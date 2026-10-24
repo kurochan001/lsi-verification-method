@@ -8,7 +8,8 @@ LSIの仕様書から検証パターンを作り、要求に対する網羅で�
 - **手法の一般化文書**：[ロジック半導体の仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体の仕様書への適用はまだ行っていません。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-24時点の状況は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
-  - 対応済みは4,386要求（暫定設計網羅率35.60%）、合格の証跡があるのは2,893要求（暫定実行確認率23.48%）。
+  - 対応済みは6,430要求（暫定設計網羅率52.20%）、合格の証跡があるのは3,734要求（暫定実行確認率30.31%）。本文（1〜40章）だけでは53.47%。
+  - 対応するテストのなかった要求に新規テストを書き、独立検証で624本のうち594本を採用した（30本は欠陥）。
   - 解釈保留は46論点のうち27論点を解消した。
   - 作成者とは別の検証者による反証を、全件に適用した。
 - **ツール**：ケーススタディで使った照合キット、生成テストの枠組み、台帳と計測の参照実装です。kirimasim-testsのディレクトリ構成を前提にしており、このリポジトリ単独では動きません（[tools/README.md](tools/README.md)）。
@@ -34,6 +35,7 @@ PROVENANCE.md                   各ファイルの由来（元のリポジトリ
    - [既存テストの照合（20%到達）](docs/case-study-ieee1800/existing-test-matching-20percent-20261023.md)
    - [附属書ヘッダ・VPIテストと照合](docs/case-study-ieee1800/header-vpi-tests-and-matching-20261023.md)
    - [予約語の生成テスト](docs/case-study-ieee1800/keyword-tests-20261024.md)
+   - [未対応要求への新規テスト（50%到達）](docs/case-study-ieee1800/gap-tests-20261024.md)
 6. [検証で見つかった問題の累積](docs/case-study-ieee1800/existing-test-matching-review-20261022.md)と[シミュレータと規格の差異](docs/case-study-ieee1800/simulator-differences.md)：独立検証で何が見つかるかの実例
 
 ## 今後の計画

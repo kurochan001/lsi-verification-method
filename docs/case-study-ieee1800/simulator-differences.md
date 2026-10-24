@@ -227,48 +227,48 @@ independent oracle confirmations. The following observable differences remain:
 
 - Icarus 13.0 does not wake a wait on queue size when the final element is
   popped (7.10.2.7):
-  [test_queue_size_wait_after_pop](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch7/test_queue_size_wait_after_pop.sv).
+  [test_queue_size_wait_after_pop](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch7/test_queue_size_wait_after_pop.sv).
 - Icarus 13.0 constructs the derived object through a typed constructor but
   calls the base virtual method through the base handle (8.8, 8.20):
-  [test_typed_constructor_into_base_handle](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch8/test_typed_constructor_into_base_handle.sv).
+  [test_typed_constructor_into_base_handle](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch8/test_typed_constructor_into_base_handle.sv).
 - Icarus 13.0 keeps source macro definitions after `undefineall` (22.5.3):
-  [test_undefineall_clears_nested_macro_expansion](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch22/test_undefineall_clears_nested_macro_expansion.sv).
+  [test_undefineall_clears_nested_macro_expansion](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch22/test_undefineall_clears_nested_macro_expansion.sv).
 - Icarus 13.0 accepts a value argument to the argumentless `$stacktrace`
   call (20.17.2):
-  [test_illegal_stacktrace_argument](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch20/test_illegal_stacktrace_argument.sv).
+  [test_illegal_stacktrace_argument](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch20/test_illegal_stacktrace_argument.sv).
 - Both releases propagate a program continuous output before a module NBA
   reaction to its input has completed (24.3.2):
-  [test_program_output_after_module_nba_chain](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch24/test_program_output_after_module_nba_chain.sv).
+  [test_program_output_after_module_nba_chain](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch24/test_program_output_after_module_nba_chain.sv).
 - The 5.052 release orders signed associative keys as unsigned values
   across zero (7.8.4):
-  [test_assoc_signed_boundary_order](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch7/test_assoc_signed_boundary_order.sv).
+  [test_assoc_signed_boundary_order](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch7/test_assoc_signed_boundary_order.sv).
 - The 5.052 release accepts an associative key type containing a real
   member (7.8.5):
-  [test_illegal_assoc_real_member_key](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch7/test_illegal_assoc_real_member_key.sv).
+  [test_illegal_assoc_real_member_key](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch7/test_illegal_assoc_real_member_key.sv).
 - The 5.052 release expands an inner string concatenation into two queue
   elements instead of keeping it as one string item (10.10.3):
-  [test_unpacked_concat_typed_array_and_string_item](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch10/test_unpacked_concat_typed_array_and_string_item.sv).
+  [test_unpacked_concat_typed_array_and_string_item](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch10/test_unpacked_concat_typed_array_and_string_item.sv).
 - The 5.052 release loses the prototype default when an out-of-block
   method definition legally omits it (8.24):
-  [test_extern_method_scoped_return_type](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch8/test_extern_method_scoped_return_type.sv).
+  [test_extern_method_scoped_return_type](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch8/test_extern_method_scoped_return_type.sv).
 - The 5.052 release runs the mixed event sensitivity processes at time zero
   as well as at the four later input changes (9.4.2.1, 6.8):
-  [test_event_or_mixed_comma_forms](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch9/test_event_or_mixed_comma_forms.sv).
+  [test_event_or_mixed_comma_forms](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_event_or_mixed_comma_forms.sv).
 - The 5.052 release accepts a checker covergroup referencing a formal
   whose actual is constant (17.6):
-  [test_illegal_checker_covergroup_constant_actual](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch17/test_illegal_checker_covergroup_constant_actual.sv).
+  [test_illegal_checker_covergroup_constant_actual](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch17/test_illegal_checker_covergroup_constant_actual.sv).
 - The 5.052 release observes a different position after seeking with a
   pushed-back character and does not clear the error text after a successful
   I/O operation (21.3.5, 21.3.7):
-  [test_fseek_cancels_ungetc_and_clears_error](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch21/test_fseek_cancels_ungetc_and_clears_error.sv).
+  [test_fseek_cancels_ungetc_and_clears_error](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch21/test_fseek_cancels_ungetc_and_clears_error.sv).
 - The 5.052 release prints the sampled value for the live reference in an
   assertion pass action after the NBA update (4.4.2.5, 16.5.1):
-  [test_preponed_sample_observed_before_action](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch4/test_preponed_sample_observed_before_action.sv).
+  [test_preponed_sample_observed_before_action](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch4/test_preponed_sample_observed_before_action.sv).
 - LABEL annotation is unavailable in Icarus 13.0; the 5.052 release ignores
   SDF annotation, including the new dependent label expression and pulse
   boundary cases (32.4.3, 32.7):
-  [test_sdf_label_recomputes_delay_expression](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch32/test_sdf_label_recomputes_delay_expression.sv),
-  [test_sdf_pulse_limit_near_delay_boundary](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/tests/ch32/test_sdf_pulse_limit_near_delay_boundary.sv).
+  [test_sdf_label_recomputes_delay_expression](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch32/test_sdf_label_recomputes_delay_expression.sv),
+  [test_sdf_pulse_limit_near_delay_boundary](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch32/test_sdf_pulse_limit_near_delay_boundary.sv).
 
 ## Cases added after the 2026-10-23 expression review
 
@@ -328,7 +328,7 @@ Icarus Verilog 13.0 stable (v13_0-dirty) fails compilation of all fifteen
 cases because of unsupported associative arrays or unpacked structs.
 These actual compile attempts are recorded as known differences, not passes.
 
-See [the test addition report](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/associative-gap-tests-20261023.md) for all
+See [the test addition report](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/associative-gap-tests-20261023.md) for all
 inputs, mutation checks, result snapshots and coverage changes. The original
 fifteen-case runs and the later one-case wildcard/count refinements are kept
 as separate snapshots; partial successes are not merged into one run.
@@ -377,3 +377,154 @@ that reserves it. Both releases reject 493 of the 496 at the declaration.
   default keyword set, where 22.14 lists both as standard versions and makes
   an unrecognized one an error. Its default set reserves every keyword of
   Annex B, so the 248 `gen/ch5/test_gen_kw_2023_*` tests still match it.
+
+## Cases added by the 2026-10-24 gap tests
+
+The tests written for open requirements (see the [result report](gap-tests-20261024.md)) show the
+following differences, taken from the notes their writers kept and checked by their
+independent reviewers. As above, constructs that a release rejects or does not support,
+internal faults, missing header constants and VPI relations it does not model, and
+Verilator's two-state values are left out.
+
+### Icarus Verilog 13.0: results
+
+| Clause | What it does | Tests |
+| --- | --- | --- |
+| 6.16 (Table 6-9) | `s_b < "ab"` with `string s_b = "b"` gives 1 (and `s_b > "ab"` also gives 1). | `ch6/test_string_comparison_operators_and_literals` |
+| 6.11.3, 6.8 | `integer unsigned u = '1;` displays -1 with `%0d`: the unsigned keyword on integer is ignored. | `ch6/test_integer_types_state_and_signing` |
+| 6.12, 6.13 | A shortreal initialized to `1.0 + 2.0 ** -30` compares unequal to 1.0 (the value is kept at double precision), although `$shortrealtobits` of it gives 3f800000. | `ch6/test_shortreal_ieee754_single` |
+| 6.10, 23.2.2.1, 22.8 | Under `` `default_nettype wand ``, the implicit net of a non-ANSI port with only a port declaration (`output [3:0] y;`) is a wire: two drivers 1101 and 0110 resolve to x1xx. (Implicit nets from continuous assignments, port connections and gate terminals do get wand: `ch6/test_implicit_net_scope_and_lookup` matches.) | `ch6/test_implicit_port_expression_nets` |
+| 6.16.10 | `s[i].atoreal()` on the elements of a string array returns 0.0 for every element (`"2.5e3xyz"`, `"3.75"`, ...), and the empty element prints as a space. | `ch6/test_string_atoreal_scan_rules` |
+| 6.19, 6.24.1 | Evaluates the enum value expression `4'hf + 4'h1` of a `bit [4:0]` enum with the 4-bit width of its operands (Q=0, R=1) instead of in the context of a cast to the 5-bit base type (Q=16, R=17). | `ch6/test_enum_encoding_cast_to_base` |
+| 6.16, 6.20 | A `parameter string S` initialized with a literal that contains NUL characters (`"\0"`) keeps them: `S.len()` is 7 instead of 3, the length of the string with the NUL characters removed. | `ch6/test_param_literal_initializers_follow_type` |
+| 7.3.1, 6.11.2 | Reading the 2-state member `bit [7:0] b2` of a packed union that also has a 4-state member returns the stored x/z bits unchanged (`b2=1x0z10x1`, `$isunknown(m.b2)=1`, `b2+1=xxxxxxxx`) instead of converting them to 0 (`10001001`, 0, `10001010`); the initial read of b2 also gives `xxxxxxxx` instead of `00000000`. | `ch7/test_packed_union_mixed_two_four_state` |
+| 7.4.4 | For `typedef tri_t row_t [0:3]; row_t tab [0:1];` the unpacked dimension of the typedef becomes the slowest one (`$size(tab,1)=4`, `$size(tab,2)=2`, `tab[1][2]` reported out of bounds), and the subarray assignment `one_row = tab[1]` is rejected. The dimensions from the typedef vary faster than those of the declaration, so tab is [0:1][0:3]. | `ch7/test_multidim_typedef_stages_and_shared_declaration` |
+| 7.10.1 | A queue slice `q[a:b]` with variable bounds yields the whole queue (`size=5: 10 20 30 40 50`) for every pair of bounds. | `ch7/test_queue_slice_bounds_clip_and_empty` |
+| 11.4.7, 11.3.5 | Evaluates the second operand of `->` when the first operand is false: `lhs(1'b0) -> rhs(1'b0)` calls rhs (`nr=1`). For `&&` and `->`, a logically false first operand means the second operand shall not be evaluated. | `ch11/test_logical_operands_evaluated_once_and_unknown_left` |
+| 11.4.1, 11.4.10 | `arr[k] >>>= 2` on an element of `int arr[4]` holding -16 gives 1073741820 (zeros shifted in), while `x >>>= 2` on an int variable and `arr[1] = arr[1] >>> 2` give -4. The compound assignment has the meaning of the blocking assignment with the binary operator, and >>> of a signed operand fills with the sign bit. | `ch11/test_compound_assignment_index_evaluated_once` |
+| 11.5.1 | A bit-select of the 2-state `bit [7:0] b` with an out-of-range index (`b[i8]`, i8 = 8) or an x index reads x, and `q4 = b[i9 +: 4]` (wholly out of range) leaves x in the 2-state `bit [3:0] q4` (`xxxx`). An invalid select of a 2-state value reads 0. | `ch11/test_vector_select_declared_bounds_direction_and_invalid` |
+| 26.3 | `localparam int k_first = k;` written before `import lp::*;` gives `lp::k` (5) when `k` is referenced again after the import; with no later reference it gives the compilation-unit `k` (100). Only wildcard candidates before the reference may be used, so it has to be 100. | `ch26/test_package_lookup_reference_point` |
+| 28.6 | notif0 and notif1 with data 0 or 1 and a control that is x or z show StX; Table 28-5 gives H (data 0) and L (data 1), shown as StH and StL. | `ch28/test_notif_gate_truth_table_all_inputs` |
+| 28.7, 28.14 | rnmos and rpmos that are the only driver of a net show their output with strong strength (St0, St1, StX) and StX where Table 28-6 gives L or H; the standard requires the strong data to be reduced to pull (Pu0, Pu1, PuX, PuL, PuH). With a second, z driver on the net rnmos shows the right values, rpmos still not. nmos and pmos match. | `ch28/test_mos_switch_truth_tables` |
+| 28.9, 28.14 | rcmos passes strong data with strong strength (St0, St1) where 28.14 requires pull strength, as an rnmos/rpmos pair on one net shows (the known rcmos deviation, here compared with that pair). | `ch28/test_rcmos_switch_rnmos_rpmos_equivalence` |
+| 28.8 | A tranif0 with two delays (d1, d2) uses d1 when its control rises to 1 (the switch turns off) and d2 when the control falls to 0 (the switch turns on); 28.8 makes the first delay the turn-on delay and the second the turn-off delay. tranif1 matches (tests/ch28/test_pass_switch_control_delay_forms.sv). | `ch28/test_tranif0_control_turn_on_off_delays` |
+| 28.12.4 | On wand and wor with drivers of ambiguous strength it gives St0, St1, St0, StX instead of 650, 65X, 56X, 56X (the known deviation that it ignores driver strengths on wired nets). | `ch28/test_wired_logic_ambiguous_strength_combinations` |
+| 30.5.1 | A negative module path delay (a specparam of -3, or 1 - 6) is not treated as zero: the output change that should come without delay never appears in the run. | `ch30/test_specify_negative_path_delay` |
+| 30.7.4.2 | Ignores showcancelled and pulsestyle_ondetect: the negative pulse leaves the output at 1 instead of x from 15 (on-event) or 12 (on-detect) to 17. | `ch30/test_showcancelled_negative_pulse_x` |
+| 32.3 | Reports an IOPATH entry without a matching module path as "SDF ERROR: Unable to match ModPath" instead of a warning; it does annotate the other entries. | `ch32/test_sdf_unannotatable_entry_warning` |
+| 36.5, 36.8.1 | A vpiSizedFunc whose sizetf gives 12 returns 32 bits ("function result: 00000f01"); Icarus takes the width from a .sft file at compile time, not from sizetf. All other lines match. | `ch36/test_vpi_systf_task_function_places` |
+| 37.39 | vpi_get(vpiDirection) of a path term returns a value other than vpiInput/vpiOutput, and vpi_handle(vpiModPath, path_term) returns NULL; vpiModule of a path and vpi_get_delays/vpi_put_delays of a path match. | `ch37/test_vpi_mod_path_relations_delays` |
+| 37.41, 13.4 | On functions, vpiFuncType gives vpiSizedFunc for integer and vpiSizedSignedFunc for time, which 37.41 does not give for them. | `ch37/test_vpi_function_decl_type_range` |
+| 38.3 | vpi_compare_objects returns 1 only for the same handle (also for mem[j] with j out of range) and 0 for distinct handles to the same element (mem[j] vs mem[k] with j==k, mem[j] vs vpi_handle_by_index(mem,0)) | `ch38/test_vpi_compare_objects_current_object` |
+| 38.15, K.2 | vpi_user.h declares s_vpi_vecval aval and bval as PLI_INT32 instead of PLI_UINT32 (Figure 38-8) | `ch38/test_vpi_value_time_delay_structures` |
+| 38.34 | vpiInertialDelay and vpiTransportDelay remove no scheduled event (all three modes behave as vpiPureTransportDelay) | `ch38/test_vpi_put_value_delay_modes_queue` |
+| 38.19 | vpi_handle_by_index(scalar, 0) returns a handle (s[0]) although a bit-select of a scalar is illegal (11.5.1), so 38.19 requires NULL; unused variables are also left out of the VPI model. | `ch38/test_vpi_handle_by_name_scope_index` |
+| 38.27, 38.25 | vpi_mcd_open of a file that vpi_mcd_open or $fopen already opened gives a new descriptor instead of the existing one; vpi_mcd_flush of a channel with no open file returns 0 (it calls fflush(NULL)) | `ch38/test_vpi_mcd_open_reuse` |
+
+### Icarus Verilog 13.0: illegal designs that it accepts
+
+| Clause | What it does | Tests |
+| --- | --- | --- |
+| 6.21 | Accepts `da[1] <= 2;`, a nonblocking assignment to an element of a dynamic array. | `ch6/test_illegal_nonblocking_to_dynamic_array_element` |
+| 7.4.1 | Accepts `bit [8] octet;`, a packed dimension given as a single size, without an error. A packed dimension needs a `[ constant_expression : constant_expression ]` range. | `ch7/test_illegal_packed_dimension_single_size` |
+| 8.17 | Accepts an explicit `super.new(3)` in a subclass whose extends clause already gives the constructor arguments (`extends base_c(5)`). | `ch8/test_illegal_super_new_with_extends_arguments` |
+| 29.7 | Accepts a UDP initial statement that assigns an input instead of the output reg. | `ch29/test_illegal_udp_initial_assigns_input` |
+| 30.4.2, 30.4.5, 30.4.6 | Accepts a parallel module path with a list of sources `(a, b => y)` or of destinations `(b => y, z)`; Syntax 30-3 gives a parallel connection one input and one output terminal, and 30.4.5/30.4.6 require a full connection for several sources or destinations. (Verilator 5.052 accepts them too; it does not check specify paths.) | `ch30/test_illegal_specify_parallel_multiple_sources`, `ch30/test_illegal_specify_parallel_multiple_destinations` |
+
+### Verilator 5.052: results
+
+| Clause | What it does | Tests |
+| --- | --- | --- |
+| 6.16.3 | Gives `getc()` the unsigned type `bit[7:0]` (`$typename` prints `bit[7:0]`, and `s.getc(64'h1_0000_0002)` on the character 8'he9 prints 233) instead of the signed `byte` of its prototype (`byte`, -23). | `ch6/test_string_getc_index_rules` |
+| 6.16.9 | atoi/atohex/atooct skip leading white space and parse a sign like C strtol: `" 12".atoi()=12`, `"-12".atoi()=-12`, `"+12".atoi()=12`, `"-ff".atohex()=-255`, `"-7".atooct()=-7`. The scan takes only leading digits and underscores and does not parse a sign, so all of these are 0. | `ch6/test_string_ato_integer_scan_rules` |
+| 6.19.5.3, 6.19.5.4 | For a value that is not a member (`t_t'(7)` of {A=1,B=2,C=3}), next() returns A, prev() returns B and next(2) returns B, and for `l_t'(3'd6)` of a logic [2:0] enum next() and prev() return P (001); the standard returns the default initial value of the enum, 0 for the int base and xxx for the logic base. (For the default value 0 itself, prev() gives 0.) | `ch6/test_enum_next_prev_from_non_member` |
+| 6.19.5.5, 20.6.1 | `$typename(c.num())` prints `bit[31:0]` instead of `int`, the return type of the num() prototype (the value 3 and the signed comparison `c.num() - 5 < 0` are right). | `ch6/test_enum_num_name_result_types` |
+| 6.22.1 f, 7.4.2 | `type(fa) == type(fd)` for `int fa [0:3]` and `int fd [4]` gives 0; `[4]` declares the bounds [0:3] (https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/7.4.2), so the fixed-size arrays have the same bounds and matching elements and match (1). | `ch6/test_type_matching_rules_by_type_compare` |
+| 6.24.1, 20.6.1 | `$typename(signed'(b))` for `bit [3:0] b` and `$typename(unsigned'(bs))` for `bit signed [3:0] bs` give `logic[3:0]`: the signing cast of a 2-state operand becomes a 4-state vector, where its elements shall be bit (the size casts `8'(b)` give `bit[7:0]` as required). Its `$typename` also leaves out `signed` (`$typename(bit signed [3:0])` is `bit[3:0]`). Icarus Verilog 13.0 has no `$typename` of a data type. | `ch6/test_cast_size_sign_keep_state_domain` |
+| 20.5, 6.24.1 | `$shortrealtobits` returns the 64-bit double precision pattern (`$shortrealtobits(n)` for -2.5 prints `c004000000000000`, and the 32-bit variable assigned `$shortrealtobits(3.375)` gets 0) instead of the 32-bit single precision pattern (`c0200000`, `40580000`). | `ch6/test_cast_shortreal_round_vs_bit_pattern` |
+| 7.4.1, 6.22.1 e, 6.23 | A type-reference comparison between an integer type with a predefined width and its matching vector type gives 0 (`type(byte) == type(bit signed [7:0])`, also with a typedef of that vector, and likewise for shortint, int, longint, integer, time), while `type(int) == type(int)` gives 1. The standard makes them matching types, so the comparisons are 1. | `ch7/test_integer_atom_types_match_vector_types` |
+| 7.4.5 Table 7-1 | Reading a fixed unpacked array of real, shortreal, string, class, interface class or virtual interface elements with an out-of-bounds index (7 for [0:3]) or an index with an x bit returns a stored element value (1.5, 2.5, "full", non-null handles) instead of 0.0, "" and null. The C++ build also fails on reads/`== null` comparisons of an event array element (`cannot convert 'VlEvent' to 'IData'`). | `ch7/test_array_invalid_index_read_handles_real_string` |
+| 7.4.5 Table 7-1 | Reading `[0:1]` arrays of queues, dynamic arrays, associative arrays, fixed-size arrays, unpacked structures and unpacked unions with index 5 or 2'bx0 returns the stored element (sizes 2/3/1, 1,2,3, the stored structure and union) instead of empty arrays, arrays of 'x / '0, a structure of member defaults (with the initial assignment c = 9) and 'x for the first union member. | `ch7/test_array_invalid_index_read_aggregates` |
+| 7.4.5 Table 7-1 | Reading a `chandle ch [0:3]` whose elements C set to non-null pointers with index 7 or 2'b1x returns a non-null chandle (`null=0`) instead of null. | `ch7/test_array_invalid_index_read_chandle` |
+| 7.5.1, 13.5.2 | After `d = new[3](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/d)` outdates a task's `ref int r` to `d[1]`, the task's later write `r = 99` changes the new array (`t=4: 5 99 7`) instead of only the outdated element (`5 6 7`). | `ch7/test_dynamic_array_new_discards_data_and_references` |
+| 7.10.1 | For q = {10,20,30,40,50}: `q[5:5]` yields `{50}` instead of `{}`, `q[-1:-1]` yields the whole queue instead of `{}`, and `q[1:3'b0z1]` yields one element instead of `{}` (a bound with a z bit). In-range, clipped and reversed slices are right. | `ch7/test_queue_slice_bounds_clip_and_empty` |
+| 7.10.5 | `insert(1, 9)` on a full `int bq[$:2]` grows it to four elements (`0 9 1 2`) instead of dropping the element pushed past index 2 (`0 9 1`); push_back, push_front and the write to [$+1] are bounded correctly. | `ch7/test_bounded_queue_methods_discard_beyond_bound` |
+| 7.10.5 | Assigning a five-element unbounded queue to `int bq[$:2]` keeps two elements (`20 21`) instead of three (`20 21 22`); the concatenation assignments are bounded correctly. | `ch7/test_bounded_queue_assign_discards_beyond_bound` |
+| 7.12.1, 7.8.4 | For `int dn [4:1] = '{7,0,9,5}`, find_first/find_first_index give 5 at 0 and find_last/find_last_index give 7 at 3 (expected 7 at 4 and 5 at 1); for `up [1:4]` the indices are 0 and 3 (expected 1 and 4). For an `int aa[int]` with keys -5, 0, 3, 10, find_first/find_last follow unsigned key order (8 at 3, 6 at -5) instead of the first()/last() order (6 at -5, 4 at 10). | `ch7/test_array_locator_first_last_by_range_and_min_tie` |
+| 7.12.2 | `sort()` and `rsort()` without a with clause on `int b[$] = '{3, -1, 2}` order the elements as unsigned values (`2 3 -1` and `-1 3 2`) instead of by the signed int relational operators (`-1 2 3` and `3 2 -1`). With a with clause, and on strings and structures, the results are right. | `ch7/test_array_ordering_methods_with_and_iterator` |
+| 7.12.3 | The width of a reduction result does not follow the element type or the with expression: `$bits(b.sum(v) with (int'(v)))` is 8 (expected 32), `lo.sum with (item[3:0])` on {8'h0f, 8'h0e} gives 29 with `$bits` 8 (expected 13 and 4), and `ba.sum()` on a `bit ba[4] = '{1,1,1,0}` gives 3 (expected 1, a 1-bit result). The values of the int'() sums are right. | `ch7/test_array_reduction_result_type_and_with_width` |
+| 8.23 | In a derived class that declares its own non-virtual `f`, the call `base_c::f()` runs the derived `f` (sum 224) instead of the method of base_c (sum 124). `base_c::pv`, `base_c::pub` and `base_c::ps` select the base members correctly. | `ch8/test_class_scope_base_members_from_derived` |
+| 11.4.6 | `!=?` of two handles to different objects (interface class handles `i1 !=? i3`, also a plain class `b1 !=? b2`) and of two different chandles (`c1 !=? c2`) gives 0. For class, interface class and chandle operands the wildcard operators are the same as == and !=, so the result is 1. | `ch11/test_equality_class_interface_chandle_handles` |
+| 11.4.12.1 | The operand of a replication with a zero multiplier is not evaluated: `{{Z{next()}}, 4'hf}` with Z = 0 leaves the call count at 0. The operands of a replication are evaluated exactly once, even when the multiplier is zero. | `ch11/test_concatenation_pattern_string_operand_and_replication_once` |
+| 11.2.1, 20.4.1, 20.5 | `$shortrealtobits(0.5)` in a localparam gives 00000000, and `$bitstoshortreal` there gives 0.0. | `ch11/test_constant_system_function_calls_at_elaboration` |
+| 20.2 | After `$finish(0)` the calling procedure goes on and prints `10: after $finish` before the run ends. | `ch20/test_finish_ends_simulation` |
+| 20.2, 24.7 | `$exit()` from the first program ends the whole simulation at once (at 5), after the rest of the calling procedure has run (`5: p_first after $exit`) | `ch20/test_exit_waits_for_programs` |
+| 19.5, 19.5.2, 19.7 (already listed for `ch19/test_cg_at_least`) | `at_least` is ignored: each bin is covered after its first hit (`value bin after 0, 1, 2: 100`) | `ch19/test_cg_bin_hit_counts` |
+| 27.5, 23.3.1 | Without `--top-module`, it elaborates module `self_only`, which is instantiated only by itself inside a conditional generate, as a top-level module and runs its initial procedure ("self_only elaborated with D=2"). A module that contains an instance of itself is not a top-level module. | `ch27/test_generate_recursive_module` |
+| 26.6 | A package with `export xt_base::*;` written before `import xt_base::w;` does not make `w` visible: a module that imports `xt_early::w` gets the compilation-unit `w` (200) instead of `xt_base::w` (2). An export may precede its corresponding import. | `ch26/test_package_export_transitivity` |
+| 26.6 | `export p::*` also exports candidates of a wildcard import that the package never referenced: through `xw_pkgwild` it gives `xw_base::b` (2) and through `xw_list` it gives `xw_other::c` (3), where the names have to be looked up in the compilation unit (500, 700). | `ch26/test_package_export_wildcard_forms` |
+| 26.5, 26.3 | In a module with `import so_e::*;` followed by `import so_i::c;`, an unqualified `c` gives the wildcard candidate `so_e::c` (4); the explicit import has to take precedence (7). | `ch26/test_package_search_order_cases` |
+| 26.3 | A reference to `z` before the local declaration of `z` binds to that later declaration (30) instead of the compilation-unit `z` (300), and the reference to `k` before the wildcard import binds to `lp::k` (5). | `ch26/test_package_lookup_reference_point` |
+| 29.5 | A level-sensitive sequential UDP whose rows `1 1 : 0 : 1` and `1 1 : 1 : 0` select the next state by the current state gives 0 instead of 1 when s rises to make the inputs 1 1 from state 0 (it does not use the current state field there). | `ch29/test_udp_level_sequential_next_state_by_current` |
+| 29.8 | Ignores the delays of UDP instances (`u_and2 #3`, `u_buf #(2, 4)`): the outputs change at once (listed above for sequential UDPs; here for combinational ones too). | `ch29/test_udp_instance_delay_name_and_terminal_forms` |
+| 36.10.1, 38.36.2 | A cbAfterDelay registration with time type vpiSuppressTime is accepted: vpi_chk_error returns 0 and no cbPLIError callback occurs, although 38.36.2 makes it an error. | `ch36/test_vpi_chk_error_pli_error_callback` |
+| 38.36.2 | A cbNextSimTime callback gets the time fields of its request (2) in cb_data->time instead of the current simulation time (30) | `ch38/test_vpi_time_callbacks_without_events` |
+| 38.21, 38.36.2 | vpi_handle_by_name returns NULL for the instance of an empty module (u_sub), and vpi_register_cb ignores vpiScaledRealTime (it reads high/low as the delay) | `ch38/test_vpi_time_callback_scaled_real` |
+| 38.4, 20.2 | vpi_control(vpiFinish, 0) prints '- :0: Verilog $finish' (empty file name, so the runner does not strip it as a banner) while the routine is still running, although $finish(0) prints nothing. | `ch38/test_vpi_control_finish_on_return` |
+| 38.11 | vpi_get_str(vpiName) returns a pointer to a string that stays unchanged after a later vpi_get_str call for another object, not one temporary buffer used by every call. | `ch38/test_vpi_string_buffers` |
+| 38.34 | vpi_put_value ignores the delay of every delay mode and sets the value at once (the last put wins) | `ch38/test_vpi_put_value_delay_modes_queue` |
+| 38.34 | vpi_put_value on a net driven by a continuous assignment has no visible effect (the nets keep the driver value 10) | `ch38/test_vpi_put_value_net_deposit` |
+| 38.34 | vpi_put_value on a named event does not trigger it. | `ch38/test_vpi_put_value_event_vector_scaled` |
+
+### Verilator 5.052: illegal designs that it accepts
+
+| Clause | What it does | Tests |
+| --- | --- | --- |
+| 6.5 | Accepts a procedural write to a module variable on the line before its declaration. | `ch6/test_illegal_variable_used_before_declaration` |
+| 6.5, 23.3.3 | Accepts a variable connected to an inout port of an instance. | `ch6/test_illegal_variable_actual_on_inout_port` |
+| 6.5, 23.2.2.3 | Accepts `inout var logic p`. | `ch6/test_illegal_inout_port_declared_as_variable` |
+| 6.5, 11.5.3 | Accepts `assign v[0] = ...` together with `initial v[i] = ...` (i a variable). | `ch6/test_illegal_variable_index_prefix_mixed_writers` |
+| 6.6.2 | Accepts two continuous assignments sharing bit 1 of a uwire vector. | `ch6/test_illegal_uwire_overlapping_bit_drivers` |
+| 6.12, 11.3.1 | Accepts `r & 1` and `r << 1` with a real `r` (warnings only). | `ch6/test_illegal_real_operand_bitwise_and`, `ch6/test_illegal_real_operand_shift` |
+| 6.19 | Accepts an enum name value that uses a hierarchical name (`A = u.BASE`, a localparam of an instance) and gives A the value 4; hierarchical names are not allowed in enum values. | `ch6/test_illegal_enum_value_hierarchical_name` |
+| 6.19 | Accepts `enum logic signed [3:0] {LO = -7, HI = 8}` and truncates HI to -8; 8 is out of range for a signed 4-bit base (the discarded bits 0 differ from the sign bit 1), which is an error. | `ch6/test_illegal_enum_signed_value_out_of_range` |
+| 6.21 | Accepts `initial count = 5;` on a line before the declaration `int count;`; a variable declaration shall precede any simple reference to it. | `ch6/test_illegal_variable_referenced_before_declaration` |
+| 6.21 | Accepts a static variable declared with an initializer but without the keyword static in a static task and in an initial block. | `ch6/test_illegal_static_task_variable_initializer_no_keyword`, `ch6/test_illegal_initial_block_variable_initializer_no_keyword` |
+| 6.21 | Accepts `assign w = h.value;`, which reads a member of a class object outside a procedural block. | `ch6/test_illegal_continuous_assign_reads_class_member` |
+| 6.21 | Accepts `force av = 1;` on a variable of an automatic task. | `ch6/test_illegal_force_automatic_variable` |
+| 7.12.3, 11.4.8 | Accepts `a.and with (real'(item))` on an int array, although the bitwise AND of and() is not defined for the real type of the with expression. | `ch7/test_illegal_reduction_and_with_real_expression` |
+| 8.19 | Accepts a second assignment to an instance constant (`const int k;`) in the constructor. | `ch8/test_illegal_instance_constant_assigned_twice` |
+| 8.19 | Accepts `const static int limit;` (an instance constant declared static) assigned in the constructor. | `ch8/test_illegal_const_static_instance_constant` |
+| 11.5.1 | Accepts `v[0:3]` for `logic [7:0] v` and runs the design. The first expression of a non-indexed part-select shall address a more significant bit than the second, so the design is illegal. | `ch11/test_illegal_part_select_reversed_bounds` |
+| 19.5.2 | Accepts `bins others[] = default sequence;`. | `ch19/test_illegal_cg_default_sequence_array` |
+| 19.8.1 | Accepts `option.weight = w;` where `w` is a formal argument of the overridden sample method. | `ch19/test_illegal_cg_sample_arg_in_option` |
+| 28.3.5 | Accepts a gate instance array name declared twice with two ranges (`t_nand[0:1] (https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/...), t_nand[2:3] (https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/...)`) without an error; one instance name may have only one range. | `ch28/test_illegal_gate_array_split_range` |
+| 26.3 | Accepts a module that imports a package declared later in the same source file; the package has to be compiled before the importing scope. | `ch26/test_illegal_package_imported_before_compiled` |
+| 26.3 | Accepts explicit imports of `width` from two different packages in one scope. | `ch26/test_illegal_package_explicit_import_two_packages` |
+| 26.3 | Accepts an explicit import of `width` into a scope that declares `width` itself. | `ch26/test_illegal_package_explicit_import_local_name` |
+| 24.3, 3.14.2.2 | Accepts a later timeunit in a program that does not match the first one, and a timeprecision among the program items that repeats nothing. | `ch24/test_illegal_program_timeunit_mismatch`, `ch24/test_illegal_program_timeprecision_after_item` |
+| 29.3.6 | Accepts `-` in the table of a combinational UDP, which 29.3.6 allows only in the output field of a sequential UDP. (Icarus Verilog 13.0 stops on an internal assertion.) | `ch29/test_illegal_udp_hyphen_combinational` |
+| 29.7 | Accepts a begin-end block with two assignments as the initial statement of a UDP. | `ch29/test_illegal_udp_initial_block` |
+| 35.5.4 | Accepts an import declaration with a ref formal (only the link step fails for the missing C function). | `ch35/test_illegal_dpi_import_ref_formal` |
+| 35.5.4 (footnote 25) | Accepts `import "DPI-C" function :initial int c_f();` in a module. | `ch35/test_illegal_dpi_import_override_specifier` |
+| 35.5.2 | Accepts a pure imported function with an output argument. | `ch35/test_illegal_dpi_pure_function_output` |
+
+### Both releases: results
+
+| Clause | What it does | Tests |
+| --- | --- | --- |
+| 26.3 | A reference to `y` written before `import lv::y;` gives `lv::y` (7) instead of the compilation-unit `y` (400): an explicit import makes the name locally visible only after it. Verilator also binds `w_first` to the later local `w` (30 instead of 300). | `ch26/test_package_local_visibility` |
+
+### Both releases: illegal designs that it accepts
+
+| Clause | What it does | Tests |
+| --- | --- | --- |
+| 6.12, 11.3.1 | Accept `r % 2.0` with a real `r` (Verilator with warnings only). | `ch6/test_illegal_real_operand_modulus` |
+| 6.20.5 | Both accept a reference to a module-body specparam (`$display("%0d", tHold)` in an initial block) on a line before its declaration and print 5; a specparam declared outside a specify block shall be declared before it is referenced. | `ch6/test_illegal_specparam_used_before_declaration` |
+| 6.21 | Both accept `assign w = da[0];`, a continuous assignment that reads an element of a dynamic array; such references are limited to procedural blocks. | `ch6/test_illegal_continuous_assign_reads_dynamic_element` |
+| 27.4, 27.6 | Both accept `genblk1[1].x`, a hierarchical reference from the module into an unnamed loop generate block; such declarations can be referenced only from within the hierarchy of that block, and genblk<n> is a name for external interfaces only. | `ch27/test_illegal_generate_unnamed_loop_block_reference` |
+| 29.3.4 | Accept a combinational UDP entry `x x : 1;` whose inputs are all x and whose output is not x (29.3.4 requires x). | `ch29/test_illegal_udp_all_x_entry_not_x` |
+| 29.3.6 | Accept a value change (01) in the current state field of a sequential UDP entry; Table 29-1 permits (vw) only in input fields. | `ch29/test_illegal_udp_value_change_in_state_field` |
+| 29.7, 29.3 | Accept `initial q = 2;` in a UDP; init_val allows only 1'b0, 1'b1, 1'bx (and the uppercase forms), 1 and 0. | `ch29/test_illegal_udp_initial_value_two` |
+| 30.4.1 | Accept a module path whose source is an input port declared `input var logic a` (a variable); 30.4.1 requires the source to be a net. | `ch30/test_illegal_specify_path_source_variable_port` |
+| 33.4.1.1 | Both accept a config whose design statement names another config. (Icarus skips config declarations.) | `ch33/test_illegal_config_design_is_config` |
