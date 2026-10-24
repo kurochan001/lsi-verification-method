@@ -227,48 +227,48 @@ independent oracle confirmations. The following observable differences remain:
 
 - Icarus 13.0 does not wake a wait on queue size when the final element is
   popped (7.10.2.7):
-  [test_queue_size_wait_after_pop](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch7/test_queue_size_wait_after_pop.sv).
+  [test_queue_size_wait_after_pop](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch7/test_queue_size_wait_after_pop.sv).
 - Icarus 13.0 constructs the derived object through a typed constructor but
   calls the base virtual method through the base handle (8.8, 8.20):
-  [test_typed_constructor_into_base_handle](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch8/test_typed_constructor_into_base_handle.sv).
+  [test_typed_constructor_into_base_handle](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch8/test_typed_constructor_into_base_handle.sv).
 - Icarus 13.0 keeps source macro definitions after `undefineall` (22.5.3):
-  [test_undefineall_clears_nested_macro_expansion](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch22/test_undefineall_clears_nested_macro_expansion.sv).
+  [test_undefineall_clears_nested_macro_expansion](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch22/test_undefineall_clears_nested_macro_expansion.sv).
 - Icarus 13.0 accepts a value argument to the argumentless `$stacktrace`
   call (20.17.2):
-  [test_illegal_stacktrace_argument](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch20/test_illegal_stacktrace_argument.sv).
+  [test_illegal_stacktrace_argument](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch20/test_illegal_stacktrace_argument.sv).
 - Both releases propagate a program continuous output before a module NBA
   reaction to its input has completed (24.3.2):
-  [test_program_output_after_module_nba_chain](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch24/test_program_output_after_module_nba_chain.sv).
+  [test_program_output_after_module_nba_chain](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch24/test_program_output_after_module_nba_chain.sv).
 - The 5.052 release orders signed associative keys as unsigned values
   across zero (7.8.4):
-  [test_assoc_signed_boundary_order](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch7/test_assoc_signed_boundary_order.sv).
+  [test_assoc_signed_boundary_order](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch7/test_assoc_signed_boundary_order.sv).
 - The 5.052 release accepts an associative key type containing a real
   member (7.8.5):
-  [test_illegal_assoc_real_member_key](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch7/test_illegal_assoc_real_member_key.sv).
+  [test_illegal_assoc_real_member_key](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch7/test_illegal_assoc_real_member_key.sv).
 - The 5.052 release expands an inner string concatenation into two queue
   elements instead of keeping it as one string item (10.10.3):
-  [test_unpacked_concat_typed_array_and_string_item](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch10/test_unpacked_concat_typed_array_and_string_item.sv).
+  [test_unpacked_concat_typed_array_and_string_item](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch10/test_unpacked_concat_typed_array_and_string_item.sv).
 - The 5.052 release loses the prototype default when an out-of-block
   method definition legally omits it (8.24):
-  [test_extern_method_scoped_return_type](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch8/test_extern_method_scoped_return_type.sv).
+  [test_extern_method_scoped_return_type](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch8/test_extern_method_scoped_return_type.sv).
 - The 5.052 release runs the mixed event sensitivity processes at time zero
   as well as at the four later input changes (9.4.2.1, 6.8):
-  [test_event_or_mixed_comma_forms](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_event_or_mixed_comma_forms.sv).
+  [test_event_or_mixed_comma_forms](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch9/test_event_or_mixed_comma_forms.sv).
 - The 5.052 release accepts a checker covergroup referencing a formal
   whose actual is constant (17.6):
-  [test_illegal_checker_covergroup_constant_actual](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch17/test_illegal_checker_covergroup_constant_actual.sv).
+  [test_illegal_checker_covergroup_constant_actual](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch17/test_illegal_checker_covergroup_constant_actual.sv).
 - The 5.052 release observes a different position after seeking with a
   pushed-back character and does not clear the error text after a successful
   I/O operation (21.3.5, 21.3.7):
-  [test_fseek_cancels_ungetc_and_clears_error](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch21/test_fseek_cancels_ungetc_and_clears_error.sv).
+  [test_fseek_cancels_ungetc_and_clears_error](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch21/test_fseek_cancels_ungetc_and_clears_error.sv).
 - The 5.052 release prints the sampled value for the live reference in an
   assertion pass action after the NBA update (4.4.2.5, 16.5.1):
-  [test_preponed_sample_observed_before_action](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch4/test_preponed_sample_observed_before_action.sv).
+  [test_preponed_sample_observed_before_action](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch4/test_preponed_sample_observed_before_action.sv).
 - LABEL annotation is unavailable in Icarus 13.0; the 5.052 release ignores
   SDF annotation, including the new dependent label expression and pulse
   boundary cases (32.4.3, 32.7):
-  [test_sdf_label_recomputes_delay_expression](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch32/test_sdf_label_recomputes_delay_expression.sv),
-  [test_sdf_pulse_limit_near_delay_boundary](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch32/test_sdf_pulse_limit_near_delay_boundary.sv).
+  [test_sdf_label_recomputes_delay_expression](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch32/test_sdf_label_recomputes_delay_expression.sv),
+  [test_sdf_pulse_limit_near_delay_boundary](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/tests/ch32/test_sdf_pulse_limit_near_delay_boundary.sv).
 
 ## Cases added after the 2026-10-23 expression review
 
@@ -328,7 +328,7 @@ Icarus Verilog 13.0 stable (v13_0-dirty) fails compilation of all fifteen
 cases because of unsupported associative arrays or unpacked structs.
 These actual compile attempts are recorded as known differences, not passes.
 
-See [the test addition report](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/associative-gap-tests-20261023.md) for all
+See [the test addition report](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/associative-gap-tests-20261023.md) for all
 inputs, mutation checks, result snapshots and coverage changes. The original
 fifteen-case runs and the later one-case wildcard/count refinements are kept
 as separate snapshots; partial successes are not merged into one run.
@@ -439,14 +439,14 @@ Verilator's two-state values are left out.
 | 6.16.9 | atoi/atohex/atooct skip leading white space and parse a sign like C strtol: `" 12".atoi()=12`, `"-12".atoi()=-12`, `"+12".atoi()=12`, `"-ff".atohex()=-255`, `"-7".atooct()=-7`. The scan takes only leading digits and underscores and does not parse a sign, so all of these are 0. | `ch6/test_string_ato_integer_scan_rules` |
 | 6.19.5.3, 6.19.5.4 | For a value that is not a member (`t_t'(7)` of {A=1,B=2,C=3}), next() returns A, prev() returns B and next(2) returns B, and for `l_t'(3'd6)` of a logic [2:0] enum next() and prev() return P (001); the standard returns the default initial value of the enum, 0 for the int base and xxx for the logic base. (For the default value 0 itself, prev() gives 0.) | `ch6/test_enum_next_prev_from_non_member` |
 | 6.19.5.5, 20.6.1 | `$typename(c.num())` prints `bit[31:0]` instead of `int`, the return type of the num() prototype (the value 3 and the signed comparison `c.num() - 5 < 0` are right). | `ch6/test_enum_num_name_result_types` |
-| 6.22.1 f, 7.4.2 | `type(fa) == type(fd)` for `int fa [0:3]` and `int fd [4]` gives 0; `[4]` declares the bounds [0:3] (https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/7.4.2), so the fixed-size arrays have the same bounds and matching elements and match (1). | `ch6/test_type_matching_rules_by_type_compare` |
+| 6.22.1 f, 7.4.2 | `type(fa) == type(fd)` for `int fa [0:3]` and `int fd [4]` gives 0; `[4]` declares the bounds [0:3] (https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/7.4.2), so the fixed-size arrays have the same bounds and matching elements and match (1). | `ch6/test_type_matching_rules_by_type_compare` |
 | 6.24.1, 20.6.1 | `$typename(signed'(b))` for `bit [3:0] b` and `$typename(unsigned'(bs))` for `bit signed [3:0] bs` give `logic[3:0]`: the signing cast of a 2-state operand becomes a 4-state vector, where its elements shall be bit (the size casts `8'(b)` give `bit[7:0]` as required). Its `$typename` also leaves out `signed` (`$typename(bit signed [3:0])` is `bit[3:0]`). Icarus Verilog 13.0 has no `$typename` of a data type. | `ch6/test_cast_size_sign_keep_state_domain` |
 | 20.5, 6.24.1 | `$shortrealtobits` returns the 64-bit double precision pattern (`$shortrealtobits(n)` for -2.5 prints `c004000000000000`, and the 32-bit variable assigned `$shortrealtobits(3.375)` gets 0) instead of the 32-bit single precision pattern (`c0200000`, `40580000`). | `ch6/test_cast_shortreal_round_vs_bit_pattern` |
 | 7.4.1, 6.22.1 e, 6.23 | A type-reference comparison between an integer type with a predefined width and its matching vector type gives 0 (`type(byte) == type(bit signed [7:0])`, also with a typedef of that vector, and likewise for shortint, int, longint, integer, time), while `type(int) == type(int)` gives 1. The standard makes them matching types, so the comparisons are 1. | `ch7/test_integer_atom_types_match_vector_types` |
 | 7.4.5 Table 7-1 | Reading a fixed unpacked array of real, shortreal, string, class, interface class or virtual interface elements with an out-of-bounds index (7 for [0:3]) or an index with an x bit returns a stored element value (1.5, 2.5, "full", non-null handles) instead of 0.0, "" and null. The C++ build also fails on reads/`== null` comparisons of an event array element (`cannot convert 'VlEvent' to 'IData'`). | `ch7/test_array_invalid_index_read_handles_real_string` |
 | 7.4.5 Table 7-1 | Reading `[0:1]` arrays of queues, dynamic arrays, associative arrays, fixed-size arrays, unpacked structures and unpacked unions with index 5 or 2'bx0 returns the stored element (sizes 2/3/1, 1,2,3, the stored structure and union) instead of empty arrays, arrays of 'x / '0, a structure of member defaults (with the initial assignment c = 9) and 'x for the first union member. | `ch7/test_array_invalid_index_read_aggregates` |
 | 7.4.5 Table 7-1 | Reading a `chandle ch [0:3]` whose elements C set to non-null pointers with index 7 or 2'b1x returns a non-null chandle (`null=0`) instead of null. | `ch7/test_array_invalid_index_read_chandle` |
-| 7.5.1, 13.5.2 | After `d = new[3](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/d)` outdates a task's `ref int r` to `d[1]`, the task's later write `r = 99` changes the new array (`t=4: 5 99 7`) instead of only the outdated element (`5 6 7`). | `ch7/test_dynamic_array_new_discards_data_and_references` |
+| 7.5.1, 13.5.2 | After `d = new[3](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/d)` outdates a task's `ref int r` to `d[1]`, the task's later write `r = 99` changes the new array (`t=4: 5 99 7`) instead of only the outdated element (`5 6 7`). | `ch7/test_dynamic_array_new_discards_data_and_references` |
 | 7.10.1 | For q = {10,20,30,40,50}: `q[5:5]` yields `{50}` instead of `{}`, `q[-1:-1]` yields the whole queue instead of `{}`, and `q[1:3'b0z1]` yields one element instead of `{}` (a bound with a z bit). In-range, clipped and reversed slices are right. | `ch7/test_queue_slice_bounds_clip_and_empty` |
 | 7.10.5 | `insert(1, 9)` on a full `int bq[$:2]` grows it to four elements (`0 9 1 2`) instead of dropping the element pushed past index 2 (`0 9 1`); push_back, push_front and the write to [$+1] are bounded correctly. | `ch7/test_bounded_queue_methods_discard_beyond_bound` |
 | 7.10.5 | Assigning a five-element unbounded queue to `int bq[$:2]` keeps two elements (`20 21`) instead of three (`20 21 22`); the concatenation assignments are bounded correctly. | `ch7/test_bounded_queue_assign_discards_beyond_bound` |
@@ -498,7 +498,7 @@ Verilator's two-state values are left out.
 | 11.5.1 | Accepts `v[0:3]` for `logic [7:0] v` and runs the design. The first expression of a non-indexed part-select shall address a more significant bit than the second, so the design is illegal. | `ch11/test_illegal_part_select_reversed_bounds` |
 | 19.5.2 | Accepts `bins others[] = default sequence;`. | `ch19/test_illegal_cg_default_sequence_array` |
 | 19.8.1 | Accepts `option.weight = w;` where `w` is a formal argument of the overridden sample method. | `ch19/test_illegal_cg_sample_arg_in_option` |
-| 28.3.5 | Accepts a gate instance array name declared twice with two ranges (`t_nand[0:1] (https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/...), t_nand[2:3] (https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/...)`) without an error; one instance name may have only one range. | `ch28/test_illegal_gate_array_split_range` |
+| 28.3.5 | Accepts a gate instance array name declared twice with two ranges (`t_nand[0:1] (https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/...), t_nand[2:3] (https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/...)`) without an error; one instance name may have only one range. | `ch28/test_illegal_gate_array_split_range` |
 | 26.3 | Accepts a module that imports a package declared later in the same source file; the package has to be compiled before the importing scope. | `ch26/test_illegal_package_imported_before_compiled` |
 | 26.3 | Accepts explicit imports of `width` from two different packages in one scope. | `ch26/test_illegal_package_explicit_import_two_packages` |
 | 26.3 | Accepts an explicit import of `width` into a scope that declares `width` itself. | `ch26/test_illegal_package_explicit_import_local_name` |
@@ -742,3 +742,8 @@ Icarus Verilog or Verilator are to be excluded, and this one is a candidate.
 | Clause | What the test expects, and what the standard says | Outputs | Test |
 | --- | --- | --- | --- |
 | 21.4, 21.4.3 | `$readmemh(file, m, 2, 5)` on `logic [7:0] m[0:1][0:2]` is expected to load the words at row-major positions 2 to 5 (`m[0][2]` to `m[1][2]`). 21.4 says that start_addr and finish_addr apply to the addresses of the unpacked array, which represent its highest dimension, and 21.4.3 that address entries address only the words of the highest dimension, so 2 and 5 lie outside `[0:1]`. | Icarus Verilog 13.0 and Verilator 5.052: `m[0][2]=11 ... m[1][2]=44` (the expected output). kirimasim: warns that address 2 of the range is outside the memory and leaves every word `ee`. Lyra 7e2c604b9ab2: `m[0][2]=ee`. nvc does not parse the test. | `ch21/test_readmemh_address_range` |
+
+A later review of the 194 tests with `:oracle: spec` whose result Lyra did not
+match (2026-10-25) found no further expected output to be wrong, but two
+tests whose diagnostic regular expression required the format of Icarus
+Verilog and Verilator, since fixed; see the [review](lyra-disagreement-review-20261025.md).
