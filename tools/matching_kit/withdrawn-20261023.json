@@ -1,0 +1,422 @@
+[
+  [
+    "SV2023-6.16.2-EXTRACT-NO-RESIZE",
+    {
+      "test": "tests/ch6/test_string_putc.sv",
+      "observation": "5文字Helloの先頭/中間/末尾をputcで更新し、Jello/Healo/Hellaの全stringとの等値比較を行う。比較にはlengthも含まれ、append/truncateなら成功しない。範囲外indexやzero-writeはこのfileでは未刺激。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "24d77b21a2e5a8fc4d3b177ac05a917e205c36fdc12f176c16aa57dd74912ced",
+      "evidence": [
+        {
+          "file": "tests/ch6/test_string_putc.sv",
+          "contains": "s.putc(4, \"a\");"
+        },
+        {
+          "file": "tests/ch6/test_string_putc.expected",
+          "contains": "String putc tests: 3/3 passed"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-6.16.3-EXTRACT-SIGNATURE",
+    {
+      "test": "tests/ch6/test_string_getc_is_byte.sv",
+      "observation": "引数indexでABの文字を取得し、戻り式自体の$bits=8、2call連結幅16、ASCII e9の符号値-23を観測してbyte返値を確認する。別型の変数へ格納した値だけではない。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "cf3fb9a1b0c904361a04fe7ecf33a688dfbde1144c78b188bdfe5b460e6f72ec",
+      "evidence": [
+        {
+          "file": "tests/ch6/test_string_getc_is_byte.sv",
+          "contains": "hi.getc(0)"
+        },
+        {
+          "file": "tests/ch6/test_string_getc_is_byte.expected",
+          "contains": "$bits(s.getc(0)) = 8\nhi.getc(0) = -23"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-7.12.2-EXTRACT-RSORT",
+    {
+      "test": "tests/ch7/test_array_ordering_methods.sv",
+      "observation": "withなしのsort/rsortが5element全部を10/20/30/40/50と逆順へ並べることを各fatal guardで比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "d5f0032cc060b1864b8fc7b39540f06375634fcae8ffb614f8348ce944e8eb78",
+      "evidence": [
+        {
+          "file": "tests/ch7/test_array_ordering_methods.sv",
+          "contains": "result.sort();"
+        },
+        {
+          "file": "tests/ch7/test_array_ordering_methods.expected",
+          "contains": "PASS: Array ordering methods"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-7.12.2-EXTRACT-RSORT",
+    {
+      "test": "tests/ch7/test_struct_array_sort.sv",
+      "observation": "struct elementにwithを指定し選んだint fieldの昇順/降順を比較する。native structのrelational演算に頼らない。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "26ef261a1f5b48dd11bbe318164f57c7ca9677ed66a3a7ca894d6154d2c5cf4b",
+      "evidence": [
+        {
+          "file": "tests/ch7/test_struct_array_sort.sv",
+          "contains": "records.rsort with (item.id);"
+        },
+        {
+          "file": "tests/ch7/test_struct_array_sort.expected",
+          "contains": "TEST PASSED (8/8)"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-7.12.2-EXTRACT-SORT",
+    {
+      "test": "tests/ch7/test_array_ordering_methods.sv",
+      "observation": "withなしのsort/rsortが5element全部を10/20/30/40/50と逆順へ並べることを各fatal guardで比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "d5f0032cc060b1864b8fc7b39540f06375634fcae8ffb614f8348ce944e8eb78",
+      "evidence": [
+        {
+          "file": "tests/ch7/test_array_ordering_methods.sv",
+          "contains": "result.sort();"
+        },
+        {
+          "file": "tests/ch7/test_array_ordering_methods.expected",
+          "contains": "PASS: Array ordering methods"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-7.12.2-EXTRACT-SORT",
+    {
+      "test": "tests/ch7/test_struct_array_sort.sv",
+      "observation": "struct elementにwithを指定し選んだint fieldの昇順/降順を比較する。native structのrelational演算に頼らない。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "26ef261a1f5b48dd11bbe318164f57c7ca9677ed66a3a7ca894d6154d2c5cf4b",
+      "evidence": [
+        {
+          "file": "tests/ch7/test_struct_array_sort.sv",
+          "contains": "records.rsort with (item.id);"
+        },
+        {
+          "file": "tests/ch7/test_struct_array_sort.expected",
+          "contains": "TEST PASSED (8/8)"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-7.12.2-EXTRACT-SORT",
+    {
+      "test": "tests/ch7/test_comb_queue_with_clause.sv",
+      "observation": "元のint順とは異なるsquare keyで先頭3elementの昇順を比較する。withを無視したnative signed numeric sortでは条件が失敗する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "86abedf227b5517c3228a134bb8a9437df198ad20519d3351dc8fe9ad1a60335",
+      "evidence": [
+        {
+          "file": "tests/ch7/test_comb_queue_with_clause.sv",
+          "contains": "q_copy.sort() with (item * item);"
+        },
+        {
+          "file": "tests/ch7/test_comb_queue_with_clause.expected",
+          "contains": "T3: PASS - q.sort() with clause works"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-8.7-EXTRACT-PROPERTY-INITIALIZATION",
+    {
+      "test": "tests/ch8/test_property_initializer_after_super_new.sv",
+      "observation": "base constructor後のexplicit property initializationがderived body前に完了するb41→c43→430の例と、explicit initializer無しのclass propertyがtype defaultのx/0を得る例をANDで確認する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "4d5e91058c6f3437925663da885da3db6d0003a1dfa8d96bc4546e3b3ece1eff",
+      "evidence": [
+        {
+          "file": "tests/ch8/test_property_initializer_after_super_new.sv",
+          "contains": "int c = b + 2;"
+        },
+        {
+          "file": "tests/ch8/test_property_initializer_after_super_new.expected",
+          "contains": "b=41 seen_c=43 c=430"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-8.7-EXTRACT-PROPERTY-INITIALIZATION",
+    {
+      "test": "tests/ch6/test_uninitialized_package_and_class_variables.sv",
+      "observation": "base constructor後のexplicit property initializationがderived body前に完了するb41→c43→430の例と、explicit initializer無しのclass propertyがtype defaultのx/0を得る例をANDで確認する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "0ed390f3fb1e472be6672c60552cc5e329bb85426bdfc34b7a29957d2eb60245",
+      "evidence": [
+        {
+          "file": "tests/ch6/test_uninitialized_package_and_class_variables.sv",
+          "contains": "holder obj;"
+        },
+        {
+          "file": "tests/ch6/test_uninitialized_package_and_class_variables.expected",
+          "contains": "class: inst=xxxx stat=xxxx two=0000"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-8.14-EXTRACT-VIRTUAL-OVERRIDE-DISPATCH",
+    {
+      "test": "tests/ch8/test_virt_method.sv",
+      "observation": "base Shape.area0に対しRectangle20とSquare36を同じbase型sから呼ぶ。overrideにvirtualを再記載しないRectangleでも動的dispatchを保持する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "5db0604fba6f2bfbee7d56d78aa59e0aaa460090fe403d59fabc14f9c98e8f74",
+      "evidence": [
+        {
+          "file": "tests/ch8/test_virt_method.sv",
+          "contains": "s = sq;"
+        },
+        {
+          "file": "tests/ch8/test_virt_method.expected",
+          "contains": "Virt method tests: 4/4 passed"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-9.7-EXTRACT-RUNNING-STATE",
+    {
+      "test": "tests/ch26/test_std_package_access.sv",
+      "observation": "現在initialを実行中のself handleについてblocking statementを待っていない点でstatus()==RUNNINGを直接比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "62b1637a774b6a3a547a5ee502eb844595db49d539111ed49469ab27ef4fe06a",
+      "evidence": [
+        {
+          "file": "tests/ch26/test_std_package_access.sv",
+          "contains": "p2.status() == std::process::RUNNING"
+        },
+        {
+          "file": "tests/ch26/test_std_package_access.expected",
+          "contains": "same process: 1, running: 1"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-9.7-EXTRACT-SELF-SIGNATURE",
+    {
+      "test": "tests/ch26/test_std_package_access.sv",
+      "observation": "型名からのstatic self()をstd有無の両形式で呼び、process handleへ受けて同一性と実行状態を比較する。異なるclassや整数を返すAPIでは型とstatusへのアクセスが成立しない。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "62b1637a774b6a3a547a5ee502eb844595db49d539111ed49469ab27ef4fe06a",
+      "evidence": [
+        {
+          "file": "tests/ch26/test_std_package_access.sv",
+          "contains": "p2 = std::process::self();"
+        },
+        {
+          "file": "tests/ch26/test_std_package_access.expected",
+          "contains": "same process: 1, running: 1"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-26.7-EXTRACT-STD-IMPLICIT-IMPORT",
+    {
+      "test": "tests/ch26/test_std_package_access.sv",
+      "observation": "user class mailboxがimplicit wildcard候補をshadowし、std::mailboxだけはbuilt-inのput/numとなる対照。無修飾semaphore/processもstd修飾と同時に使用し、std::randomizeは先頭$なしで制約付き成功を返す。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "62b1637a774b6a3a547a5ee502eb844595db49d539111ed49469ab27ef4fe06a",
+      "evidence": [
+        {
+          "file": "tests/ch26/test_std_package_access.sv",
+          "contains": "std::mailbox #(int) m_std;"
+        },
+        {
+          "file": "tests/ch26/test_std_package_access.expected",
+          "contains": "mailbox: n = 42, num() = -1\nstd::mailbox: num() = 1\nsemaphore: 1, std::semaphore: 0\nsame process: 1, running: 1\nstd::randomize: 1\nx in range: 1"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-26.7-EXTRACT-STD-NO-DOLLAR",
+    {
+      "test": "tests/ch26/test_std_package_access.sv",
+      "observation": "user class mailboxがimplicit wildcard候補をshadowし、std::mailboxだけはbuilt-inのput/numとなる対照。無修飾semaphore/processもstd修飾と同時に使用し、std::randomizeは先頭$なしで制約付き成功を返す。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "62b1637a774b6a3a547a5ee502eb844595db49d539111ed49469ab27ef4fe06a",
+      "evidence": [
+        {
+          "file": "tests/ch26/test_std_package_access.sv",
+          "contains": "std::mailbox #(int) m_std;"
+        },
+        {
+          "file": "tests/ch26/test_std_package_access.expected",
+          "contains": "mailbox: n = 42, num() = -1\nstd::mailbox: num() = 1\nsemaphore: 1, std::semaphore: 0\nsame process: 1, running: 1\nstd::randomize: 1\nx in range: 1"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-26.7-EXTRACT-STD-QUALIFIER",
+    {
+      "test": "tests/ch26/test_std_package_access.sv",
+      "observation": "user class mailboxがimplicit wildcard候補をshadowし、std::mailboxだけはbuilt-inのput/numとなる対照。無修飾semaphore/processもstd修飾と同時に使用し、std::randomizeは先頭$なしで制約付き成功を返す。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "62b1637a774b6a3a547a5ee502eb844595db49d539111ed49469ab27ef4fe06a",
+      "evidence": [
+        {
+          "file": "tests/ch26/test_std_package_access.sv",
+          "contains": "std::mailbox #(int) m_std;"
+        },
+        {
+          "file": "tests/ch26/test_std_package_access.expected",
+          "contains": "mailbox: n = 42, num() = -1\nstd::mailbox: num() = 1\nsemaphore: 1, std::semaphore: 0\nsame process: 1, running: 1\nstd::randomize: 1\nx in range: 1"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-37.29-EXTRACT-VIRTUAL-INITIALIZER",
+    {
+      "test": "tests/ch37/test_vpi_virtual_interface_vars.sv",
+      "observation": "declaration initializer有り、宣言時なし→後で代入、未初期化の3変数からvpiExprを取得し、b1/NULL/NULLを実名で比較。current vpiActualのb1/b1/NULLとは区別する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "9128ae027a6dd6c6f69fb0db08fe51987b09a6adde09e83ee6f22bc74510b5c4",
+      "evidence": [
+        {
+          "file": "tests/ch37/test_vpi_virtual_interface_vars.sv",
+          "contains": "virtual test_vpi_virtual_interface_vars_bus v_init = b1;"
+        },
+        {
+          "file": "tests/ch37/test_vpi_virtual_interface_vars.expected",
+          "contains": "v_init: expr b1, actual b1, modport 0\nv_late: expr none, actual b1, modport 0\nv_mp: expr none, actual none, modport 1"
+        },
+        {
+          "file": "tests/ch37/test_vpi_virtual_interface_vars.c",
+          "contains": "name_of(vpi_handle(vpiExpr, v))"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-37.30-EXTRACT-INTERFACE-TYPE-PARENT",
+    {
+      "test": "tests/ch37/test_vpi_interface_typespecs.sv",
+      "observation": "modport typespec phy_tのParentが対応interfaceのDefNameを持つことと、interface typespec bus_tのParent=NULLを両方比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "e1b7a1b0b341b6683b3ca49b1e5bc2acd631ae94429df8cb50543456eadea548",
+      "evidence": [
+        {
+          "file": "tests/ch37/test_vpi_interface_typespecs.sv",
+          "contains": "typedef virtual test_vpi_interface_typespecs_bus.phy phy_t;"
+        },
+        {
+          "file": "tests/ch37/test_vpi_interface_typespecs.expected",
+          "contains": "phy_t: def name phy, parent test_vpi_interface_typespecs_bus"
+        },
+        {
+          "file": "tests/ch37/test_vpi_interface_typespecs.c",
+          "contains": "vpiHandle p = vpi_handle(vpiParent, t);"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-37.58-EXTRACT-VECTOR-USES",
+    {
+      "test": "tests/ch37/test_vpi_select_objects_event_arrays.sv",
+      "observation": "whole u/bit u[2]/containing part u[3:2]の全usageを用意し、vectorからはCA3+primitive2、bit2からはwhole/own/containing partのCA3だけとなることを比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "29eae146961515746592779cd1e8c7d352d8dc0da597481ae0f80246535e316b",
+      "evidence": [
+        {
+          "file": "tests/ch37/test_vpi_select_objects_event_arrays.sv",
+          "contains": "#1 $vt_selects(m2[1][2], dyn[1], iv[3], P[2], mv[k][1][5], mv[2][1][5]);"
+        },
+        {
+          "file": "tests/ch37/test_vpi_select_objects_event_arrays.expected",
+          "contains": "uses of u[2]: cont assign, cont assign, cont assign"
+        },
+        {
+          "file": "tests/ch37/test_vpi_select_objects_event_arrays.c",
+          "contains": "uses(\"u[2]\", rhs_of(\"y2\"));"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-37.72-EXTRACT-DIAGRAM-002",
+    {
+      "test": "tests/ch37/test_vpi_case_loop_force_stmts.sv",
+      "observation": "caseからcase-item iteratorでsingle/multiple/defaultの3itemを取得し、casezの1itemとも比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "023b1e863faae1e19c0901d956f68a5269492637c0b2d99d904675a6da511d6b",
+      "evidence": [
+        {
+          "file": "tests/ch37/test_vpi_case_loop_force_stmts.sv",
+          "contains": "unique case (sel)"
+        },
+        {
+          "file": "tests/ch37/test_vpi_case_loop_force_stmts.expected",
+          "contains": "case: type case, qualifier unique, condition sel, expressions per item: 1 2 0"
+        },
+        {
+          "file": "tests/ch37/test_vpi_case_loop_force_stmts.c",
+          "contains": "vpi_iterate(vpiCaseItem, s)"
+        }
+      ]
+    }
+  ],
+  [
+    "SV2023-37.72-EXTRACT-DIAGRAM-003",
+    {
+      "test": "tests/ch37/test_vpi_case_loop_force_stmts.sv",
+      "observation": "case itemからexpressionをiterate/scanし、各itemの1/2/0個のgroupingを比較する。",
+      "reviewed_on": "2026-10-23",
+      "reviewer": "Codex (AI); not an independent human review",
+      "inputs_sha256": "023b1e863faae1e19c0901d956f68a5269492637c0b2d99d904675a6da511d6b",
+      "evidence": [
+        {
+          "file": "tests/ch37/test_vpi_case_loop_force_stmts.sv",
+          "contains": "2'd1, 2'd2: g = 1;"
+        },
+        {
+          "file": "tests/ch37/test_vpi_case_loop_force_stmts.expected",
+          "contains": "expressions per item: 1 2 0"
+        },
+        {
+          "file": "tests/ch37/test_vpi_case_loop_force_stmts.c",
+          "contains": "count(vpiExpr, item)"
+        }
+      ]
+    }
+  ]
+]
