@@ -55,26 +55,26 @@ APIの型・戻り値、数式の境界、Cヘッダ・アルゴリズムも対�
 要求の洗い出し完了時点（既存テストの追加照合前）のテスト対応は94行、新鮮な実行成功証跡は85行でした。
 対応未確認は、既存テストにそのケースが存在しないという判定ではありません。
 今回の作業ではテストを追加していません。
-[暫定値・確定値と動作別・環境別の集計](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/behavior-coverage-summary.md)を参照してください。
+[暫定値・確定値と動作別・環境別の集計](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/behavior-coverage-summary.md)を参照してください。
 
 ## 保存先と更新
 
-- [要求台帳](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/coverage/behaviors.json): 安定ID、動作、合格基準、性質、出典、テスト対応。
-- [出典監査](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/coverage/requirement-audit.json): 全節・全ブロックの分類と要求への対応、図表の確認方法。
-- [出典索引](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/coverage/requirement-source-index.json): 原本・各節・各ブロックのハッシュと物理ページ・行位置。
-- [節台帳](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/coverage/standard-sections.json): 規定／参考、節の状態と確認根拠。
+- [要求台帳](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/coverage/behaviors.json): 安定ID、動作、合格基準、性質、出典、テスト対応。
+- [出典監査](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/coverage/requirement-audit.json): 全節・全ブロックの分類と要求への対応、図表の確認方法。
+- [出典索引](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/coverage/requirement-source-index.json): 原本・各節・各ブロックのハッシュと物理ページ・行位置。
+- [節台帳](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/coverage/standard-sections.json): 規定／参考、節の状態と確認根拠。
 - [未解決事項](requirement-extraction-notes.md): 46論点の出典と影響、2026-10-24の再検討結果。
 - [管理手順](coverage-rules.md): テスト対応付け、証跡更新、分母の管理方法。
 
-原本は`../sukimasim/IEEE_1800-2023_SystemVerilog/IEEE_Std_1800-2023_SystemVerilog.pdf`です。
+原本は、リポジトリの外の資料ディレクトリ（既定はリポジトリの隣の`IEEE_1800-2023_SystemVerilog`、環境変数`IEEE1800_SOURCE`で変更）にある`IEEE_Std_1800-2023_SystemVerilog.pdf`です。
 PDFの全1,354ページを位置の基準とし、規格本文そのもののキャッシュはリポジトリに複製していません。
 
 検証コマンド:
 
 ```sh
 python3 tools/behavior_coverage.py --check --require-source-reviewed \
-  --verify-source ../sukimasim/IEEE_1800-2023_SystemVerilog
-python3 tools/import_standard_sections.py ../sukimasim/IEEE_1800-2023_SystemVerilog --check
+  --verify-source ../IEEE_1800-2023_SystemVerilog
+python3 tools/import_standard_sections.py ../IEEE_1800-2023_SystemVerilog --check
 python3 -m unittest discover -s tools -p 'test_behavior_coverage.py'
 python3 -m unittest discover -s tools -p 'test_requirement_audit.py'
 ```

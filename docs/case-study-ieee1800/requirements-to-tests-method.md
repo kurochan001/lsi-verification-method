@@ -4,7 +4,7 @@
 2026-10-22〜24の作業（要求の全抽出、20%→52.2%までの照合・テスト追加、台帳の見直し）で使った方法を、別の担当者が同じ結果を再現できる形で書いています。
 作業はまだ途中で、未完了の部分は「既知の限界」に書いています。
 
-関連資料: [要求抽出の結果](requirement-extraction.md) / [未解決事項](requirement-extraction-notes.md) / [計測規則と更新手順](coverage-rules.md) / [テストの書式](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/README.md#test-format) / [半導体の仕様書への一般化](../method/spec-to-verification-method.md)
+関連資料: [要求抽出の結果](requirement-extraction.md) / [未解決事項](requirement-extraction-notes.md) / [計測規則と更新手順](coverage-rules.md) / [テストの書式](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/README.md#test-format) / [半導体の仕様書への一般化](../method/spec-to-verification-method.md)
 
 ## 1. 前提と原則
 
@@ -186,6 +186,7 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
   - Icarus 13.0が一致すれば`iverilog@13.0`を付ける。
   - Verilatorのseed 1と73の両方が一致すれば`verilator@5.052`を付ける。
   - どちらも一致しなければ`spec`だけにする。
+  - kirimasim、nvc、Lyraの結果は`:oracle:`に記録しない。これらは、期待値の裏付けを増やすための比較用です（nightlyで実行）。
   - `:fourstate:`と`` `timescale ``は実態に合わせる。
 - 違法系のテストは、`kind: error`の要求にだけ使います。エラーは1つだけにし、`:expected_stderr_regex:`でファイルと行を示します。未対応構文のエラーを、規格違反の検出と取り違えないようにします。
 - コメント行を「Verilator」という語で始めないでください（BADVLTPRAGMAになる）。実行に数秒以上かかるテストや、巨大なメモリを使うテストは避けます。
@@ -245,7 +246,8 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
 | 同じ`$display`の中の評価順に依存する | 規格が順序を決めない観測をしない |
 | 違法系の`:expected_stderr_regex:`が、違反の前後にある合法な行を指す | 「`// illegal`」の行と照らし、正しい実装がその行で報告することを確かめる |
 | 違法系に、意図した違反とは別の違反が重なる（例：automaticタスクの項目への階層参照） | 違反を1つにし、それを除いた設計にエラーがないことを確かめる |
-| ANSI形式で種類を省いた2状態型の入力（`input int`）は、ネットになるので違法 | `input var int`と書く（23.2.2.3、6.7.1） |
+| ANSI形式で種類を省いた入力ポートで、ネットに使えない型（`input int`などの2状態型、仮想インターフェース）を使う | `input var int`のように`var`を付ける（23.2.2.3、6.7.1） |
+| 違反の行に付けた説明のコメントが、それ自体で違反になる（`` `line ``と同じ行のコメントは22.12で禁止） | 指令の行にはコメントを置かない |
 | 強度やtri-stateを出力するのに`:fourstate: no`になっている | 強度の構文を使うテストは`:fourstate: yes`にする |
 | 未サイズの値の`$bits`、同時刻の事象の順序、VPIの反復順や要素名のように、規格が決めない値を出力する | 出力しないか、規格が決める形に変える |
 
@@ -293,6 +295,9 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
    git diff --check
    ```
 
+8. push した後、最初のnightly（または手動実行）で、すべてのシミュレータのジョブが最後まで走ったことを確かめます。
+   新しいテストが、シミュレータを暴走させることがあるためです。2026-10-24には、違法なシーケンスの循環でVerilatorが再帰を止めず、ランナーのメモリを使い切ってジョブが止まりました。いまはVerilatorのジョブでプロセスごとのメモリを制限しています。
+
 ### 計測の読み方
 
 - **暫定値**：全登録行を同じ重みで数えます。附属書の定数や予約語は、1個が1行です。このため、それらの行で値が大きく動きます。全体の値と並べて、本文（1〜40章）だけの値と章別の内訳を必ず載せます。
@@ -327,7 +332,7 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
 
 ## 12. 既知の限界と未完了
 
-- 暫定設計網羅率は52.20%（2026-10-24、[結果報告](gap-tests-20261024.md)）で、目標の50%を超えました。未検証の区間の新規テストと照合案は、リポジトリ外の作業ディレクトリにあります。
+- 暫定設計網羅率は59.59%（2026-10-24、[2回目の結果報告](gap-tests-2-20261024.md)）です。75%に向けた残りの区間の新規テストと照合案は、リポジトリ外の作業ディレクトリにあります。
 - 対象外にしているもの：
   - 附属書F（アサーションの形式意味論）は、書き換え規則でシミュレータの出力から観測しにくい。
   - 34章（保護エンベロープ）は、暗号化がツールごとに異なる。
@@ -335,5 +340,7 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
 - 解釈保留は19論点・21行が残っています（規範どうしの衝突）。
 - 未対応の行には、観測できない記述（処理系の裁量、アプリケーション側の義務、規格が決めない順序）がまだ混ざっています。全行の点検（観測可能／混在／観測不能／重複の分類と分割）は未実施です。
 - `:oracle: spec`だけのテスト（どのシミュレータでも動かないもの）は、AIの検証だけに依っています。人による確認はまだです。
+- 比較用のnvcとLyra（2026-10-24追加）は、独立した裏付けとしては限られます。nvcはSystemVerilogへの対応が少なく、DPI・VPIのテストを実行できません。Lyraとkirimasimはフロントエンドにslangを共有しているので、構文解析や展開に関する両者の一致は、独立した裏付けになりません。
+- 比較で見つかった、期待値が規格と食い違う疑いのあるテスト（Icarus・Verilator由来の期待値）は、除外の候補として[シミュレータと規格の差異](simulator-differences.md#expected-outputs-that-may-follow-both-releases-rather-than-the-standard)に記録しています。まだ除外していません。
 - 照合キットのWorkflowスクリプトは、Claude CodeのWorkflowツールを前提にしています。ほかの環境では、指示文を同じ基準で使う必要があります。
 - 附属書ヘッダのテスト24本を作った生成スクリプトは、使い捨てとしてリポジトリに入れていません。コミット済みのテストと、7.3節の技法が基準です。

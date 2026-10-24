@@ -1,6 +1,6 @@
 # 規格全動作の網羅率を管理する
 
-[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/behavior-coverage.md)は、
+[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/behavior-coverage.md)は、
 節の引用数とは独立した指標です。全規格の要求台帳に対する**暫定値と確定値を併記**します。
 IEEE 1800-2023 の本文1–41章と附属書A–Q、1,740見出しを調査台帳に登録しています。
 **全1,740節の資料確認・要求抽出は完了しました。確定値の分母は未承認です。**
@@ -8,7 +8,7 @@ IEEE 1800-2023 の本文1–41章と附属書A–Q、1,740見出しを調査台�
 初期登録の105件は規格全動作の分母ではありません。現在3,938本の全テストについて
 動作との対応確認を終えたという意味でもありません。
 
-[コンパイラ指令の照合結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-preprocessor-20261023.md)に、
+[コンパイラ指令の照合結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-preprocessor-20261023.md)に、
 直近の対応追加、集合証拠、観測不足と要求単位の整理が必要な箇所を記録しています。
 
 ## mainの集計とNightlyの集計
@@ -24,7 +24,7 @@ Nightlyの`Match`割合はテスト出力の一致率であり、要求台帳に
 対象コミット・版・実行範囲を確認してから結果を比較してください。
 
 Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後で、結果レポートの時刻はUTCです。
-[日本時間への換算と更新状況の確認方法](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/nightly-results.md)を参照してください。
+[日本時間への換算と更新状況の確認方法](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/nightly-results.md)を参照してください。
 
 ## 計測の意味
 
@@ -80,7 +80,7 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
   複合証拠の定義と入力ハッシュも固定し、グループを削除して一部の成功で代替する変更を検出します。
 - `test-matching.json`: 全既存テストの入力ハッシュ、引用節、対応登録済みID、未承認候補、
   解釈保留、正常／違法区分の相違、上位節の引用を記録する照合台帳。
-  [照合状況](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/test-requirement-matching.md)は章別の登録済み／未登録本数を表示します。
+  [照合状況](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/test-requirement-matching.md)は章別の登録済み／未登録本数を表示します。
   全件の候補列挙は意味上の照合完了ではなく、候補だけから動作網羅率は増えません。
 - `test-matching-reviews.json`: 対応を保留した箇所の、確認範囲・要求ID・理由・刺激／期待値の
   根拠・担当・日付・入力ハッシュ。部分観測、期待値／診断の問題、引用の具体化、
@@ -98,12 +98,12 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
   以前の全3,912本の結果を保持し、部分実行を全件実行と扱いません。
 - `results/associative-matching-20261023-*.json`: 連想配列の引用修正7本と集合メンバー等を含む40本の再実行。
   Verilator 5.052は37 pass・3 known、Icarus 13.0は40 knownです。knownは実行成功へ含めません。
-  [照合結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-associative-arrays-20261023.md)に、対応範囲と集合証拠の不足を記録しています。
+  [照合結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-associative-arrays-20261023.md)に、対応範囲と集合証拠の不足を記録しています。
 - `results/associative-gaps-20261023-*.json`: 連想配列レビュー後に追加した15本の実行結果。
   その後変更したwildcard/count各1本は、`associative-wildcard-refinement-20261023-*.json`と
   `associative-count-refinement-20261023-*.json`へ別実行として保存しました。
   現在の入力ではVerilator 5.052のseed 1/73とも8 pass・7 known、Icarus 13.0は15 knownです。
-  [追加内容と残件](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/associative-gap-tests-20261023.md)を参照してください。
+  [追加内容と残件](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/associative-gap-tests-20261023.md)を参照してください。
 - `results/header-vpi-tests-20261023-*.json`: 附属書I/K/L/MのCヘッダを検証する24本と、37章のVPIテスト24本の実行結果。
   Icarus 13.0（v13_0-dirty）は1 pass・47 known、Verilator 5.052はseed 1/73とも17 pass・31 knownです。
   [追加内容と照合結果](header-vpi-tests-and-matching-20261023.md)を参照してください。
@@ -114,6 +114,9 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
   Icarus 13.0は239 pass・355 known、Verilator 5.052はseed 1/73とも203 pass・391 knownです。
   取り込み後に3本（ポート宣言1本、`:lrm:`の引用2本）を直し、その再実行を`gap-refinement-20261024-*.json`へ別に保存しました（各3 known）。
   [追加内容と照合結果](gap-tests-20261024.md)を参照してください。
+- `results/gap-tests-2-20261024-*.json`: 同じ作業の2回目で独立検証を終えた新規テスト933本と、入力ハッシュが変わった`tests/ch22`の既存4本の実行結果。
+  Icarus 13.0は529 pass・408 known、Verilator 5.052はseed 1/73とも504 pass・433 knownです。
+  [追加内容と照合結果](gap-tests-2-20261024.md)を参照してください。
 - `behavior-summary.json`: 現在の暫定値・確定値、章別の割合、分母SHA-256、
   シミュレータごとの失敗・既知不一致・未対応・未実行・古い証跡などの内訳。
   `--update`で概要Markdownとともに再生成し、`--check`で両方の鮮度を検査します。
@@ -227,10 +230,13 @@ python3 tools/behavior_coverage.py --write-baseline --reason '具体的な規格
 `--verify-source`は抽出テキストのハッシュも検査します。PDFから新たに`pdftotext -layout`
 で抽出したテキストと、提供された抽出済みテキストが一致することも初回に確認しています。
 
+資料のディレクトリは、以下ではリポジトリの隣の`IEEE_1800-2023_SystemVerilog`としています。
+`tools/requirement_source.py`の既定値も同じで、環境変数`IEEE1800_SOURCE`で変えられます。
+
 ```sh
 python3 tools/behavior_coverage.py --check \
-  --verify-source ../sukimasim/IEEE_1800-2023_SystemVerilog
-python3 tools/import_standard_sections.py ../sukimasim/IEEE_1800-2023_SystemVerilog --check
+  --verify-source ../IEEE_1800-2023_SystemVerilog
+python3 tools/import_standard_sections.py ../IEEE_1800-2023_SystemVerilog --check
 python3 tools/requirement_source.py --index /tmp/requirement-source-index.json
 ```
 

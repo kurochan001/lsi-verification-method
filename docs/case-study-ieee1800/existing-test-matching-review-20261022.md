@@ -2,8 +2,8 @@
 
 対象は既存テストと IEEE 1800-2023 の要求台帳との対応です。
 全テストの意味上の照合を完了したという報告ではありません。
-[全テストの照合台帳](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/test-requirement-matching.md)と
-[現在の計測結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/behavior-coverage-summary.md)を併せて参照してください。
+[全テストの照合台帳](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/test-requirement-matching.md)と
+[現在の計測結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/behavior-coverage-summary.md)を併せて参照してください。
 
 ## 今回の到達点
 
@@ -21,6 +21,12 @@
   M01以降で示す刺激・期待値・判定の問題は、この照合では変更していません。
 
 ## 最新の続行結果（2026-10-24）
+[未対応要求への新規テストの2回目](gap-tests-2-20261024.md)で、中断していた8区間の作成を再開し、独立検証を終えた新規テスト933本と照合案を取り込みました。
+集計は7,341要求（59.590876%）、成功証跡4,135要求（33.566036%）です。本文（1〜40章）だけでは62.57%です。
+検証では照合案1,030件のうち102件を却下し、新規テスト962本のうち26本を欠陥としました。
+新しい種類の欠陥として、`` `line ``と同じ行に置いたコメントが22.12の違反を重ねる例と、仮想インターフェースを種類なしの入力ポートにする例がありました。
+
+その前の2026-10-24の結果です。
 [未対応要求への新規テスト](gap-tests-20261024.md)で、独立検証を終えた13区間の新規テスト594本と照合案を取り込みました。
 集計は6,430要求（52.195795%）、成功証跡3,734要求（30.310902%）で、50%の目標を超えました。本文（1〜40章）だけでは53.47%です。
 検証では照合案2,215件のうち166件を却下し、新規テスト624本のうち30本を欠陥としました。
@@ -42,34 +48,34 @@
 集計は2,465要求（20.009741%）、成功証跡1,292要求（10.487864%）です。全テストの意味上の照合は引き続き未完了です。
 418本から1,296件の根拠を追加し、要求定義・分母・既存入力を保持しています。M65–M97と42件の保留判断を追加しました。最終監査で既存保留と不整合な仮対応20件を除外し、別fixtureの20件へ置き換えた結果です。
 
-前回の[VPIの照合・10%到達結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-vpi-20261023.md)では、
+前回の[VPIの照合・10%到達結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-vpi-20261023.md)では、
 55本から442件の対応根拠を追加し、対応要求は810行から1,242行（+432行）になりました。
 暫定設計網羅率10.081987%で、10%超過を確認しました。実行確認は754行、6.12%です。
 M59–M64と39件の範囲別判断、5件のAND集合証拠を記録しました。既存入力・要求定義は保持しています。
 元テストの再実行は行わず、保存済み結果へ入力・ランナーの鮮度を照合しました。
-その直前の[コンパイラ指令のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-preprocessor-20261023.md)では、
+その直前の[コンパイラ指令のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-preprocessor-20261023.md)では、
 32本・18要求行・85件の対応根拠を追加しました。M52–M58、5件の集合証拠と41件の範囲別判断を記録しています。
 既存の刺激・期待値・メタデータを変えず、保存済み実行証跡へ現在の入力ハッシュを照合しました。
 新規18要求行すべてに成功証跡があります。元テスト全件の再実行や新規テスト追加ではありません。
-その直前の[連想配列の不足した観測へのテスト追加](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/associative-gap-tests-20261023.md)では、
+その直前の[連想配列の不足した観測へのテスト追加](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/associative-gap-tests-20261023.md)では、
 M45–M50を受けて15本の新規テスト、24要求行・28件の対応根拠を追加しました。
 Verilator 5.052のseed 1/73で8本一致・7本known、Icarus 13.0で15本knownです。
 実行確認済み要求は12行増えました。更新後の入力の実測結果だけを採用しています。
-その直前の[連想配列のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-associative-arrays-20261023.md)では、
+その直前の[連想配列のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-associative-arrays-20261023.md)では、
 35本・22要求行・74件の対応根拠を追加しました。M44–M51、12件の集合証拠、7本の引用修正と40本の再実行を記録しています。
-その直前の[配列メソッドのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-array-methods-20261023.md)では、
+その直前の[配列メソッドのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-array-methods-20261023.md)では、
 35本・21要求行・119件の対応根拠を追加しました。M36–M43と保留理由、8件の集合証拠を記録しています。
-その直前の[クラス・構築・メソッドのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-classes-20261023.md)では、
+その直前の[クラス・構築・メソッドのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-classes-20261023.md)では、
 45本・27要求行・92件の対応根拠を追加しました。M29–M35と保留理由、3件の集合証拠を記録しています。
-その直前の[制御文・ループのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-control-flow-20261023.md)では、
+その直前の[制御文・ループのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-control-flow-20261023.md)では、
 51本・26要求行の対応を追加しました。M23–M28、集合証拠、実行証跡と保留理由を記録しています。
-その直前の[不足した観測へのテスト追加](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/expression-gap-tests-20261023.md)では、
+その直前の[不足した観測へのテスト追加](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/expression-gap-tests-20261023.md)では、
 M18–M22を受けて11本の新規テスト、29要求行の対応を追加し、更新後の入力で実行しました。
 その直前の式・幅・符号・算術の照合では29本・42要求行の対応を追加しました。
-[式と算術のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-expressions-20261023.md)に、
+[式と算術のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-expressions-20261023.md)に、
 M18–M22、べき乗の集合証拠、未採用の理由と実行証跡を記録しています。
-その直前の42本・27要求行の追加は[サブルーチンのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-subroutines-20261023.md)、
-さらに前の43本・41要求行の追加は[代入系のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/docs/existing-test-matching-review-20261023.md)を参照してください。
+その直前の42本・27要求行の追加は[サブルーチンのレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-subroutines-20261023.md)、
+さらに前の43本・41要求行の追加は[代入系のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/docs/existing-test-matching-review-20261023.md)を参照してください。
 照合分では既存入力・期待値を変更せず、追加分は新規テストとして記録しています。
 要求定義は変更していません。以下は2026-10-22時点の経過と指摘です。
 
@@ -80,7 +86,7 @@ M18–M22、べき乗の集合証拠、未採用の理由と実行証跡を記�
 直前からの増分は187本・107行です。要求の全12,319行の定義・合格基準は変更していません。
 
 対応を保留した31本・32件の範囲別判断を
-[レビュー判断台帳](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/coverage/test-matching-reviews.json)へ記録しました。
+[レビュー判断台帳](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/coverage/test-matching-reviews.json)へ記録しました。
 部分観測、期待値／診断の問題、引用の具体化、複合要求の整理を区別しています。
 入力ハッシュと根拠文字列を検査し、古い判断を検出します。
 この件数はファイル全体のレビュー完了数ではなく、カバレッジの分子にも加えません。
@@ -133,7 +139,7 @@ M07・M08に新しい観測不足を示しました。
 
 ## M01: $isunbounded に数値リテラルを渡す正常系テスト
 
-対象: [test_system_isunbounded.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch20/test_system_isunbounded.sv)。
+対象: [test_system_isunbounded.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch20/test_system_isunbounded.sv)。
 
 `$isunbounded(100)` の戻り値ゼロを正常な期待結果として要求しています。
 規格20.6.3の本文と Syntax 20-8（提供PDFの物理631ページ）は、引数をパラメータ名に制限しています。
@@ -146,12 +152,12 @@ M07・M08に新しい観測不足を示しました。
 
 ## M02: 宣言・名前だけでは、その機能の検証にならない
 
-例: [test_macro_concat.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch22/test_macro_concat.sv) は
+例: [test_macro_concat.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch22/test_macro_concat.sv) は
 `MAKE_NAME(base)` に二重バッククォートによる名前連結を定義しますが、呼び出していません。
 `STRINGIFY` の結果、宣言マクロ、ネストした数値マクロの観測はありますが、
 この名前連結の定義だけを `MACRO-TOKEN-DELIMITER` の検証に計上してはいけません。
 
-また [test_macro_advanced.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch22/test_macro_advanced.sv) の
+また [test_macro_advanced.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch22/test_macro_advanced.sv) の
 `STRINGIFY` と `CONCAT` も定義だけです。
 実際に呼び出し、組み立てた識別子へのアクセスや、展開文字列の期待結果を観測する必要があります。
 今回の登録では、これらの未使用定義を根拠とする対応を追加していません。
@@ -163,12 +169,12 @@ M07・M08に新しい観測不足を示しました。
 既定の暗黙wireと、`default_nettype none` による未宣言net禁止を一行にまとめています。
 `kind: error` のため、暗黙wireを観測する正常系だけでは、この行全体への対応を登録できません。
 
-[test_resetall_default_nettype.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch22/test_resetall_default_nettype.sv) には
+[test_resetall_default_nettype.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch22/test_resetall_default_nettype.sv) には
 reset後の暗黙netが幅1のwireとして機能する観測があります。
 この検証価値を無視せず、正常系と違法系を独立した要求単位に分割して対応付ける必要があります。
 分割は出典・分母・基準値の変更を伴うため、今回の照合で要求を緩和したり分母から除外したりしていません。
 
-また、[test_semaphore_blocking_keys.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch15/test_semaphore_blocking_keys.sv) の
+また、[test_semaphore_blocking_keys.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch15/test_semaphore_blocking_keys.sv) の
 「初期2鍵から `put(3)` 後に2鍵取得できる」という観測だけでは、
 初期値を超える容量や、取得後に正確に1鍵残ることは確認できません。
 実装が2鍵へ切り詰めたり余分に消費したりしても、その後の2鍵要求はどちらも失敗します。
@@ -176,8 +182,8 @@ reset後の暗黙netが幅1のwireとして機能する観測があります。
 
 ## M04: semaphore.try_get の成功を正確な1に限定した期待値
 
-対象: [test_std_package_access.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch26/test_std_package_access.sv) と
-その [期待出力](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch26/test_std_package_access.expected)。
+対象: [test_std_package_access.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch26/test_std_package_access.sv) と
+その [期待出力](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch26/test_std_package_access.expected)。
 
 `s1.try_get()` をそのまま表示し、期待出力を `semaphore: 1, std::semaphore: 0`
 としています。規格15.3.4（提供PDFの物理374–375ページ）は成功時の戻り値を
@@ -191,8 +197,8 @@ reset後の暗黙netが幅1のwireとして機能する観測があります。
 
 ## M05: string.compare の非ゼロ結果を正確な -1 に限定した期待出力
 
-対象: [test_string_methods_extended.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch6/test_string_methods_extended.sv) と
-その [期待出力](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch6/test_string_methods_extended.expected)。
+対象: [test_string_methods_extended.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch6/test_string_methods_extended.sv) と
+その [期待出力](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch6/test_string_methods_extended.expected)。
 
 `"abc"` と `"abd"` の比較結果をそのまま表示し、`Test 7 PASS: compare=-1` を要求しています。
 規格6.16.6は、大小関係に応じた負・ゼロ・正を規定し、非ゼロの絶対値を固定しません。
@@ -205,8 +211,8 @@ reset後の暗黙netが幅1のwireとして機能する観測があります。
 
 ## M06: 違法系の行番号一致だけでは、意図した違反の検出を確認できない
 
-例: [test_illegal_interconnect_data_type.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch6/test_illegal_interconnect_data_type.sv) と
-[test_illegal_ref_in_static_function.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch13/test_illegal_ref_in_static_function.sv)。
+例: [test_illegal_interconnect_data_type.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch6/test_illegal_interconnect_data_type.sv) と
+[test_illegal_ref_in_static_function.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch13/test_illegal_ref_in_static_function.sv)。
 
 現在の違法系ランナーでは、エラー行が `expected_stderr_regex` に一致すると `pass` になる場合があります。
 今回、実際の診断を再確認すると、前者はIcarus 13.0の構文エラー、Verilator 5.052の
@@ -223,19 +229,19 @@ oracleとして扱わず、この偶然の `pass` を実行確認率に計上し
 
 ## M07: 判定対象を観測せずにPASSを表示するシナリオ
 
-[test_edge_detection.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_edge_detection.sv) のTest5–7は、
+[test_edge_detection.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_edge_detection.sv) のTest5–7は、
 sigの立上り・立下りとrst_nの変化を与えた後、固定のPASSを表示します。
 監視しているイベントはclkだけで、sig/rst_nのイベント検出器や検出数の確認はありません。
 この3シナリオの期待出力は、対象エッジをまったく処理しなくても一致します。
 対象信号ごとの監視を用意し、各刺激での検出数と不検出も確認する必要があります。
 
-[test_disable_stmt_edge_cases.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_disable_stmt_edge_cases.sv) の
+[test_disable_stmt_edge_cases.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_disable_stmt_edge_cases.sv) の
 `accum_block` も、ローカルのsumを確認せず、ブロック後に別のcountへ10を代入して
 `[PASS] Disable with accum` を表示します。sumが55まで進んでもこの出力は変わりません。
 sumの最終値を直接検査してください。他のpreserve_blockなど、値判定のあるシナリオは
 集合証拠として対応付けています。
 
-[test_task_disable_2.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_task_disable_2.sv) は、探索を途中で止めなくても
+[test_task_disable_2.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_task_disable_2.sv) は、探索を途中で止めなくても
 foundやrow/colが同じ値に残る入力を使っています。またconditional_processには
 50しか渡さず、disableへ入る負値や100超の入力を実行しません。
 途中停止後には変わらないはずのカウンタや重複した対象値、分岐へ入る入力が必要です。
@@ -243,15 +249,15 @@ foundやrow/colが同じ値に残る入力を使っています。またconditio
 
 ## M08: 遅延を実行しても、遅延時間や右辺の評価時点を検査していない
 
-[test_timing_edge_cases.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_timing_edge_cases.sv) は、
+[test_timing_edge_cases.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_timing_edge_cases.sv) は、
 `#(delay_val)` や `data = #5 8'hAA` の後で定数の代入結果を確認しますが、
 対象遅延の前後の時刻や、待機中の別プロセスからの観測はありません。
 この代入箇所の遅延を無視する誤実装でも、同じPASS出力になり得ます。
 さらに右辺が定数なので、待機前の値を保存する規則も検査できません。
 
 経過時間と更新前後の状態を検査し、右辺の保存を確認する場合は待機中に右辺を変える必要があります。
-既存の[test_assign_delay_edge_cases.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_assign_delay_edge_cases.sv) は
-経過時間を判定し、[test_intra_assignment_repeat_nonblocking.sv](https://github.com/kurochan001/kirimasim-tests/blob/b13204c/tests/ch9/test_intra_assignment_repeat_nonblocking.sv) は
+既存の[test_assign_delay_edge_cases.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_assign_delay_edge_cases.sv) は
+経過時間を判定し、[test_intra_assignment_repeat_nonblocking.sv](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/tests/ch9/test_intra_assignment_repeat_nonblocking.sv) は
 右辺とrepeat回数を書き換えた後の更新値・時刻を観測するため、これらの有効な証拠を別途登録しました。
 後者の負のrepeat一例を、0・x・zまで含む境界要求全体の証拠にはしていません。
 
