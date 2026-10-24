@@ -4,7 +4,7 @@
 2026-10-22〜24の作業（要求の全抽出、20%→52.2%までの照合・テスト追加、台帳の見直し）で使った方法を、別の担当者が同じ結果を再現できる形で書いています。
 作業はまだ途中で、未完了の部分は「既知の限界」に書いています。
 
-関連資料: [要求抽出の結果](requirement-extraction.md) / [未解決事項](requirement-extraction-notes.md) / [計測規則と更新手順](coverage-rules.md) / [テストの書式](https://github.com/kurochan001/kirimasim-tests/blob/0ccbd37/README.md#test-format) / [半導体の仕様書への一般化](../method/spec-to-verification-method.md)
+関連資料: [要求抽出の結果](requirement-extraction.md) / [未解決事項](requirement-extraction-notes.md) / [計測規則と更新手順](coverage-rules.md) / [テストの書式](https://github.com/kurochan001/kirimasim-tests/blob/c8afe0e/README.md#test-format) / [半導体の仕様書への一般化](../method/spec-to-verification-method.md)
 
 ## 1. 前提と原則
 
@@ -186,7 +186,7 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
   - Icarus 13.0が一致すれば`iverilog@13.0`を付ける。
   - Verilatorのseed 1と73の両方が一致すれば`verilator@5.052`を付ける。
   - どちらも一致しなければ`spec`だけにする。
-  - kirimasim、nvc、Lyraの結果は`:oracle:`に記録しない。これらは、期待値の裏付けを増やすための比較用です（nightlyで実行）。
+  - kirimasimとLyraの結果は`:oracle:`に記録しない。これらは、期待値の裏付けを増やすための比較用です（nightlyで実行）。
   - `:fourstate:`と`` `timescale ``は実態に合わせる。
 - 違法系のテストは、`kind: error`の要求にだけ使います。エラーは1つだけにし、`:expected_stderr_regex:`でファイルと行を示します。未対応構文のエラーを、規格違反の検出と取り違えないようにします。
 - コメント行を「Verilator」という語で始めないでください（BADVLTPRAGMAになる）。実行に数秒以上かかるテストや、巨大なメモリを使うテストは避けます。
@@ -340,7 +340,7 @@ READMEの「Test format」「Metadata」「How a test is judged」「Tests with 
 - 解釈保留は19論点・21行が残っています（規範どうしの衝突）。
 - 未対応の行には、観測できない記述（処理系の裁量、アプリケーション側の義務、規格が決めない順序）がまだ混ざっています。全行の点検（観測可能／混在／観測不能／重複の分類と分割）は未実施です。
 - `:oracle: spec`だけのテスト（どのシミュレータでも動かないもの）は、AIの検証だけに依っています。人による確認はまだです。
-- 比較用のnvcとLyra（2026-10-24追加）は、独立した裏付けとしては限られます。nvcはSystemVerilogへの対応が少なく、DPI・VPIのテストを実行できません。Lyraとkirimasimはフロントエンドにslangを共有しているので、構文解析や展開に関する両者の一致は、独立した裏付けになりません。
+- 比較用のLyra（2026-10-24追加）は、独立した裏付けとしては限られます。Lyraとkirimasimはフロントエンドにslangを共有しているので、構文解析や展開に関する両者の一致は、独立した裏付けになりません。同時に加えたnvcは、SystemVerilogへの対応が少なく（合格は6,009本中1,611本）、DPI・VPIのテストも実行できないため、2026-10-25に外しました。
 - 比較で見つかった、期待値が規格と食い違う疑いのあるテスト（Icarus・Verilator由来の期待値）は、除外の候補として[シミュレータと規格の差異](simulator-differences.md#expected-outputs-that-may-follow-both-releases-rather-than-the-standard)に記録しています。まだ除外していません。
 - 照合キットのWorkflowスクリプトは、Claude CodeのWorkflowツールを前提にしています。ほかの環境では、指示文を同じ基準で使う必要があります。
 - 附属書ヘッダのテスト24本を作った生成スクリプトは、使い捨てとしてリポジトリに入れていません。コミット済みのテストと、7.3節の技法が基準です。
