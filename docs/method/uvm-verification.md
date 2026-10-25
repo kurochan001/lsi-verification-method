@@ -152,3 +152,19 @@ IPのagentをSoCでpassiveにして再利用する場合も、観測点、クロ
 monitorからの観測に基づいて参照モデル・scoreboardを更新し、生成数、受理数、比較数、未照合の残件を分けて報告します。ランダム化した値をそのまま到達として記録せず、DUTが受理した状態・時間関係からカバレッジを採ります。
 
 test・scenario・構成・seedに加え、UVM・VIP・ソルバ・制約・重みの版を実行へ結び付けます。オブジェクトの型名・インスタンス名の変更も再現性へ影響し得ます。失敗の環境と入力を保存して再現し、縮小した直接テストと、関連するランダム回帰を修正後の確認に使います。
+
+## 10. SVAのassert・coverとの接続
+
+[SVAの手順](sva-verification.md)に従い、interfaceやDUTへ適用するcheckerと、UVMのcase ID・要求IDを結び付けます。sequenceで狙った前件が実際に受理されたかをcoverで確認し、scoreboardとSVAのどちらがデータ・時間関係を判定するかを明確にします。
+
+bindしたcheckerの適用先、enable、クロック・リセット、assertion制御とcoverage設定を記録します。UVMの正常終了や`UVM_ERROR`が0件であることだけでは、SVAが有効に評価され、必要なcoverへ到達したとは扱いません。SVA失敗をランナーの失敗へ伝える経路も確認します。
+
+sequence終了後も、進行中のSVA評価と必要な応答が完了するまで観測します。リセットによる中断や試験終端での未完了を区別し、assertとcoverの結果を同じ実行ID・構成・適用先で保存します。
+
+## 11. covergroupで機能の到達を計測する
+
+[機能カバレッジの手順](functional-coverage.md)に従い、機能・状態・境界・遷移・クロスをcoverpointとbinへ展開します。monitorからanalysis portを介してsubscriberなどへ観測を送り、複数の観測が必要なら同じcase IDの情報をcollectorでそろえてから`sample()`します。
+
+driverが生成した予定値や、別トランザクションの古い状態を採取しません。scoreboardの比較やSVAの評価が未完了のうちは、合格側のbinへ数えません。到達情報とchecker結果のどちらも実行ID・構成へ結び付け、checkerの欠落や無効化で全件合格にならないことを確認します。
+
+カバレッジモデルの版、採取の有効化、bin・crossの定義、除外と必要ヒット数を保存します。チャネル・agent・IPインスタンスごとの不足を、型全体やDBの和集合で隠さないようにします。
