@@ -155,7 +155,7 @@ timeoutでは起動時に分離したプロセスグループを停止します�
 
 GitLab用YAMLは、公開されている[公式JSONスキーマ](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/assets/javascripts/editor/schema/ci.json)でローカル検査しました。
 
-同日に、非公開の[GitLabデモプロジェクト](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)を作成し、Web IDEからこの回帰例とルートCI設定・ライセンスを登録しました。教材全体のミラーではなく、独立した初期コミットから作った`demo/expanded-regression`ブランチと[MR !1](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/1)です。アクセスにはプロジェクトの権限が必要です。
+同日に、[GitLabデモプロジェクト](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)を作成し、Web IDEからこの回帰例とルートCI設定・ライセンスを登録しました。教材全体のミラーではなく、独立した初期コミットから作った`demo/expanded-regression`ブランチと[MR !1](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/1)です。検証時は非公開で、その後同日にPublicへ変更しました。現在はログインなしでソース・履歴・CIの実行記録を閲覧できます。
 
 GitLab-hosted Linux Runner、`debian:bookworm-slim`、Python 3.11.2、Icarus 11.0で次を確認しました。初回はアカウント未確認で停止し、その解除後はCDCモデルの`input integer`でコンパイルエラーになりました。入力を明示的な32ビット符号付きwireへ修正し、コンパイル診断をCIログにも表示するようにしました。
 

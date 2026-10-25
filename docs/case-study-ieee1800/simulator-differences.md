@@ -7,6 +7,10 @@ these releases gives another result than the cited clauses require, or
 accepts a design that the standard makes illegal, with the tests that show
 it.
 
+Local revision (2026-10-25): the module-body specparam entry for clause 6.20.5
+was reworded for this repository. File origins and revisions are recorded in
+[PROVENANCE.md](../../PROVENANCE.md).
+
 Constructs that a release does not support at all, where it stops with an
 error, a "sorry" or "unsupported" message, are not listed: they show as known
 differences that do not compile. Verilator's lack of x, z and strengths, as a
@@ -520,7 +524,7 @@ Verilator's two-state values are left out.
 | Clause | What it does | Tests |
 | --- | --- | --- |
 | 6.12, 11.3.1 | Accept `r % 2.0` with a real `r` (Verilator with warnings only). | `ch6/test_illegal_real_operand_modulus` |
-| 6.20.5 | Both accept a reference to a module-body specparam (`$display("%0d", tHold)` in an initial block) on a line before its declaration and print 5; a specparam declared outside a specify block shall be declared before it is referenced. | `ch6/test_illegal_specparam_used_before_declaration` |
+| 6.20.5 | Both accept a reference to a module-body specparam (`$display("%0d", tHold)` in an initial block) on a line before its declaration and print 5. For this module-body declaration, 6.20.5 makes the earlier use of `tHold` invalid. | `ch6/test_illegal_specparam_used_before_declaration` |
 | 6.21 | Both accept `assign w = da[0];`, a continuous assignment that reads an element of a dynamic array; such references are limited to procedural blocks. | `ch6/test_illegal_continuous_assign_reads_dynamic_element` |
 | 27.4, 27.6 | Both accept `genblk1[1].x`, a hierarchical reference from the module into an unnamed loop generate block; such declarations can be referenced only from within the hierarchy of that block, and genblk<n> is a name for external interfaces only. | `ch27/test_illegal_generate_unnamed_loop_block_reference` |
 | 29.3.4 | Accept a combinational UDP entry `x x : 1;` whose inputs are all x and whose output is not x (29.3.4 requires x). | `ch29/test_illegal_udp_all_x_entry_not_x` |
