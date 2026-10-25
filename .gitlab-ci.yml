@@ -1,0 +1,2 @@
+include:
+  - local: /examples/gitlab-regression/gitlab-ci.yml

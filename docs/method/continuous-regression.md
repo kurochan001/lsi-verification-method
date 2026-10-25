@@ -4,6 +4,8 @@
 
 以下は本リポジトリの運用案です。製品向けの回帰ランナー、GitLab CI/CD、Cadenceの検証管理ツールを導入・接続したものではありません。既存のケーススタディの実行実績とは分けて扱います。
 
+GitLabで試すための[実行可能な最小例](../../examples/gitlab-regression/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・manifest・ログ・波形を保存します。ローカルの動作確認と、GitLab上での確認状況は実行例の末尾に記録しています。
+
 ## 1. vManager／Verisium ManagerとGitLabの役割
 
 Cadence vManagerは検証計画・回帰・結果・カバレッジを管理する製品です。現在の公開製品情報では[Verisium Manager](https://www.cadence.com/en_US/home/tools/system-design-and-verification/ai-driven-verification/verisium-manager.html)として、検証計画、API、ジョブの実行・スケジューリング、複数エンジンのcoverage closureなどを説明しています。Cadenceの[技術解説](https://community.cadence.com/cadence_blogs_8/b/fv/posts/enhancing-verification-processes-with-session-composer-a-path-toward-efficiency)でもVerisium Manager（vManager）の名称を使っています。

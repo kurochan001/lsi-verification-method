@@ -17,6 +17,7 @@ LSIの仕様書から検証パターンを作り、要求に対する網羅で�
 - **検証環境の検出力**：[ミューテーション検証で検証環境の検出力を確かめる](docs/method/mutation-verification.md)。回路へ意図的な誤りを入れ、刺激・checker・SVAが検出するかを評価します。変異の選び方、未検出の分析、等価な変異、検出率と未完了の集計をまとめています。
 - **検証規模の縮退**：[検証の組み合わせ・構成・実行数を縮退する](docs/method/verification-reduction.md)。同値分割・境界値、直交表・t-way、対称性・代表構成、テスト・seedの縮約、変更影響による回帰選択、形式的な抽象化を整理しています。削減の根拠、残す目標、検出力と実行コストの確認も記録します。
 - **継続的リグレッション**：[継続的リグレッションの計画・実行・結果管理](docs/method/continuous-regression.md)。変更時・定期・サインオフの回帰、manifestと分散実行、ライセンス・計算資源、失敗・retry・coverage・証跡を整理しています。Cadence vManager／Verisium ManagerとGitLab CI/CDの役割分担、併用、総費用での比較も扱います。
+- **GitLabの実行例**：[GitLabで割り込みの継続回帰を動かす](examples/gitlab-regression/README.md)。Icarus Verilogによる正常回路28ケース、2変異の検出、夜間のランダム操作列、失敗を見せるデモ、JUnit・証跡保存を実装しました。ローカルで動作確認済みで、GitLabプロジェクト上のpipeline実行は未確認です。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-24時点の状況は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
@@ -33,6 +34,8 @@ LSIの仕様書から検証パターンを作り、要求に対する網羅で�
 docs/method/                    一般化した手順書（この手法の本体）
 docs/case-study-ieee1800/       もとになった実践の資料（IEEE 1800-2023）
 docs/templates/                製品開発で使う記録の雛形
+examples/gitlab-regression/     このリポジトリ単独で動くGitLab回帰の最小例
+.gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
 tools/matching_kit/             照合案の受付・検査、検証者の判定、統合、シミュレータ実行、Workflowスクリプト
 tools/generators/               表形式の要求から検証パターンを生成する枠組みと、その例
 tools/reference/                要求台帳の検査・計測・出典監査・照合台帳の参照実装
