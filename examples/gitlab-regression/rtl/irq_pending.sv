@@ -16,8 +16,11 @@ module irq_pending #(
   assign irq = pend && irq_en;
 
   always @(posedge clk) begin
-    if (!rst_n)
-      pend <= 1'b0;
+    if (!rst_n) begin
+      // MUTATION=3 misses reset of an already-pending interrupt.
+      if (MUTATION != 3 || pend !== 1'b1)
+        pend <= 1'b0;
+    end
     else if (MUTATION == 1 && clear_accept)
       pend <= 1'b0;  // Deliberate error: clear wins over an event.
     else if (event_accept && (MUTATION != 2 || irq_en))

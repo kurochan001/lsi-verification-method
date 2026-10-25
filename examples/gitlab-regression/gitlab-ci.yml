@@ -16,6 +16,8 @@ variables:
 runner-tests:
   stage: validate
   timeout: 10m
+  rules:
+    - when: on_success
   script:
     - python3 -m unittest discover -s examples/gitlab-regression/tests -v
 

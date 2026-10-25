@@ -6,6 +6,8 @@
 
 GitLabで試すための[実行可能な最小例](../../examples/gitlab-regression/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・manifest・ログ・波形を保存します。ローカルの動作確認と、GitLab上での確認状況は実行例の末尾に記録しています。
 
+実行例では、動作中リセット、CDC遅延の観測、X注入を加え、要求ID・改訂と必須の観測目標を照合します。通常caseの合格だけでなく要求・coverageの未達もCIへ失敗として返します。意図した変異検出の途中の観測で正常機能の未達を埋めず、timeout・中断時には実行中のプロセスグループを停止します。MRの起動条件はルートYAMLに定義し、プロジェクトのmerge checkはGitLab側で別に確認します。
+
 ## 1. vManager／Verisium ManagerとGitLabの役割
 
 Cadence vManagerは検証計画・回帰・結果・カバレッジを管理する製品です。現在の公開製品情報では[Verisium Manager](https://www.cadence.com/en_US/home/tools/system-design-and-verification/ai-driven-verification/verisium-manager.html)として、検証計画、API、ジョブの実行・スケジューリング、複数エンジンのcoverage closureなどを説明しています。Cadenceの[技術解説](https://community.cadence.com/cadence_blogs_8/b/fv/posts/enhancing-verification-processes-with-session-composer-a-path-toward-efficiency)でもVerisium Manager（vManager）の名称を使っています。
