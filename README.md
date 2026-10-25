@@ -5,6 +5,8 @@ LSIの仕様書から検証パターンを作り、要求に対する網羅で�
 
 ## 現状
 
+2026-10-25に、複製対象の全資料・ツールをkirimasim-testsの最新`main`（[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)）と照合しました。各ファイルの複製元は[PROVENANCE.md](PROVENANCE.md)に記録しています。
+
 - **手法の一般化文書**：[ロジック半導体の仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体の仕様書への適用はまだ行っていません。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-24時点の状況は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。

@@ -80,8 +80,10 @@ def main() -> int:
             continue
         if kind == "hold":
             rv = reviews.get(p["test"])
+            # A recorded decision may have gained a finding number ("M98: ...").
             if rv and any(d["requirement_ids"] == p["requirement_ids"]
-                          and d["explanation"] == p["explanation"] for d in rv["decisions"]):
+                          and re.sub(r"^M\d+:\s*", "", d["explanation"]) == p["explanation"]
+                          for d in rv["decisions"]):
                 continue
         try:
             propose.RECORDS[kind](state, p)

@@ -32,7 +32,7 @@ METRIC_POLICY_VERSION = 3
 OUTCOME_PRIORITY = ("pass", "fail", "known", "unsupported", "unreviewed_oracle", "stale", "not_run")
 REVIEWS = {"unreviewed", "in_progress", "complete", "no_behavior"}
 KINDS = {"normal", "boundary", "error"}
-SIMULATORS = {"icarus", "verilator", "kirimasim", "sukimasim"}
+SIMULATORS = {"icarus", "verilator", "kirimasim", "lyra"}
 
 
 class InvalidCoverage(ValueError):

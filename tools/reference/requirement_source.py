@@ -10,12 +10,17 @@ Use --show to read every block of a section, including examples and tables.
 import argparse
 import hashlib
 import json
+import os
 import unicodedata
 from pathlib import Path
 
 import behavior_coverage as coverage
 
-DEFAULT_SOURCE = coverage.ROOT.parent / "sukimasim" / "IEEE_1800-2023_SystemVerilog"
+# The directory that holds the standard's PDF and its extracted text, which are
+# not part of the repository: $IEEE1800_SOURCE, or else
+# IEEE_1800-2023_SystemVerilog beside the checkout.
+DEFAULT_SOURCE = Path(os.environ.get("IEEE1800_SOURCE",
+                                     coverage.ROOT.parent / "IEEE_1800-2023_SystemVerilog"))
 
 
 def normalize(text: str) -> str:

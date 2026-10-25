@@ -18,7 +18,7 @@ const RUNSIM = `${REPO}/tools/matching_kit/runsim.py${args.iverilogBin ? ` --ive
 const RULES = `
 作業場所: ${REPO}（コマンドはリポジトリルートで、相対パスまたは絶対パスで実行）。
 変更してよいのは、tests/ 以下にあなたが新しく作るテストのファイル（.sv / .expected / .c / :files: の補助ファイル）だけ。既存のテスト（他の担当者が作った新規テストも含む）、tools/、coverage/、docs/、README.md、generators/ は変更しない。git 操作もしない。規格の本文・例・図をテストやコメントへ写さない（自分の言葉で説明し、節番号を引用する）。
-まず README.md の「Test format」「Metadata」「How a test is judged」「Tests with C code」「Where the expected outputs come from」（272〜458行付近）と「Contributing」（675〜743行付近）を読み、その規則に従う。同じ章の既存テストを数本読んで書き方を合わせる。
+まず README.md の「Test format」「Metadata」「How a test is judged」「Tests with C code」「Where the expected outputs come from」（288〜442行付近）と「Contributing」（692〜765行付近）を読み、その規則に従う。同じ章の既存テストを数本読んで書き方を合わせる。
 道具:
   python3 ${KIT} req <ID> [...]            要求の behavior / acceptance / 出典ブロック / 候補テスト（既存の保留も表示）
   python3 ${KIT} test <tests/chN/test_x.sv> テストのヘッダ・入力ファイル・既存リンク・既存の保留
@@ -36,6 +36,16 @@ const CRITERIA = `
 - 独立した複数条件の一部しか観測しないなら登録しない（複数テストで全条件を分担できるなら group）。
 - 違法系（kind=error）の要求は、:should_fail_because: 付きの負テストが意図した規格違反の診断を照合している場合だけ。正常系の要求に負テストは使えない（道具が拒否する）。
 - 既存の保留（HELD）・取り下げ（WITHDRAWN）・BLOCKED は道具が拒否する。その理由を回避しようとしない。
+
+これまでの独立検証でテストが欠陥とされた主な理由（書く側は避け、検証する側は必ず確かめる）:
+- ANSI 形式のポート宣言で種類（net/var）を省いた入力ポートは、既定のネット型のネットになる（23.2.2.3）。ネットに使えるのは4状態の整数型とその配列・構造体だけなので（6.7.1）、input int / input bit / 2状態型の struct / 仮想インターフェースの入力は違法。input var int のように var を付ける。inout は var にできない。
+- 違法系の :expected_stderr_regex: が、違反のある行（// illegal を付けた行）ではなく、前後の合法な行を指している。正しい実装がその行で報告することを確かめる。
+- 違法系に、意図した違反とは別の違反が同じ箇所に重なる（例: automatic タスクの項目への階層参照は 13.3.1 で別に違法、mailbox のメソッドの引数型が mailbox の型と等価でない）。違反を1つにし、それを除いた設計にエラーがないことを確かめる。
+- 違反の行に付けた説明のコメントが、それ自体で違反になる（\`line と同じ行のコメントは 22.12 で禁止）。指令の行にはコメントを置かない。
+- 正常系に、規格上合法といえない構文がある（例: 基底の protected virtual メソッドを修飾なしで override する、int になる ?: の結果をキャストなしで enum 型へ返す）。
+- 強度（%v、駆動強度、pull、tri-state）を出力するのに :fourstate: no になっている。強度の構文を使うテストは :fourstate: yes。
+- 規格が決めない値を出力している（未サイズの値の $bits、同時刻の事象の順序、規定のない VPI の反復順や要素名、32ビットのプロパティへの vpi_get64 など）。
+- :lrm: に、検証しない背景の節を書いている。:lrm: には検証する節だけを書く（引用した節には2本以上のテストが必要なので、背景の節を1本だけで引用すると深さの検査に掛かる）。
 `
 
 const ANNEX_A = `
