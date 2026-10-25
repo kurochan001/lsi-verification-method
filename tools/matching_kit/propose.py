@@ -18,10 +18,14 @@ proposal that could never be merged is refused at once.
     propose.py testverdict --out FILE --test tests/... (--ok | --defective) --reason TEXT [--verifier NAME]
 
 The verdicts of FILE go to FILE.verdicts.jsonl; the latest verdict of a key
-counts. See docs/requirements-to-tests-method.md for the review criteria.
+counts only for the proposal, test inputs and requirements reviewed at acceptance.
+See docs/requirements-to-tests-method.md for the review criteria.
+
+Local revision (2026-10-26): bind accept verdicts to reviewed input snapshots.
 """
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -218,6 +222,42 @@ RECORDS = {"check": check_record, "group": group_record, "hold": hold_record}
 COMMANDS = {"add": "check", "group": "group", "hold": "hold"}
 
 
+def review_snapshot(state: State, proposal: dict) -> dict:
+    """Identify the proposal and all inputs the verifier is accepting.
+
+    Mapping progress is excluded from requirement identities; the requirement's
+    contract, source references and interpretation metadata are included.
+    """
+    kind = proposal["type"]
+    if kind == "group":
+        tests = [m["test"] for m in proposal["members"]]
+    else:
+        tests = [proposal["test"]]
+    ids = (proposal["requirement_ids"] if kind == "hold"
+           else [proposal["requirement_id"]])
+
+    def digest(value):
+        return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+
+    requirements = {}
+    for rid in ids:
+        row = state.rows.get(rid) or reject(f"unknown requirement {rid}")
+        requirements[rid] = digest({k: v for k, v in row.items()
+                                    if k not in ("checks", "check_groups")})
+    return {"schema": 1, "proposal_sha256": digest(proposal),
+            "test_inputs_sha256": {name: suite_results.input_digest(ROOT / name)
+                                   for name in tests},
+            "requirements_sha256": requirements}
+
+
+def verify_approval(state: State, proposal: dict, verdict: dict) -> None:
+    if not verdict.get("review_snapshot"):
+        reject("accept verdict has no review snapshot; independently review and accept again")
+    if verdict["review_snapshot"] != review_snapshot(state, proposal):
+        reject("stale accept verdict: proposal, test inputs or requirements changed; "
+               "independently review and accept again")
+
+
 def append(out: Path, record: dict) -> None:
     if record["key"] in {p["key"] for p in read_jsonl(out)}:
         reject(f"duplicate proposal key {record['key']} in {out}")
@@ -306,19 +346,33 @@ def cmd_propose(args):
 def cmd_show(args):
     out = Path(args.out)
     verdicts = {v["key"]: v for v in read_jsonl(out.with_name(out.name + ".verdicts.jsonl"))}
+    state = None
     for p in read_jsonl(out):
         v = verdicts.get(p["key"])
+        if v and v["verdict"] == "accept":
+            if state is None:
+                state = State()
+            try:
+                verify_approval(state, p, v)
+            except (Rejected, OSError, ValueError) as exc:
+                print(f"{p['key']}  [stale: {exc}]")
+                continue
         print(f"{p['key']}  " + (f"[{v['verdict']}: {v['reason'][:80]}]" if v else "[no verdict]"))
 
 
 def cmd_verdict(args):
     out = Path(args.out)
-    if args.key not in {p["key"] for p in read_jsonl(out)}:
+    proposal = next((p for p in read_jsonl(out) if p["key"] == args.key), None)
+    if proposal is None:
         reject(f"no proposal with key {args.key} in {out}")
     if len(args.reason.strip()) < 15:
         reject("give a concrete reason (>= 15 chars)")
     record = {"key": args.key, "verdict": "accept" if args.accept else "reject",
               "reason": args.reason.strip(), "verifier": args.verifier}
+    if args.accept:
+        state = State()
+        RECORDS[proposal["type"]](state, proposal)
+        record["review_snapshot"] = review_snapshot(state, proposal)
     with out.with_name(out.name + ".verdicts.jsonl").open("a") as fh:
         fh.write(json.dumps(record, ensure_ascii=False) + "\n")
     print(f"OK {record['verdict']} {args.key}")

@@ -1,3 +1,4 @@
+// Local revision (2026-10-26): require re-review of stale acceptance snapshots.
 export const meta = {
   name: 'ieee-match-wave',
   description: 'Propose and adversarially verify IEEE 1800-2023 requirement links to existing tests, one matcher + one verifier per partition',
@@ -101,7 +102,7 @@ ${CRITERIA}
  - group で、メンバー全体でも要求の全条件がそろわない。
  不確かなら reject する。
 4. type=hold は、explanation が具体的で、テストを読んで正しいと確認できれば accept、曖昧・誤りなら reject する。
-5. すべての照合案に verdict を記録する（理由は日本語で具体的に）。show で [no verdict] が残っていないことを最後に確認する。
+5. すべての照合案に verdict を記録する（理由は日本語で具体的に）。show で [no verdict] と [stale: ...] が残っていないことを最後に確認する。accept は照合案・テスト入力・要求の承認時ハッシュを記録する。古い承認や変更済みの入力は、現行の内容を独立に再レビューしてから再承認する。
 
 最後に accept / reject の件数と、主な reject 理由の傾向を返す。`
 }

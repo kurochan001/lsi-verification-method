@@ -1,3 +1,4 @@
+// Local revision (2026-10-26): require re-review of stale acceptance snapshots.
 export const meta = {
   name: 'ieee-gap-tests-v2',
   description: 'Match existing tests or write new standard-derived tests for open IEEE 1800-2023 requirements, then independently verify tests and mappings',
@@ -114,7 +115,7 @@ ${p.mode === 'annexA' ? ANNEX_A : ''}
 - 刺激が要求の全条件を起こし、期待出力が誤実装と区別できるかを確かめる。独立した複数条件の一部しか見ていない、誤実装でも同じ出力になる、anchor が無関係、違法系なのに意図した違反を照合していない、のどれかなら reject。不確かなら reject。
 type=hold は、explanation が具体的で正しいと確認できれば accept、曖昧・誤りなら reject。
 
-すべてのテストと照合案に判定を付け、最後に show で [no verdict] がないことを確認する。既に判定のあるもの（最後の判定が有効）は、テストや anchor が変わっていなければ判定し直さなくてよい。最後に ok / defective のテスト数、accept / reject 件数、主な理由を返す。`
+すべてのテストと照合案に判定を付け、最後に show で [no verdict] と [stale: ...] がないことを確認する。accept は照合案・テスト入力・要求の承認時ハッシュを記録する。古い承認や変更済みの入力は、現行の内容を独立に再レビューしてから再承認する。最後に ok / defective のテスト数、accept / reject 件数、主な理由を返す。`
 }
 
 const WRITE_SCHEMA = { type: 'object', properties: { tests_written: { type: 'integer' }, proposals: { type: 'integer' }, notes: { type: 'string' } }, required: ['tests_written', 'proposals', 'notes'] }

@@ -10,6 +10,8 @@ it.
 Local revision (2026-10-25): the module-body specparam entry for clause 6.20.5
 was reworded for this repository. File origins and revisions are recorded in
 [PROVENANCE.md](../../PROVENANCE.md).
+Local correction (2026-10-26): restored `new[3](d)` in the dynamic-array entry
+after a link rewrite had altered the code.
 
 Constructs that a release does not support at all, where it stops with an
 error, a "sorry" or "unsupported" message, are not listed: they show as known
@@ -450,7 +452,7 @@ Verilator's two-state values are left out.
 | 7.4.5 Table 7-1 | Reading a fixed unpacked array of real, shortreal, string, class, interface class or virtual interface elements with an out-of-bounds index (7 for [0:3]) or an index with an x bit returns a stored element value (1.5, 2.5, "full", non-null handles) instead of 0.0, "" and null. The C++ build also fails on reads/`== null` comparisons of an event array element (`cannot convert 'VlEvent' to 'IData'`). | `ch7/test_array_invalid_index_read_handles_real_string` |
 | 7.4.5 Table 7-1 | Reading `[0:1]` arrays of queues, dynamic arrays, associative arrays, fixed-size arrays, unpacked structures and unpacked unions with index 5 or 2'bx0 returns the stored element (sizes 2/3/1, 1,2,3, the stored structure and union) instead of empty arrays, arrays of 'x / '0, a structure of member defaults (with the initial assignment c = 9) and 'x for the first union member. | `ch7/test_array_invalid_index_read_aggregates` |
 | 7.4.5 Table 7-1 | Reading a `chandle ch [0:3]` whose elements C set to non-null pointers with index 7 or 2'b1x returns a non-null chandle (`null=0`) instead of null. | `ch7/test_array_invalid_index_read_chandle` |
-| 7.5.1, 13.5.2 | After `d = new[3](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/d)` outdates a task's `ref int r` to `d[1]`, the task's later write `r = 99` changes the new array (`t=4: 5 99 7`) instead of only the outdated element (`5 6 7`). | `ch7/test_dynamic_array_new_discards_data_and_references` |
+| 7.5.1, 13.5.2 | After `d = new[3](d)` outdates a task's `ref int r` to `d[1]`, the task's later write `r = 99` changes the new array (`t=4: 5 99 7`) instead of only the outdated element (`5 6 7`). | `ch7/test_dynamic_array_new_discards_data_and_references` |
 | 7.10.1 | For q = {10,20,30,40,50}: `q[5:5]` yields `{50}` instead of `{}`, `q[-1:-1]` yields the whole queue instead of `{}`, and `q[1:3'b0z1]` yields one element instead of `{}` (a bound with a z bit). In-range, clipped and reversed slices are right. | `ch7/test_queue_slice_bounds_clip_and_empty` |
 | 7.10.5 | `insert(1, 9)` on a full `int bq[$:2]` grows it to four elements (`0 9 1 2`) instead of dropping the element pushed past index 2 (`0 9 1`); push_back, push_front and the write to [$+1] are bounded correctly. | `ch7/test_bounded_queue_methods_discard_beyond_bound` |
 | 7.10.5 | Assigning a five-element unbounded queue to `int bq[$:2]` keeps two elements (`20 21`) instead of three (`20 21 22`); the concatenation assignments are bounded correctly. | `ch7/test_bounded_queue_assign_discards_beyond_bound` |

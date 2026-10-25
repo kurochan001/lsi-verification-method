@@ -1,6 +1,7 @@
 # ツール
 
 ここにあるのは、ケーススタディ（[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)）で使ったツールの写しです。
+照合キットには、2026-10-26に承認時スナップショットと入力変更時の停止を追加しています。上流からの複製元とローカル改訂は[由来](../PROVENANCE.md)に記録しています。
 どれもkirimasim-testsのディレクトリ構成（`coverage/`の台帳、`tests/`のテスト、`tools/suite_results.py`）を前提にしています。
 このリポジトリ単独では動きません。動かすときは、kirimasim-testsの同じ場所に置いて使います。
 汎用化（台帳の形式とテストの構成からの切り離し）は、[今後の計画](../README.md#今後の計画)の項目です。

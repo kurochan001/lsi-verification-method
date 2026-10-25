@@ -7,13 +7,16 @@ Usage:
 Every *.jsonl file of PROPOSALS_DIR (not *.verdicts.jsonl) is read. A proposal
 is applied only when the latest verdict of its key is "accept", and only after
 it passes the checks of propose.py again against the ledgers as they are
-before this merge. Checks go to coverage/behaviors.json, with the input digest
-of the test computed now; groups become check_groups; holds are added to
+before this merge. Acceptance snapshots must match the current proposal, test
+inputs and requirements. Checks go to coverage/behaviors.json, with the reviewed
+input digest; groups become check_groups; holds are added to
 coverage/test-matching-reviews.json. Proposals already applied are skipped, so
 running it again changes nothing. A requirement that gets a group has every
 one of its checks in some group, as validate() requires.
 
 Then regenerate the reports (docs/requirements-to-tests-method.md, section 9).
+
+Local revision (2026-10-26): reject stale or unversioned approvals before writing.
 """
 
 import argparse
@@ -27,7 +30,6 @@ from propose import ROOT, Rejected, State, read_jsonl
 
 sys.path.insert(0, str(ROOT / "tools"))
 import behavior_coverage  # noqa: E402
-import suite_results  # noqa: E402
 
 SCOPE = ("Listed requirement decisions only; this is not completion of every observation "
          "or requirement in the test.")
@@ -62,13 +64,6 @@ def main() -> int:
     rows = {r["id"]: r for r in data["requirements"]}
     reviews_doc = json.loads((ROOT / "coverage/test-matching-reviews.json").read_text())
     reviews = {rv["test"]: rv for rv in reviews_doc["reviews"]}
-    digests = {}
-
-    def digest(name: str) -> str:
-        if name not in digests:
-            digests[name] = suite_results.input_digest(ROOT / name)
-        return digests[name]
-
     accepted = accepted_proposals(args.proposals)
     valid, skipped = [], []
     for source, p, v in accepted:
@@ -87,14 +82,22 @@ def main() -> int:
                 continue
         try:
             propose.RECORDS[kind](state, p)
-        except Rejected as e:
+            propose.verify_approval(state, p, v)
+        except (Rejected, OSError, ValueError) as e:
             skipped.append((p["key"], str(e)))
             continue
         valid.append((source, p, v))
 
+    if skipped:
+        print(f"accepted={len(accepted)} applied=0 skipped={len(skipped)}")
+        for key, why in skipped:
+            print(f"SKIP {key}: {why}")
+        return 1
+
     log, grouped = [], {}
     for source, p, v in valid:
         kind = p["type"]
+        digests = v["review_snapshot"]["test_inputs_sha256"]
         if kind == "check":
             r = rows[p["requirement_id"]]
             if any(c["test"] == p["test"] for c in r["checks"]):
@@ -102,14 +105,14 @@ def main() -> int:
             r["checks"].append({"test": p["test"],
                                 "observation": f"{p['observation']} 区別: {p['rationale']}",
                                 "reviewed_on": args.date, "reviewer": args.reviewer,
-                                "inputs_sha256": digest(p["test"]), "evidence": p["evidence"]})
+                                "inputs_sha256": digests[p["test"]], "evidence": p["evidence"]})
         elif kind == "group":
             r = rows[p["requirement_id"]]
             for m in p["members"]:
                 if not any(c["test"] == m["test"] for c in r["checks"]):
                     r["checks"].append({"test": m["test"], "observation": m["observation"],
                                         "reviewed_on": args.date, "reviewer": args.reviewer,
-                                        "inputs_sha256": digest(m["test"]),
+                                        "inputs_sha256": digests[m["test"]],
                                         "evidence": m["evidence"]})
             r.setdefault("check_groups", []).append(
                 {"id": p["group_id"], "tests": [m["test"] for m in p["members"]],
@@ -119,7 +122,7 @@ def main() -> int:
         else:
             rv = reviews.get(p["test"])
             if rv is None:
-                rv = {"test": p["test"], "inputs_sha256": digest(p["test"]),
+                rv = {"test": p["test"], "inputs_sha256": digests[p["test"]],
                       "reviewed_on": args.date, "reviewer": args.reviewer, "scope": SCOPE,
                       "decisions": []}
                 reviews[p["test"]] = rv
@@ -130,7 +133,7 @@ def main() -> int:
                                     "reviewed_on": args.date, "reviewer": args.reviewer,
                                     "evidence": p["evidence"]})
         log.append({"key": p["key"], "source": source, "verdict": v["reason"],
-                    "verifier": v.get("verifier")})
+                    "verifier": v.get("verifier"), "review_snapshot": v["review_snapshot"]})
 
     for r in grouped.values():
         in_groups = {t for g in r["check_groups"] for t in g["tests"]}

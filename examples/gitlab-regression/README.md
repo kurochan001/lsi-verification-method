@@ -7,7 +7,7 @@
 - [`.gitlab-ci.yml`](../../.gitlab-ci.yml)：下記のCI設定をincludeする入口。
 - [`gitlab-ci.yml`](gitlab-ci.yml)：依存ツールの準備、ランナー確認、回帰、JUnit・artifact保存。
 - [`run.py`](run.py)：計画生成、コンパイル、ケース実行、判定、manifest・JUnit・結果の作成。
-- [`irq_pending.sv`](rtl/irq_pending.sv)：説明用の回路と、検証用に選べる2個の変異。
+- [`irq_pending.sv`](rtl/irq_pending.sv)：説明用の回路と、検証用に選べる3個の変異。CDC受信回路側の1個と合わせて4個。
 - [`irq_tb.sv`](tb/irq_tb.sv)：仕様に基づく状態・IRQの比較。失敗ラベルと完了記録を出力する。
 - [`cdc_delay_model.sv`](tb/cdc_delay_model.sv)：転送ごとに1／2／3受信サイクルの遅延を選ぶ検証用モデル。
 - [`cdc_receiver.sv`](rtl/cdc_receiver.sv)：2経路の一致を待ち、toggleごとに1回だけ受理する説明用の回路。
