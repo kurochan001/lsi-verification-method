@@ -54,6 +54,8 @@
 
 pairwiseは2軸の組を覆う方式であり、3軸以上の相互作用や、事象の順序・時間差を自動で保証しません。採用する軸、区分、制約、組み合わせの次数と残るリスクを記録します。NISTの[組み合わせ試験](https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software)と[事象列の試験](https://csrc.nist.gov/Projects/automated-combinatorial-testing-for-software/combinatorial-methods-in-testing/event-sequence-testing)を参考にしています。ソフトウェアでの検出実績を、そのままLSIの完了保証へ読み替えることはしません。
 
+同値分割・直交表・可変次数、代表構成、回帰選択を組み合わせる場合の条件は、[検証規模の縮退](verification-reduction.md)に従います。制約で違法な生成行を除いた後も、必要な合法の組が失われていないかを検査します。既存の必須目標を減らす場合は、代表との対応・根拠を付けて計画を改訂します。
+
 ランダムに組を選ぶ場合の制約・重み・seedの設計、未到達からの調整、失敗の再現は、[制約付きランダム検証](constrained-random-verification.md)で扱います。組を選ぶ方式を変えても、必須目標と期待値は承認なく変えません。
 
 ## 5. 同時・順序・中断を実際に起こす
