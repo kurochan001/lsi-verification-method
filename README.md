@@ -8,6 +8,7 @@ LSIの仕様書から検証パターンを作り、要求に対する網羅で�
 複製資料・ツールの同期基準は、2026-10-25に確認したkirimasim-testsの`main`（[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)）です。一般化した手順書には、このリポジトリで製品開発向けの追記・改訂をしています。派生元と変更の範囲は[PROVENANCE.md](PROVENANCE.md)に記録しています。
 
 - **手法の一般化文書**：[ロジック半導体の仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体の仕様書への適用はまだ行っていません。実際の製品開発で機能検証と併せて必要な、クロック・リセット、低電力、タイミング、DFT・量産テスト、物理設計、信頼性、システム統合、ポストシリコンの項目も14節に整理しています。
+- **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、回帰の合格条件をまとめています。実行可能なUVMテストベンチは今後の適用で用意します。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-24時点の状況は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
   - 対応済みは7,341要求（暫定設計網羅率59.59%）、合格の証跡があるのは4,135要求（暫定実行確認率33.57%）。本文（1〜40章）だけでは62.57%。
@@ -31,7 +32,7 @@ PROVENANCE.md                   各ファイルの由来（元のリポジトリ
 
 ## 読む順序
 
-1. [一般化した手順書](docs/method/spec-to-verification-method.md)
+1. [一般化した手順書](docs/method/spec-to-verification-method.md)。UVMで実装する場合は[UVMへの適用](docs/method/uvm-verification.md)も参照します。
 2. [もとになった手順書（IEEE 1800-2023）](docs/case-study-ieee1800/requirements-to-tests-method.md)
 3. [要求抽出の結果と台帳見直し](docs/case-study-ieee1800/requirement-extraction.md)と[未解決事項](docs/case-study-ieee1800/requirement-extraction-notes.md)：仕様の曖昧さの扱いの実例
 4. [計測規則](docs/case-study-ieee1800/coverage-rules.md)：設計網羅率と実行確認率、証跡の鮮度、AND集合

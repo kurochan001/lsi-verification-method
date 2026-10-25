@@ -215,6 +215,14 @@
 
 形式検証では、対象プロパティ、仮定、初期状態・リセット、抽象化、証明の境界、探索深さ、エンジン、結果を記録します。有限の深さまで反例がない結果と、仮定の下で全到達状態に成り立つことを示す非有界の証明を区別し、`cover`の到達を証明済みに読み替えません。過剰な仮定で必要な事象を除外していないかも確認します。`unknown`、タイムアウト、エラーは未完了です（付録CのSBY資料）。
 
+### 9.7 UVMでの実装
+
+UVM（Universal Verification Methodology）を使う場合は、要求の刺激をtest・sequenceに、観測をmonitorに、正しさの判定をscoreboard・アサーションに、到達の確認を機能カバレッジに対応付けます。sequenceを実行したことやbinの到達だけでは、要求の合格にはしません。
+
+レジスタにはRALを使い、バス経由の検証、モデルの予測、実データとの比較を区別します。採用するUVMライブラリとVIPの版、構成・factory override、checkerの有効化設定も実行証跡に含めます。
+
+構成、要求IDとの対応付け、RAL、UARTの適用例、テストの終了・回帰の合格条件は、[UVMで要求と検証資産を結び付ける](uvm-verification.md)にまとめています。これらは今後適用する運用案です。現行の照合キットには、UVM環境の構築や結果の取り込みを自動化する機能はありません。
+
 ## 10. 段階F：独立した検証
 
 - **パターンの判定**：検証者は、期待値（参照モデルの出力、チェッカーの判定基準）を仕様から自分で導いて照合します。合法な刺激か（仕様が禁じる使い方をしていないか）、決定性があるか、構成の前提が正しいかも確かめます。期待値が仕様から導けないパターンは欠陥です。
@@ -458,6 +466,7 @@ checks: []
 次は、検証方式の意味を確認するための資料です。この文書の完了条件と記録形式は、これらを踏まえて定めた運用案です。製品ごとの承認済みフローや、適用規格の要求に置き換わるものではありません。
 
 - [Accellera UVM 1.2 User's Guide](https://www.accellera.org/images/downloads/standards/uvm/uvm_users_guide_1.2.pdf)：1.1.4、1.1.9、4.9〜4.10。スコアボードの比較、モニタでの観測、チェックと機能カバレッジの役割を確認しました。
+- [AccelleraのUVM配布情報](https://www.accellera.org/downloads/standards/uvm)と[IEEE 1800.2対応の公式参照実装](https://github.com/accellera-official/uvm-core/blob/main/README.md)：規格と実装の版・互換性の確認先です。9.7節の詳細資料では、RALやphaseの公式コードも参照しています。
 - [YosysHQ SBYの設定形式](https://yosyshq.readthedocs.io/projects/sby/en/stable/reference.html)と[形式検証の構文](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)：`bmc`、`prove`、`cover`、仮定と探索深さの区別を確認しました。
 - [AMD Vivadoの同期器MTBF解析](https://docs.amd.com/r/en-US/ug835-vivado-tcl-commands/report_synchronizer_mtbf)：デバイス特性と同期器に基づく評価の例です。FPGA向けの資料であり、ASICでは対象セル・プロセスに対応した評価条件が必要です。
 - [OpenLaneの実装・サインオフ手順](https://openlane2.readthedocs.io/en/latest/getting_started/newcomers/index.html#signoff-steps)：製造に進む前の物理・タイミング検証の位置付けを確認しました。製品の全サインオフ項目を網羅する資料としては扱いません。
