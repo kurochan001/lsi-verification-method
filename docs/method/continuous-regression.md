@@ -6,7 +6,7 @@
 
 GitLabで試すための[実行可能な最小例](../../examples/gitlab-regression/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。ローカルの動作確認と、GitLab上での確認状況は実行例の末尾に記録しています。
 
-実行例はIRQ・CDC、[FIFOの6構成ランダム検証](../../examples/gitlab-fifo/README.md)、[オープンソースツールによるフォーマル検証](../../examples/gitlab-formal/README.md)、[APBレジスタの3構成検証](../../examples/gitlab-apb/README.md)を実装しています。[APBと割込みの結合検証](../../examples/gitlab-apb-irq/README.md)では、マスク・W1C・イベントを組み合わせ、機能単体の確認から相互作用の確認へ進めます。2026-10-26に結合検証追加前のGitLab mainで全16ジョブ・JUnit 108件の成功を確認しました。現在の構成・追加例の実行記録・予定件数は[実行例一覧](../../README.md#gitlab実行例の現在の構成)にまとめています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
+実行例はIRQ・CDC、[FIFOの6構成ランダム検証](../../examples/gitlab-fifo/README.md)、[オープンソースツールによるフォーマル検証](../../examples/gitlab-formal/README.md)、[APBレジスタの3構成検証](../../examples/gitlab-apb/README.md)を実装しています。[APBと割込みの結合検証](../../examples/gitlab-apb-irq/README.md)では、マスク・W1C・イベントを組み合わせ、機能単体の確認から相互作用の確認へ進めます。[ready/valid通信の4構成ランダム検証](../../examples/gitlab-stream/README.md)では、待ち中の保持と転送数・順序を確認します。2026-10-26にready/valid追加前のGitLab mainで全20ジョブ・JUnit 126件の成功を確認しました。現在の構成・追加例の実行記録・予定件数は[実行例一覧](../../README.md#gitlab実行例の現在の構成)にまとめています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
 
 実行例では、動作中リセット、CDC遅延の観測、X注入を加え、要求ID・改訂と必須の観測目標を照合します。通常ケースの合格だけでなく要求・カバレッジの未達もCIへ失敗として返します。意図した変異検出の途中の観測で正常機能の未達を埋めず、タイムアウト・中断時には実行中のプロセスグループを停止します。MRの起動条件はルートYAMLに定義し、プロジェクトのマージ条件はGitLab側で別に確認します。
 

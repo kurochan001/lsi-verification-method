@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "STREAM-EMPTY",
+      "description": "空状態のsource valid×destination ready",
+      "goals": [
+        "cross/empty/valid0/ready0",
+        "cross/empty/valid0/ready1",
+        "cross/empty/valid1/ready0",
+        "cross/empty/valid1/ready1"
+      ]
+    },
+    {
+      "id": "STREAM-FULL",
+      "description": "満杯状態のsource valid×destination ready",
+      "goals": [
+        "cross/full/valid0/ready0",
+        "cross/full/valid0/ready1",
+        "cross/full/valid1/ready0",
+        "cross/full/valid1/ready1"
+      ]
+    },
+    {
+      "id": "STREAM-INTERIOR",
+      "minimum_depth": 2,
+      "description": "中間占有状態のsource valid×destination ready",
+      "goals": [
+        "cross/interior/valid0/ready0",
+        "cross/interior/valid0/ready1",
+        "cross/interior/valid1/ready0",
+        "cross/interior/valid1/ready1"
+      ]
+    },
+    {
+      "id": "STREAM-DATA",
+      "description": "実際に受信した代表データ",
+      "goals": [
+        "data/zero",
+        "data/ones",
+        "data/alternating"
+      ]
+    },
+    {
+      "id": "STREAM-STALL",
+      "description": "入出力の待ちと受信再開",
+      "goals": [
+        "stall/output",
+        "stall/input",
+        "stall/resume"
+      ]
+    },
+    {
+      "id": "STREAM-FLOW",
+      "description": "同時送受信、満杯の入替え、連続受信、排出",
+      "goals": [
+        "flow/simultaneous",
+        "flow/full-replace",
+        "flow/consecutive",
+        "flow/drained"
+      ]
+    },
+    {
+      "id": "STREAM-RESET",
+      "description": "リセット状態と破棄、待ち中のリセット、復帰",
+      "goals": [
+        "reset/empty",
+        "reset/nonempty",
+        "reset/stalled",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "STREAM-WRAP",
+      "description": "深さの2倍以上の受理と受信",
+      "goals": [
+        "wrap/write",
+        "wrap/read"
+      ]
+    },
+    {
+      "id": "STREAM-COMPLETE",
+      "description": "最後まで排出し、受理・受信・リセット破棄数を照合",
+      "goals": [
+        "completion/drain"
+      ]
+    }
+  ]
+}

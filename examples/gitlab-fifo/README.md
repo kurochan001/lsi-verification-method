@@ -115,3 +115,7 @@ python3 examples/gitlab-fifo/run.py --demo-bug 1
 同日に、[GitLabの確認用MR !2](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/2)の[パイプライン #2988278136](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988278136)でも確認しました。Debian・Python 3.11.2・Icarus Verilog 11.0で、FIFOの全6構成のsmoke、FIFOランナー10テスト、既存IRQランナー12テストとIRQ回帰の全9ジョブが成功しました。JUnitはFIFO36件＋IRQ38件の計74件、失敗・エラー0件です。各FIFOジョブの`summary.json`から、深さ1の18／18目標、深さ3・8の22／22目標、3変異の検出を照合しました。nightlyの全2000サイクル×3 seedの確認は上記のローカル実行です。
 
 MR !2はmainへマージ済みで、[マージ後のCI #2988306496](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988306496)も成功しました。さらにフォーマル検証を統合した[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)でも、FIFO全6ジョブを含む12ジョブが成功しています。現行のJUnitはFIFO36件＋IRQ38件＋フォーマル16件の計90件です。上記74件はフォーマル統合前の記録です。[現行構成の一覧](../../README.md#gitlab実行例の現在の構成)を参照してください。
+
+## ready/valid通信への展開
+
+[ready/valid通信のランダム検証例](../gitlab-stream/README.md)では、validとreadyが同時に成立したときの受理、受信待ち中のデータ保持、満杯での同時送受信による入替えを検証します。本FIFO例の、満杯時は同時読出しがあっても書込みを受け付けない仕様とは異なります。ポートの意味と受理条件を対象回路の仕様に合わせて判定します。

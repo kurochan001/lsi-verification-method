@@ -102,6 +102,6 @@ python3 examples/gitlab-apb-irq/run.py --wait 1 --demo-bug 1
 
 公開デモの[MR !5](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/5)で、[CI #2988726525](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988726525)の全20ジョブ成功、JUnit 126件・失敗／エラー0件を確認しました。結合検証の3ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも44/44または45/45目標、3変異の検出、予定5ケースの完了、対象コミット`0da7a642`を確認しています。追加分のJUnitは18件、ランナー確認は別枠の12テストです。
 
-確認したGitLab実行はsmokeで、結合検証のnightly全3構成はローカルで確認しました。全例を含むscheduleの153件をGitLabで実行した結果ではありません。MR !5のmainへのマージは行っていません。
+確認したGitLab実行はsmokeで、結合検証のnightly全3構成はローカルで確認しました。全例を含むscheduleの153件をGitLabで実行した結果ではありません。その後、MR !5はmainへマージされ、[mainのCI #2988757915](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988757915)も全20ジョブ・JUnit 126件で成功しています（2026-10-26確認）。
 
 製品への展開では、割込みの極性・レベル／パルス方式、CPU側の確認応答、優先順位・共有割込み、CDC、実際のレジスタ仕様とソフトウェアの順序制約を照合してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続回帰](../../docs/method/continuous-regression.md)も参照してください。
