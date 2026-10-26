@@ -52,6 +52,7 @@ flowchart TD
 - **ready/valid通信のランダム検証例**：[GitLabでready/valid通信をランダム検証する](examples/gitlab-stream/README.md)。受信待ち、valid・データ保持、満杯時の同時送受信、欠落・重複・順序、リセット破棄を検証します。深さ1／3×幅8／16の4構成で必須25／29目標と3変異を判定し、最後の排出と転送数も照合します。
 - **アービタの検証例**：[GitLabでラウンドロビン・アービタを検証する](examples/gitlab-arbiter/README.md)。要求元2／3／4の排他制御、待ち中の選択保持、受理順序、条件付きの公平性を検証します。構成ごとに21／31／49目標と3変異を判定し、受理機会と実サイクルの待ちを分けて記録します。
 - **UARTのランダム検証例**：[GitLabでUARTを検証する](examples/gitlab-uart/README.md)。8N1／8E1／8O1と分周数8／16の6構成で、独立した送受信照合、エラー注入、偽スタート、転送中リセットと復帰、21／22目標と3／4変異を確認します。
+- **APB・UART・割込みの結合検証例**：[GitLabで3機能を結合検証する](examples/gitlab-apb-uart/README.md)。レジスタ操作から実際の送受信、エラーと割込みまでを9構成で確認します。W1C・MASK更新・受信読出しの競合を含め、60／61／69／70目標と5変異を判定します。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26に確認した[上流の集計（`b2de3bc5`）](https://github.com/kurochan001/kirimasim-tests/blob/b2de3bc5ef17071be53d44c6742700c03b1b12a7/docs/behavior-coverage-summary.md)は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
@@ -66,9 +67,9 @@ flowchart TD
 
 ## GitLab実行例の現在の構成
 
-2026-10-26に、アービタの[MR !9](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/9)までmainへマージ済みであることを確認しました。[mainのCI #2989957235](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989957235)は全33ジョブ成功、JUnit 199件・失敗／エラー0件です。
+2026-10-26に、APB・UART・割込みの結合検証の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)までmainへマージ済みであることを確認しました。[mainのCI #2990167574](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990167574)は全50ジョブ成功、JUnit 311件・失敗／エラー0件です。
 
-UARTのランダム検証を加えた構成を下表に示します。[MR !10](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/10)の[CI #2990037734](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990037734)で全40ジョブ・JUnit 239件の成功を確認しました。詳細は[UART例の実行記録](examples/gitlab-uart/README.md#7-適用範囲と実行確認)へ記載しています。MR !10は未マージです。
+現行の構成を下表に示します。追加した9構成の目標・変異・完了記録の照合結果は[結合例の実行記録](examples/gitlab-apb-uart/README.md#7-適用範囲と実行確認)に記載しています。
 
 | 実行例 | 回帰ジョブ数・対象 | 通常実行のJUnit件数 | schedule実行の予定件数 |
 | --- | --- | --- | --- |
@@ -82,9 +83,10 @@ UARTのランダム検証を加えた構成を下表に示します。[MR !10](h
 | [回帰の縮退の比較](examples/gitlab-reduction/README.md) | 1ジョブ、全件／選択／ストレス保持の比較 | 18（集約判定） | 18（集約判定） |
 | [ラウンドロビン・アービタ](examples/gitlab-arbiter/README.md) | 3ジョブ、要求元2／3／4 | 21（各7） | 27（各9） |
 | [UARTランダム検証](examples/gitlab-uart/README.md) | 6ジョブ、分周数8／16×パリティなし／偶数／奇数 | 40（各6／7） | 52（各8／9） |
-| 合計 | 回帰30ジョブ＋ランナー確認10ジョブ | 239 | 294 |
+| [APB・UART・割込み結合検証](examples/gitlab-apb-uart/README.md) | 9ジョブ、待ち状態0／1／3×パリティなし／偶数／奇数 | 72（各8） | 90（各10） |
+| 合計 | 回帰39ジョブ＋ランナー確認11ジョブ | 311 | 384 |
 
-ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件、縮退比較11件、アービタ13件、UART 13件の計115テストで、上表のJUnit件数とは別です。scheduleではシミュレーションと縮退比較の9例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。294件は設定から算出した予定件数で、GitLabで全例を含むschedule実行は今回行っていません。追加前のmainの199件と追加後の結果を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件、縮退比較11件、アービタ13件、UART 13件、APB・UART・割込み14件の計129テストで、上表のJUnit件数とは別です。scheduleではシミュレーションと縮退比較の10例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。384件は設定から算出した予定件数で、GitLabで全例を含むschedule実行は今回行っていません。追加前のmainの239件と現行の311件の記録を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
 
 ## 構成
 
@@ -104,6 +106,7 @@ examples/gitlab-sva/            SVAの実行・ネイティブカバー・前件
 examples/gitlab-reduction/      回帰の選択・実行量・目標維持・検出力を比較
 examples/gitlab-arbiter/        仲裁の排他・選択保持・順序・条件付き公平性と3構成回帰
 examples/gitlab-uart/           UARTの独立した送受信・エラー・リセットと6構成ランダム回帰
+examples/gitlab-apb-uart/       APB・UART・割込みの競合・データ経路と9構成結合回帰
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
 tools/matching_kit/             照合案の受付・検査、検証者の判定、統合、シミュレータ実行、Workflowスクリプト
 tools/generators/               表形式の要求から検証パターンを生成する枠組みと、その例

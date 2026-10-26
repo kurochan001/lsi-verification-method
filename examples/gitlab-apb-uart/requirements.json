@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AU-DATA",
+      "description": "独立した送受信データ照合",
+      "goals": [
+        "tx/data-zero",
+        "tx/data-ones",
+        "tx/data-alternating",
+        "tx/data-lsb",
+        "tx/data-msb",
+        "rx/data-zero",
+        "rx/data-ones",
+        "rx/data-alternating",
+        "rx/data-lsb",
+        "rx/data-msb"
+      ]
+    },
+    {
+      "id": "AU-TRANSFER",
+      "description": "APB操作とUART通信の結合",
+      "goals": [
+        "transfer/tx-complete",
+        "transfer/rx-read",
+        "transfer/duplex"
+      ]
+    },
+    {
+      "id": "AU-ERROR",
+      "description": "バスアクセスのエラーと副作用抑止",
+      "goals": [
+        "bus/error-busy",
+        "bus/error-empty",
+        "bus/error-direction",
+        "bus/error-readonly",
+        "bus/error-unaligned",
+        "bus/error-unmapped"
+      ]
+    },
+    {
+      "id": "AU-IRQ",
+      "description": "マスクと保持・クリア・複数要因",
+      "goals": [
+        "irq/masked-event",
+        "irq/unmask-pending",
+        "irq/remask-pending",
+        "irq/clear-release",
+        "irq/partial-clear",
+        "irq/last-clear"
+      ]
+    },
+    {
+      "id": "AU-FRAMING",
+      "description": "フレーミングエラーの割込み通知",
+      "goals": [
+        "error/framing-irq"
+      ]
+    },
+    {
+      "id": "AU-PARITY",
+      "description": "パリティエラーの割込み通知",
+      "goals": [
+        "error/parity-irq"
+      ],
+      "requires_parity": true
+    },
+    {
+      "id": "AU-CROSS-0",
+      "description": "実イベントとマスク・W1Cのクロス",
+      "goals": [
+        "cross/bit0/mask0/clear0/event0",
+        "cross/bit0/mask0/clear0/event1",
+        "cross/bit0/mask0/clear1/event0",
+        "cross/bit0/mask0/clear1/event1",
+        "cross/bit0/mask1/clear0/event0",
+        "cross/bit0/mask1/clear0/event1",
+        "cross/bit0/mask1/clear1/event0",
+        "cross/bit0/mask1/clear1/event1"
+      ]
+    },
+    {
+      "id": "AU-CROSS-1",
+      "description": "実イベントとマスク・W1Cのクロス",
+      "goals": [
+        "cross/bit1/mask0/clear0/event0",
+        "cross/bit1/mask0/clear0/event1",
+        "cross/bit1/mask0/clear1/event0",
+        "cross/bit1/mask0/clear1/event1",
+        "cross/bit1/mask1/clear0/event0",
+        "cross/bit1/mask1/clear0/event1",
+        "cross/bit1/mask1/clear1/event0",
+        "cross/bit1/mask1/clear1/event1"
+      ]
+    },
+    {
+      "id": "AU-CROSS-2",
+      "description": "実イベントとマスク・W1Cのクロス",
+      "goals": [
+        "cross/bit2/mask0/clear0/event0",
+        "cross/bit2/mask0/clear0/event1",
+        "cross/bit2/mask0/clear1/event0",
+        "cross/bit2/mask0/clear1/event1",
+        "cross/bit2/mask1/clear0/event0",
+        "cross/bit2/mask1/clear0/event1",
+        "cross/bit2/mask1/clear1/event0",
+        "cross/bit2/mask1/clear1/event1"
+      ],
+      "requires_parity": true
+    },
+    {
+      "id": "AU-CROSS-3",
+      "description": "実イベントとマスク・W1Cのクロス",
+      "goals": [
+        "cross/bit3/mask0/clear0/event0",
+        "cross/bit3/mask0/clear0/event1",
+        "cross/bit3/mask0/clear1/event0",
+        "cross/bit3/mask0/clear1/event1",
+        "cross/bit3/mask1/clear0/event0",
+        "cross/bit3/mask1/clear0/event1",
+        "cross/bit3/mask1/clear1/event0",
+        "cross/bit3/mask1/clear1/event1"
+      ]
+    },
+    {
+      "id": "AU-PHASE",
+      "description": "バス動作中も受信イベントを保持",
+      "goals": [
+        "event/setup",
+        "event/error-response",
+        "bus/back-to-back"
+      ]
+    },
+    {
+      "id": "AU-WAIT",
+      "description": "待ち中の受信イベント保持",
+      "goals": [
+        "event/wait"
+      ],
+      "minimum_wait": 1
+    },
+    {
+      "id": "AU-MASK-EVENT",
+      "description": "マスク変更と新規受信の同時動作",
+      "goals": [
+        "simultaneous/enable-event",
+        "simultaneous/disable-event"
+      ]
+    },
+    {
+      "id": "AU-SNAPSHOT",
+      "description": "受信保持と読出しの競合",
+      "goals": [
+        "rx/overwrite",
+        "rx/read-and-new"
+      ]
+    },
+    {
+      "id": "AU-RESET",
+      "description": "転送中とIRQ出力中のリセット・復帰",
+      "goals": [
+        "reset/active-tx",
+        "reset/active-irq",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

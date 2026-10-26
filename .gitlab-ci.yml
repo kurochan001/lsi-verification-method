@@ -19,3 +19,4 @@ include:
   - local: /examples/gitlab-reduction/gitlab-ci.yml
   - local: /examples/gitlab-arbiter/gitlab-ci.yml
   - local: /examples/gitlab-uart/gitlab-ci.yml
+  - local: /examples/gitlab-apb-uart/gitlab-ci.yml

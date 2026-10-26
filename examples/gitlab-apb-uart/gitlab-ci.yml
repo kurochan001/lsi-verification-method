@@ -1,0 +1,33 @@
+variables:
+  APB_UART_DEMO_BUG: "0"
+  APB_UART_REGRESSION_SEED: "17"
+
+apb-uart-runner-tests:
+  stage: validate
+  timeout: 10m
+  script:
+    - python3 -m unittest discover -s examples/gitlab-apb-uart/tests -v
+
+apb-uart-regression:
+  stage: regression
+  timeout: 10m
+  parallel:
+    matrix:
+      - APB_UART_WAIT: ["0", "1", "3"]
+        APB_UART_PARITY: ["0", "1", "2"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      variables:
+        APB_UART_PROFILE: nightly
+    - when: on_success
+      variables:
+        APB_UART_PROFILE: smoke
+  script:
+    - python3 examples/gitlab-apb-uart/run.py --wait "$APB_UART_WAIT" --parity "$APB_UART_PARITY" --profile "$APB_UART_PROFILE" --seed "$APB_UART_REGRESSION_SEED" --demo-bug "$APB_UART_DEMO_BUG" --out "artifacts/apb-uart-wait${APB_UART_WAIT}-parity${APB_UART_PARITY}"
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - artifacts/apb-uart-*/
+    reports:
+      junit: artifacts/apb-uart-*/junit.xml

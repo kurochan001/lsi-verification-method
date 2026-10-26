@@ -89,4 +89,6 @@ smokeはパリティなし各6件、有効時各7件、合計40件のJUnitを出
 
 ローカルで6構成のsmoke、ランナー確認13テスト、および各構成で3 seed×1000ランダム操作を確認しました。公開デモの[MR !10](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/10)で、[CI #2990037734](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990037734)の全40ジョブ成功、JUnit 239件・失敗／エラー0件を確認しました。
 
-UARTの6ジョブはIcarus Verilog 11.0で実行され、保存済み証跡でも21/21または22/22目標、3／4変異、予定した全5／6ケースの完了、送受信完了数、入力ソースのハッシュとコミット`0bc95660`を確認しました。追加分のJUnitは40件です。GitLabで確認したのはsmokeで、全例を含むscheduleの294件は今回実行していません。MR !10のmainへのマージは行っていません。
+UARTの6ジョブはIcarus Verilog 11.0で実行され、保存済み証跡でも21/21または22/22目標、3／4変異、予定した全5／6ケースの完了、送受信完了数、入力ソースのハッシュとコミット`0bc95660`を確認しました。追加分のJUnitは40件です。GitLabで確認したのはsmokeで、全例を含むscheduleの294件は今回実行していません。その後MR !10はmainへマージされ、[mainのCI #2990074629](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990074629)でも全40ジョブ・JUnit 239件の成功を確認しました。
+
+APBレジスタ・割込みとの接続は、別の[結合検証例](../gitlab-apb-uart/README.md)で扱います。単体例の確認範囲とは分けて記録します。
