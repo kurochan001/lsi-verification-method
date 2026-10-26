@@ -1,0 +1,17 @@
+[options]
+mode @MODE@
+depth 10
+timeout 60
+@COVER_OPTIONS@
+
+[engines]
+smtbmc z3
+
+[script]
+read -formal -sv sync_fifo.sv fifo_formal.sv
+chparam -set DEPTH @DEPTH@ -set WIDTH 8 -set MUTATION @MUTATION@ -set CHECK_DATA @CHECK_DATA@ -set LOCK_RESET @LOCK_RESET@ fifo_formal
+prep -top fifo_formal
+
+[files]
+sync_fifo.sv
+fifo_formal.sv

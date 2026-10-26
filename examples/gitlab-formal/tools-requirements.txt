@@ -1,0 +1,7 @@
+# Tested portable toolchain; no commercial EDA license is required.
+yowasp-yosys==0.70.0.0.post1259
+yowasp-runtime==1.96
+wasmtime==47.0.1
+platformdirs==4.13.5
+click==8.5.0
+z3-solver==4.15.3.0
