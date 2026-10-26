@@ -188,6 +188,22 @@ irq_formal.sv
 
 この3個のcoverはリセット解除・競合・結果への到達確認です。[クロス検証の12目標](feature-interaction-verification.md)や[covergroupの16目標](functional-coverage.md)を列挙して検査したものではありません。これらを形式検証で閉じるなら、各目標の初期PEND、IRQ_EN、前後の受理順序を表す履歴・coverを追加し、対応するassertの証明範囲と同じ仮定で確認します。
 
+**同じモデルでも、taskごとに問う内容が異なる**
+
+```mermaid
+flowchart TD
+  accTitle: 割り込みの形式モデルを三つの方式で確認する
+  accDescr: bmcは深さ8までの違反を探し、proveは帰納法による証明を試み、coverは三つの到達目標への経路を探す。
+  M["irq_formal：RTL・assert・assume・cover"] --> B["bmc：深さ8までの反例探索"]
+  M --> P["prove：安全性の非有界証明を試行"]
+  M --> C["cover：3目標への経路を探索"]
+  B --> BR["PASS：指定深さまで反例なし"]
+  P --> PR["PASS：ベースケースと帰納段階が成立"]
+  C --> CR["PASS：3目標すべてに到達"]
+```
+
+図は7節のSBY設定と、その各taskがPASSした場合の意味です。FAIL・unknown・timeoutも5節の分類で記録します。探索深さやモデルを変えた結果は、別の実行条件として保存します。
+
 ### 動作確認の範囲
 
 2026-10-25に上記2個のコードブロックを一時ディレクトリへ保存し、YoWASP版Yosys 0.70（`28ba3cb92`、パッケージ`yowasp-yosys==0.70.0.0.post1259`）と同梱SBY・smtbmc、Z3 5.3.1で実行しました。SBYの版表示は`unknown SBY version`だったため、使用パッケージの版を記録しています。通常例では次を確認しました。

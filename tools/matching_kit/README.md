@@ -62,6 +62,20 @@ format. Independently review the current inputs before recording another
 `verdict --accept`; the command records the version, not the semantic review.
 Rejected verdicts do not require a snapshot.
 
+```mermaid
+flowchart TD
+  accTitle: Proposal acceptance and merge with version checks
+  accDescr: A verifier reviews the proposal, tests and requirements. Acceptance records their hashes; merge checks them again and stops if an unapplied acceptance is stale.
+  P["Proposal: check / group / hold"] --> V["Independent verifier reads current inputs"]
+  V -- "accept" --> S["Record reviewed proposal, test and requirement hashes"]
+  V -- "reject" --> R["Keep rejection; do not merge this proposal"]
+  S --> M["merge.py revalidates unapplied accepted proposals"]
+  M --> J{"All checks and snapshots still match?"}
+  J -- "yes" --> W["Write ledgers and merge log"]
+  J -- "no" --> X["Exit 1 without writing"]
+  X -- "Independent review of current inputs" --> V
+```
+
 Before writing, `merge.py` checks all unapplied accepted proposals and their
 snapshots. If any fails, it exits with status 1 without changing either ledger
 or the merge log, including with `--dry-run`. Existing unversioned acceptances

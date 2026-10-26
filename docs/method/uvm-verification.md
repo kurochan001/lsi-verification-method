@@ -28,23 +28,24 @@ virtual interfaceや設定オブジェクトを`uvm_config_db`などで渡す際
 
 この手法では、刺激と判定を次のように接続します。アサーションはインターフェースやDUTへの`bind`などで併用できます。
 
-```text
-test / env の構成
-      |
-      v
-sequence -> sequencer -> driver -> DUT
-                                   |
-                                   v
-                                monitor
-                                   |
-               +-------------------+--------------------+
-               v                   v                    v
-        参照モデルへの入力    scoreboardへの応答   coverage collector
-               |                   ^
-               +---- 期待結果 ------+
-
-要求ID -> 刺激・観測・判定・カバレッジの対応表 -> 実行ID付きの証跡
+```mermaid
+flowchart TD
+  accTitle: UVMで刺激、観測、判定、到達を結ぶ構成
+  accDescr: sequenceからDUTへ刺激を送り、monitorの受理観測を参照モデルへ、応答観測をscoreboardへ渡し、coverageにも関連付ける。
+  T["test / env：構成と設定"] --> S["sequence / sequence item"]
+  S --> Q["sequencer"] --> D["driver"] --> U["DUT"]
+  U --> M["monitor：受理・完了・状態を観測"]
+  M -- "受理された要求" --> R["参照モデル"]
+  R -- "期待結果" --> B["scoreboard"]
+  M -- "実際の応答" --> B
+  M -- "同じケースの属性" --> C["coverage collector"]
+  U -. "信号・時間関係" .-> V["SVA checker"]
+  B --> E["要求ID・case ID・実行IDで証跡を対応付け"]
+  C --> E
+  V --> E
 ```
+
+実線は刺激・観測・結果の受け渡し、点線はSVAの観測関係です。図は接続の概念図で、クラス継承やphaseの順序を示すものではありません。複数agent間の相関は8節、到達と合格の集計は11節で扱います。
 
 参照モデルへ入れるのは、仕様上受理されたと観測できる要求です。ドライバが送信を予定しただけの操作を、DUTが受理した操作として扱いません。要求・応答の順序が入れ替わる場合は、IDなどで対応を照合し、リセットで破棄される処理も仕様に合わせて扱います。
 

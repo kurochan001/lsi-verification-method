@@ -115,6 +115,27 @@ endmodule
 
 エッジkで競合をサンプルすると、同じエッジのNBAでPENDが更新され、その値を次のエッジk+1のサンプルで確認します。そのため、状態更新のassertには`|=>`を使っています。k+1のNBAでさらに値が変わっても、k+1のアサーションが確認するのはその更新より前のサンプルです。IRQの式は、その時点のPEND・IRQ_ENとの組み合わせ関係を確認するため同じサンプルで比較します。
 
+**競合を検査するときの観測時点**
+
+```mermaid
+sequenceDiagram
+  accTitle: SVAのサンプルとNBA更新の前後関係
+  accDescr: エッジkで競合と更新前PENDをサンプルし、NBAでセットする。次のエッジのサンプルを使って後件を評価する。
+  participant S as サンプリング
+  participant D as DUTのレジスタ
+  participant A as ap_set_wins
+  Note over S,A: エッジk
+  S->>A: Preponed：event=1、clear=1、更新前PEND
+  D->>D: NBA：PENDを1へ更新
+  A->>A: Observed：前件成立、次のサンプルを待つ
+  Note over S,A: エッジk+1
+  S->>A: Preponed：PEND=1をサンプル
+  D->>D: NBA：このエッジの入力に従って更新
+  A->>A: Observed：保存したPEND=1で後件を評価
+```
+
+図はリセットによる中断がない正常な競合の例で、サンプリングと更新の主要部分だけを示します。Observedでの判定に、その時点の信号を読み直した値を使うという意味ではありません。
+
 `cp_collision`は競合への到達、`cp_collision_result`はセットされた状態までの経路を記録します。完了のcoverが1回当たっても、他の競合ケースの失敗を取り消しません。初期PEND・時間差・IRQ_ENの必須12目標は、別途case IDとcrossへ対応付けます。これら2つのcoverだけで12目標すべてを確認したとは扱いません。
 
 リセットで競合直後の評価が中断される場合は、要求が許すキャンセルかを別に判定します。このコードにはリセットそのものの出力検査は含めていません。

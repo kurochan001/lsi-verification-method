@@ -71,6 +71,23 @@ python3 examples/gitlab-regression/run.py --demo-bug 1
 
 ## 3. GitLabへ置いて実行する
 
+**この例のpipelineで実際に流れる処理**
+
+```mermaid
+flowchart TD
+  accTitle: GitLabの回帰例のジョブと判定の流れ
+  accDescr: workflowが許可した起動でランナー確認を実行し、その合格後にIRQ回帰を実行する。回帰は終了コードとJUnit、証跡をGitLabへ渡す。
+  T["push・MR・web・schedule"] --> W["workflow rulesで起動可否と重複を制御"]
+  W -- "許可された起動" --> V["runner-tests：ランナーの統合テスト"]
+  V -- "合格" --> R["irq-regression：run.pyを実行"]
+  V -- "失敗" --> F["pipeline失敗、後段の回帰は実行しない"]
+  R --> G["通常機能・変異・X検出・必須50目標を判定"]
+  G -- "終了コード0 / 非0" --> J["GitLabがjobの成否を判定"]
+  G --> A["JUnit・manifest・ログ・波形を保存"]
+```
+
+scheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。JUnitは結果表示用で、jobの成否はランナーの終了状態に反映します。中断やRunner障害ではartifactを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
+
 GitLab上に空のプロジェクトを用意し、この例を含むコミットをpushします。新規プロジェクトではREADMEなどで初期化しない方法が簡単です。未コミットのファイルはpushでは送られないため、例のファイルを含むコミットを使います。
 
 既存のGitHub向け`origin`を保持し、別の`gitlab` remoteへ送る例です。URLは自分のプロジェクトへ置き換え、GitLabに対応した認証を使います。既存の`gitlab` remoteがある場合は、その設定を確認します。

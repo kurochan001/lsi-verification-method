@@ -56,6 +56,23 @@ GitLabでは[scheduled pipeline](https://docs.gitlab.com/ci/pipelines/schedules/
 
 ## 4. 計画・ビルド・分散実行を同じ回帰へ結ぶ
 
+```mermaid
+flowchart TD
+  accTitle: CIと回帰管理の責務を分けた実行フロー
+  accDescr: 変更や定期起動から計画を確定し、Runnerやfarmで実行する。結果を予定ケースへ照合し、判定と証跡をCIおよび要求管理へ返す。
+  T["変更・定期・手動の起動"] --> C["CI：対象commitとcampaignを指定"]
+  C --> M["回帰管理：manifestと必須case IDを確定"]
+  M --> B["ビルド：入力・ツール・構成のIDを保存"]
+  B --> R["Runner / farm：caseを分散実行"]
+  R --> A["集約：予定と結果、終了状態、証跡を照合"]
+  A --> J["合格・失敗・未完了・未実行を判定"]
+  J --> CI["CIへ終了状態・JUnitを返す"]
+  J --> E["要求・coverage・長期証跡を管理"]
+  A -. "retryは別attempt、元の結果を保持" .-> R
+```
+
+図は製品向けの運用案です。回帰管理には専用製品や自社ランナーを使えます。下記のGitLab最小例は、このうち1ジョブ内の逐次実行を実装したものです。retryを許す原因・回数は先に定めます。
+
 回帰を起動するときに、実行対象の一覧を持つmanifestを確定します。campaign ID、計画版、commit、構成、test・scenario、seed、checker、ツールと入力、必要なcase IDを記録します。実行中に対象を追加・削除する場合も、計画の変更として残します。
 
 処理の順序は、次を基本にします。

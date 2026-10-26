@@ -142,6 +142,24 @@ endmodule
 
 `observed`と`checked`は同じ型の別インスタンスです。型全体の率を1つ読むのではなく、それぞれの`x_atomic`、coverpoint、binの内訳を確認します。既知値を確認してからbit型へ渡し、X/Zを0/1へ変換して到達したように見せない構成にしています。
 
+**同じケースを、観測側と合格側へ分類する流れ**
+
+```mermaid
+flowchart TD
+  accTitle: 到達の観測と合格した到達の分離
+  accDescr: 未完了と未知値を分離し、完了した既知値のケースをobservedへ記録する。checkerが実行され合格した場合だけcheckedにも記録する。
+  M["同じcase IDの観測とchecker結果をそろえる"] --> C{"completeか"}
+  C -- "いいえ" --> I["未完了として記録"]
+  C -- "はい" --> K{"観測値はすべて既知か"}
+  K -- "いいえ" --> X["未知値を記録し、エラーを報告"]
+  K -- "はい" --> O["observedへsample"]
+  O --> J{"checkerを実行し、合格したか"}
+  J -- "はい" --> P["checkedへもsample"]
+  J -- "いいえ" --> F["合格側へは採取せず、判定・残件を保持"]
+```
+
+図は6節の`record_case()`の分類を表します。checkerの未実行・失敗の詳細やテスト全体の終了状態は、collectorへ渡す判定の元記録でも管理します。
+
 collector自体は期待値を作りません。PENDの更新とIRQの値を、[SVAのchecker](sva-verification.md#5-例イベントとw1cの優先順位)やscoreboardが確認し、対応する判定を渡します。`checker_passed`を固定値にしたり、前件が成立していないassertの無失敗を渡したりしないようにします。
 
 この16目標は基本の状態更新を分類するもので、前後のタイミングを扱う既存の12クロス目標とは別です。機能の基本動作と、相互作用の時間関係の両方を検証計画へ登録します。coverpointのbinとcrossのbinを足した総数を、意味の異なる要求数として扱いません。
