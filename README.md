@@ -3,6 +3,8 @@
 LSIの仕様書から検証パターンを作り、要求に対する網羅で検証の完了を測る方法を確立するためのリポジトリです。
 仕様書を観測可能な最小単位の要求に分けます。そして、要求ごとに、誤実装なら結果が変わる検証を用意します。作った者とは別の者がそれを反証し、版に紐づいた証跡で網羅を計測します。
 
+初めて読む方は[用語集](docs/glossary.md)で略語・指標の意味を確認できます。[FAQ](docs/faq.md)には、導入、100%の読み方、ランダム検証、SVA・フォーマル、CDC、縮退、CIと完了判断の疑問をまとめています。
+
 ## 全体像
 
 ```mermaid
@@ -55,6 +57,8 @@ flowchart TD
 
 ```text
 docs/method/                    一般化した手順書（この手法の本体）
+docs/glossary.md                用語・略語と、この手順での意味
+docs/faq.md                     導入・方式の使い分け・運用上のFAQ
 docs/case-study-ieee1800/       もとになった実践の資料（IEEE 1800-2023）
 docs/templates/                製品開発で使う記録の雛形
 examples/gitlab-regression/     このリポジトリ単独で動くGitLab回帰の最小例
@@ -66,6 +70,8 @@ PROVENANCE.md                   各ファイルの由来（元のリポジトリ
 ```
 
 ## 読む順序
+
+用語や方式の違いで迷ったときは、[用語集](docs/glossary.md)と[FAQ](docs/faq.md)から該当する手順書へ進めます。
 
 製品へ適用する際は、[検証領域の点検](docs/method/verification-gap-review.md)と[適用範囲の雛形](docs/templates/verification-scope.md)で、必要な領域・構成・担当・判定段階を先に確認します。
 
