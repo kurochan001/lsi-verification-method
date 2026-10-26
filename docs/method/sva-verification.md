@@ -230,6 +230,12 @@ UVMとの接続は[UVM資料](uvm-verification.md)、刺激と時間関係は[�
 
 最後の3ケースは、SVAのfail数0だけで要求の合格を判定できないことの確認です。ハーネスは確認用の一時ファイルで、製品DUT・正式な回帰環境ではありません。2値シミュレーションでの記述例の確認であり、X/Zの検査、すべてのSVA構文・実行環境の検証、形式証明は行っていません。
 
+### GitLabで実行できるSVA例
+
+[GitLabでSVAのアサーションとカバーを実行する](../../examples/gitlab-sva/README.md)では、同じ説明用IRQ回路へ6個の並行アサーションと12個のカバーを接続します。状態更新・保持・同期リセット・IRQ出力を検査し、各assertで意図した違反を検出します。前件のない刺激、チェッカー無効化、最後の後件の観測も扱います。
+
+この実行例はVerilatorの2値シミュレーションで、ネイティブの`coverage.dat`とcover actionのログを照合します。本文の`ap_known`によるX/Z検査やSVA全構文の対応、形式証明を確認した結果ではありません。完了カバーは履歴ガード付きの`$past`式で表し、本文の`##1`を使う説明コードと実装上の記法を分けています。ツール版、確認範囲、CI結果は実行例へ記録します。
+
 ## 11. 参考にした一次資料
 
 - [DVCon 2010：Asynchronous Behaviors Meet Their Match with SystemVerilog Assertions](https://dvcon-proceedings.org/wp-content/uploads/asynchronous-behaviors-meet-their-match-with-systemverilog-assertions.pdf)：サンプリング、NBA更新、非同期のdisable条件の注意点を参照しました。旧版規格に基づく論文であり、採用する規格・ツールの仕様も確認します。

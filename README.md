@@ -37,6 +37,7 @@ flowchart TD
 - **機能間の検証**：[機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md)。依存関係の洗い出し、同時動作・順序・中断、クロス目標の選定と合格条件をまとめています。イベントとW1Cクリアの競合を、12目標の例として示しています。
 - **ランダム検証**：[制約付きランダム検証の計画・実行・完了判定](docs/method/constrained-random-verification.md)。制約、分布、seed、回帰計画、未達への調整、失敗の再現・縮小をまとめています。クロス検証の12目標を探索する、9実行の計画例も示しています。
 - **SVAによる検証**：[SVAのアサーションとカバーによる検証](docs/method/sva-verification.md)。assert・assume・cover、サンプリング、vacuous pass、リセット、シミュレーションとフォーマル検証の完了判定をまとめています。イベントとW1Cの競合を使ったチェッカー例も示しています。
+- **SVAの実行例**：[GitLabでSVAのアサーションとカバーを実行する](examples/gitlab-sva/README.md)。既存IRQ回路をVerilatorで検証し、6個のassert・12個のcover、6種類の違反、前件のない診断を実行します。カバーログとネイティブの`coverage.dat`も照合します。
 - **covergroupによる機能網羅**：[covergroupで機能を体系的に網羅する](docs/method/functional-coverage.md)。機能一覧からcoverpoint・bin・crossを選ぶ方法、観測と判定、除外とインスタンス別の集計をまとめています。基本動作の16目標を収集するコレクター例も示しています。
 - **フォーマル検証**：[フォーマル検証の計画・証明・完了判定](docs/method/formal-verification.md)。仮定・初期状態、抽象化・証明の分割、有界検査と非有界の証明、活性、反例・到達性、サインオフをまとめています。小さな割り込みモデルの証明と、誤実装・過剰な仮定の確認例も示しています。
 - **検証環境の検出力**：[ミューテーション検証で検証環境の検出力を確かめる](docs/method/mutation-verification.md)。回路へ意図的な誤りを入れ、刺激・チェッカー・SVAが検出するかを評価します。変異の選び方、未検出の分析、等価な変異、検出率と未完了の集計をまとめています。
@@ -66,6 +67,8 @@ flowchart TD
 
 ready/valid通信のランダム検証を加えた構成を下表に示します。[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)の[CI #2989066110](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989066110)で全25ジョブ・JUnit 150件の成功を確認しました。詳細は[ready/valid例の確認記録](examples/gitlab-stream/README.md#7-実行確認)へ記載しています。MR !6のmainへのマージは行っていません。
 
+SVA例はready/validのMR !6を土台に追加します。MR !6が未マージのため、SVAの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)の宛先は`examples/stream-random-20261026`です。取り込みはMR !6→!7の順とし、!6をマージ後も!7の宛先が変わらない場合はmainへ変更します。[CI #2989571313](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989571313)で全27ジョブ・JUnit 160件の成功を確認しました。詳細は[確認記録](examples/gitlab-sva/README.md#7-実行確認)へ記載しています。
+
 | 実行例 | 回帰ジョブ数・対象 | 通常実行のJUnit件数 | schedule実行の予定件数 |
 | --- | --- | --- | --- |
 | [IRQ・CDC](examples/gitlab-regression/README.md) | 1ジョブ、要求8件・目標50件 | 38 | 41 |
@@ -74,9 +77,10 @@ ready/valid通信のランダム検証を加えた構成を下表に示します
 | [APBレジスタ検証](examples/gitlab-apb/README.md) | 3ジョブ、待ち状態0／1／3 | 18（各6） | 24（各8） |
 | [APB＋割込み結合検証](examples/gitlab-apb-irq/README.md) | 3ジョブ、待ち状態0／1／3 | 18（各6） | 24（各8） |
 | [ready/validランダム検証](examples/gitlab-stream/README.md) | 4ジョブ、深さ1／3×幅8／16 | 24（各6） | 32（各8） |
-| 合計 | 回帰19ジョブ＋ランナー確認6ジョブ | 150 | 185 |
+| [SVAのアサーションとカバー](examples/gitlab-sva/README.md) | 1ジョブ、要求6件・カバー12目標 | 10 | 12 |
+| 合計 | 回帰20ジョブ＋ランナー確認7ジョブ | 160 | 197 |
 
-ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件の計67テストで、上表のJUnit件数とは別です。scheduleではシミュレーション5例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。185件は設定から算出した予定件数です。追加前のmainで確認した126件と追加後のMRの結果を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件の計78テストで、上表のJUnit件数とは別です。scheduleではシミュレーション6例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。197件は設定から算出した予定件数です。追加前のmainで確認した126件と追加後のMRの結果を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
 
 ## 構成
 
@@ -92,6 +96,7 @@ examples/gitlab-formal/         オープンソースツールによるFIFOの�
 examples/gitlab-apb/            APBレジスタ・W1C・待ち状態の検証と3構成の並列回帰
 examples/gitlab-apb-irq/        APBと割込みの結合・クロス検証と3構成の並列回帰
 examples/gitlab-stream/         ready/valid・バックプレッシャーと4構成の並列回帰
+examples/gitlab-sva/            SVAの実行・ネイティブカバー・前件不足と検出力の確認
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
 tools/matching_kit/             照合案の受付・検査、検証者の判定、統合、シミュレータ実行、Workflowスクリプト
 tools/generators/               表形式の要求から検証パターンを生成する枠組みと、その例

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SVA-SET-WINS",
+      "assertion": "ap_set_wins",
+      "description": "セットとクリアの競合はセット優先",
+      "goals": [
+        "cp_set_wins_seen",
+        "cp_set_wins_done"
+      ]
+    },
+    {
+      "id": "SVA-SET-ONLY",
+      "assertion": "ap_set_only",
+      "description": "イベントのみでセット",
+      "goals": [
+        "cp_set_only_seen",
+        "cp_set_only_done"
+      ]
+    },
+    {
+      "id": "SVA-CLEAR-ONLY",
+      "assertion": "ap_clear_only",
+      "description": "クリアのみで解除",
+      "goals": [
+        "cp_clear_only_seen",
+        "cp_clear_only_done"
+      ]
+    },
+    {
+      "id": "SVA-HOLD",
+      "assertion": "ap_hold",
+      "description": "操作がないクロックで保持",
+      "goals": [
+        "cp_hold_seen",
+        "cp_hold_done"
+      ]
+    },
+    {
+      "id": "SVA-RESET",
+      "assertion": "ap_reset",
+      "description": "保持中の同期リセットと次サンプルの解除",
+      "goals": [
+        "cp_reset_pending_seen",
+        "cp_reset_done"
+      ]
+    },
+    {
+      "id": "SVA-IRQ",
+      "assertion": "ap_irq",
+      "description": "保持状態と許可による出力",
+      "goals": [
+        "cp_masked_pending",
+        "cp_unmasked_pending"
+      ]
+    }
+  ]
+}
