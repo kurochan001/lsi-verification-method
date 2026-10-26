@@ -2,7 +2,7 @@
 
 有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。GitLabへこの例を含むコミットを置くと、ランナーの確認テストと、説明用IRQ回路の回帰を実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
-同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)も追加しています。以下ではIRQ・CDC回帰の処理を説明します。
+同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)も含まれます。現行の全体構成は[READMEの実行例一覧](../../README.md#gitlab実行例の現在の構成)、以下の件数は特記がなければIRQ・CDC回帰の内訳です。
 
 ## 1. 実行するもの
 
@@ -73,22 +73,30 @@ python3 examples/gitlab-regression/run.py --demo-bug 1
 
 ## 3. GitLabへ置いて実行する
 
-**IRQ・CDC回帰のジョブと判定の流れ**
+**IRQ・CDCを含む現行パイプラインの流れ**
 
 ```mermaid
 flowchart TD
-  accTitle: GitLabの回帰例のジョブと判定の流れ
-  accDescr: workflowが許可した起動でランナー確認を実行し、その合格後にIRQ回帰を実行する。回帰は終了コードとJUnit、証跡をGitLabへ渡す。
+  accTitle: 三つの検証例を実行するGitLabパイプライン
+  accDescr: workflowが許可した起動で三種類のランナー確認を行い、成功後にIRQ、FIFO六構成、フォーマル二構成を実行して結果と証跡を保存する。
   T["push・MR・web・schedule"] --> W["workflow rulesで起動可否と重複を制御"]
-  W -- "許可された起動" --> V["runner-tests：ランナーの統合テスト"]
+  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマルのランナー確認"]
   V -- "合格" --> R["irq-regression：run.pyを実行"]
+  V -- "合格" --> Q["fifo-regression：6構成のランダム検証"]
+  V -- "合格" --> M["fifo-formal：ツールを準備し2構成を検査"]
   V -- "失敗" --> F["パイプライン失敗、後段の回帰は実行しない"]
-  R --> G["通常機能・変異・X検出・必須50目標を判定"]
-  G -- "終了コード0 / 非0" --> J["GitLabがジョブの成否を判定"]
+  R --> G["IRQ：通常機能・変異・X検出・必須50目標を判定"]
+  Q --> GQ["FIFO：構成ごとの必須18／22目標・3変異を判定"]
+  M --> GM["フォーマル：証明・有界検査・到達性・診断を判定"]
+  G -- "終了コード0 / 非0" --> J["各ジョブの成否をGitLabへ反映"]
+  GQ --> J
+  GM --> J
   G --> A["JUnit・マニフェスト・ログ・波形を保存"]
+  GQ --> A
+  GM --> A
 ```
 
-scheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
+IRQ・FIFOはscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
 
 GitLab上に空のプロジェクトを用意し、この例を含むコミットをpushします。新規プロジェクトではREADMEなどで初期化しない方法が簡単です。未コミットのファイルはpushでは送られないため、例のファイルを含むコミットを使います。
 
@@ -107,14 +115,14 @@ GitLabのパイプライン画面で次を確認します。
 
 1. `runner-tests`が合格する。
 2. `irq-regression`が合格し、ログ末尾に`Regression: PASS`がある。
-3. Tests表示に38項目あり、失敗・errorが0である。
+3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では、FIFO・フォーマルを含む90項目になる。
 4. アーティファクトの`summary.json`で通常回路32合格・変異4検出・Xの自己確認1検出を、`coverage.json`で8要求・50/50目標の合格を確認する。
 
 プロジェクトのCI Lint／Pipeline editorでも、includeを含む設定を検査します。ジョブがpendingのままなら、適合するRunner・untaggedの受付・利用枠を確認します。依存パッケージの取得で失敗した場合は環境の失敗で、回路の不具合とは分けます。
 
-MRでは、ルートの`workflow:rules`がMR パイプラインを明示的に有効にし、MRが開いているブランチのpush パイプラインを抑止します。両ジョブにrulesを付け、MRでも`runner-tests`を省略しません。GitLab側では、対象プロジェクトの「Pipelines must succeed」などのマージ条件を有効にし、必要なブランチ保護も設定します。ローカルのYAML変更だけでプロジェクトのmerge設定が有効になるわけではありません。
+MRでは、ルートの`workflow:rules`がMRパイプラインを有効にし、MRが開いているブランチのpushパイプラインを抑止します。現行設定ではランナー確認3ジョブと回帰9ジョブを実行します。GitLab側では、対象プロジェクトの「Pipelines must succeed」などのマージ条件を有効にし、必要なブランチ保護も設定します。ローカルのYAML変更だけでプロジェクトのマージ条件が有効になるわけではありません。
 
-実行先では、作業ブランチをpushしてMRを作成・更新し、MR パイプラインが重複せず、両ジョブを実行すること、失敗したMRのmergeが止まることも確認します。[GitLabのMR設定](https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/)と[workflowの説明](https://docs.gitlab.com/ci/yaml/workflow/)が参照先です。
+実行先では、作業ブランチをpushしてMRを作成・更新し、必要な12ジョブが含まれることと、失敗したMRのマージが止まることを確認します。パイプラインの重複はイベントと対象SHAを照合して確認します。[GitLabのMR設定](https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/)と[workflowの説明](https://docs.gitlab.com/ci/yaml/workflow/)が参照先です。
 
 ## 4. GitLabで赤になるデモ
 
@@ -185,4 +193,6 @@ GitLab-hosted Linux Runner、`debian:bookworm-slim`、Python 3.11.2、Icarus 11.
 
 GitLabのPipeline editorで構文正常を確認し、展開した設定をCI Lintでも検査しました。MRが開いているブランチのpushを模擬すると、`workflow:rules`によりパイプラインが作成されません。実際の変更ではMR パイプラインに両ジョブが含まれます。
 
-プロジェクトは`Pipelines must succeed`を有効、skippedの成功扱いを無効にしました。mainはmergeをMaintainersに限定し、直接pushをNo one、force pushを無効にしています。検証終了時にはMRを未マージで残し、その後2026-10-25のユーザー指示により[MR !1をmainへマージ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/commit/b0440823fb1ff9015f4ca911a0ec81ed18492459)しました。夜間回帰の[schedule](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipeline_schedules)は`0 2 * * *`・Asia/Tokyo・対象`demo/expanded-regression`ですが、定期起動はInactiveです。上記はscheduleの手動起動を確認した結果で、毎晩の継続運用や製品への適用実績ではありません。
+2026-10-25の検証では、`Pipelines must succeed`を有効、skippedの成功扱いを無効にしました。mainはマージをMaintainersに限定し、直接pushをNo one、force pushを無効に設定しました。検証終了時にはMRを未マージで残し、その後同日のユーザー指示により[MR !1をmainへマージ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/commit/b0440823fb1ff9015f4ca911a0ec81ed18492459)しました。検証時の[schedule](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipeline_schedules)は`0 2 * * *`・Asia/Tokyo・対象`demo/expanded-regression`で、Inactiveに設定しました。上記はscheduleの手動起動を確認した記録で、毎晩の継続運用や製品への適用実績ではありません。現行mainで定期運用する場合は、対象ブランチと有効状態を確認してください。
+
+2026-10-26にはFIFOのMR !2、フォーマル検証のMR !3もmainへマージされました。[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)で全12ジョブ・JUnit 90件の成功を確認しています。上記の38／41件・2ジョブという数値は、IRQ例だけを実行していた当時の記録です。

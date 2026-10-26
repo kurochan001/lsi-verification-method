@@ -127,7 +127,9 @@ pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存�
 
 CIの緑は設定したジョブの合格です。予定ケースの欠落、必須目標、未完了、チェッカーの実行結果をランナーが判定し、異常を非0の終了コードへ反映する必要があります。GitLabのJUnitレポートは結果表示用で、単独ではジョブの状態を変えません。[GitLab公式のJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)
 
-この実行例は`requirements-and-coverage`で必須目標を照合し、未達なら回帰を失敗させます。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含むプロジェクトの規則も確認してください。[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)と[保存・判定](../examples/gitlab-regression/README.md#6-保存するものと判定)を参照してください。
+IRQ・FIFOのシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達なら回帰を失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[現行構成](../README.md#gitlab実行例の現在の構成)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
+
+CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。現在の公開デモではFIFOのMR !2・フォーマルのMR !3ともmainへマージ済みで、通常パイプラインのJUnitは計90件です（2026-10-26確認）。
 
 ### Q25. このリポジトリだけで何を実行できますか
 

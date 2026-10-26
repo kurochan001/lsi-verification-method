@@ -30,7 +30,7 @@ flowchart TD
 
 ## 現状
 
-複製資料・ツールの同期基準は、2026-10-25に確認したkirimasim-testsの`main`（[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)）です。一般化した手順書には、このリポジトリで製品開発向けの追記・改訂をしています。派生元と変更の範囲は[PROVENANCE.md](PROVENANCE.md)に記録しています。
+ケーススタディ文書の最終取り込みは2026-10-26のkirimasim-tests [`0da4f2fc`](https://github.com/kurochan001/kirimasim-tests/commit/0da4f2fc247bfcee27fc407b8ef0cd8d8f768dfc)、参照ツールの同期基準は2026-10-25の[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)です。下記の集計値は、2026-10-26に確認した上流[`b2de3bc5`](https://github.com/kurochan001/kirimasim-tests/commit/b2de3bc5ef17071be53d44c6742700c03b1b12a7)の値へ更新しています。一般化した手順書と実行例には、このリポジトリ独自の追記・改訂があります。由来と更新範囲は[PROVENANCE.md](PROVENANCE.md)を参照してください。
 
 - **手法の一般化文書**：[デジタルLSIの仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体検証に関する一般的な情報をまとめ、仕様から検証パターンを作る流れを整理した資料です。実際の製品開発で機能検証と併せて必要な、クロック・リセット、低電力、タイミング、DFT・量産テスト、物理設計、信頼性、システム統合、ポストシリコンの項目も14節に整理しています。
 - **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、回帰の合格条件をまとめています。実行可能なUVMテストベンチは今後の適用で用意します。
@@ -46,15 +46,29 @@ flowchart TD
 - **FIFOのランダム検証例**：[GitLabでFIFOのランダム検証を実行する](examples/gitlab-fifo/README.md)。参照キューによるデータ・占有数の比較、空／満杯・同時要求、動作中リセット、3変異の検出、深さ1／3／8×幅8／16の6構成回帰を実装しています。必須18／22目標を構成ごとに判定し、GitLabのmatrixジョブとJUnit・証跡保存へつなぎます。
 - **商用ツール不要のフォーマル検証例**：[GitLabでFIFOをフォーマル検証する](examples/gitlab-formal/README.md)。ジョブ内でYosys・SBY・Z3を準備し、制御の非有界証明、データの有界検査、6目標の到達性、3変異の反例、過剰な仮定の点検を実行します。幅8・深さ1／3を別々に判定し、手元へのツール導入なしで試せます。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
-- **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26時点の状況は次のとおりです。
+- **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26に確認した[上流の集計（`b2de3bc5`）](https://github.com/kurochan001/kirimasim-tests/blob/b2de3bc5ef17071be53d44c6742700c03b1b12a7/docs/behavior-coverage-summary.md)は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
-  - 対応済みは9,585要求（暫定設計網羅率77.81%）で、75%の目標を超えた。合格の証跡があるのは5,424要求（暫定実行確認率44.03%）。本文（1〜40章、9,486要求）では、暫定設計網羅率77.46%（7,348要求）、暫定実行確認率37.85%（3,590要求）。
+  - 対応済みは9,887要求（暫定設計網羅率80.26%）、合格の証跡があるのは5,495要求（暫定実行確認率44.61%）。本文（1〜40章、9,486要求）では、暫定設計網羅率79.18%（7,511要求）、暫定実行確認率38.17%（3,621要求）。分母は未承認のため、いずれも暫定値。
+  - 全6,986テストのうち、要求との対応登録があるものは4,577本、未登録は2,409本。登録済みは少なくとも1要求との対応を確認した本数で、各テスト全体のレビュー完了数ではない。
   - 対応するテストのなかった要求に新規テストを書き、作成者とは別の検証者が合格としたものだけを取り込んだ（2026-10-24〜26に区間ごとに実施）。最初の2回では、1,586本のうち1,530本が合格し、1,527本を取り込んだ（56本は欠陥）。
-  - Icarus Verilog 13.0 が期待どおりの結果を再現する、規格だけを根拠にしていたテスト277本に、`:oracle:` を記録した。
+  - 文書取り込み時の`0da4f2fc`では、Icarus Verilog 13.0が期待どおりの結果を再現する、規格だけを根拠にしていたテスト277本に、`:oracle:`を記録した。
   - 比較用のシミュレータとして Lyra を加え、Icarus Verilog・Verilator・kirimasim と並べて毎晩実行している（nvc も試したが、対応が少ないため外した）。期待値が規格と食い違う疑いのあるテストを、除外の候補として記録している。
-  - 解釈保留は46論点のうち27論点を解消した。
+  - 解釈保留は19論点・要求21行。資料確認の完了と、解釈・分母の確定は区別して管理している。
   - 上記の新規テストと照合案は、作成者とは別の検証者による独立レビューを経て取り込んだ。スイート全体の全テストをレビュー済みという意味ではない。
 - **ツール**：ケーススタディで使った照合キット、生成テストの枠組み、台帳と計測の参照実装です。kirimasim-testsのディレクトリ構成を前提にしており、このリポジトリ単独では動きません（[tools/README.md](tools/README.md)）。
+
+## GitLab実行例の現在の構成
+
+2026-10-26に、FIFOの[MR !2](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/2)とフォーマル検証の[MR !3](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/3)がmainへマージ済みであることを確認しました。[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)は、全12ジョブ成功、JUnit 90件・失敗／エラー0件です。
+
+| 実行例 | 回帰ジョブ数・対象 | 通常実行のJUnit件数 | schedule実行の予定件数 |
+| --- | --- | --- | --- |
+| [IRQ・CDC](examples/gitlab-regression/README.md) | 1ジョブ、要求8件・目標50件 | 38 | 41 |
+| [FIFOランダム検証](examples/gitlab-fifo/README.md) | 6ジョブ、深さ1／3／8×幅8／16 | 36（各6） | 48（各8） |
+| [FIFOフォーマル検証](examples/gitlab-formal/README.md) | 2ジョブ、幅8・深さ1／3 | 16（各8） | 16（各8） |
+| 合計 | 回帰9ジョブ＋ランナー確認3ジョブ | 90 | 105 |
+
+ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件の計30テストで、上表のJUnit件数とは別です。scheduleではIRQ・FIFOがnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。105件は現行設定から算出した予定件数で、今回mainで確認したのは通常実行の90件です。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
 
 ## 構成
 
