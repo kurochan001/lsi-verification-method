@@ -127,15 +127,17 @@ pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存�
 
 CIの緑は設定したジョブの合格です。予定ケースの欠落、必須目標、未完了、チェッカーの実行結果をランナーが判定し、異常を非0の終了コードへ反映する必要があります。GitLabのJUnitレポートは結果表示用で、単独ではジョブの状態を変えません。[GitLab公式のJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)
 
-IRQ・FIFOのシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達なら回帰を失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[現行構成](../README.md#gitlab実行例の現在の構成)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
+IRQ・FIFO・APBのシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達なら回帰を失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[現行構成](../README.md#gitlab実行例の現在の構成)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
 
-CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。現在の公開デモではFIFOのMR !2・フォーマルのMR !3ともmainへマージ済みで、通常パイプラインのJUnitは計90件です（2026-10-26確認）。
+CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。2026-10-26に確認したmainは、FIFOのMR !2・フォーマルのMR !3がマージ済みで、JUnitは計90件です。APB例の3構成を追加したMR !4では、全16ジョブ・JUnit 108件の成功を確認しました。MR !4のmainへのマージは行っていません。最新の実行確認は[構成一覧](../README.md#gitlab実行例の現在の構成)と各例の確認記録を参照してください。
 
 ### Q25. このリポジトリだけで何を実行できますか
 
 `examples/gitlab-regression/`の説明用IRQ回帰は、Python 3.10以上とIcarus Verilogの`iverilog`・`vvp`があればローカルで実行できます。[ローカル手順](../examples/gitlab-regression/README.md#2-まずローカルで実行する)にコマンドがあります。通常回路、変異、X注入、要求・50目標の照合を行い、手続き的チェッカーの観測記録を集計します。UVM、SVAのカバレッジ、covergroup DB、フォーマルをそのジョブで実行する例ではありません。
 
 同じ環境で[同期FIFOのランダム検証](../examples/gitlab-fifo/README.md)も実行できます。参照キューによる比較、境界テストとseed付き操作列、リセット、3変異の検出を行います。深さと幅を変えた6構成をそれぞれ判定するGitLab設定もあります。
+
+[APBレジスタ検証](../examples/gitlab-apb/README.md)も同じ環境で実行できます。3種類の待ち時間、アドレス分類×操作、エラー応答、W1Cとイベントの競合、リセットを比較し、構成ごとの必須目標を判定します。
 
 [FIFOのフォーマル検証](../examples/gitlab-formal/README.md)は、専用のPythonパッケージをGitLabのジョブ内で準備して実行します。ローカルで試す場合の一時仮想環境の手順も用意しています。
 

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "APB-ACCESS", "description": "全アドレス分類の読出し・書込みと応答、エラー時の状態保持", "goals": ["cross/config/read", "cross/config/write", "cross/id/read", "cross/id/write", "cross/pending/read", "cross/pending/write", "cross/unmapped/read", "cross/unmapped/write", "cross/unaligned/read", "cross/unaligned/write"]},
+    {"id": "APB-DATA", "description": "設定レジスタの代表データ", "goals": ["data/zero", "data/ones", "data/alternating"]},
+    {"id": "APB-W1C", "description": "ゼロ書込み、全クリア、同一ビットのイベント優先", "goals": ["w1c/zero", "w1c/clear-all", "w1c/event-wins"]},
+    {"id": "APB-RESET", "description": "IDLE・SETUP・ACCESS中の同期リセット", "goals": ["reset/idle", "reset/setup", "reset/access"]},
+    {"id": "APB-CONTINUOUS", "description": "PSELを保持した連続転送にもSETUPを挟む", "goals": ["bus/back-to-back"]},
+    {"id": "APB-WAIT", "minimum_wait": 1, "description": "待ちサイクル中の要求保持と副作用抑止", "goals": ["bus/wait"]}
+  ]
+}

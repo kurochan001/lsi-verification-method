@@ -1,0 +1,32 @@
+variables:
+  APB_DEMO_BUG: "0"
+  APB_REGRESSION_SEED: "17"
+
+apb-runner-tests:
+  stage: validate
+  timeout: 10m
+  script:
+    - python3 -m unittest discover -s examples/gitlab-apb/tests -v
+
+apb-regression:
+  stage: regression
+  timeout: 10m
+  parallel:
+    matrix:
+      - APB_WAIT: ["0", "1", "3"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      variables:
+        APB_PROFILE: nightly
+    - when: on_success
+      variables:
+        APB_PROFILE: smoke
+  script:
+    - python3 examples/gitlab-apb/run.py --wait "$APB_WAIT" --profile "$APB_PROFILE" --seed "$APB_REGRESSION_SEED" --demo-bug "$APB_DEMO_BUG" --out "artifacts/apb-wait${APB_WAIT}"
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - artifacts/apb-*/
+    reports:
+      junit: artifacts/apb-*/junit.xml

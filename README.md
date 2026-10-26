@@ -45,6 +45,7 @@ flowchart TD
 - **GitLabの実行例**：[GitLabで割り込みの継続回帰を動かす](examples/gitlab-regression/README.md)。基本動作・時間関係・動作中リセット・CDC遅延モデル、4変異とXの自己確認、8要求・50目標の自動判定、MR・定期回帰、JUnit・証跡保存を実装しています。ローカルと[公開GitLabデモ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)で動作確認済みです。通常・夜間回帰、失敗時のJUnit・アーティファクト、MRのマージ制御の実行記録を掲載しています。
 - **FIFOのランダム検証例**：[GitLabでFIFOのランダム検証を実行する](examples/gitlab-fifo/README.md)。参照キューによるデータ・占有数の比較、空／満杯・同時要求、動作中リセット、3変異の検出、深さ1／3／8×幅8／16の6構成回帰を実装しています。必須18／22目標を構成ごとに判定し、GitLabのmatrixジョブとJUnit・証跡保存へつなぎます。
 - **商用ツール不要のフォーマル検証例**：[GitLabでFIFOをフォーマル検証する](examples/gitlab-formal/README.md)。ジョブ内でYosys・SBY・Z3を準備し、制御の非有界証明、データの有界検査、6目標の到達性、3変異の反例、過剰な仮定の点検を実行します。幅8・深さ1／3を別々に判定し、手元へのツール導入なしで試せます。
+- **APBレジスタ検証例**：[GitLabでAPBレジスタを検証する](examples/gitlab-apb/README.md)。読出し・書込み、待ち状態0／1／3、エラー応答、W1Cとイベントの競合、動作中リセットを検証します。3構成で必須20／21目標と3変異の検出を判定します。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26に確認した[上流の集計（`b2de3bc5`）](https://github.com/kurochan001/kirimasim-tests/blob/b2de3bc5ef17071be53d44c6742700c03b1b12a7/docs/behavior-coverage-summary.md)は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
@@ -61,14 +62,17 @@ flowchart TD
 
 2026-10-26に、FIFOの[MR !2](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/2)とフォーマル検証の[MR !3](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/3)がmainへマージ済みであることを確認しました。[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)は、全12ジョブ成功、JUnit 90件・失敗／エラー0件です。
 
+APB例は[MR !4](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/4)へ追加し、[CI #2988642917](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988642917)で全16ジョブ・JUnit 108件の成功を確認しました。MR !4のmainへのマージは行っていません。
+
 | 実行例 | 回帰ジョブ数・対象 | 通常実行のJUnit件数 | schedule実行の予定件数 |
 | --- | --- | --- | --- |
 | [IRQ・CDC](examples/gitlab-regression/README.md) | 1ジョブ、要求8件・目標50件 | 38 | 41 |
 | [FIFOランダム検証](examples/gitlab-fifo/README.md) | 6ジョブ、深さ1／3／8×幅8／16 | 36（各6） | 48（各8） |
 | [FIFOフォーマル検証](examples/gitlab-formal/README.md) | 2ジョブ、幅8・深さ1／3 | 16（各8） | 16（各8） |
-| 合計 | 回帰9ジョブ＋ランナー確認3ジョブ | 90 | 105 |
+| [APBレジスタ検証](examples/gitlab-apb/README.md) | 3ジョブ、待ち状態0／1／3 | 18（各6） | 24（各8） |
+| 合計 | 回帰12ジョブ＋ランナー確認4ジョブ | 108 | 129 |
 
-ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件の計30テストで、上表のJUnit件数とは別です。scheduleではIRQ・FIFOがnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。105件は現行設定から算出した予定件数で、今回mainで確認したのは通常実行の90件です。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+APB追加後の構成を上表に示します。ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件の計42テストで、上表のJUnit件数とは別です。scheduleではIRQ・FIFO・APBがnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。129件は設定から算出した予定件数です。APB追加前のmainで確認した90件とは区別し、追加後の実行結果は[APB例の確認記録](examples/gitlab-apb/README.md#6-実行確認)へ記載しています。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
 
 ## 構成
 
@@ -81,6 +85,7 @@ docs/templates/                製品開発で使う記録の雛形
 examples/gitlab-regression/     このリポジトリ単独で動くGitLab回帰の最小例
 examples/gitlab-fifo/           FIFOのスコアボード・ランダム検証と6構成の並列回帰
 examples/gitlab-formal/         オープンソースツールによるFIFOの証明・有界検査・到達性
+examples/gitlab-apb/            APBレジスタ・W1C・待ち状態の検証と3構成の並列回帰
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
 tools/matching_kit/             照合案の受付・検査、検証者の判定、統合、シミュレータ実行、Workflowスクリプト
 tools/generators/               表形式の要求から検証パターンを生成する枠組みと、その例

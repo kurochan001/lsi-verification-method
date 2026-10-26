@@ -12,3 +12,4 @@ include:
   - local: /examples/gitlab-regression/gitlab-ci.yml
   - local: /examples/gitlab-fifo/gitlab-ci.yml
   - local: /examples/gitlab-formal/gitlab-ci.yml
+  - local: /examples/gitlab-apb/gitlab-ci.yml
