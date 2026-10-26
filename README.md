@@ -30,7 +30,7 @@ flowchart TD
 
 ## 現状
 
-ケーススタディ文書の最終取り込みは2026-10-26のkirimasim-tests [`0da4f2fc`](https://github.com/kurochan001/kirimasim-tests/commit/0da4f2fc247bfcee27fc407b8ef0cd8d8f768dfc)、参照ツールの同期基準は2026-10-25の[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)です。下記の集計値は、2026-10-26に確認した上流[`b2de3bc5`](https://github.com/kurochan001/kirimasim-tests/commit/b2de3bc5ef17071be53d44c6742700c03b1b12a7)の値へ更新しています。一般化した手順書と実行例には、このリポジトリ独自の追記・改訂があります。由来と更新範囲は[PROVENANCE.md](PROVENANCE.md)を参照してください。
+ケーススタディ文書の最終取り込みは2026-10-26のkirimasim-tests [`0da4f2fc`](https://github.com/kurochan001/kirimasim-tests/commit/0da4f2fc247bfcee27fc407b8ef0cd8d8f768dfc)、参照ツールの同期基準は2026-10-25の[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)です。下記の集計値は、2026-10-26に確認した上流[`5fb3c45d`](https://github.com/kurochan001/kirimasim-tests/commit/5fb3c45d73e4946d99690389752b82c86eecaa50)の値へ更新しています。一般化した手順書と実行例には、このリポジトリ独自の追記・改訂があります。由来と更新範囲は[PROVENANCE.md](PROVENANCE.md)を参照してください。
 
 - **手法の一般化文書**：[デジタルLSIの仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体検証に関する一般的な情報をまとめ、仕様から検証パターンを作る流れを整理した資料です。実際の製品開発で機能検証と併せて必要な、クロック・リセット、低電力、タイミング、DFT・量産テスト、物理設計、信頼性、システム統合、ポストシリコンの項目も14節に整理しています。
 - **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、回帰の合格条件をまとめています。実行可能なUVMテストベンチは今後の適用で用意します。
@@ -54,10 +54,10 @@ flowchart TD
 - **UARTのランダム検証例**：[GitLabでUARTを検証する](examples/gitlab-uart/README.md)。8N1／8E1／8O1と分周数8／16の6構成で、独立した送受信照合、エラー注入、偽スタート、転送中リセットと復帰、21／22目標と3／4変異を確認します。
 - **APB・UART・割込みの結合検証例**：[GitLabで3機能を結合検証する](examples/gitlab-apb-uart/README.md)。レジスタ操作から実際の送受信、エラーと割込みまでを9構成で確認します。W1C・MASK更新・受信読出しの競合を含め、60／61／69／70目標と5変異を判定します。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
-- **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26に確認した[上流の集計（`b2de3bc5`）](https://github.com/kurochan001/kirimasim-tests/blob/b2de3bc5ef17071be53d44c6742700c03b1b12a7/docs/behavior-coverage-summary.md)は次のとおりです。
+- **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26に確認した[上流の集計（`5fb3c45d`）](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
-  - 対応済みは9,887要求（暫定設計網羅率80.26%）、合格の証跡があるのは5,495要求（暫定実行確認率44.61%）。本文（1〜40章、9,486要求）では、暫定設計網羅率79.18%（7,511要求）、暫定実行確認率38.17%（3,621要求）。分母は未承認のため、いずれも暫定値。
-  - 全6,986テストのうち、要求との対応登録があるものは4,577本、未登録は2,409本。登録済みは少なくとも1要求との対応を確認した本数で、各テスト全体のレビュー完了数ではない。
+  - 対応済みは10,209要求（暫定設計網羅率82.87%）、合格の証跡があるのは5,639要求（暫定実行確認率45.77%）。本文（1〜40章、9,486要求）では、暫定設計網羅率82.57%（7,833要求）、暫定実行確認率39.69%（3,765要求）。分母は未承認のため、いずれも暫定値。
+  - 全7,144テストのうち、要求との対応登録があるものは4,730本、未登録は2,414本。登録済みは少なくとも1要求との対応を確認した本数で、各テスト全体のレビュー完了数ではない。
   - 対応するテストのなかった要求に新規テストを書き、作成者とは別の検証者が合格としたものだけを取り込んだ（2026-10-24〜26に区間ごとに実施）。最初の2回では、1,586本のうち1,530本が合格し、1,527本を取り込んだ（56本は欠陥）。
   - 文書取り込み時の`0da4f2fc`では、Icarus Verilog 13.0が期待どおりの結果を再現する、規格だけを根拠にしていたテスト277本に、`:oracle:`を記録した。
   - 比較用のシミュレータとして Lyra を加え、Icarus Verilog・Verilator・kirimasim と並べて毎晩実行している（nvc も試したが、対応が少ないため外した）。期待値が規格と食い違う疑いのあるテストを、除外の候補として記録している。
@@ -67,7 +67,7 @@ flowchart TD
 
 ## GitLab実行例の現在の構成
 
-2026-10-26に、APB・UART・割込みの結合検証の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)までmainへマージ済みであることを確認しました。[mainのCI #2990167574](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990167574)は全50ジョブ成功、JUnit 311件・失敗／エラー0件です。
+2026-10-26に、実装の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)と確認記録・構成図の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)がmainへ取り込まれたことを確認しました。最新mainは`ec594de7`で、[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)は成功しています。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)では全50ジョブ成功、JUnit 311件・失敗／エラー0件を確認済みです。MR !12はドキュメントだけの変更で、現行のCI設定・実装は同じです。
 
 現行の構成を下表に示します。追加した9構成の目標・変異・完了記録の照合結果は[結合例の実行記録](examples/gitlab-apb-uart/README.md#7-適用範囲と実行確認)に記載しています。
 
@@ -86,7 +86,7 @@ flowchart TD
 | [APB・UART・割込み結合検証](examples/gitlab-apb-uart/README.md) | 9ジョブ、待ち状態0／1／3×パリティなし／偶数／奇数 | 72（各8） | 90（各10） |
 | 合計 | 回帰39ジョブ＋ランナー確認11ジョブ | 311 | 384 |
 
-ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件、縮退比較11件、アービタ13件、UART 13件、APB・UART・割込み14件の計129テストで、上表のJUnit件数とは別です。scheduleではシミュレーションと縮退比較の10例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。384件は設定から算出した予定件数で、GitLabで全例を含むschedule実行は今回行っていません。追加前のmainの239件と現行の311件の記録を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件、縮退比較11件、アービタ13件、UART 13件、APB・UART・割込み14件の計129テストで、上表のJUnit件数とは別です。scheduleではシミュレーションと縮退比較の10例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。384件は設定から算出した予定件数で、GitLabで全例を含むschedule実行は今回行っていません。各例の追加時点の記録と、現行構成の記録を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
 
 ## 構成
 

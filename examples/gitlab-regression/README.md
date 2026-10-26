@@ -147,14 +147,14 @@ GitLabのパイプライン画面で次を確認します。
 
 1. `runner-tests`が合格する。
 2. `irq-regression`が合格し、ログ末尾に`Regression: PASS`がある。
-3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では、FIFO・フォーマルを含む90項目になる。
+3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナー確認129テストはこの件数とは別に実行する。
 4. アーティファクトの`summary.json`で通常回路32合格・変異4検出・Xの自己確認1検出を、`coverage.json`で8要求・50/50目標の合格を確認する。
 
 プロジェクトのCI Lint／Pipeline editorでも、includeを含む設定を検査します。ジョブがpendingのままなら、適合するRunner・untaggedの受付・利用枠を確認します。依存パッケージの取得で失敗した場合は環境の失敗で、回路の不具合とは分けます。
 
-MRでは、ルートの`workflow:rules`がMRパイプラインを有効にし、MRが開いているブランチのpushパイプラインを抑止します。現行設定ではランナー確認3ジョブと回帰9ジョブを実行します。GitLab側では、対象プロジェクトの「Pipelines must succeed」などのマージ条件を有効にし、必要なブランチ保護も設定します。ローカルのYAML変更だけでプロジェクトのマージ条件が有効になるわけではありません。
+MRでは、ルートの`workflow:rules`がMRパイプラインを有効にし、MRが開いているブランチのpushパイプラインを抑止します。現行設定ではランナー確認11ジョブと回帰39ジョブ、計50ジョブを実行します。GitLab側では、対象プロジェクトの「Pipelines must succeed」などのマージ条件を有効にし、必要なブランチ保護も設定します。ローカルのYAML変更だけでプロジェクトのマージ条件が有効になるわけではありません。
 
-実行先では、作業ブランチをpushしてMRを作成・更新し、必要な12ジョブが含まれることと、失敗したMRのマージが止まることを確認します。パイプラインの重複はイベントと対象SHAを照合して確認します。[GitLabのMR設定](https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/)と[workflowの説明](https://docs.gitlab.com/ci/yaml/workflow/)が参照先です。
+実行先では、作業ブランチをpushしてMRを作成・更新し、必要な50ジョブが含まれることと、失敗したMRのマージが止まることを確認します。パイプラインの重複はイベントと対象SHAを照合して確認します。[GitLabのMR設定](https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/)と[workflowの説明](https://docs.gitlab.com/ci/yaml/workflow/)が参照先です。
 
 ## 4. GitLabで赤になるデモ
 
@@ -228,3 +228,5 @@ GitLabのPipeline editorで構文正常を確認し、展開した設定をCI Li
 2026-10-25の検証では、`Pipelines must succeed`を有効、skippedの成功扱いを無効にしました。mainはマージをMaintainersに限定し、直接pushをNo one、force pushを無効に設定しました。検証終了時にはMRを未マージで残し、その後同日のユーザー指示により[MR !1をmainへマージ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/commit/b0440823fb1ff9015f4ca911a0ec81ed18492459)しました。検証時の[schedule](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipeline_schedules)は`0 2 * * *`・Asia/Tokyo・対象`demo/expanded-regression`で、Inactiveに設定しました。上記はscheduleの手動起動を確認した記録で、毎晩の継続運用や製品への適用実績ではありません。現行mainで定期運用する場合は、対象ブランチと有効状態を確認してください。
 
 2026-10-26にはFIFOのMR !2、フォーマル検証のMR !3もmainへマージされました。[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)で全12ジョブ・JUnit 90件の成功を確認しています。上記の38／41件・2ジョブという数値は、IRQ例だけを実行していた当時の記録です。
+
+その後、APB・UART・割込みのMR !11と確認記録のMR !12までmainへ取り込まれました。2026-10-26に最新main `ec594de7`の[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しました。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)は全50ジョブ・JUnit 311件・失敗／エラー0件です。全例を含むscheduleの384件は予定値で、今回GitLabで実行した結果ではありません。

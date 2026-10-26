@@ -6,6 +6,8 @@
 
 [FIFOの実行例](../../examples/gitlab-fifo/README.md)では、固定の境界テストと、Pythonで生成した書込み・読出し・リセットのランダム操作列を使い、独立した参照キューで比較します。seed・全入力列の保存、複数構成の回帰、未達による失敗、意図した不具合の検出を試せます。
 
+[ready/valid通信](../../examples/gitlab-stream/README.md)、[アービタ](../../examples/gitlab-arbiter/README.md)、[UART](../../examples/gitlab-uart/README.md)、[APB・UART・割込みの結合](../../examples/gitlab-apb-uart/README.md)にも、固定ケースとseed付き操作列を組み合わせた実行例があります。構成ごとの必須目標、変異検出、全入力・完了数の保存まで確認できます。これらはPythonで入力を生成する教材で、UVMやSystemVerilogの`randomize()`による実装ではありません。
+
 ## 1. 直接テスト・クロス検証との役割分担
 
 | 方式 | 主に担う役割 |

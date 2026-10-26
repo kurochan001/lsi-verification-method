@@ -6,7 +6,14 @@
 
 GitLabで試すための[実行可能な最小例](../../examples/gitlab-regression/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。ローカルの動作確認と、GitLab上での確認状況は実行例の末尾に記録しています。
 
-実行例はIRQ・CDC、[FIFOの6構成ランダム検証](../../examples/gitlab-fifo/README.md)、[オープンソースツールによるフォーマル検証](../../examples/gitlab-formal/README.md)、[APBレジスタの3構成検証](../../examples/gitlab-apb/README.md)を実装しています。[APBと割込みの結合検証](../../examples/gitlab-apb-irq/README.md)では、マスク・W1C・イベントを組み合わせ、機能単体の確認から相互作用の確認へ進めます。[ready/valid通信の4構成ランダム検証](../../examples/gitlab-stream/README.md)では、待ち中の保持と転送数・順序を確認します。2026-10-26にAPB・UART結合例の追加後のGitLab mainで全50ジョブ・JUnit 311件の成功を確認しました。現在の構成・追加例の実行記録・予定件数は[実行例一覧](../../README.md#gitlab実行例の現在の構成)にまとめています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。 [SVAの実行例](../../examples/gitlab-sva/README.md)では、並行アサーション、ネイティブのカバー、違反検出と前件不足を回帰の判定へ組み込みます。[縮退の比較例](../../examples/gitlab-reduction/README.md)では学習と検証を分け、全件と選択後の実行量・目標・検出力を実測します。[アービタの3構成検証](../../examples/gitlab-arbiter/README.md)では、要求元ごとの進行と待ちを測り、受信停止と公平性を区別します。[UARTの6構成ランダム検証](../../examples/gitlab-uart/README.md)では、送受信を独立に照合し、エラー注入とリセット復帰、構成ごとの要求目標を判定します。[APB・UART・割込みの9構成結合検証](../../examples/gitlab-apb-uart/README.md)では、バスから実際の通信・通知までをつなぎ、W1C・マスク更新・受信読出しとの競合を確認します。
+実行例は次の範囲まで実装しています。現行のジョブ数・JUnit件数と最新のCI確認先は[実行例一覧](../../README.md#gitlab実行例の現在の構成)に集約しています。
+
+- [IRQ・CDC](../../examples/gitlab-regression/README.md)、[FIFOランダム](../../examples/gitlab-fifo/README.md)、[FIFOフォーマル](../../examples/gitlab-formal/README.md)：基本的な実行・判定・証跡保存と、方式ごとの合格条件。
+- [APBレジスタ](../../examples/gitlab-apb/README.md)、[APBと割込み](../../examples/gitlab-apb-irq/README.md)、[APB・UART・割込み](../../examples/gitlab-apb-uart/README.md)：バス操作から状態・通信・通知までの結合と競合。
+- [ready/valid通信](../../examples/gitlab-stream/README.md)、[アービタ](../../examples/gitlab-arbiter/README.md)、[UART](../../examples/gitlab-uart/README.md)：転送・受理・待ち・エラーと復帰の構成別判定。
+- [SVA](../../examples/gitlab-sva/README.md)、[回帰の縮退](../../examples/gitlab-reduction/README.md)：アサーション・カバー・前件不足と、目標維持・検出力・実行量の比較。
+
+現行構成はランナー確認11ジョブと回帰39ジョブです。通常実行のJUnitは311件、ランナー確認129テストは別枠です。全例のscheduleは384件を予定しますが、その全体をGitLabで実行した結果ではありません。確認記録のMR !12までmainへ取り込まれ、最新mainの[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
 
 実行例では、動作中リセット、CDC遅延の観測、X注入を加え、要求ID・改訂と必須の観測目標を照合します。通常ケースの合格だけでなく要求・カバレッジの未達もCIへ失敗として返します。意図した変異検出の途中の観測で正常機能の未達を埋めず、タイムアウト・中断時には実行中のプロセスグループを停止します。MRの起動条件はルートYAMLに定義し、プロジェクトのマージ条件はGitLab側で別に確認します。
 

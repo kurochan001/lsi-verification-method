@@ -1,11 +1,11 @@
 # 規格全動作の網羅率を管理する
 
-[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/behavior-coverage.md)は、
+[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage.md)は、
 節の引用数とは独立した指標です。全規格の要求台帳に対する**暫定値と確定値を併記**します。
 IEEE 1800-2023 の本文1–41章と附属書A–Q、1,740見出しを調査台帳に登録しています。
 **全1,740節の資料確認・要求抽出は完了しました。確定値の分母は未承認です。**
 [抽出結果](requirement-extraction.md)に確認範囲と残る解釈・分母整理を記録しています。
-初期登録の105件は規格全動作の分母ではありません。2026-10-26に確認した[上流`b2de3bc5`の集計](https://github.com/kurochan001/kirimasim-tests/blob/b2de3bc5ef17071be53d44c6742700c03b1b12a7/docs/behavior-coverage-summary.md)では、全6,986テストのうち要求との対応登録が4,577本、未登録が2,409本です。
+初期登録の105件は規格全動作の分母ではありません。2026-10-26に確認した[上流`5fb3c45d`の集計](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)では、全7,144テストのうち要求との対応登録が4,730本、未登録が2,414本です。
 全テストの動作との対応確認が完了したことや、登録済みの各テスト全体をレビューしたことを意味しません。この段落の本数は文書取り込み元`0da4f2fc`から更新した値です。
 
 [コンパイラ指令の照合結果](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/existing-test-matching-preprocessor-20261023.md)に、
