@@ -2,7 +2,7 @@
 
 有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。GitLabへこの例を含むコミットを置くと、ランナーの確認テストと、説明用IRQ回路の回帰を実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
-同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)、[APBレジスタ検証例](../gitlab-apb/README.md)も含まれます。現行の全体構成は[READMEの実行例一覧](../../README.md#gitlab実行例の現在の構成)、以下の件数は特記がなければIRQ・CDC回帰の内訳です。
+同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)、[APBレジスタ検証例](../gitlab-apb/README.md)、[APBと割込みの結合検証例](../gitlab-apb-irq/README.md)も含まれます。現行の全体構成は[READMEの実行例一覧](../../README.md#gitlab実行例の現在の構成)、以下の件数は特記がなければIRQ・CDC回帰の内訳です。
 
 ## 1. 実行するもの
 
@@ -77,30 +77,34 @@ python3 examples/gitlab-regression/run.py --demo-bug 1
 
 ```mermaid
 flowchart TD
-  accTitle: 四つの検証例を実行するGitLabパイプライン
-  accDescr: workflowが許可した起動で四種類のランナー確認を行い、成功後にIRQ、FIFO六構成、フォーマル二構成、APB三構成を実行して結果と証跡を保存する。
+  accTitle: 五つの検証例を実行するGitLabパイプライン
+  accDescr: workflowが許可した起動で五種類のランナー確認を行い、成功後にIRQ、FIFO六構成、フォーマル二構成、APB三構成とAPB・割込み結合三構成を実行して結果と証跡を保存する。
   T["push・MR・web・schedule"] --> W["workflow rulesで起動可否と重複を制御"]
-  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマル・APBのランナー確認"]
+  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマル・APB・結合検証のランナー確認"]
   V -- "合格" --> R["irq-regression：run.pyを実行"]
   V -- "合格" --> Q["fifo-regression：6構成のランダム検証"]
   V -- "合格" --> M["fifo-formal：ツールを準備し2構成を検査"]
   V -- "合格" --> B["apb-regression：待ち状態3構成を検査"]
+  V -- "合格" --> BI["apb-irq-regression：結合回路3構成を検査"]
   V -- "失敗" --> F["パイプライン失敗、後段の回帰は実行しない"]
   R --> G["IRQ：通常機能・変異・X検出・必須50目標を判定"]
   Q --> GQ["FIFO：構成ごとの必須18／22目標・3変異を判定"]
   M --> GM["フォーマル：証明・有界検査・到達性・診断を判定"]
   B --> GB["APB：構成ごとの必須20／21目標・3変異を判定"]
+  BI --> GBI["結合：必須44／45目標・3変異を判定"]
   G -- "終了コード0 / 非0" --> J["各ジョブの成否をGitLabへ反映"]
   GQ --> J
   GM --> J
   GB --> J
+  GBI --> J
   G --> A["JUnit・マニフェスト・ログ・波形を保存"]
   GQ --> A
   GM --> A
   GB --> A
+  GBI --> A
 ```
 
-IRQ・FIFO・APBはscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
+IRQ・FIFO・APB・APBと割込みの結合検証はscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
 
 GitLab上に空のプロジェクトを用意し、この例を含むコミットをpushします。新規プロジェクトではREADMEなどで初期化しない方法が簡単です。未コミットのファイルはpushでは送られないため、例のファイルを含むコミットを使います。
 

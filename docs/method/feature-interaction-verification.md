@@ -171,3 +171,7 @@ W1Cが受理されるエッジを0、唯一のイベントが受理されるエ�
 
 - [Accellera UVM 1.2 User's Guide](https://www.accellera.org/images/downloads/standards/uvm/uvm_users_guide_1.2.pdf)：4.7節の仮想シーケンスと、4.10節の明示的な機能カバレッジを参考にしました。
 - [NISTの組み合わせ試験](https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software)と[事象列の試験](https://csrc.nist.gov/Projects/automated-combinatorial-testing-for-software/combinatorial-methods-in-testing/event-sequence-testing)：値の組み合わせと、順序を含む目標の選び方を参考にしました。この資料の相互作用表・完了条件・割り込みIPの例は、本リポジトリで定めた運用案です。
+
+## 実行できる結合検証例
+
+[GitLabでAPBと割込みの結合検証を実行する](../../examples/gitlab-apb-irq/README.md)では、既存のAPBレジスタ回路を使い、マスク中のイベント保持、W1Cとイベントの競合、マスク更新との同時動作、複数要因のクリア、待ち・エラー・リセットを実行します。4要因×マスク×クリア×イベントの32クロスを含む目標を、待ち時間0／1／3の各構成で独立に判定します。本文の計画例にある12目標とは別に、この回路の仕様に合わせて定義した目標です。

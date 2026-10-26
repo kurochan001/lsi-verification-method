@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "APB-IRQ-CROSS",
+      "description": "各ビットでpendingを保持した状態のマスク×W1Cクリア×同一ビットイベント",
+      "goals": [
+        "cross/bit0/mask0/clear0/event0",
+        "cross/bit0/mask0/clear0/event1",
+        "cross/bit0/mask0/clear1/event0",
+        "cross/bit0/mask0/clear1/event1",
+        "cross/bit0/mask1/clear0/event0",
+        "cross/bit0/mask1/clear0/event1",
+        "cross/bit0/mask1/clear1/event0",
+        "cross/bit0/mask1/clear1/event1",
+        "cross/bit1/mask0/clear0/event0",
+        "cross/bit1/mask0/clear0/event1",
+        "cross/bit1/mask0/clear1/event0",
+        "cross/bit1/mask0/clear1/event1",
+        "cross/bit1/mask1/clear0/event0",
+        "cross/bit1/mask1/clear0/event1",
+        "cross/bit1/mask1/clear1/event0",
+        "cross/bit1/mask1/clear1/event1",
+        "cross/bit2/mask0/clear0/event0",
+        "cross/bit2/mask0/clear0/event1",
+        "cross/bit2/mask0/clear1/event0",
+        "cross/bit2/mask0/clear1/event1",
+        "cross/bit2/mask1/clear0/event0",
+        "cross/bit2/mask1/clear0/event1",
+        "cross/bit2/mask1/clear1/event0",
+        "cross/bit2/mask1/clear1/event1",
+        "cross/bit3/mask0/clear0/event0",
+        "cross/bit3/mask0/clear0/event1",
+        "cross/bit3/mask0/clear1/event0",
+        "cross/bit3/mask0/clear1/event1",
+        "cross/bit3/mask1/clear0/event0",
+        "cross/bit3/mask1/clear0/event1",
+        "cross/bit3/mask1/clear1/event0",
+        "cross/bit3/mask1/clear1/event1"
+      ]
+    },
+    {
+      "id": "APB-IRQ-MASK",
+      "description": "保持中イベントのマスク解除と再マスク",
+      "goals": [
+        "sequence/unmask-pending",
+        "sequence/mask-pending"
+      ]
+    },
+    {
+      "id": "APB-IRQ-CLEAR",
+      "description": "全有効要因のクリアによる割込み解除",
+      "goals": [
+        "sequence/clear-release"
+      ]
+    },
+    {
+      "id": "APB-IRQ-CONCURRENT",
+      "description": "マスク更新とイベントの同時発生",
+      "goals": [
+        "simultaneous/enable-event",
+        "simultaneous/disable-event"
+      ]
+    },
+    {
+      "id": "APB-IRQ-ERROR",
+      "description": "エラー応答時も独立したイベントを保持",
+      "goals": [
+        "event/error-response"
+      ]
+    },
+    {
+      "id": "APB-IRQ-RESET",
+      "description": "割込み出力中のリセットと新規イベントへの復帰",
+      "goals": [
+        "reset/active-irq",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "APB-IRQ-CONTINUOUS",
+      "description": "連続するレジスタ操作",
+      "goals": [
+        "bus/back-to-back"
+      ]
+    },
+    {
+      "id": "APB-IRQ-SETUP-EVENT",
+      "description": "SETUP中のイベント保持",
+      "goals": [
+        "event/setup"
+      ]
+    },
+    {
+      "id": "APB-IRQ-WAIT-EVENT",
+      "minimum_wait": 1,
+      "description": "待ち状態中のイベント保持",
+      "goals": [
+        "event/wait"
+      ]
+    },
+    {
+      "id": "APB-IRQ-MULTI",
+      "description": "複数要因の一部クリアで割込みを保持し、最後の要因クリアで解除",
+      "goals": [
+        "multi/partial-clear",
+        "multi/last-clear"
+      ]
+    }
+  ]
+}
