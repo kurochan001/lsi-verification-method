@@ -17,3 +17,5 @@ include:
   - local: /examples/gitlab-stream/gitlab-ci.yml
   - local: /examples/gitlab-sva/gitlab-ci.yml
   - local: /examples/gitlab-reduction/gitlab-ci.yml
+  - local: /examples/gitlab-arbiter/gitlab-ci.yml
+  - local: /examples/gitlab-uart/gitlab-ci.yml

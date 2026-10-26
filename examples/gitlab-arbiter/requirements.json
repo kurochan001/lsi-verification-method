@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ARB-MASK",
+      "kind": "mask-cross",
+      "description": "全要求マスク×受信ready"
+    },
+    {
+      "id": "ARB-SERVICE",
+      "kind": "per-port",
+      "description": "各要求元を受理"
+    },
+    {
+      "id": "ARB-ROTATE",
+      "kind": "rotation",
+      "description": "隣接要求元への受理順序の回転"
+    },
+    {
+      "id": "ARB-STALL",
+      "kind": "fixed",
+      "description": "待ち中の選択保持と新規要求・再開",
+      "goals": [
+        "stall/active",
+        "stall/new-arrival",
+        "stall/resume"
+      ]
+    },
+    {
+      "id": "ARB-RESET",
+      "kind": "fixed",
+      "description": "アイドル・未受理要求のリセットと復帰",
+      "goals": [
+        "reset/idle",
+        "reset/pending",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "ARB-FAIR",
+      "kind": "fixed",
+      "description": "全競合での公平性窓と全要求元の受理",
+      "goals": [
+        "fair/window-complete",
+        "fair/all-ports"
+      ]
+    },
+    {
+      "id": "ARB-COMPLETE",
+      "kind": "fixed",
+      "description": "最後の未受理要求をすべて解消",
+      "goals": [
+        "completion/drain"
+      ]
+    }
+  ]
+}

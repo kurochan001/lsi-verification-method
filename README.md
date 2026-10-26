@@ -50,6 +50,8 @@ flowchart TD
 - **APBレジスタ検証例**：[GitLabでAPBレジスタを検証する](examples/gitlab-apb/README.md)。読出し・書込み、待ち状態0／1／3、エラー応答、W1Cとイベントの競合、動作中リセットを検証します。3構成で必須20／21目標と3変異の検出を判定します。
 - **APBと割込みの結合検証例**：[GitLabでAPBと割込みの結合検証を実行する](examples/gitlab-apb-irq/README.md)。マスク中の保持、W1Cと再発生、マスク更新との競合、複数要因のクリア、待ち・エラー・リセットを3構成で確認します。4要因×マスク×クリア×イベントの32クロスを含め、必須44／45目標と3変異の検出を判定します。
 - **ready/valid通信のランダム検証例**：[GitLabでready/valid通信をランダム検証する](examples/gitlab-stream/README.md)。受信待ち、valid・データ保持、満杯時の同時送受信、欠落・重複・順序、リセット破棄を検証します。深さ1／3×幅8／16の4構成で必須25／29目標と3変異を判定し、最後の排出と転送数も照合します。
+- **アービタの検証例**：[GitLabでラウンドロビン・アービタを検証する](examples/gitlab-arbiter/README.md)。要求元2／3／4の排他制御、待ち中の選択保持、受理順序、条件付きの公平性を検証します。構成ごとに21／31／49目標と3変異を判定し、受理機会と実サイクルの待ちを分けて記録します。
+- **UARTのランダム検証例**：[GitLabでUARTを検証する](examples/gitlab-uart/README.md)。8N1／8E1／8O1と分周数8／16の6構成で、独立した送受信照合、エラー注入、偽スタート、転送中リセットと復帰、21／22目標と3／4変異を確認します。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
 - **実践例（ケーススタディ）**：IEEE 1800-2023（SystemVerilog）の規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で手法を実践しました。2026-10-26に確認した[上流の集計（`b2de3bc5`）](https://github.com/kurochan001/kirimasim-tests/blob/b2de3bc5ef17071be53d44c6742700c03b1b12a7/docs/behavior-coverage-summary.md)は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
@@ -64,9 +66,9 @@ flowchart TD
 
 ## GitLab実行例の現在の構成
 
-2026-10-26に、ready/validの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)とSVAの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)がmainへ取り込まれたことを確認しました。SVAを!6のブランチへマージした後、!6がmainへマージされています。[mainのCI #2989619450](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989619450)は全27ジョブ成功、JUnit 160件・失敗／エラー0件です。
+2026-10-26に、アービタの[MR !9](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/9)までmainへマージ済みであることを確認しました。[mainのCI #2989957235](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989957235)は全33ジョブ成功、JUnit 199件・失敗／エラー0件です。
 
-回帰の縮退の比較例を加えた構成を下表に示します。[MR !8](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/8)の[CI #2989712015](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989712015)で全29ジョブ・JUnit 178件の成功を確認しました。詳細は[縮退例の確認記録](examples/gitlab-reduction/README.md#7-実行確認)へ記載しています。MR !8のmainへのマージは行っていません。
+UARTのランダム検証を加えた構成を下表に示します。[MR !10](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/10)の[CI #2990037734](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990037734)で全40ジョブ・JUnit 239件の成功を確認しました。詳細は[UART例の実行記録](examples/gitlab-uart/README.md#7-適用範囲と実行確認)へ記載しています。MR !10は未マージです。
 
 | 実行例 | 回帰ジョブ数・対象 | 通常実行のJUnit件数 | schedule実行の予定件数 |
 | --- | --- | --- | --- |
@@ -78,9 +80,11 @@ flowchart TD
 | [ready/validランダム検証](examples/gitlab-stream/README.md) | 4ジョブ、深さ1／3×幅8／16 | 24（各6） | 32（各8） |
 | [SVAのアサーションとカバー](examples/gitlab-sva/README.md) | 1ジョブ、要求6件・カバー12目標 | 10 | 12 |
 | [回帰の縮退の比較](examples/gitlab-reduction/README.md) | 1ジョブ、全件／選択／ストレス保持の比較 | 18（集約判定） | 18（集約判定） |
-| 合計 | 回帰21ジョブ＋ランナー確認8ジョブ | 178 | 215 |
+| [ラウンドロビン・アービタ](examples/gitlab-arbiter/README.md) | 3ジョブ、要求元2／3／4 | 21（各7） | 27（各9） |
+| [UARTランダム検証](examples/gitlab-uart/README.md) | 6ジョブ、分周数8／16×パリティなし／偶数／奇数 | 40（各6／7） | 52（各8／9） |
+| 合計 | 回帰30ジョブ＋ランナー確認10ジョブ | 239 | 294 |
 
-ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件、縮退比較11件の計89テストで、上表のJUnit件数とは別です。scheduleではシミュレーションと縮退比較の7例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。215件は設定から算出した予定件数です。追加前のmainで確認した160件と追加後のMRの結果を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+ランナー確認はIRQ 12件、FIFO 10件、フォーマル8件、APB 12件、APB＋割込み12件、ready/valid 13件、SVA 11件、縮退比較11件、アービタ13件、UART 13件の計115テストで、上表のJUnit件数とは別です。scheduleではシミュレーションと縮退比較の9例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。294件は設定から算出した予定件数で、GitLabで全例を含むschedule実行は今回行っていません。追加前のmainの199件と追加後の結果を区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
 
 ## 構成
 
@@ -98,6 +102,8 @@ examples/gitlab-apb-irq/        APBと割込みの結合・クロス検証と3�
 examples/gitlab-stream/         ready/valid・バックプレッシャーと4構成の並列回帰
 examples/gitlab-sva/            SVAの実行・ネイティブカバー・前件不足と検出力の確認
 examples/gitlab-reduction/      回帰の選択・実行量・目標維持・検出力を比較
+examples/gitlab-arbiter/        仲裁の排他・選択保持・順序・条件付き公平性と3構成回帰
+examples/gitlab-uart/           UARTの独立した送受信・エラー・リセットと6構成ランダム回帰
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
 tools/matching_kit/             照合案の受付・検査、検証者の判定、統合、シミュレータ実行、Workflowスクリプト
 tools/generators/               表形式の要求から検証パターンを生成する枠組みと、その例

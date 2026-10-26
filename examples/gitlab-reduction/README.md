@@ -102,6 +102,6 @@ JUnitは**18件の集約判定**です。学習1件、選択1件、正常回帰3
 
 公開デモの[MR !8](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/8)で、[CI #2989712015](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989712015)の全29ジョブ成功、JUnit 178件・失敗／エラー0件を確認しました。縮退比較はIcarus Verilog 11.0で実行され、保存済み`summary.json`・`manifest.json`・`selection.json`でもseed 17、候補24ケース、229回のシミュレーション、233／42／47検査サイクル、各方式19目標、M1〜M3の維持とM4の検出差を確認しました。対象コミットは`a5c63877`です。追加分のJUnitは18集約判定、ランナー確認は別枠の11テストです。
 
-初回CIは共有Runnerの補助イメージ取得時の認証エラーで既存ジョブが準備段階で停止しました。検証コードを変更せず再実行し、上記の成功を確認しています。GitLabで確認したのはsmokeで、nightlyはローカルで実行しました。全例を含むscheduleの215件をGitLabで今回実行した結果ではありません。MR !8のmainへのマージは行っていません。
+初回CIは共有Runnerの補助イメージ取得時の認証エラーで既存ジョブが準備段階で停止しました。検証コードを変更せず再実行し、上記の成功を確認しています。GitLabで確認したのはsmokeで、nightlyはローカルで実行しました。全例を含むscheduleの215件をGitLabで今回実行した結果ではありません。その後、MR !8はmainへマージされ、[mainのCI #2989744619](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989744619)も全29ジョブ・JUnit 178件で成功しています（2026-10-26確認）。
 
 製品への適用では、ここで省略した時間関係・長時間負荷・構成・独立した検査方式も評価してください。[検証の縮退の手順](../../docs/method/verification-reduction.md)と[継続回帰](../../docs/method/continuous-regression.md)が参照先です。

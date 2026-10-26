@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "UART-DATA",
+      "description": "送受信データの代表ビットパターン",
+      "goals": [
+        "tx/data-zero",
+        "tx/data-ones",
+        "tx/data-alternating",
+        "tx/data-lsb",
+        "tx/data-msb",
+        "rx/data-zero",
+        "rx/data-ones",
+        "rx/data-alternating",
+        "rx/data-lsb",
+        "rx/data-msb"
+      ]
+    },
+    {
+      "id": "UART-TRANSFER",
+      "description": "送受信と同時動作",
+      "goals": [
+        "tx/normal",
+        "rx/normal",
+        "duplex/simultaneous"
+      ]
+    },
+    {
+      "id": "UART-BUSY",
+      "description": "送信中の開始パルスを受理しない",
+      "goals": [
+        "tx/busy-ignore"
+      ]
+    },
+    {
+      "id": "UART-FRAMING",
+      "description": "低いストップビットを検出",
+      "goals": [
+        "rx/framing-error"
+      ]
+    },
+    {
+      "id": "UART-PARITY",
+      "requires_parity": true,
+      "description": "パリティ不一致を検出",
+      "goals": [
+        "rx/parity-error"
+      ]
+    },
+    {
+      "id": "UART-FALSE-START",
+      "description": "短いスタートパルスを棄却",
+      "goals": [
+        "rx/false-start"
+      ]
+    },
+    {
+      "id": "UART-RESET",
+      "description": "転送中リセットと復帰",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "UART-IDLE",
+      "description": "アイドル時はシリアル線high",
+      "goals": [
+        "idle/line-high"
+      ]
+    },
+    {
+      "id": "UART-PHASE",
+      "description": "受信波形の2種類の開始位相",
+      "goals": [
+        "phase/early",
+        "phase/late"
+      ]
+    }
+  ]
+}
