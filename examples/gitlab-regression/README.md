@@ -115,7 +115,7 @@ flowchart TD
   GAR --> J
   GU --> J
   GAU --> J
-  G --> A["JUnit・マニフェスト・ログ・波形を保存"]
+  G --> A["JUnit・マニフェスト・ログ・方式ごとの証跡を保存"]
   GQ --> A
   GM --> A
   GB --> A
@@ -147,7 +147,7 @@ GitLabのパイプライン画面で次を確認します。
 
 1. `runner-tests`が合格する。
 2. `irq-regression`が合格し、ログ末尾に`Regression: PASS`がある。
-3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナー確認129テストはこの件数とは別に実行する。
+3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナー確認130テストはこの件数とは別に実行する。
 4. アーティファクトの`summary.json`で通常回路32合格・変異4検出・Xの自己確認1検出を、`coverage.json`で8要求・50/50目標の合格を確認する。
 
 プロジェクトのCI Lint／Pipeline editorでも、includeを含む設定を検査します。ジョブがpendingのままなら、適合するRunner・untaggedの受付・利用枠を確認します。依存パッケージの取得で失敗した場合は環境の失敗で、回路の不具合とは分けます。

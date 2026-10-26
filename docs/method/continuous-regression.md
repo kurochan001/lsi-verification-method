@@ -13,7 +13,7 @@ GitLabで試すための[実行可能な最小例](../../examples/gitlab-regress
 - [ready/valid通信](../../examples/gitlab-stream/README.md)、[アービタ](../../examples/gitlab-arbiter/README.md)、[UART](../../examples/gitlab-uart/README.md)：転送・受理・待ち・エラーと復帰の構成別判定。
 - [SVA](../../examples/gitlab-sva/README.md)、[回帰の縮退](../../examples/gitlab-reduction/README.md)：アサーション・カバー・前件不足と、目標維持・検出力・実行量の比較。
 
-現行構成はランナー確認11ジョブと回帰39ジョブです。通常実行のJUnitは311件、ランナー確認129テストは別枠です。全例のscheduleは384件を予定しますが、その全体をGitLabで実行した結果ではありません。確認記録のMR !12までmainへ取り込まれ、最新mainの[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
+現行構成はランナー確認11ジョブと回帰39ジョブです。通常実行のJUnitは311件、ランナー確認130テストは別枠です（2026-10-27のローカル修正後）。全例のscheduleは384件を予定しますが、その全体をGitLabで実行した結果ではありません。確認記録のMR !12までmainへ取り込まれ、最新mainの[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
 
 実行例では、動作中リセット、CDC遅延の観測、X注入を加え、要求ID・改訂と必須の観測目標を照合します。通常ケースの合格だけでなく要求・カバレッジの未達もCIへ失敗として返します。意図した変異検出の途中の観測で正常機能の未達を埋めず、タイムアウト・中断時には実行中のプロセスグループを停止します。MRの起動条件はルートYAMLに定義し、プロジェクトのマージ条件はGitLab側で別に確認します。
 

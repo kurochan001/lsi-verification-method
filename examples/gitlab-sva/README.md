@@ -90,9 +90,11 @@ python3 examples/gitlab-sva/run.py --checker-off
 
 どちらも終了コード1が期待値です。`--checker-off`ではツールのカウンター自体は残りますが、観測は0となり、予定した違反も検出できなくなります。失敗ラベル、予定件数、必須カバー、ネイティブ証跡を合わせて判定します。
 
+要求カタログは、この教材の固定した6アサーションと12カバーの対応表に照合します。アサーション名の誤記・重複・欠落、別アサーションのカバーへの取り違えは実行前にエラーにします。教材を拡張する場合は、要求・固定対応表・チェッカー・感度確認ケースを併せて改訂してください。
+
 ## 6. GitLab CIと保存する証跡
 
-ルートの`.gitlab-ci.yml`から[CI設定](gitlab-ci.yml)を読み込みます。`sva-runner-tests`はEDAツールを使わないランナー11テスト、`sva-regression`は実際のSVAをコンパイル・実行するジョブです。後者はVerilator・g++・makeをジョブ内で準備します。push・MR・webはsmoke、scheduleはnightlyです。
+ルートの`.gitlab-ci.yml`から[CI設定](gitlab-ci.yml)を読み込みます。`sva-runner-tests`はEDAツールを使わないランナー12テスト、`sva-regression`は実際のSVAをコンパイル・実行するジョブです。後者はVerilator・g++・makeをジョブ内で準備します。push・MR・webはsmoke、scheduleはnightlyです。
 
 手動パイプラインの変数`SVA_DEMO_BUG=1/2/3`で不具合デモ、`SVA_REGRESSION_SEED`でseedを選べます。チェッカー無効化デモはローカルの明示オプションで実行します。
 
@@ -113,3 +115,5 @@ python3 examples/gitlab-sva/run.py --checker-off
 当初、SVAの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)は、未マージのready/validの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)を土台にして、そのブランチを宛先として作成しました。その後、!7が!6のブランチへマージされ、!6もmainへマージされました。
 
 2026-10-26に、SVAを含むmainの[CI #2989619450](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989619450)も全27ジョブ・JUnit 160件で成功したことを確認しています。これらのマージはユーザーが行いました。
+
+2026-10-27の全体レビューでは、要求カタログの`assertion`を未実装の名前に変えても回帰が成功する問題を再現し、固定対応表との照合を追加しました。ランナー12テストで誤記・重複・カバーの取り違え・欠落の拒否を確認し、正常なカタログで実際のSVA回帰も成功しました。この修正の確認はローカルで行っており、上記GitLab CIの記録は修正前の版に対するものです。

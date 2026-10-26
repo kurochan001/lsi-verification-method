@@ -20,7 +20,7 @@ module arbiter_tb;
   integer max_wall = 0, max_service_wait = 0, full_window = 0;
   integer fd, fields, vr, vready;
   bit previous_stall = 0, recovering = 0, all_serviced;
-  string vectors;
+  string vectors, wave;
   rr_arbiter #(.PORTS(PORTS), .MUTATION(MUTATION)) dut (clk, rst_n, req, ready, grant);
   always #5 clk = !clk;
   task fail(input string label);
@@ -35,6 +35,7 @@ module arbiter_tb;
       port_max_wall[p] = 0; port_max_service[p] = 0;
     end
     if (!$value$plusargs("VECTORS=%s", vectors)) $fatal(1, "Missing VECTORS");
+    if ($value$plusargs("WAVE=%s", wave)) begin $dumpfile(wave); $dumpvars(0, arbiter_tb); end
     fd = $fopen(vectors, "r");
     if (!fd) $fatal(1, "Cannot open vectors");
     while (!$feof(fd)) begin

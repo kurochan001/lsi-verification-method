@@ -114,6 +114,25 @@ class SvaRunnerTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 MODULE.load_catalog(path)
 
+    def test_assertion_inventory_and_cover_bindings_are_checked(self):
+        original = json.loads((RUNNER.parent / "requirements.json").read_text())
+        for corruption in ("unknown", "duplicate", "wrong-covers", "missing"):
+            catalog = json.loads(json.dumps(original))
+            requirements = catalog["requirements"]
+            if corruption == "unknown":
+                requirements[0]["assertion"] = "ap_not_implemented"
+            elif corruption == "duplicate":
+                requirements[1]["assertion"] = requirements[0]["assertion"]
+            elif corruption == "wrong-covers":
+                requirements[0]["goals"], requirements[1]["goals"] = requirements[1]["goals"], requirements[0]["goals"]
+            else:
+                requirements.pop()
+            with self.subTest(corruption=corruption):
+                path = self.directory / "requirements.json"
+                path.write_text(json.dumps(catalog))
+                with self.assertRaises(ValueError):
+                    MODULE.load_catalog(path)
+
     def test_existing_output_is_not_overwritten(self):
         out = self.directory / "existing"
         out.mkdir()

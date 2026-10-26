@@ -23,6 +23,17 @@ SUPPORT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(SUPPORT)
 write_json = SUPPORT.write_json
 
+# This example has a fixed checker and six corresponding sensitivity cases.
+# Keep the requirement bindings in the same reviewed plan as those cases.
+ASSERTION_COVERS = {
+    "ap_set_wins": {"cp_set_wins_seen", "cp_set_wins_done"},
+    "ap_set_only": {"cp_set_only_seen", "cp_set_only_done"},
+    "ap_clear_only": {"cp_clear_only_seen", "cp_clear_only_done"},
+    "ap_hold": {"cp_hold_seen", "cp_hold_done"},
+    "ap_reset": {"cp_reset_pending_seen", "cp_reset_done"},
+    "ap_irq": {"cp_masked_pending", "cp_unmasked_pending"},
+}
+
 
 def boundary_vectors():
     # Final idle clock observes the last obligation without starting a new one.
@@ -71,7 +82,7 @@ def make_plan(args):
 def load_catalog(path):
     catalog = json.loads(path.read_text(encoding="utf-8"))
     requirements = catalog["requirements"]
-    ids, goals = set(), set()
+    ids, goals, assertions = set(), set(), set()
     if not requirements:
         raise ValueError("empty requirements")
     for requirement in requirements:
@@ -81,8 +92,15 @@ def load_catalog(path):
                 not isinstance(covers, list) or not covers or len(covers) != len(set(covers)) or
                 any(not isinstance(c, str) or not re.fullmatch(r"cp_\w+", c) or c in goals for c in covers)):
             raise ValueError("invalid or duplicate requirement/assertion/cover")
+        if assertion not in ASSERTION_COVERS or assertion in assertions:
+            raise ValueError("unknown or duplicate assertion in requirements")
+        if set(covers) != ASSERTION_COVERS[assertion]:
+            raise ValueError("requirement covers do not match their assertion")
         ids.add(rid)
+        assertions.add(assertion)
         goals.update(covers)
+    if assertions != ASSERTION_COVERS.keys():
+        raise ValueError("requirements omit a planned assertion")
     return catalog, goals
 
 

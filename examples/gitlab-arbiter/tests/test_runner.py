@@ -59,6 +59,11 @@ class ArbiterRegressionTests(unittest.TestCase):
                 key = (case.attrib["classname"], case.attrib["name"])
                 self.assertNotIn(key, ids)
                 ids.add(key)
+            manifest = json.loads((out / "manifest.json").read_text())
+            for planned in manifest["cases"]:
+                wave = out / planned["id"] / "wave.vcd"
+                self.assertTrue(wave.is_file(), f"missing waveform for {planned['id']}")
+                self.assertIn("$enddefinitions $end", wave.read_text())
             diagnostic = json.loads((out / f"p{ports}-blocked-sink/result.json").read_text())
             self.assertEqual(diagnostic["metrics"]["opportunities"], 0)
             self.assertGreater(diagnostic["metrics"]["max_wall"], ports)
