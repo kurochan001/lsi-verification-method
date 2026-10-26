@@ -108,8 +108,8 @@ python3 examples/gitlab-sva/run.py --checker-off
 
 一般的な記述・運用上の注意は[手順書のSVAによる検証](../../docs/method/sva-verification.md)を参照してください。
 
-## 8. 公開デモの取り込み順
+## 8. 公開デモの取り込み記録
 
-SVAの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)は、未マージのready/validの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)を土台にし、宛先を`examples/stream-random-20261026`にしています。MR !6を先にmainへマージし、その後MR !7を取り込みます。
+当初、SVAの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)は、未マージのready/validの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)を土台にして、そのブランチを宛先として作成しました。その後、!7が!6のブランチへマージされ、!6もmainへマージされました。
 
-GitLabには、対象ブランチのマージ時にそのブランチも削除した場合、後続MRの宛先を更新する[仕組み](https://docs.gitlab.com/user/project/merge_requests/#update-merge-requests-when-target-branch-merges)があります。!6をマージ後も!7の宛先が変わらない場合はmainへ変更してください。今回これらのマージは行っていません。
+2026-10-26に、SVAを含むmainの[CI #2989619450](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989619450)も全27ジョブ・JUnit 160件で成功したことを確認しています。これらのマージはユーザーが行いました。

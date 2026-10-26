@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "requirements": [
+    {
+      "id": "REDUCTION-ATOMIC",
+      "description": "初期保持状態×割込み許可×イベント・クリア操作",
+      "goals": [
+        "atomic/p0/en0/op0",
+        "atomic/p0/en0/op1",
+        "atomic/p0/en0/op2",
+        "atomic/p0/en0/op3",
+        "atomic/p0/en1/op0",
+        "atomic/p0/en1/op1",
+        "atomic/p0/en1/op2",
+        "atomic/p0/en1/op3",
+        "atomic/p1/en0/op0",
+        "atomic/p1/en0/op1",
+        "atomic/p1/en0/op2",
+        "atomic/p1/en0/op3",
+        "atomic/p1/en1/op0",
+        "atomic/p1/en1/op1",
+        "atomic/p1/en1/op2",
+        "atomic/p1/en1/op3"
+      ]
+    },
+    {
+      "id": "REDUCTION-RESET",
+      "description": "空・保持中のリセットと復帰",
+      "goals": [
+        "reset/empty",
+        "reset/nonempty",
+        "reset/recovery"
+      ]
+    }
+  ],
+  "guard_cases": [
+    "stress-long-history"
+  ],
+  "additional_observation": "stress/long-history"
+}
