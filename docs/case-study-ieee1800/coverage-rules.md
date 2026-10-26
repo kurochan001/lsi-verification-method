@@ -1,16 +1,14 @@
 # 規格全動作の網羅率を管理する
 
-[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/behavior-coverage.md)は、
+[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/behavior-coverage.md)は、
 節の引用数とは独立した指標です。全規格の要求台帳に対する**暫定値と確定値を併記**します。
 IEEE 1800-2023 の本文1–41章と附属書A–Q、1,740見出しを調査台帳に登録しています。
 **全1,740節の資料確認・要求抽出は完了しました。確定値の分母は未承認です。**
 [抽出結果](requirement-extraction.md)に確認範囲と残る解釈・分母整理を記録しています。
-初期登録の105件は規格全動作の分母ではありません。同期基準の`3faf239`での全6,009本について
+初期登録の105件は規格全動作の分母ではありません。現在3,938本の全テストについて
 動作との対応確認を終えたという意味でもありません。
 
-2026-10-26のローカル訂正：テスト総数を、上記の固定コミットの集計に合わせました。
-
-[コンパイラ指令の照合結果](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/existing-test-matching-preprocessor-20261023.md)に、
+[コンパイラ指令の照合結果](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/existing-test-matching-preprocessor-20261023.md)に、
 直近の対応追加、集合証拠、観測不足と要求単位の整理が必要な箇所を記録しています。
 
 ## mainの集計とNightlyの集計
@@ -26,7 +24,7 @@ Nightlyの`Match`割合はテスト出力の一致率であり、要求台帳に
 対象コミット・版・実行範囲を確認してから結果を比較してください。
 
 Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後で、結果レポートの時刻はUTCです。
-[日本時間への換算と更新状況の確認方法](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/nightly-results.md)を参照してください。
+[日本時間への換算と更新状況の確認方法](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/nightly-results.md)を参照してください。
 
 ## 計測の意味
 
@@ -82,7 +80,7 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
   複合証拠の定義と入力ハッシュも固定し、グループを削除して一部の成功で代替する変更を検出します。
 - `test-matching.json`: 全既存テストの入力ハッシュ、引用節、対応登録済みID、未承認候補、
   解釈保留、正常／違法区分の相違、上位節の引用を記録する照合台帳。
-  [照合状況](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/test-requirement-matching.md)は章別の登録済み／未登録本数を表示します。
+  [照合状況](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/test-requirement-matching.md)は章別の登録済み／未登録本数を表示します。
   全件の候補列挙は意味上の照合完了ではなく、候補だけから動作網羅率は増えません。
 - `test-matching-reviews.json`: 対応を保留した箇所の、確認範囲・要求ID・理由・刺激／期待値の
   根拠・担当・日付・入力ハッシュ。部分観測、期待値／診断の問題、引用の具体化、
@@ -100,12 +98,12 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
   以前の全3,912本の結果を保持し、部分実行を全件実行と扱いません。
 - `results/associative-matching-20261023-*.json`: 連想配列の引用修正7本と集合メンバー等を含む40本の再実行。
   Verilator 5.052は37 pass・3 known、Icarus 13.0は40 knownです。knownは実行成功へ含めません。
-  [照合結果](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/existing-test-matching-associative-arrays-20261023.md)に、対応範囲と集合証拠の不足を記録しています。
+  [照合結果](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/existing-test-matching-associative-arrays-20261023.md)に、対応範囲と集合証拠の不足を記録しています。
 - `results/associative-gaps-20261023-*.json`: 連想配列レビュー後に追加した15本の実行結果。
   その後変更したwildcard/count各1本は、`associative-wildcard-refinement-20261023-*.json`と
   `associative-count-refinement-20261023-*.json`へ別実行として保存しました。
   現在の入力ではVerilator 5.052のseed 1/73とも8 pass・7 known、Icarus 13.0は15 knownです。
-  [追加内容と残件](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/associative-gap-tests-20261023.md)を参照してください。
+  [追加内容と残件](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/associative-gap-tests-20261023.md)を参照してください。
 - `results/header-vpi-tests-20261023-*.json`: 附属書I/K/L/MのCヘッダを検証する24本と、37章のVPIテスト24本の実行結果。
   Icarus 13.0（v13_0-dirty）は1 pass・47 known、Verilator 5.052はseed 1/73とも17 pass・31 knownです。
   [追加内容と照合結果](header-vpi-tests-and-matching-20261023.md)を参照してください。
@@ -119,12 +117,31 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
 - `results/gap-tests-2-20261024-*.json`: 同じ作業の2回目で独立検証を終えた新規テスト933本と、入力ハッシュが変わった`tests/ch22`の既存4本の実行結果。
   Icarus 13.0は529 pass・408 known、Verilator 5.052はseed 1/73とも504 pass・433 knownです。
   [追加内容と照合結果](gap-tests-2-20261024.md)を参照してください。
+- `results/gap4-20261025-*.json`: 保留していた照合案のうち、p01・p05・p07・p12の4区間を独立検証して取り込んだ256本の実行結果。
+  Icarus 13.0は132 pass・124 known、Verilator 5.052はseed 1/73とも129 pass・127 knownです。
+- `results/gap5-20261026-*.json`: 同じ照合の第2弾としてp09・p10・p13・p15を検証して取り込んだ188本の実行結果。
+  Icarus 13.0は62 pass・126 known、Verilator 5.052はseed 1/73とも49 pass・139 knownです。
+- `results/ch22-rehash-20261026-*.json`と`results/p10-refinement-20261026-*.json`: ch22のinclude fixture復元で入力ハッシュが変わった既存10本と、`:lrm:`から背景節を外した1本の再実行。
+- `results/gap6-20261026-*.json`: wave4のa01〜a05・g05・g08・g09・h01・h02を検証して取り込んだ176本の実行結果。
+  Icarus 13.0は49 pass・127 known、Verilator 5.052はseed 1/73とも82 pass・94 knownです。
+- `results/ch37-depth-20261026-*.json`: 深さ検査のため37.4.2の2本目として既存VPIテストへ引用を足した再実行。
+- `results/gap7-20261026-*.json`: K.2ヘッダ31・I.3 DPI 55・N.2分布7の要求に向けて書いた18本の実行結果。
+  Icarus 13.0は3 pass・15 known、Verilator 5.052はseed 1/73とも14 pass・4 knownです。
+- `results/gap8-20261026-*.json`: 20.11アサーション制御42・40章カバレッジ20・17章checker 29・36.12.1互換8の要求に向けて書いた30本の実行結果。
+  すべて `:oracle: spec` で、Icarus 13.0は0 pass・30 known、Verilator 5.052はseed 1/73とも4 pass・26 knownです。
+- `results/gap9-20261026-*.json`: 附属書Aの構文要求に向けて書き、独立検証を終えた93本の実行結果。
+  Icarus 13.0は17 pass・76 known、Verilator 5.052はseed 1/73とも44 pass・49 knownです。
+- `results/ch5-rehash-20261026-*.json`と`results/ch19-depth-20261026-*.json`: includeディレクトリの入力変化と、深さ検査のため背景節を外した再実行。
+- `results/audit-full-20261026-icarus13.json`と`results/audit-spec-20261026-verilator-*.json`: 全6799本のIcarus実行と、spec-only 1645本のVerilator実行（seed 1/73）。
+- `results/audit-oracle-20261026-icarus13.json`: spec-onlyのうちIcarus 13.0で一致した277本へ`iverilog@13.0`を追加した後の再実行（277/277 pass）。
 - `results/regex-refinement-20261025-*.json`: 判定の正規表現をメッセージの書式に依存しない形に直した`ch16`の2本の再実行。
   Icarus 13.0は2 known、Verilator 5.052はseed 1/73とも1 pass・1 knownです。
   [見直しの記録](lyra-disagreement-review-20261025.md)を参照してください。
+- `results/oracle-refinement-20261025-*.json`: `:oracle:`に誤って`iverilog@13.0`とあった取り込みテスト3本（`tests/imported/`）を`spec`に直した後の再実行。
+  Icarus 13.0とVerilator 5.052（seed 1/73）とも3 knownです。
 - `behavior-summary.json`: 現在の暫定値・確定値、章別の割合、分母SHA-256、
   シミュレータごとの失敗・既知不一致・未対応・未実行・古い証跡などの内訳。
-  `--update`で概要Markdownとともに再生成し、`--check`で両方が現在の入力から生成されたものかを検査します。
+  `--update`で概要Markdownとともに再生成し、`--check`で両方の鮮度を検査します。
 - `behavior-history.json`: 計測履歴。分母と計測規則の版を添えて保存します。
   分母が変わった前後の割合は、そのまま改善・悪化として比較しません。
 
@@ -153,7 +170,7 @@ includeとinclude検索ディレクトリ内のファイルを含めます。マ
 python3 tools/requirement_source.py --show 10.9.1 10.9.2
 ```
 
-キーワードだけの抽出では、定義、表のセル、構文、例外をすべて抽出できません。
+キーワードだけの抽出では、定義、表のセル、構文、例外を拾い切れません。
 すべての出典ブロックを分類し、要求は`source_spans`に節とブロックIDを登録してください。
 `complete`または`no_behavior`にするには全ブロックの監査記録が必要です。
 解釈が未解決の要求には`interpretation_issue`を付け、節を`in_progress`のままにします。
