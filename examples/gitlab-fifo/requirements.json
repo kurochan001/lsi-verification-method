@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "FIFO-EMPTY", "description": "空での保持、書込み、読出し要求、同時要求", "goals": ["cross/empty/op0", "cross/empty/op1", "cross/empty/op2", "cross/empty/op3"]},
+    {"id": "FIFO-FULL", "description": "満杯での保持、書込み要求、読出し、同時要求", "goals": ["cross/full/op0", "cross/full/op1", "cross/full/op2", "cross/full/op3"]},
+    {"id": "FIFO-INTERIOR", "description": "空でも満杯でもない状態での全操作", "minimum_depth": 2, "goals": ["cross/interior/op0", "cross/interior/op1", "cross/interior/op2", "cross/interior/op3"]},
+    {"id": "FIFO-DATA", "description": "受理したデータの順序・値、未受理操作の無影響", "goals": ["data/zero", "data/ones", "data/alternating"]},
+    {"id": "FIFO-RESET", "description": "空・データ保持中のリセット、解除後の転送", "goals": ["reset/empty", "reset/nonempty", "reset/recovery"]},
+    {"id": "FIFO-WRAP", "description": "深さ分の書込み・読出しを超える反復転送", "goals": ["wrap/write", "wrap/read"]},
+    {"id": "FIFO-FULL-BLOCK", "description": "満杯時の書込みを受け付けない", "goals": ["blocked/write-full"]},
+    {"id": "FIFO-EMPTY-BLOCK", "description": "空のとき読出しを受け付けない", "goals": ["blocked/read-empty"]}
+  ]
+}

@@ -2,6 +2,8 @@
 
 有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。GitLabへこの例を含むコミットを置くと、ランナーの確認テストと、説明用IRQ回路の回帰を実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
+同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)も追加しています。以下ではIRQ・CDC回帰の処理を説明します。
+
 ## 1. 実行するもの
 
 - [`.gitlab-ci.yml`](../../.gitlab-ci.yml)：下記のCI設定をincludeする入口。
@@ -71,7 +73,7 @@ python3 examples/gitlab-regression/run.py --demo-bug 1
 
 ## 3. GitLabへ置いて実行する
 
-**この例のパイプラインで実際に流れる処理**
+**IRQ・CDC回帰のジョブと判定の流れ**
 
 ```mermaid
 flowchart TD
@@ -79,7 +81,7 @@ flowchart TD
   accDescr: workflowが許可した起動でランナー確認を実行し、その合格後にIRQ回帰を実行する。回帰は終了コードとJUnit、証跡をGitLabへ渡す。
   T["push・MR・web・schedule"] --> W["workflow rulesで起動可否と重複を制御"]
   W -- "許可された起動" --> V["runner-tests：ランナーの統合テスト"]
-  V -- "合格" --> R["irq-regression：実行.pyを実行"]
+  V -- "合格" --> R["irq-regression：run.pyを実行"]
   V -- "失敗" --> F["パイプライン失敗、後段の回帰は実行しない"]
   R --> G["通常機能・変異・X検出・必須50目標を判定"]
   G -- "終了コード0 / 非0" --> J["GitLabがジョブの成否を判定"]

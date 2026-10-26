@@ -10,3 +10,4 @@ workflow:
 
 include:
   - local: /examples/gitlab-regression/gitlab-ci.yml
+  - local: /examples/gitlab-fifo/gitlab-ci.yml
