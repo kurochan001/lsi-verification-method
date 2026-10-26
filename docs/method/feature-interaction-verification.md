@@ -78,9 +78,9 @@ pairwiseは2軸の組を覆う方式であり、3軸以上の相互作用や、�
 - 状態更新後のデータ・状態・通知と、必要な復帰・進行の結果。
 - 到達したクロス目標と、対応する比較・アサーションの実行数・合否。
 
-UVMでは、複数agentをvirtual sequenceなどで協調させ、monitorの観測を相関させるcollectorとscoreboardを用意します。瞬時の属性はcovergroupのcrossで、順序や時間差は観測履歴やSVAのsequence・cover propertyなどで確認します。異なるmonitorの古い値を寄せ集めてクロスを成立させないよう、同じケースの情報がそろった時点でサンプルします。実装上の接続は[UVM資料の8節](uvm-verification.md#8-機能間のクロスをuvmで実装する)に示します。
+UVMでは、複数エージェントを仮想シーケンスなどで協調させ、モニターの観測を相関させるコレクターとスコアボードを用意します。瞬時の属性はcovergroupのcrossで、順序や時間差は観測履歴やSVAのシーケンス・cover propertyなどで確認します。異なるモニターの古い値を寄せ集めてクロスを成立させないよう、同じケースの情報がそろった時点でサンプリングします。実装上の接続は[UVM資料の8節](uvm-verification.md#8-機能間のクロスをuvmで実装する)に示します。
 
-covergroupのbin・crossの粒度、採取、インスタンスごとの内訳と集計は、[機能網羅の手順](functional-coverage.md)に従います。
+covergroupのbin・crossの粒度、収集、インスタンスごとの内訳と集計は、[機能網羅の手順](functional-coverage.md)に従います。
 
 ## 7. 例：イベント発生とW1Cクリアの競合
 
@@ -121,7 +121,7 @@ W1Cが受理されるエッジを0、唯一のイベントが受理されるエ�
 
 期待値は次のとおりです。PENDはbindしたアサーションなどで各エッジの状態更新後に確認し、読み出しでも最終状態を確認します。IRQも各観測点で期待するPENDとIRQ_ENから判定します。IRQ_EN=0でIRQが0のままでも、PENDの検査を省略しません。
 
-クロック付きSVAで同じエッジのNBA更新を確認する場合は、次のサンプリング時点で更新結果を確認するなど、観測時点を合わせます。具体的なassertと、競合への到達・完了を記録するcoverは、[SVAのchecker例](sva-verification.md#5-例イベントとw1cの優先順位)に示しています。
+クロック付きSVAで同じエッジのNBA更新を確認する場合は、次のサンプリング時点で更新結果を確認するなど、観測時点を合わせます。具体的なassertと、競合への到達・完了を記録するcoverは、[SVAのチェッカー例](sva-verification.md#5-例イベントとw1cの優先順位)に示しています。
 
 | イベントの受理エッジ | エッジ0の更新後のPEND | エッジ+1の更新後のPEND |
 | --- | --- | --- |
@@ -169,5 +169,5 @@ W1Cが受理されるエッジを0、唯一のイベントが受理されるエ�
 
 ## 9. 参考にした一次資料
 
-- [Accellera UVM 1.2 User's Guide](https://www.accellera.org/images/downloads/standards/uvm/uvm_users_guide_1.2.pdf)：4.7節のvirtual sequenceと、4.10節の明示的な機能カバレッジを参考にしました。
+- [Accellera UVM 1.2 User's Guide](https://www.accellera.org/images/downloads/standards/uvm/uvm_users_guide_1.2.pdf)：4.7節の仮想シーケンスと、4.10節の明示的な機能カバレッジを参考にしました。
 - [NISTの組み合わせ試験](https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software)と[事象列の試験](https://csrc.nist.gov/Projects/automated-combinatorial-testing-for-software/combinatorial-methods-in-testing/event-sequence-testing)：値の組み合わせと、順序を含む目標の選び方を参考にしました。この資料の相互作用表・完了条件・割り込みIPの例は、本リポジトリで定めた運用案です。
