@@ -2,6 +2,31 @@
 
 4要因・1通知先の教材用コントローラにAPBを接続します。単なる割込み保持に加え、優先順位、threshold、処理中状態、ソフトウェアのclaim／completeを照合します。
 
+## 通知とclaimの選択を分ける
+
+有効なpendingから候補を選び、IRQ通知にだけthresholdを適用します。claimは選んだ要因を処理中へ移します。
+
+```mermaid
+flowchart TD
+  accTitle: 通知とclaimの選択を分ける
+  accDescr: 有効なpendingから候補を選び、IRQ通知にだけthresholdを適用します。claimは選んだ要因を処理中へ移します。
+  E["要因イベント"] --> P["pendingを保持"]
+  P --> S["ENABLE・優先順位で候補を選択"]
+  S --> T{"優先順位がthreshold超？"}
+  T -- "はい" --> I["IRQ通知"]
+  S --> C["claim読出し：thresholdと独立"]
+  C --> V["pendingを除去・in_serviceへ"]
+  V --> D["complete書込みで処理中を解除"]
+```
+
+選択候補がなければclaimは0です。処理中の同じ要因についての新イベントは本文の捕捉規則に従います。
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| 同順位の候補 | 小さいIDを優先 | claim IDと状態 |
+| threshold以下の候補 | IRQは出さなくてもclaimできる | 通知と選択を別検査 |
+| 処理中のイベント | 本文のlevel／edge規則を適用 | completeとの同時成立 |
+
 ## 教材の仕様
 
 番地は0x00 ENABLE、0x04 THRESHOLD、0x08 PENDING（RO）、0x0C IN_SERVICE（RO）、0x10 CLAIM/COMPLETE、0x20〜0x2Cの4個が各PRIORITYです。要因IDは1〜4、優先順位は0〜3で、0は選択しません。同順位なら小さいIDを優先します。

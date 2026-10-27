@@ -184,6 +184,31 @@ bindしたチェッカーの適用先、enable、クロック・リセット、a
 
 この教材はUVMの構成とRALの具体例です。SystemVerilogの制約付き`randomize()`、ネイティブcovergroup DB、本文のUARTエージェントや全項目を実装したものではありません。3種類のRTL変異と誤った期待値の診断、native UVM summary、終了状態・件数・VCDを照合します。ライブラリは外部へ準備し、使用版とソースハッシュを証跡へ保存します。
 
+### イベント後のpredictと実読出しを分ける
+
+APBの実行例では、独立モデルからミラーを更新した後、frontdoorの読出しとscoreboardの照合も要求します。
+
+```mermaid
+sequenceDiagram
+  accTitle: イベント後のpredictと実読出しを分ける
+  accDescr: APBの実行例では、独立モデルからミラーを更新した後、frontdoorの読出しとscoreboardの照合も要求します。
+  participant T as UVM test
+  participant M as 独立仕様モデル
+  participant R as RAL
+  participant D as APB DUT
+  T->>D: W1C操作・イベント競合を実行
+  T->>M: 受理した操作から期待値を計算
+  M-->>T: 期待するPENDING
+  T->>R: predictでミラーへ反映
+  T->>R: mirror UVM_CHECK
+  R->>D: frontdoor読出し
+  D-->>R: 実PRDATA
+  R->>R: ミラーと比較
+```
+
+図はlocal-uvmの明示的predictionの流れです。DUTの値をそのままpredictへコピーせず、独立scoreboardの比較も別に行います。
+
+
 ## 14. 制約付きランダム化・covergroupと仕様生成
 
 [UVMランダム例](../../examples/local-uvm-random/README.md)では、上記APBのagent・monitor・独立scoreboardを再利用し、SVの`rand`・`constraint`・`randomize()`とネイティブcovergroupを実行します。各待ち構成・各通常実行で24 binを要求し、DBのbin一覧とヒット、同一seedの再現を確認します。固定の境界操作も含むため、ランダム刺激だけの収束性能を測る例ではありません。

@@ -2,6 +2,29 @@
 
 [既存のUVM APB例](../local-uvm/README.md)のagent・driver・monitor・独立scoreboardを再利用し、新しいテストとsubscriberを接続します。SystemVerilogの`rand`・`constraint`・`randomize()`と、実際のcoverpoint・crossを使うローカル教材です。
 
+## ランダム刺激と観測カバレッジ
+
+randomizeの成功後にAPBへ送り、実完了の観測を独立scoreboardとネイティブcovergroupへ渡します。
+
+```mermaid
+flowchart TD
+  accTitle: ランダム刺激と観測カバレッジ
+  accDescr: randomizeの成功後にAPBへ送り、実完了の観測を独立scoreboardとネイティブcovergroupへ渡します。
+  R["rand・constraint・randomize"] --> V{"成功・合法な値？"}
+  V -- "はい" --> D["既存UVM driver"] --> U["APB RTL"] --> M["monitor：実完了を観測"]
+  V -- "いいえ" --> F["送信中断・失敗"]
+  M --> S["独立scoreboard"]
+  M --> C["subscriberのcovergroup"] --> B["coverage.datの24 binを照合"]
+```
+
+固定12操作で境界を確保してからランダム操作を追加します。24 binの達成は、ランダム刺激だけの収束性能を表しません。
+
+| カバレッジ区分 | 内訳・合格条件 | 確認単位 |
+| --- | --- | --- |
+| バス用 | 番地4＋方向2＋応答2＋番地×方向8 | 16 bin |
+| 競合用 | イベント2＋クリア2＋cross4 | 8 bin |
+| 通常実行ごと | 独立比較の合格と全24 binのヒット | 構成やseedの和集合で補わない |
+
 ## 検査内容
 
 ランダム化するのは読書き、番地、データ、イベントです。番地は0／4／8／12、PENDING書込みデータは0〜15、イベントは0／1／3／15に制約します。ROへの書込み・未定義番地も含め、許可されたエラー応答をscoreboardで比較します。生成後にも制約への適合を検査し、`randomize()`の失敗を検出してから送信を中断します。

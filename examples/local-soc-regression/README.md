@@ -10,6 +10,31 @@
 6. [クレジット方式のフロー制御](../local-credit-link/README.md)
 7. [小規模キャッシュとDMA](../local-cache-dma/README.md)
 
+## 実行ステージと子回帰の内訳
+
+core・tools・formalを別々に選択でき、allでは7例すべての完了と成功を確認します。
+
+```mermaid
+flowchart TD
+  accTitle: 実行ステージと子回帰の内訳
+  accDescr: core・tools・formalを別々に選択でき、allでは7例すべての完了と成功を確認します。
+  P["local-soc-regression"] --> C["core：割込み・リングDMA・クレジット・キャッシュ"]
+  P --> T["tools：UVMランダム・レジスタ生成"]
+  P --> F["formal：反例の再現"]
+  C --> E["各子のJUnit・マニフェスト・詳細証跡"]
+  T --> E
+  F --> E
+  E --> G["親7ゲート"]
+```
+
+合計は子113／137件です。formal内の8個のBMCや親ゲートを、子の件数へ再合算しません。
+
+| 直下の子の区分 | smoke JUnit | nightly JUnit |
+| --- | --- | --- |
+| core：4回路8構成 | 56件 | 72件 |
+| tools：UVMランダム／生成 | 17＋16件 | 21＋20件 |
+| formal：BMC・再現・正常確認 | 24件 | 24件 |
+
 ## 準備と実行
 
 4回路の実行にはPython 3.10以上とIcarusを使います。UVM・生成RALにはVerilator 5.052とC++20環境、レジスタ生成には専用のSystemRDL環境、反例の生成には固定版SBY・YoWASP・Z3環境が必要です。[UVM](../local-uvm/README.md)、[SystemRDL](../local-register-spec/README.md)、[フォーマル](../local-formal-common/README.md)の準備を行います。既存の環境はそのまま使えます。

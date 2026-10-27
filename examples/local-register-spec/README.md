@@ -2,6 +2,34 @@
 
 `registers.rdl`を実際のSystemRDLコンパイラーでエラボレーションし、独自の小さなexporterでAPB RTL、Cヘッダー、UVM RALを生成します。生成物は実行先に保存し、別に手書きした`contract.json`と照合します。GitLabは使いません。
 
+## 共通生成物と独立契約の照合
+
+SystemRDLから複数ビューを生成し、共通する仕様誤りは別に手書きした契約と照合して検出します。
+
+```mermaid
+flowchart TD
+  accTitle: 共通生成物と独立契約の照合
+  accDescr: SystemRDLから複数ビューを生成し、共通する仕様誤りは別に手書きした契約と照合して検出します。
+  S["registers.rdl"] --> E["実SystemRDLコンパイラー・限定exporter"]
+  E --> R["APB RTL"]
+  E --> C["Cヘッダー"]
+  E --> U["UVM RAL"]
+  E --> M["メタデータ"]
+  I["独立したcontract.json"] --> V["番地・幅・reset・属性を比較"]
+  M --> V
+  R --> T["RTL実行・Cコンパイル・RAL属性照合"]
+  C --> T
+  U --> T
+```
+
+生成ビュー同士が一致するだけでは合格にしません。生成器が対応しない属性や階層は拒否します。
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| メタデータ | 独立契約と全項目を照合 | 共通原本の誤りを検出 |
+| 生成RTL | APBを駆動して機能を比較 | RO・W1C・reset・待ち |
+| C・RAL | C定数と実UVMモデル属性を照合 | RAL frontdoor接続は含まない |
+
 ## 原本と生成物の検査
 
 教材の原本は、0x00の8ビットCONFIG（RW、reset 0x12）、0x04の32ビットID（RO、0x52444c31）、0x08の4ビットPENDING（W1C、reset 0）です。PENDINGでは同一エッジのイベントをクリアより優先します。

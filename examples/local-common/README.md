@@ -2,6 +2,30 @@
 
 [ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先順位付き割込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
 
+## 実行から構成別判定まで
+
+入力と独立した期待値を生成し、終了状態・件数・通常カバレッジを構成ごとに照合します。
+
+```mermaid
+flowchart TD
+  accTitle: 実行から構成別判定まで
+  accDescr: 入力と独立した期待値を生成し、終了状態・件数・通常カバレッジを構成ごとに照合します。
+  G["各例のrun.py：刺激・期待値"] --> V["vectors.txt"] --> S["IcarusでRTL・TBを実行"]
+  S --> R["終了コード・完了数・COUNTを照合"]
+  R --> C["合格した通常ケースのCOVERを集計"]
+  C --> E["構成別ゲート・JUnit・証跡"]
+  S --> N["負の試験：予定違反を別判定"]
+  N --> E
+```
+
+図は実行と判定の依存関係です。負の試験の到達で、通常ケースの未達を補いません。
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| 通常ケース | 終了・比較数・種別件数が一致 | ログ・result.json |
+| 構成別ゲート | 各構成で必須目標へ到達 | coverage.json |
+| 負の試験 | 予定ラベルと異常終了が一致 | 通常カバーへ加算しない |
+
 ## 準備と実行
 
 POSIX環境（macOS／Linux）、Python 3.10以上、PATH上のIcarus Verilog（`iverilog`と`vvp`）を使います。追加のPythonパッケージは不要です。リポジトリのルートから実行してください。
@@ -24,14 +48,6 @@ python3 examples/local-memory-order/run.py
 ```
 
 各例は、境界値の通常検証、seedを固定したランダム検証、意図的な不具合・期待値の誤りを加えた4種類の負の試験を実行します。ECCは保証範囲外の診断2件も別枠で実行します。カバレッジはSystemVerilogのcovergroupではなく、テストベンチが出力する`COVER`ログを集計する簡易実装です。
-
-```text
-Pythonで刺激と独立した期待値を生成 → vectors.txt
-                                          ↓
-IcarusでRTLとテストベンチを実行 → 出力照合・観測ログ・VCD
-                                          ↓
-終了状態・完了数・種別ごとの件数を確認 → 構成ごとの必須目標を判定
-```
 
 各例の`run.py`が刺激と期待値を作り、このディレクトリの`runner.py`が実行・集計します。[既存IRQ例](../gitlab-regression/run.py)のプロセス起動、タイムアウト、終了判定を再利用するため、例のディレクトリだけを抜き出さず、リポジトリ全体を取得してください。
 

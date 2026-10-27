@@ -2,13 +2,29 @@
 
 既存の[APBレジスタ](../gitlab-apb/README.md)を、実際のSystemVerilog UVMクラスライブラリで検証します。PythonでUVMを模倣する例ではありません。Verilator 5.052とAccellera UVM 2020-3.2で実行します。対応状況は[Verilatorの公式変更履歴](https://verilator.org/guide/latest/changes.html)と[Accelleraの配布情報](https://www.accellera.org/downloads/standards/uvm)を参照してください。
 
-## 構成と判定
+## RALと独立scoreboardの二重照合
 
-```text
-UVM test → RAL frontdoor → adapter → sequencer → driver → APB RTL
-                                                   ↓
-                         monitor → analysis port → scoreboard
+RALのfrontdoorを実APBへ変換し、monitorの観測を仕様から作った期待値と比較します。
+
+```mermaid
+flowchart TD
+  accTitle: RALと独立scoreboardの二重照合
+  accDescr: RALのfrontdoorを実APBへ変換し、monitorの観測を仕様から作った期待値と比較します。
+  T["UVM test・sequence"] --> R["RAL frontdoor"] --> A["adapter・sequencer・driver"] --> U["APB RTL"]
+  U --> M["monitor"] --> S["独立scoreboard"]
+  T --> P["イベント後の仕様値を明示的predict"] --> R
+  R --> C["mirror UVM_CHECKで実読出しを比較"]
 ```
+
+明示的predictへDUTのPENDINGをコピーしません。predict単独では合否を決めず、scoreboardと実読出しも要求します。
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| 通常バス操作 | frontdoorとauto prediction | 戻りstatusとscoreboard |
+| イベントとW1Cの競合 | 終了後に仕様値を明示的predict | その後の実読出し比較 |
+| リセット | DUT駆動とRAL resetを別々に実施 | 初期値・ミラー照合 |
+
+## 構成と判定
 
 agentがsequencer・driver・monitorを持ち、`uvm_config_db`でvirtual interfaceを渡します。monitorは実際のAPB完了とイベント、エッジ後の状態を観測します。scoreboardは独立したCONFIG・PENDINGの期待値を更新し、読出し値、エラー応答、SETUP・待ち中を含む状態を照合します。
 

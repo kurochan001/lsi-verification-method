@@ -10,6 +10,32 @@
 6. [クロック停止・再開とリセット制御](../local-clock-reset/README.md)
 7. [SystemVerilog UVMとRAL](../local-uvm/README.md)
 
+## 解析・4回路・UVMの集約
+
+coreで解析と4回路を、uvmでUVM例を選び、allでは全7例を起動します。
+
+```mermaid
+flowchart TD
+  accTitle: 解析・4回路・UVMの集約
+  accDescr: coreで解析と4回路を、uvmでUVM例を選び、allでは全7例を起動します。
+  P["local-workflow-regression"] --> C["core：6例"]
+  C --> A["失敗の縮小・刺激調整"]
+  C --> R["幅変換・保護・ECCメモリ・クロック"]
+  P --> U["uvm：APBのUVM・RAL"]
+  A --> E["子ごとの詳細試行と結果"]
+  R --> E
+  U --> E
+  E --> G["親7ゲートで完了・成功を照合"]
+```
+
+探索中のRTL実行数は別の記録です。親の7件と子83／111件を重複加算しません。
+
+| 直下の子の区分 | smoke JUnit | nightly JUnit |
+| --- | --- | --- |
+| 4回路・8構成 | 56件 | 72件 |
+| 縮小・刺激調整 | 6＋8件 | 6＋16件 |
+| UVM | 13件 | 17件 |
+
 ## 実行
 
 共通にPython 3.10以上とIcarusを使います。UVMにはVerilator 5.052、C++20ビルド環境、別途準備したUVM 2020-3.2が必要です。

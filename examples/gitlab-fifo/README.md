@@ -4,6 +4,21 @@ PythonとIcarus Verilogで、同期FIFOを検証する例です。スコアボ�
 
 [IRQ・CDCの実行例](../gitlab-regression/README.md)に続く題材です。プロセスの実行・停止、ログの終了判定は、同例の[`run.py`](../gitlab-regression/run.py)を再利用しています。このリポジトリ全体を取得して実行してください。
 
+## 要求と受理した操作を区別する
+
+書込み・読出しの受理をエッジ前の空・満杯から判定し、参照キューで値・順序・占有数を比較します。
+
+```mermaid
+flowchart TD
+  accTitle: 要求と受理した操作を区別する
+  accDescr: 書込み・読出しの受理をエッジ前の空・満杯から判定し、参照キューで値・順序・占有数を比較します。
+  I["wr_en・rd_en・data"] --> A["エッジ前のempty・fullで受付判定"]
+  A --> D["DUT FIFO"] --> C["rd_valid・rd_data・件数を比較"]
+  A --> Q["独立参照キュー"] --> C
+```
+
+本FIFOは満杯なら同時読出しがあっても書込みを受理しません。ready/valid FIFOの別例と受付規則が異なります。
+
 ## 1. FIFOの仕様
 
 [`sync_fifo.sv`](rtl/sync_fifo.sv)は説明用の単一クロックFIFOです。深さ1・3・8、データ幅8・16で確認します。深さ3は、ポインターの折返しを2のべき乗に依存させないための構成です。

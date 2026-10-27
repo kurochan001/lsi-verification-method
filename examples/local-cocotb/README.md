@@ -2,6 +2,28 @@
 
 Pythonのコルーチンで刺激・位相モニター・レジスタ参照モデルを動かす、実行可能なcocotb例です。[既存APBレジスタ](../gitlab-apb/README.md)を変更せずに使います。
 
+## 駆動・観測・期待値を分ける
+
+PythonがAPBを駆動し、完了エッジの前後を区別して参照レジスタと照合します。
+
+```mermaid
+flowchart TD
+  accTitle: 駆動・観測・期待値を分ける
+  accDescr: PythonがAPBを駆動し、完了エッジの前後を区別して参照レジスタと照合します。
+  S["Pythonの固定・ランダム刺激"] --> D["APB駆動"] --> U["既存APB RTL"]
+  U --> M["位相モニター"] --> C["応答・状態を比較"]
+  S --> R["独立レジスタモデル"] --> C
+  C --> E["生JUnit・FST・集約結果"]
+```
+
+cocotbの生JUnitとランナーのJUnitは、同じ試験の別階層として保存します。
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| SETUP・待ち中 | 早すぎる更新がない | CONFIG・PENDING |
+| 完了エッジ | 更新前の読出し値を比較 | PREADY・PSLVERR・PRDATA |
+| エッジ後 | イベントとW1Cの優先順位を適用 | 更新後の状態 |
+
 ## 準備
 
 POSIX、Python 3.10以上、Icarus Verilogを用意します。初回だけ専用の一時仮想環境へ[固定版パッケージ](tools-requirements.txt)を入れます。既に作成した環境を再利用する場合はactivateから始めます。

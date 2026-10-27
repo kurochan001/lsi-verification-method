@@ -2,6 +2,40 @@
 
 1／2本のワードラインを持つ直接マップ・ライトバックキャッシュと、それを迂回するDMAアクセスを接続した教材です。CPUは単純な要求モデルで、実CPU命令やOSは実行しません。メモリは16ワード、データは32ビットです。
 
+## 保守操作前後の可視性
+
+CPU書込みはキャッシュを、DMA書込みはメモリを更新します。cleanとinvalidateの前後で見える値を区別します。
+
+```mermaid
+sequenceDiagram
+  accTitle: 保守操作前後の可視性
+  accDescr: CPU書込みはキャッシュを、DMA書込みはメモリを更新します。cleanとinvalidateの前後で見える値を区別します。
+  participant C as CPU要求モデル
+  participant K as キャッシュ
+  participant M as メモリ
+  participant D as DMA要求モデル
+  C->>K: 値Aを書込み（dirty）
+  D->>M: 読出し
+  M-->>D: clean前は古い値
+  C->>K: clean
+  K->>M: 値Aを書戻し
+  D->>M: 値Bを書込み
+  C->>K: 読出し
+  K-->>C: invalidate前は値A
+  C->>K: invalidate
+  C->>K: 再読出し
+  K->>M: 値Bを取得
+  K-->>C: 値B
+```
+
+矢印は論理的な操作順序です。CPUとDMAは同じ要求口から直列に受け付け、物理的な同時実行やバリア命令はモデル化しません。
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| CPU書込み後のDMA読出し | clean前は古いメモリ値、後は書戻し値 | DMA応答 |
+| DMA書込み後のCPU読出し | invalidate前は古いヒット値、後は取得し直す | CPU応答 |
+| dirty行のinvalidate | エラーで保持 | 応答とメモリ |
+
 ## 操作と可視性
 
 要求はCPU読出し／書込み、clean（書戻し）、invalidate（無効化）、DMA読出し／書込みの6種類です。CPUとDMAは同じ要求口から直列に受け付けます。各処理の待ち時間と応答保持を含めて比較します。CPU・DMAの書込みには4ビットのバイトストローブがあり、無効レーンを保持します。

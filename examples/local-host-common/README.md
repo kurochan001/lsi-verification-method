@@ -2,6 +2,25 @@
 
 [Cドライバ](../local-c-driver/README.md)、[cocotb](../local-cocotb/README.md)、[シミュレーター差分](../local-differential/README.md)が使う共通ランナーです。必要なツールは各例のREADMEを参照してください。
 
+## 生の実行結果と集約判定
+
+C・cocotb・差分検証の実行結果を、終了・件数・要求・波形などの条件と照合して集約します。
+
+```mermaid
+flowchart TD
+  accTitle: 生の実行結果と集約判定
+  accDescr: C・cocotb・差分検証の実行結果を、終了・件数・要求・波形などの条件と照合して集約します。
+  P["例ごとの入力・ビルド計画"] --> R["C・cocotb・差分を実行"] --> C["終了・RESULT・COUNTを照合"]
+  C --> G["構成別の通常カバレッジを判定"] --> E["集約JUnit・summary"]
+  R --> D["生JUnit・VCD／FST・比較トレース"]
+```
+
+| 確認する場面 | 期待する動作 | 主な照合対象 |
+| --- | --- | --- |
+| 通常 | 終了0・唯一の完了記録・COUNT一致 | 構成別の全必須目標 |
+| 負の試験 | 予定ラベルと非ゼロ終了 | 注入先ごとに分類 |
+| JUnit | 親ゲートと生の結果を区別 | 同じ試験を二重計上しない |
+
 ## 共通オプション
 
 各例の`run.py`をリポジトリのルートから実行します。`--profile smoke|nightly`、`--seed`（既定17）、`--iterations`で探索量を指定します。nightlyはseed、seed+1、seed+2を使います。固定試験と予定の負の試験は省略しません。

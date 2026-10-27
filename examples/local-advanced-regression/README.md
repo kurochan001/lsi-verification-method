@@ -10,6 +10,32 @@
 - [シミュレーター差分](../local-differential/README.md)：IcarusとVerilatorの仕様照合・有効観測列の比較。
 - [完了期限の証明](../local-progress/README.md)：受信側の進行条件を明記した証明と、その条件を外した反例。
 
+## 7例の実行範囲と集計階層
+
+simulationは6例、formalは完了期限1例を選び、親は各子回帰の結果を集約します。
+
+```mermaid
+flowchart TD
+  accTitle: 7例の実行範囲と集計階層
+  accDescr: simulationは6例、formalは完了期限1例を選び、親は各子回帰の結果を集約します。
+  P["local-advanced-regression"] --> S["simulation：6例"]
+  P --> F["formal：完了期限の証明"]
+  S --> C["共通シミュレーション：Stream・DSP・競合"]
+  S --> H["ホスト：C・cocotb・差分"]
+  C --> E["子の詳細JUnit・ログ・波形"]
+  H --> E
+  F --> E
+  E --> G["親は子回帰7件のゲート"]
+```
+
+親ゲートと子の件数を合算しません。段階を一部選択した場合、未選択の例は合格扱いにしません。
+
+| 直下の子の区分 | smoke JUnit | nightly JUnit |
+| --- | --- | --- |
+| 共通シミュレーション3例 | 35件 | 45件 |
+| ホスト3例 | 37件 | 51件 |
+| 完了期限のフォーマル | 16件 | 16件 |
+
 ## 準備と実行
 
 POSIX、Python 3.10以上、Icarus、Verilator、C／C++コンパイラー、makeを使います。cocotbは[専用仮想環境](../local-cocotb/README.md)、フォーマルは[既存の仮想環境](../local-formal-common/README.md)を用意します。既存環境を上書きせず再利用できます。
