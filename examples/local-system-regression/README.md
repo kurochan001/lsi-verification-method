@@ -69,6 +69,8 @@ python3 examples/local-system-regression/run.py --out artifacts/system-all
 python3 -m unittest discover -s examples/local-system-regression/tests -v
 ```
 
-この親ランナーの確認3件は、子の成功フラグだけでは結果欠落・失敗を隠せないこと、実行Python不在、既存出力先の保護を確認します。
+この親ランナーの確認4件は、子の成功フラグだけでは結果欠落・失敗を隠せないこと、実行Python不在、既存出力先の保護を確認します。
 
 各例の制限を読み、デジタルモデルと物理検証、BMCと非有界証明、到達性と正しさを区別して使ってください。商用VIP、CDC／RDC、UPF、合成・STAの実行結果を示す教材ではありません。
+
+一覧形式の子結果は、空でない一意のチェックIDも要求します。IDの欠落・重複、不正な結果要素を成功にしません。

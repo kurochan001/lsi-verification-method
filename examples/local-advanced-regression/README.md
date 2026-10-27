@@ -74,4 +74,6 @@ python3 examples/local-advanced-regression/run.py --stage formal \
 python3 -m unittest discover -s examples/local-advanced-regression/tests -v
 ```
 
-親ランナーの確認3件は、子の成功フラグで結果欠落や失敗を隠せないこと、実行環境不在、出力先保護を確認します。各例の実行範囲は個別READMEを参照してください。
+親ランナーの確認4件は、子の成功フラグで結果欠落や失敗を隠せないこと、実行環境不在、出力先保護を確認します。各例の実行範囲は個別READMEを参照してください。
+
+一覧形式の子結果は、空でない一意のチェックIDも要求します。IDの欠落・重複、不正な結果要素を成功にしません。

@@ -1,5 +1,5 @@
 [
-  {"name":"cfg","address":0,"width":8,"reset":18,"access":"RW"},
-  {"name":"idreg","address":4,"width":32,"reset":1380207665,"access":"RO"},
-  {"name":"pending","address":8,"width":4,"reset":0,"access":"W1C"}
+  {"name":"cfg","address":0,"width":8,"reset":18,"access":"RW","volatile":false,"hw_update":"none","precedence":"sw"},
+  {"name":"idreg","address":4,"width":32,"reset":1380207665,"access":"RO","volatile":false,"hw_update":"none","precedence":"sw"},
+  {"name":"pending","address":8,"width":4,"reset":0,"access":"W1C","volatile":true,"hw_update":"stickybit","precedence":"hw"}
 ]

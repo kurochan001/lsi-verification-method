@@ -11,11 +11,17 @@ def model(path):
         fields=list(reg.fields())
         if set(reg.list_properties())-{'regwidth'} or reg.is_array or reg.get_property('regwidth')!=32 or len(fields)!=1:raise ValueError('only scalar 32-bit one-field registers supported')
         f=fields[0];sw=f.get_property('sw').name;ow=f.get_property('onwrite');ow=ow.name if ow else None
-        if set(f.list_properties())-{'sw','hw','reset','onwrite'} or f.get_property('hw').name!=('w' if reg.inst_name=='pending' else 'r'):raise ValueError('unsupported hardware update or field property')
+        pending=reg.inst_name=='pending'
+        allowed={'sw','hw','reset','onwrite'} | ({'stickybit','precedence'} if pending else set())
+        if set(f.list_properties())-allowed or f.get_property('hw').name!=('w' if pending else 'r'):raise ValueError('unsupported hardware update or field property')
         if f.low!=0 or not 1<=f.width<=32 or sw not in ('r','rw') or ow not in (None,'woclr') or f.get_property('onread') is not None:raise ValueError('unsupported field semantics')
+        precedence=f.get_property('precedence').name
+        if pending:
+            if sw!='rw' or ow!='woclr' or not f.get_property('stickybit') or precedence!='hw':raise ValueError('pending requires stickybit events with hardware precedence')
+        elif ow is not None:raise ValueError('hardware event updates are supported only for pending')
         reset=f.get_property('reset')
         if not isinstance(reset,int) or reg.absolute_address%4 or reg.absolute_address>252:raise ValueError('explicit integer reset and aligned byte offset required')
-        registers.append(dict(name=reg.inst_name,address=reg.absolute_address,width=f.width,reset=reset,access='RO' if sw=='r' else 'W1C' if ow=='woclr' else 'RW'))
+        registers.append(dict(name=reg.inst_name,address=reg.absolute_address,width=f.width,reset=reset,access='RO' if sw=='r' else 'W1C' if ow=='woclr' else 'RW',volatile=f.is_hw_writable,hw_update='stickybit' if pending else 'none',precedence=precedence))
     if {r['name'] for r in registers}!={'cfg','idreg','pending'}:raise ValueError('this teaching exporter expects cfg/idreg/pending')
     if next(r for r in registers if r['name']=='pending')['width']>4:raise ValueError('hardware event port is four bits')
     return registers
@@ -30,7 +36,7 @@ def export(registers,out):
         if access=='RW':writes.append(f"if(done && !bad && pwrite && paddr==8'd{a}){n}<=pwdata & (MUTATION==2 ? 32'hf:32'h{mask:x});")
         elif access=='W1C':writes.append(f"{n}<=MUTATION==3 && done && pwrite && paddr==8'd{a} ? ({n}|events)&~pwdata[{w-1}:0]:({n}&~((done && !bad && pwrite && paddr==8'd{a}) ? pwdata[{w-1}:0]:{w}'b0))|events[{w-1}:0];")
         header += [f'#define DEMO_{n.upper()}_ADDR {a}u',f'#define DEMO_{n.upper()}_MASK 0x{mask:x}u',f'#define DEMO_{n.upper()}_RESET 0x{value:x}u']
-        ral.append(f'''{n}=rdl_word::type_id::create("{n}");{n}.configure(this);{n}.build("{access}",{w},32'h{value:x});default_map.add_reg({n},{a},"{'RO' if access=='RO' else 'RW'}");''')
+        ral.append(f'''{n}=rdl_word::type_id::create("{n}");{n}.configure(this);{n}.build("{access}",{w},32'h{value:x},1'b{int(r['volatile'])});default_map.add_reg({n},{a},"{'RO' if access=='RO' else 'RW'}");''')
     ro=' || '.join(f"paddr==8'd{r['address']}" for r in registers if r['access']=='RO') or "1'b0"
     text='''module rdl_regs #(parameter MUTATION=0,WAIT_CYCLES=0)(input wire clk,rst_n,psel,penable,pwrite,input wire[7:0]paddr,input wire[31:0]pwdata,input wire[3:0]events,output wire pready,pslverr,output reg[31:0]prdata);
 '''+ '\n'.join(decl)+f'''
@@ -52,8 +58,8 @@ class rdl_word extends uvm_reg;
 `uvm_object_utils(rdl_word)
 uvm_reg_field value;
 function new(string n="rdl_word");super.new(n,32,UVM_NO_COVERAGE);endfunction
-function void build(string access,int width,uvm_reg_data_t reset_value);
-value=uvm_reg_field::type_id::create("value");value.configure(this,width,0,access,0,reset_value,1,0,0);
+function void build(string access,int width,uvm_reg_data_t reset_value,bit is_volatile);
+value=uvm_reg_field::type_id::create("value");value.configure(this,width,0,access,is_volatile,reset_value,1,0,0);
 endfunction endclass
 class rdl_block extends uvm_reg_block;
 `uvm_object_utils(rdl_block)

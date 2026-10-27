@@ -13,7 +13,8 @@ def child_success(summary):
     planned=summary.get('planned');results=summary.get('results')
     if type(planned) is not int or planned<=0:return False
     if type(results) is int:return results==planned
-    return isinstance(results,list) and len(results)==planned and all(isinstance(r,dict) and r.get('status')=='pass' for r in results)
+    if not isinstance(results,list) or len(results)!=planned or not all(isinstance(r,dict) and r.get('status')=='pass' and isinstance(r.get('id'),str) and r['id'].strip() for r in results):return False
+    return len({r['id'] for r in results})==len(results)
 def run(args):
     names=(CORE if args.stage in ('all','core') else [])+(TOOLS if args.stage in ('all','tools') else [])+(FORMAL if args.stage in ('all','formal') else [])
     e=E.Evidence('local-soc-regression',args,[Path(__file__)],dict(children=names,parent_cases='child regression gates; child checks are separate'),names)

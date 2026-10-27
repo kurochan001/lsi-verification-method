@@ -19,9 +19,12 @@ SIMULATIONS=['local-axis','local-c-driver','local-memory-order','local-dsp','loc
 FORMALS=['local-progress']
 
 def child_success(summary):
+    if not isinstance(summary,dict):return False
     if summary.get('success') is not True or type(summary.get('planned')) is not int or summary['planned']<=0:return False
     results=summary.get('results')
-    if isinstance(results,list):return len(results)==summary['planned'] and all(r.get('outcome') in ('pass','detected') for r in results)
+    if isinstance(results,list):
+        if len(results)!=summary['planned'] or not all(isinstance(r,dict) and r.get('outcome') in ('pass','detected') and isinstance(r.get('id'),str) and r['id'].strip() for r in results):return False
+        return len({r['id'] for r in results})==len(results)
     return type(results) is int and results==summary['planned'] and summary.get('complete') is True
 
 def run(args):

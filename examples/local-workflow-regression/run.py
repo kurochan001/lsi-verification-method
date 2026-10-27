@@ -9,11 +9,13 @@ spec=importlib.util.spec_from_file_location('workflow_evidence',HERE.parent/'loc
 CORE=['local-failure-reduction','local-coverage-feedback','local-width-converter','local-access-control','local-ecc-memory','local-clock-reset']
 
 def child_success(summary):
+    if not isinstance(summary,dict):return False
     if summary.get('success') is not True or summary.get('complete') is not True:return False
     planned=summary.get('planned');results=summary.get('results')
     if type(planned) is not int or planned<=0:return False
     if type(results) is int:return results==planned
-    return isinstance(results,list) and len(results)==planned and all(r.get('status')=='pass' for r in results)
+    if not isinstance(results,list) or len(results)!=planned or not all(isinstance(r,dict) and r.get('status')=='pass' and isinstance(r.get('id'),str) and r['id'].strip() for r in results):return False
+    return len({r['id'] for r in results})==len(results)
 
 def run(args):
     names=(CORE if args.stage in ('all','core') else [])+(['local-uvm'] if args.stage in ('all','uvm') else [])

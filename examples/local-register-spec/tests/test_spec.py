@@ -29,4 +29,14 @@ class SpecificationTests(unittest.TestCase):
                 with self.subTest(case=i):
                     p=Path(tmp)/'bad.rdl';p.write_text(text)
                     with self.assertRaises(ValueError):generator.model(p)
+    def test_pending_requires_explicit_event_and_precedence_contract(self):
+        generator=P.E.load('test_pending_policy',P.HERE/'generate.py')
+        source=(P.HERE/'registers.rdl').read_text()
+        changes=[('precedence=hw;',''),('precedence=hw;','precedence=sw;'),('stickybit;',''),('stickybit;','intr;stickybit;'),('stickybit;','stickybit=false;')]
+        with tempfile.TemporaryDirectory() as tmp:
+            for before,after in changes:
+                with self.subTest(change=(before,after)):
+                    self.assertIn(before,source)
+                    p=Path(tmp)/'policy.rdl';p.write_text(source.replace(before,after))
+                    with self.assertRaises(ValueError):generator.model(p)
 if __name__=='__main__':unittest.main()

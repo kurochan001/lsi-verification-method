@@ -10,7 +10,7 @@ R=importlib.util.module_from_spec(spec);spec.loader.exec_module(R)
 class RunnerTest(unittest.TestCase):
     def test_consistent_simulation_and_formal_children_are_accepted(self):
         self.assertTrue(R.child_success(dict(success=True,planned=2,results=2,complete=True)))
-        self.assertTrue(R.child_success(dict(success=True,planned=2,results=[dict(outcome='pass'),dict(outcome='detected')])))
+        self.assertTrue(R.child_success(dict(success=True,planned=2,results=[dict(id='proof',outcome='pass'),dict(id='mutation',outcome='detected')])))
     def test_success_flag_cannot_hide_missing_or_failed_cases(self):
         for record in (dict(success=True),dict(success=True,planned=2,results=1,complete=True),
                        dict(success=True,planned=1,results=[dict(outcome='error')]),dict(success=True,planned=0,results=[],complete=True),
@@ -25,4 +25,10 @@ class RunnerTest(unittest.TestCase):
             (out/'keep').write_text('keep')
             p=subprocess.run([sys.executable,R.__file__,'--out',str(out)],capture_output=True,text=True)
             self.assertEqual(p.returncode,2);self.assertEqual((out/'keep').read_text(),'keep')
+    def test_duplicate_missing_or_malformed_result_ids_are_rejected(self):
+        good=dict(id='check', outcome='pass')
+        for rows in ([good,dict(good)], [dict(outcome='pass')], [dict(good,id='')], [dict(good,id=' ')], ['pass'], [None]):
+            with self.subTest(rows=rows):
+                self.assertFalse(R.child_success(dict(success=True,complete=True,planned=len(rows),results=rows)))
+        for summary in (None,[],True):self.assertFalse(R.child_success(summary))
 if __name__=='__main__':unittest.main()

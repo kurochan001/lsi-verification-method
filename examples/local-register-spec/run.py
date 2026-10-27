@@ -13,7 +13,7 @@ def operations(seed,n):
 def same_contract(model,contract):return sorted(model,key=lambda r:r['name'])==sorted(contract,key=lambda r:r['name'])
 def run(args):
     n=24 if args.profile=='smoke' else 150;seeds=list(range(args.seed,args.seed+(1 if args.profile=='smoke' else 3)))
-    names=['generate','independent-contract','reject-shared-spec-error','ral-build','header','bad-header','ral','bad-ral']+[f'wait{w}-{name}' for w in (0,2) for name in [*[f'random-seed{s}' for s in seeds],'mutation1','mutation2','mutation3']]
+    names=['generate','independent-contract','reject-shared-spec-error','ral-build','header','bad-header','ral','bad-ral','bad-ral-volatility']+[f'wait{w}-{name}' for w in (0,2) for name in [*[f'random-seed{s}' for s in seeds],'mutation1','mutation2','mutation3']]
     e=E.Evidence('local-register-spec',args,[Path(__file__),HERE/'generate.py',HERE/'registers.rdl',HERE/'contract.json',HERE/'rtl_tb.sv',HERE/'ral_tb.sv',HERE/'check_header.c',HERE/'tools-requirements.txt'],dict(seeds=seeds,operations=n,views=['RTL','C','RAL']),names)
     generated=e.out/'generated';gen=E.P.execute([sys.executable,str(HERE/'generate.py'),str(HERE/'registers.rdl'),'--out',str(generated)],e.out/'generate.log',args.timeout,e.out)
     generated_ok=not gen['error'] and gen['returncode']==0;e.check('generate',generated_ok,gen)
@@ -36,8 +36,8 @@ def run(args):
     E.P.write_json(e.out/'uvm-source.json',dict(root=str(home),sha256={str(p.relative_to(home)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((home/'src').rglob('*')) if p.is_file()}))
     b=E.P.execute([args.verilator,'--binary','--timing','-Wno-fatal','-j','4','--top-module','ral_tb','--Mdir',str(ral),'-I'+str(home/'src'),'+define+UVM_NO_DPI',str(home/'src/uvm_pkg.sv'),str(generated/'rdl_pkg.sv'),str(HERE/'ral_tb.sv')],e.out/'ral-build.log',args.build_timeout,e.out)
     e.check('ral-build',not b['error'] and b['returncode']==0,b)
-    for corrupt in (0,1):
-        name='bad-ral' if corrupt else 'ral';d=e.out/name;d.mkdir()
+    for corrupt,name in ((0,'ral'),(1,'bad-ral'),(2,'bad-ral-volatility')):
+        d=e.out/name;d.mkdir()
         x=E.P.execute([str(ral/'Vral_tb'),f'+BAD_RAL={corrupt}'],d/'simulation.log',args.timeout,d) if not b['error'] and b['returncode']==0 else dict(error='RAL build failed',returncode=None)
         log=(d/'simulation.log').read_text() if (d/'simulation.log').exists() else ''
         status,message=E.P.classify(dict(checks=1,expected_failure='RDL_RAL' if corrupt else None),x,log)
