@@ -60,7 +60,8 @@ module width_tb;
  if(m_rvalid && m_rready)begin m_rvalid<=0;completed_sub=completed_sub+1;end
  end
  end
- integer fd,n,cycles,aw_delay,w_delay,stall,b_seen,r_seen,expected_sub;reg [63:0] v[0:10];string vectors,wave;
+ integer fd,n,cycles,aw_delay,w_delay,stall,b_seen,r_seen,expected_sub,aw_cycle,w_cycle,first_write_half,recovery_addr;
+ reg recovering=0;reg [63:0] v[0:10];string vectors,wave;
  reg aw_sent,w_sent,ar_sent,finished,ah,wh,rh,bh,dh;
  task reset_bus;begin
  rst_n=0;s_awvalid=0;s_wvalid=0;s_arvalid=0;s_bready=0;s_rready=0;
@@ -77,25 +78,27 @@ module width_tb;
  seen_sub=0;completed_sub=0;expected_half=0;
  if(kind==0)reset_bus();
  else begin
+ first_write_half=tx_strb[3:0]==0 ? 1:0;
  if((kind==1 || kind==3) && addr%8==0)begin
  for(integer h=0;h<2;h=h+1)begin
- if(addr+h*4!=error_addr)for(integer l=0;l<4;l=l+1)if(tx_strb[h*4+l] && (kind!=3 || h==0))expected_memory[addr+h*4+l]=tx_data[8*(h*4+l)+:8];
+ if(addr+h*4!=error_addr)for(integer l=0;l<4;l=l+1)if(tx_strb[h*4+l] && (kind!=3 || h==first_write_half))expected_memory[addr+h*4+l]=tx_data[8*(h*4+l)+:8];
  end end
- aw_sent=0;w_sent=0;ar_sent=0;finished=0;b_seen=0;r_seen=0;cycles=0;
+ aw_sent=0;w_sent=0;ar_sent=0;aw_cycle=-1;w_cycle=-1;finished=0;b_seen=0;r_seen=0;cycles=0;
  while(!finished && cycles<300)begin
  s_awvalid=(kind==1 || kind==3) && !aw_sent && cycles>=aw_delay;s_awaddr=addr;
  s_wvalid=(kind==1 || kind==3) && !w_sent && cycles>=w_delay;s_wdata=tx_data;s_wstrb=tx_strb;
  s_arvalid=(kind==2 || kind==4) && !ar_sent;s_araddr=addr;
  s_bready=b_seen>=stall;s_rready=r_seen>=stall;
  #1;ah=s_awvalid&&s_awready;wh=s_wvalid&&s_wready;rh=s_arvalid&&s_arready;bh=s_bvalid&&s_bready;dh=s_rvalid&&s_rready;
+ if((s_bvalid && kind!=1 && kind!=3) || (s_rvalid && kind!=2 && kind!=4))fail("WIDTH_CHANNEL");
  if(s_bvalid)b_seen=b_seen+1;if(s_rvalid)r_seen=r_seen+1;
  if((bh || dh) && kind>=3)fail("WIDTH_RESET");
  if(bh || dh)begin
  if((bh ? s_bresp:s_rresp)!==v[9][1:0])fail("WIDTH_RESPONSE");
  if(dh && s_rdata!==v[8])fail("WIDTH_READ");finished=1;
  end
- @(posedge clk);#1;if(ah)aw_sent=1;if(wh)w_sent=1;if(rh)ar_sent=1;@(negedge clk);cycles=cycles+1;
- if(kind>=3 && completed_sub==1)begin reset_bus();$display("COVER reset/partial");finished=1;end
+ @(posedge clk);#1;if(ah)begin aw_sent=1;aw_cycle=cycles;end if(wh)begin w_sent=1;w_cycle=cycles;end if(rh)ar_sent=1;@(negedge clk);cycles=cycles+1;
+ if(kind>=3 && completed_sub==1)begin reset_bus();recovering=1;recovery_addr=addr;$display("COVER reset/partial");finished=1;end
  end
  if(!finished)fail("WIDTH_TIMEOUT");
  s_awvalid=0;s_wvalid=0;s_arvalid=0;s_bready=0;s_rready=0;
@@ -105,11 +108,12 @@ module width_tb;
  if(tx_strb==0)$display("COVER strobe/zero");else if(tx_strb==255)$display("COVER strobe/full");else $display("COVER strobe/partial");
  if(tx_strb[3:0]==0 && tx_strb[7:4]!=0)$display("COVER strobe/upper-only");
  if(tx_strb[7:4]==0 && tx_strb[3:0]!=0)$display("COVER strobe/lower-only");
- if(aw_delay>w_delay)$display("COVER request/w-before-aw");if(aw_delay<w_delay)$display("COVER request/aw-before-w");
+ if(aw_cycle>=0 && w_cycle>=0)begin
+ if(aw_cycle>w_cycle)$display("COVER request/w-before-aw");if(aw_cycle<w_cycle)$display("COVER request/aw-before-w");end
  end else $display("COVER request/read");
  if(addr%8!=0)$display("COVER error/alignment");
  if(error_addr==addr)$display("COVER error/lower");if(error_addr==addr+4)$display("COVER error/upper");
- if(kind==2 && addr==32)$display("COVER reset/recovery");
+ if(kind==2 && recovering && addr==recovery_addr)begin $display("COVER reset/recovery");recovering=0;end
  @(negedge clk);
  end
  checks=checks+1;

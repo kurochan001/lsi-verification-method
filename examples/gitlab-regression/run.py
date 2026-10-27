@@ -103,11 +103,15 @@ def execute(command, log, timeout, cwd):
             code = proc.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
             error = "command timeout"
-            stop_process_group(proc)
+            cleanup_error = stop_process_group(proc)
+            if cleanup_error:
+                error += "; " + cleanup_error
         except OSError as exc:
             error = str(exc)
         except BaseException:
-            stop_process_group(proc)
+            cleanup_error = stop_process_group(proc)
+            if cleanup_error:
+                stream.write(f"\nRUNNER_ERROR {cleanup_error}\n")
             raise
         if error:
             stream.write(f"\nRUNNER_ERROR {error}\n")
@@ -116,12 +120,29 @@ def execute(command, log, timeout, cwd):
 
 
 def stop_process_group(proc):
-    if proc is not None:
+    """Try group cleanup, preserve failures as evidence and bound the final wait."""
+    if proc is None:
+        return None
+    error = None
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    except OSError as exc:
+        # A denied group signal must not discard summary/JUnit output. Killing
+        # the direct child is a fallback, not evidence that descendants stopped.
+        error = f"process group termination failed: {exc}"
         try:
-            os.killpg(proc.pid, signal.SIGKILL)
+            proc.kill()
         except ProcessLookupError:
             pass
-        proc.wait()
+        except OSError as child_error:
+            error += f"; direct child termination failed: {child_error}"
+    try:
+        proc.wait(timeout=5)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        error = (error + "; " if error else "") + f"process cleanup incomplete: {exc}"
+    return error
 
 
 def classify(case, execution, output):

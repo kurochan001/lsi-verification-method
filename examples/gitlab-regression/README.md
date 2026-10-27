@@ -147,7 +147,7 @@ GitLabのパイプライン画面で次を確認します。
 
 1. `runner-tests`が合格する。
 2. `irq-regression`が合格し、ログ末尾に`Regression: PASS`がある。
-3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナー確認130テストはこの件数とは別に実行する。
+3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナー確認132テストはこの件数とは別に実行する。
 4. アーティファクトの`summary.json`で通常回路32合格・変異4検出・Xの自己確認1検出を、`coverage.json`で8要求・50/50目標の合格を確認する。
 
 プロジェクトのCI Lint／Pipeline editorでも、includeを含む設定を検査します。ジョブがpendingのままなら、適合するRunner・untaggedの受付・利用枠を確認します。依存パッケージの取得で失敗した場合は環境の失敗で、回路の不具合とは分けます。
@@ -230,3 +230,9 @@ GitLabのPipeline editorで構文正常を確認し、展開した設定をCI Li
 2026-10-26にはFIFOのMR !2、フォーマル検証のMR !3もmainへマージされました。[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)で全12ジョブ・JUnit 90件の成功を確認しています。上記の38／41件・2ジョブという数値は、IRQ例だけを実行していた当時の記録です。
 
 その後、APB・UART・割込みのMR !11と確認記録のMR !12までmainへ取り込まれました。2026-10-26に最新main `ec594de7`の[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しました。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)は全50ジョブ・JUnit 311件・失敗／エラー0件です。全例を含むscheduleの384件は予定値で、今回GitLabで実行した結果ではありません。
+
+## タイムアウト後の停止処理
+
+共通のプロセス実行処理は、タイムアウト時にプロセスグループの停止を試みます。停止APIがエラーになった場合も、直接の子プロセスへの停止を試み、後処理の待ち時間を制限して、エラーを実行結果とログへ残します。子孫全体の停止を確認できなかった場合は、その事実をエラーとして残し、変異の検出成功には数えません。後処理の例外で通常の集計・JUnit作成が中断される問題を修正しました。外部からの強制終了でファイル保存が完了することまでは保証しません。
+
+この処理の追加確認2件を含み、IRQランナーの確認テストは14件です。GitLab全体の確認は132件で、以前のGitLab実行記録129件・前回のローカル確認130件とは版を分けて扱います。

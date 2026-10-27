@@ -11,6 +11,7 @@ import signal
 import tempfile
 import time
 import unittest
+from unittest import mock
 import xml.etree.ElementTree as ET
 
 
@@ -202,6 +203,28 @@ class RunnerIntegrationTests(unittest.TestCase):
             if process.poll() is None:
                 process.kill()
                 process.wait()
+
+
+class ProcessCleanupTests(unittest.TestCase):
+    def test_denied_group_signal_preserves_timeout_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            log=Path(tmp)/'command.log'
+            with mock.patch.object(MODULE.os,'killpg',side_effect=PermissionError('denied')):
+                result=MODULE.execute([sys.executable,'-c','import time;time.sleep(10)'],log,0.05,Path(tmp))
+            self.assertIn('command timeout',result['error'])
+            self.assertIn('process group termination failed',result['error'])
+            self.assertLess(result['seconds'],5)
+            self.assertIn('RUNNER_ERROR',log.read_text())
+            status,_=MODULE.classify(dict(checks=1,expected_failure='IRQ_SET_WINS'),result,'CHECK_FAIL IRQ_SET_WINS\n')
+            self.assertEqual(status,'error')
+
+    def test_cleanup_wait_is_bounded_and_does_not_mask_error(self):
+        proc=mock.Mock(pid=12345)
+        proc.wait.side_effect=subprocess.TimeoutExpired(['simulator'],5)
+        with mock.patch.object(MODULE.os,'killpg'):
+            error=MODULE.stop_process_group(proc)
+        proc.wait.assert_called_once_with(timeout=5)
+        self.assertIn('process cleanup incomplete',error)
 
 
 if __name__ == "__main__":
