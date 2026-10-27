@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TIMER-LOAD",
+      "description": "タイマーのロード値とロード優先",
+      "goals": [
+        "timer/load-zero",
+        "timer/load-one",
+        "timer/load-max",
+        "timer/load-on-expiry"
+      ]
+    },
+    {
+      "id": "TIMER-COUNT",
+      "description": "単発・周期・停止",
+      "goals": [
+        "timer/one-shot-expiry",
+        "timer/periodic-reload",
+        "timer/disabled-hold",
+        "timer/periodic-one"
+      ]
+    },
+    {
+      "id": "TIMER-IRQ",
+      "description": "イベントとクリアの優先順位",
+      "goals": [
+        "irq/set-wins",
+        "irq/clear"
+      ]
+    },
+    {
+      "id": "WDG",
+      "description": "ロード・キック・停止・タイムアウト",
+      "goals": [
+        "watchdog/load-zero",
+        "watchdog/load-max",
+        "watchdog/load-priority",
+        "watchdog/timeout",
+        "watchdog/kick-on-expiry",
+        "watchdog/disabled-hold"
+      ]
+    },
+    {
+      "id": "COMBINED",
+      "description": "同時満了とリセット復帰",
+      "goals": [
+        "combined/expiry",
+        "reset/active",
+        "reset/recovery",
+        "completion/idle"
+      ]
+    }
+  ]
+}

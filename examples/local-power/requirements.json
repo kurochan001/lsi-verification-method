@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "REQUEST",
+      "goals": [
+        "request/accepted",
+        "request/completed"
+      ]
+    },
+    {
+      "id": "POWER",
+      "goals": [
+        "power/drain",
+        "power/isolate-before-off",
+        "power/off",
+        "power/wake",
+        "power/restore"
+      ]
+    },
+    {
+      "id": "RETENTION",
+      "goals": [
+        "retention/keep",
+        "retention/discard"
+      ]
+    },
+    {
+      "id": "RESET",
+      "goals": [
+        "reset/active"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ORDER",
+      "goals": [
+        "read/before-write",
+        "read/after-write",
+        "collision/same-edge",
+        "read/held-during-write",
+        "collision/two-writers"
+      ]
+    },
+    {
+      "id": "ROUTE",
+      "goals": [
+        "route/write-target0",
+        "route/write-target1",
+        "route/read-target0",
+        "route/read-target1"
+      ]
+    }
+  ]
+}

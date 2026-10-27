@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AHB-PIPELINE",
+      "description": "アドレスとデータの受付・待ち",
+      "goals": [
+        "address/nonseq",
+        "address/seq",
+        "bus/idle",
+        "bus/busy",
+        "bus/unselected",
+        "bus/pipeline",
+        "bus/wait-policy"
+      ]
+    },
+    {
+      "id": "AHB-DATA",
+      "description": "サイズとレーン・データ",
+      "goals": [
+        "size/byte",
+        "size/half",
+        "size/word",
+        "data/zero",
+        "data/ones",
+        "data/alternating"
+      ]
+    },
+    {
+      "id": "AHB-ERROR",
+      "description": "エラー種別・二サイクル応答・次要求取消",
+      "goals": [
+        "error/address",
+        "error/alignment",
+        "error/size",
+        "error/readonly",
+        "error/two-cycle",
+        "error/cancel"
+      ]
+    },
+    {
+      "id": "AHB-RESET",
+      "description": "途中リセットと復帰",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

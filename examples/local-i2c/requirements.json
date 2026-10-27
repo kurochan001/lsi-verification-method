@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "I2C-DATA",
+      "description": "一バイトの書込み・読出し",
+      "goals": [
+        "transfer/write",
+        "transfer/read",
+        "data/zero",
+        "data/ones",
+        "data/alternating",
+        "data/lsb",
+        "data/msb"
+      ]
+    },
+    {
+      "id": "I2C-BUS",
+      "description": "バス制御とクロック待ち",
+      "goals": [
+        "bus/start",
+        "bus/stop",
+        "bus/repeated-start",
+        "bus/stretch"
+      ]
+    },
+    {
+      "id": "I2C-RESPONSE",
+      "description": "ACKとNACKの区別",
+      "goals": [
+        "response/ack",
+        "response/nack",
+        "response/controller-nack",
+        "response/data-reject",
+        "address/mismatch"
+      ]
+    },
+    {
+      "id": "I2C-RESET",
+      "description": "途中リセットと復帰",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

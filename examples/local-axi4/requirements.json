@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AXI4-BURST",
+      "goals": [
+        "burst/beats1",
+        "burst/beats2",
+        "burst/beats3",
+        "burst/beats4"
+      ]
+    },
+    {
+      "id": "AXI4-ID",
+      "goals": [
+        "id/0",
+        "id/1",
+        "id/2",
+        "id/3",
+        "id/repeated"
+      ]
+    },
+    {
+      "id": "AXI4-OUTSTANDING",
+      "goals": [
+        "outstanding/write-two",
+        "outstanding/read-two"
+      ]
+    },
+    {
+      "id": "AXI4-STROBE",
+      "goals": [
+        "strobe/mode0",
+        "strobe/mode1",
+        "strobe/mode2",
+        "strobe/mode3"
+      ]
+    },
+    {
+      "id": "AXI4-RESPONSE",
+      "goals": [
+        "response/okay",
+        "response/error"
+      ]
+    },
+    {
+      "id": "AXI4-BOUNDARY",
+      "goals": [
+        "boundary/4k-legal",
+        "boundary/4k-rejected"
+      ]
+    },
+    {
+      "id": "AXI4-BACKPRESSURE",
+      "goals": [
+        "stall/b",
+        "stall/r",
+        "stall/long-recovery"
+      ]
+    },
+    {
+      "id": "AXI4-RESET",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "AXI4-CHANNEL",
+      "goals": [
+        "channel/w-before-aw",
+        "concurrency/r-held-during-write"
+      ]
+    }
+  ]
+}

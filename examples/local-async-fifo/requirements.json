@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ASYNC-DATA",
+      "description": "受付済みデータの順序と内容",
+      "goals": [
+        "transfer/write",
+        "transfer/read",
+        "transfer/simultaneous",
+        "data/zero",
+        "data/ones",
+        "data/alternating"
+      ]
+    },
+    {
+      "id": "ASYNC-BOUNDARY",
+      "description": "境界と同期遅延後のフラグ",
+      "goals": [
+        "boundary/full-block",
+        "boundary/empty-block",
+        "flags/full-release",
+        "flags/empty-release",
+        "pointer/wrap"
+      ]
+    },
+    {
+      "id": "ASYNC-CLOCK",
+      "description": "クロック比・位相・ジッター",
+      "goals": [
+        "clock/profile0",
+        "clock/profile1",
+        "clock/profile2",
+        "clock/profile3"
+      ]
+    },
+    {
+      "id": "ASYNC-RESET",
+      "description": "両ドメインを共通リセットして復帰",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

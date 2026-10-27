@@ -65,6 +65,98 @@ flowchart TD
   - 上記の新規テストと照合案は、作成者とは別の検証者による独立レビューを経て取り込んだ。スイート全体の全テストをレビュー済みという意味ではない。
 - **ツール**：ケーススタディで使った照合キット、生成テストの枠組み、台帳と計測の参照実装です。kirimasim-testsのディレクトリ構成を前提にしており、このリポジトリ単独では動きません（[tools/README.md](tools/README.md)）。
 
+## ローカル専用の実行例
+
+GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を18個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
+
+- **[ECCの故障注入](examples/local-ecc/README.md)**：8ビットデータのSECDED。全23,552パターンの0／1／2ビット誤り、97目標、4変異、3／4ビット誤りの限界を示す診断2件を実行します。
+- **[SPIのランダム検証](examples/local-spi/README.md)**：CPOL／CPHAの4モード×半周期2／4クロックの8構成。独立した予定時刻で送受信を照合し、各16目標と4変異、busy中start、転送中リセットを確認します。
+- **[タイマー・ウォッチドッグ](examples/local-timer-watchdog/README.md)**：幅4／8の2構成。単発・周期・停止、IRQクリアと満了、kickと満了の競合、同時満了を照合し、各20目標と4変異を確認します。
+
+- **[非同期FIFO](examples/local-async-fifo/README.md)**：深さ4／8×同期段数2／3の4構成。クロック比・位相・ジッター、参照キュー、同期遅延を含むフラグを照合し、各17目標と4変異を確認します。
+- **[I²Cのランダム検証](examples/local-i2c/README.md)**：7ビットアドレスの1バイトターゲット。ACK／NACK、Repeated START、クロックストレッチ、途中リセットを実信号で検査し、2構成・各18目標と4変異を確認します。
+- **[APB＋タイマー＋ウォッチドッグ](examples/local-apb-timer/README.md)**：既存コアにAPBレジスタとIRQマスクを接続し、幅4／8×待ち0／2の4構成で各24目標と4変異、バス完了と満了・kick・clearの競合を確認します。
+
+- **[AHB-Lite](examples/local-ahb/README.md)**：待ち状態0／1／3の3構成。アドレス／データのパイプライン、バイトレーン、2サイクルのERROR、次要求の取消しを照合し、各21目標と4変異を確認します。
+- **[AXI4-Lite](examples/local-axi/README.md)**：応答遅延0／2の2構成。AW／Wの独立受付、全16通りのWSTRB、B／Rの応答保持、読書き競合とリセットを照合し、各39目標と4変異を確認します。
+
+- **[AHB／AXI-Lite→APB結合](examples/local-bus-bridge/README.md)**：2バス×APB待ち0／2の4構成。既存レジスタ・タイマーへ接続し、応答変換、読書きの重なり、IRQ、リセットを各18目標・4変異で確認します。
+- **[AXI4のバースト・ID](examples/local-axi4/README.md)**：INCR 1〜4ビート、2ビットID、各方向2件の未完了転送。ストローブ・RLAST・ID・応答保持・4KiB境界を26目標・4変異で確認します。
+
+- **[DMA](examples/local-dma/README.md)**：APBで設定しAXI4でコピー、割込みで完了。境界分割・中断・エラーを2構成・各12目標で確認します。
+- **[複数マスター接続](examples/local-interconnect/README.md)**：2×2 AXI4の応答先・ID・仲裁・競合を12目標で確認します。
+- **[非同期APBブリッジ](examples/local-cdc-bridge/README.md)**：要求／応答FIFOとAPBを接続し、2クロック構成・各7目標で片側リセットによる全体破棄も確認します。
+- **[タイムアウト復旧](examples/local-recovery/README.md)**：古い応答の排除・期限境界・tag枯渇と協調リセットを2構成・各10目標で確認します。
+- **[低電力制御](examples/local-power/README.md)**：排出・隔離・保持・復帰を2構成・各10目標で確認するRTL動作モデルです。
+
+- **[AXI4-Stream](examples/local-axis/README.md)**：深さ2／4。パケット境界・有効バイト・途中リセットを各11目標で確認します。
+- **[固定小数点DSP](examples/local-dsp/README.md)**：2タップFIRの符号・丸め・上下限・飽和・履歴を2構成・各10目標で確認します。
+- **[同一領域の競合](examples/local-memory-order/README.md)**：既存AXI接続の読書き・書込み同士の競合を、取込み時刻に基づく9目標で確認します。
+
+```sh
+python3 examples/local-ecc/run.py
+python3 examples/local-spi/run.py
+python3 examples/local-timer-watchdog/run.py
+python3 examples/local-async-fifo/run.py
+python3 examples/local-i2c/run.py
+python3 examples/local-apb-timer/run.py
+python3 examples/local-ahb/run.py
+python3 examples/local-axi/run.py
+python3 examples/local-bus-bridge/run.py
+python3 examples/local-axi4/run.py
+python3 examples/local-system-regression/run.py --stage simulation
+python3 examples/local-axis/run.py
+python3 examples/local-dsp/run.py
+python3 examples/local-memory-order/run.py
+```
+
+各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。2026-10-27に全45構成のsmoke／nightlyとシミュレーション・共通の確認テスト127件がローカルで成功しました。共通シミュレーションランナーの回帰JUnitは全構成合計でsmoke 317件、nightly 407件です。下記のGitLab例の50ジョブ・311／384件やランナー確認130件には含めません。GitLabのCI設定への追加・CI起動は行っていません。
+
+### AHB／AXIのランダム・フォーマル検証
+
+AHBのランダム刺激にはINCR4・BUSYと転送中リセット、AXIには長めの応答待ちと片側要求・保留応答のリセットを追加しました。[フォーマル検証例](examples/local-bus-formal/README.md)では、同じRTLの5構成に対し、安全性の非有界証明、深さ12のデータBMC、到達性、各4変異と過剰な仮定の診断を実行します。Yosys・SBY・Z3用の一時仮想環境はリンク先の手順で用意します。
+
+```sh
+python3 examples/local-bus-formal/run.py --bus ahb
+python3 examples/local-bus-formal/run.py --bus axi
+```
+
+フォーマルは各9タスク・全45件のJUnitで、シミュレーションの317／407件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。新しいシステム例の判定確認も含め、ローカルの確認テストは合計190件です。2026-10-27に各回帰と190テストが予定どおりの結果になることを確認しました。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
+
+### AHB／AXIの追加検査をまとめて実行する
+
+[バス検証の追加例](examples/local-bus-validation/README.md)で、独立プロトコルチェッカーとネイティブSVA、構成別クロス、APB結合、4値のX検査と短パルスリセット、性能・長時間待ちからの復帰、lint・line／toggleカバレッジを実行します。AXI4の別例も子回帰として起動します。VerilatorとC++ビルド環境を追加で使います。
+
+```sh
+python3 examples/local-bus-validation/run.py
+python3 examples/local-bus-validation/run.py --profile nightly
+```
+
+親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記18例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
+
+### 結合・復旧・低電力・等価性まで進める
+
+[システム検証7例の手順](examples/local-system-regression/README.md)から、DMA、複数マスター接続、非同期APBブリッジ、タイムアウト復旧、低電力制御に加え、[AXI4の制御証明・データBMC](examples/local-axi4-formal/README.md)と[FIFOの等価性証明](examples/local-equivalence/README.md)をまとめて実行できます。
+
+```sh
+. /tmp/lsi-bus-formal-venv/bin/activate
+python3 examples/local-system-regression/run.py
+```
+
+初回のツール準備は[共通フォーマル手順](examples/local-formal-common/README.md)を参照してください。親JUnitは7件、シミュレーション子は63／81件、AXI4フォーマルは18件、等価性は16件です。AXI4のデータBMCは直列入力・深さ12、制御証明と到達性は並行受付も扱います。低電力はUPFの実行例ではなく、等価性はSBYのmiter方式です。各例の仕様と保証範囲を分けて記載しています。
+
+### ソフトウェア・差分検証・完了期限へ広げる
+
+[追加検証7例の手順](examples/local-advanced-regression/README.md)から、パケット・DSP・競合に加え、[Cドライバと実DMA RTL](examples/local-c-driver/README.md)、[cocotbのAPB検証](examples/local-cocotb/README.md)、[Icarus／Verilator差分](examples/local-differential/README.md)、[進行条件と完了期限の証明](examples/local-progress/README.md)を実行できます。cocotbとフォーマルには、それぞれ専用の一時仮想環境を指定します。
+
+```sh
+python3 examples/local-advanced-regression/run.py \
+  --cocotb-python /tmp/lsi-cocotb-venv/bin/python \
+  --formal-python /tmp/lsi-bus-formal-venv/bin/python
+```
+
+親JUnitは7件、シミュレーション子は72／96件、完了期限のフォーマルは16件です。Cはホスト上で実行し、差分検証は有効な観測だけを比較します。進行条件の無い完了性を主張せず、その場合の期限違反の反例も確認します。負の試験の注入先と集計を区別し、既存回帰へ二重計上しません。
+
 ## GitLab実行例の現在の構成
 
 2026-10-26に、実装の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)と確認記録・構成図の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)がmainへ取り込まれたことを確認しました。最新mainは`ec594de7`で、[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)は成功しています。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)では全50ジョブ成功、JUnit 311件・失敗／エラー0件を確認済みです。MR !12はドキュメントだけの変更で、その時点のCI設定・実装は同じです。
@@ -107,6 +199,16 @@ examples/gitlab-reduction/      回帰の選択・実行量・目標維持・検
 examples/gitlab-arbiter/        仲裁の排他・選択保持・順序・条件付き公平性と3構成回帰
 examples/gitlab-uart/           UARTの独立した送受信・エラー・リセットと6構成ランダム回帰
 examples/gitlab-apb-uart/       APB・UART・割込みの競合・データ経路と9構成結合回帰
+examples/local-ecc/             SECDEDの全数故障注入・訂正・検出と保証範囲外の診断
+examples/local-spi/             SPIの4モード・2分周と独立した送受信タイミング検証
+examples/local-timer-watchdog/  タイマー・ウォッチドッグの境界・優先順位・ランダム検証
+examples/local-async-fifo/      非同期FIFO・クロック比・ジッター・同期フラグの検証
+examples/local-i2c/             I²CのACK・NACK・Repeated START・ストレッチの検証
+examples/local-apb-timer/       APBからタイマー・ウォッチドッグ・IRQまでの結合検証
+examples/local-ahb/             AHB-Liteのパイプライン・バイトレーン・ERROR応答の検証
+examples/local-axi/             AXI4-Liteの独立チャネル・WSTRB・応答保持の検証
+examples/local-common/          上記8例の共通ランナーと異常系の確認
+examples/local-bus-formal/      AHB・AXIの安全性証明・有界データ・到達性と感度確認
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
 tools/matching_kit/             照合案の受付・検査、検証者の判定、統合、シミュレータ実行、Workflowスクリプト
 tools/generators/               表形式の要求から検証パターンを生成する枠組みと、その例

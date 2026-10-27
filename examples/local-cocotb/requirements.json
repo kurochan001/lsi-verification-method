@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ACCESS",
+      "goals": [
+        "access/write",
+        "access/read",
+        "access/wait-policy"
+      ]
+    },
+    {
+      "id": "RESPONSE",
+      "goals": [
+        "response/error",
+        "response/okay",
+        "pending/event-wins"
+      ]
+    }
+  ]
+}

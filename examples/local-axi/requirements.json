@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AXI-CHANNEL",
+      "description": "独立チャネルの受付順序",
+      "goals": [
+        "channel/aw-first",
+        "channel/w-first",
+        "channel/together",
+        "channel/read-write",
+        "request/aw-held",
+        "request/w-held",
+        "request/ar-held"
+      ]
+    },
+    {
+      "id": "AXI-RESPONSE",
+      "description": "応答と待ち中の保持",
+      "goals": [
+        "response/b-okay",
+        "response/b-error",
+        "response/r-okay",
+        "response/r-error",
+        "backpressure/b",
+        "backpressure/r"
+      ]
+    },
+    {
+      "id": "AXI-STROBE",
+      "description": "全16通りのバイト有効",
+      "goals": [
+        "strobe/0",
+        "strobe/1",
+        "strobe/2",
+        "strobe/3",
+        "strobe/4",
+        "strobe/5",
+        "strobe/6",
+        "strobe/7",
+        "strobe/8",
+        "strobe/9",
+        "strobe/10",
+        "strobe/11",
+        "strobe/12",
+        "strobe/13",
+        "strobe/14",
+        "strobe/15"
+      ]
+    },
+    {
+      "id": "AXI-DATA",
+      "description": "代表データと読出しスナップショット",
+      "goals": [
+        "data/zero",
+        "data/ones",
+        "data/alternating",
+        "read/snapshot",
+        "read/same-edge"
+      ]
+    },
+    {
+      "id": "AXI-RESET",
+      "description": "半要求と応答の中断・復帰",
+      "goals": [
+        "reset/aw-only",
+        "reset/w-only",
+        "reset/b-pending",
+        "reset/r-pending",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "APB",
+      "goals": [
+        "apb/transfer",
+        "apb/error"
+      ]
+    },
+    {
+      "id": "RESET",
+      "goals": [
+        "reset/side1",
+        "reset/side2",
+        "reset/side3"
+      ]
+    },
+    {
+      "id": "TRANSPORT",
+      "goals": [
+        "transport/ordered",
+        "response/backpressure"
+      ]
+    }
+  ]
+}

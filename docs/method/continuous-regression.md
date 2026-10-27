@@ -148,6 +148,14 @@ CI設定からツールのコマンド・判定を直接大量に埋め込む前
 
 必要なカバレッジ収束・多数の利用者・構成・拠点を管理する工数が大きくなったら、専用の検証管理製品との統合を比較します。評価には同じ代表回帰を使い、設定・失敗解析・カバレッジ対応・運用の工数、待ち時間・実行量・費用を測ります。導入費だけの比較で決めません。
 
+GitLabの利用枠が限られる場合は、[ローカル専用の共通ランナー](../../examples/local-common/README.md)で[ECC](../../examples/local-ecc/README.md)、[SPI](../../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../../examples/local-timer-watchdog/README.md)を実行できます。構成別のカバレッジ、予定・完了数、変異検出、JUnit・ログ・波形を同様に保存し、実行場所にかかわらず証跡を残します。[非同期FIFO](../../examples/local-async-fifo/README.md)、[I²C](../../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../../examples/local-apb-timer/README.md)も同じ共通ランナーを使います。[AHB-Lite](../../examples/local-ahb/README.md)と[AXI4-Lite](../../examples/local-axi/README.md)も同じ方式で実行します。AHB／AXIには、証明・有界検査・到達性を区別する[ローカルのフォーマル回帰](../../examples/local-bus-formal/README.md)も用意しています。これらは既存のGitLab CIには追加していません。
+
+[バス検証の追加ランナー](../../examples/local-bus-validation/README.md)では、独立SVA・構成別クロス・X／リセット・性能・line／toggleをまとめ、[APBブリッジ](../../examples/local-bus-bridge/README.md)と[AXI4](../../examples/local-axi4/README.md)を子回帰として実行します。親の子回帰判定と子の個別JUnitは階層を分け、同じ試験を二重計上しません。コードカバレッジの未到達と警告の扱いも証跡へ保存します。
+
+[システム検証7例](../../examples/local-system-regression/README.md)には、DMA・複数マスター・非同期ブリッジ・復旧・低電力の5例と、AXI4フォーマル・FIFO等価性をまとめる親ランナーがあります。親は子の終了状態と予定／完了の一致を確認し、詳細JUnit・ソース・期待値・反例は子へ保存します。いずれもローカル専用です。
+
+[C・Python・差分・完了期限を含む追加回帰](../../examples/local-advanced-regression/README.md)では、子ごとに適切なPython環境を選択します。cocotbの生JUnitや2バックエンドの実行は詳細証跡として残し、親の集約ゲートと同じ試験として再合算しません。ツール不在や比較不能なX、欠落ログを差分検出の成功へ変換しません。
+
 ## 10. サインオフへ接続する
 
 回帰の完了には、固定したマニフェストに対して必須ケースの結果がそろい、判定とカバレッジ・証跡が有効であることが必要です。fail数0だけでなく、未実行・判定不能・結果欠落・チェッカー無効・古い版・未承認の隔離を確認します。

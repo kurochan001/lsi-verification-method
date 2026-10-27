@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PACKET",
+      "goals": [
+        "packet/single",
+        "packet/multiple",
+        "keep/full",
+        "keep/null",
+        "keep/partial"
+      ]
+    },
+    {
+      "id": "FLOW",
+      "goals": [
+        "handshake/source-stall",
+        "handshake/sink-stall",
+        "handshake/simultaneous"
+      ]
+    },
+    {
+      "id": "RESET",
+      "goals": [
+        "reset/queued",
+        "reset/partial-output",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

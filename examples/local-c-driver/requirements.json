@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TRANSFER",
+      "goals": [
+        "transfer/copy",
+        "transfer/error",
+        "apb/program",
+        "axi/stall"
+      ]
+    },
+    {
+      "id": "RECOVERY",
+      "goals": [
+        "driver/timeout",
+        "driver/abort-recovery"
+      ]
+    },
+    {
+      "id": "IRQ",
+      "goals": [
+        "irq/mask",
+        "irq/ack"
+      ]
+    }
+  ]
+}

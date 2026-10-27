@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ROUTE",
+      "goals": [
+        "route/write-target0",
+        "route/write-target1",
+        "route/read-target0",
+        "route/read-target1",
+        "master/0",
+        "master/1"
+      ]
+    },
+    {
+      "id": "ARB",
+      "goals": [
+        "arbitration/contention",
+        "concurrency/read-write"
+      ]
+    },
+    {
+      "id": "RESPONSE",
+      "goals": [
+        "response/decode-error",
+        "response/slave-error",
+        "response/backpressure"
+      ]
+    },
+    {
+      "id": "BURST",
+      "goals": [
+        "burst/multiple"
+      ]
+    }
+  ]
+}

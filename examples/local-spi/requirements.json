@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SPI-DATA",
+      "description": "送受信の独立した代表データ照合",
+      "goals": [
+        "tx/data-zero",
+        "tx/data-ones",
+        "tx/data-alternating",
+        "tx/data-lsb",
+        "tx/data-msb",
+        "rx/data-zero",
+        "rx/data-ones",
+        "rx/data-alternating",
+        "rx/data-lsb",
+        "rx/data-msb"
+      ]
+    },
+    {
+      "id": "SPI-TIMING",
+      "description": "全エッジ・CS・送受信完了",
+      "goals": [
+        "transfer/duplex",
+        "clock/all-edges",
+        "idle/lines"
+      ]
+    },
+    {
+      "id": "SPI-BUSY",
+      "description": "送信中の開始パルスを無視",
+      "goals": [
+        "busy/ignored"
+      ]
+    },
+    {
+      "id": "SPI-RESET",
+      "description": "転送途中リセットと復帰",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

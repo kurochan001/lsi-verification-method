@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BRIDGE-BUS",
+      "description": "受付と応答",
+      "goals": [
+        "upstream/read",
+        "upstream/write",
+        "response/okay",
+        "response/error",
+        "upstream/overlap"
+      ]
+    },
+    {
+      "id": "BRIDGE-MAP",
+      "description": "対象・未定義・対応外",
+      "goals": [
+        "target/basic",
+        "target/timer",
+        "decode/unmapped",
+        "policy/unsupported"
+      ]
+    },
+    {
+      "id": "BRIDGE-APB",
+      "description": "APBのフェーズとエラー",
+      "goals": [
+        "apb/setup",
+        "apb/access",
+        "apb/wait-policy",
+        "apb/error"
+      ]
+    },
+    {
+      "id": "BRIDGE-CORE",
+      "description": "満了と割込み",
+      "goals": [
+        "timer/expiry",
+        "timer/irq",
+        "watchdog/timeout"
+      ]
+    },
+    {
+      "id": "BRIDGE-RESET",
+      "description": "中断と復帰",
+      "goals": [
+        "reset/active",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

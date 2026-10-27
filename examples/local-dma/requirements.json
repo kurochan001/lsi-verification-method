@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TRANSFER",
+      "goals": [
+        "transfer/zero",
+        "transfer/copy",
+        "boundary/source-split",
+        "boundary/destination-split"
+      ]
+    },
+    {
+      "id": "RECOVERY",
+      "goals": [
+        "abort/phase1",
+        "abort/phase2",
+        "reset/active-and-recovery"
+      ]
+    },
+    {
+      "id": "ERROR",
+      "goals": [
+        "response/fault1",
+        "response/fault2",
+        "command/invalid"
+      ]
+    },
+    {
+      "id": "IRQ",
+      "goals": [
+        "irq/mask-unmask",
+        "irq/clear"
+      ]
+    }
+  ]
+}

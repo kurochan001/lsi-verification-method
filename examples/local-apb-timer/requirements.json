@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "APB-BUS",
+      "description": "APB完了・待ち・エラー・中断",
+      "goals": [
+        "apb/read",
+        "apb/write",
+        "apb/back-to-back",
+        "apb/error-read",
+        "apb/error-write",
+        "apb/latency",
+        "apb/abort-reset"
+      ]
+    },
+    {
+      "id": "APB-REG",
+      "description": "レジスタの読戻し",
+      "goals": [
+        "register/control",
+        "register/reload-timer",
+        "register/reload-watchdog",
+        "register/status",
+        "register/id"
+      ]
+    },
+    {
+      "id": "APB-CORE",
+      "description": "実際のカウンタ動作と競合",
+      "goals": [
+        "timer/expiry",
+        "timer/periodic-reload",
+        "watchdog/timeout",
+        "watchdog/kick-on-expiry",
+        "watchdog/load-priority",
+        "cross/simultaneous",
+        "cross/load-expiry"
+      ]
+    },
+    {
+      "id": "APB-IRQ",
+      "description": "保持・マスク・クリア・同時満了",
+      "goals": [
+        "irq/masked",
+        "irq/unmasked",
+        "irq/clear",
+        "cross/clear-expiry"
+      ]
+    },
+    {
+      "id": "APB-RESET",
+      "description": "中断後の再設定と同時満了",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

@@ -155,6 +155,14 @@ CIが成功していても、MRがDraftならマージはブロックされま�
 
 [APB・UART・割込みの結合検証](../examples/gitlab-apb-uart/README.md)では、APBから実際に送信し、受信データを読み、完了・エラーの割込みを確認します。マスク中の保持、W1Cと新規イベント、RXDATA読出しと新規受信を同時に起こし、9構成と5変異で判定します。受信保持は1バイトで、CPUや実ドライバは実行していません。
 
+GitLabの利用枠を使わずに追加の教材を試す場合は、[ECCの故障注入](../examples/local-ecc/README.md)、[SPIのランダム検証](../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../examples/local-timer-watchdog/README.md)があります。[共通手順](../examples/local-common/README.md)に従ってIcarus Verilogでローカル実行します。さらに、[非同期FIFO](../examples/local-async-fifo/README.md)、[I²C](../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../examples/local-apb-timer/README.md)も同じ共通ランナーで動きます。[AHB-Lite](../examples/local-ahb/README.md)と[AXI4-Lite](../examples/local-axi/README.md)では、パイプラインや独立チャネルの受付・応答も確認できます。AHB／AXIのランダム刺激を拡張し、[ローカルのフォーマル例](../examples/local-bus-formal/README.md)も追加しました。仮定付きの安全性証明、深さ12のデータBMC、到達性と不具合検出を別々に判定します。これらはGitLab CIへ組み込んでいません。
+
+AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リセット・性能・lint／コードカバレッジ](../examples/local-bus-validation/README.md)をまとめて実行できます。[APBブリッジ](../examples/local-bus-bridge/README.md)は4構成、[AXI4のバースト・ID・複数未完了転送](../examples/local-axi4/README.md)は別RTLの1構成です。AHB-Lite／AXI4-Liteの45タスクは元の回路に限定されます。AXI4には別の[小構成の制御証明・データBMC](../examples/local-axi4-formal/README.md)があり、新しいブリッジの証明結果ではありません。
+
+さらに[システム検証の7例](../examples/local-system-regression/README.md)で、DMA、複数マスター、非同期ブリッジ、タイムアウト復旧、低電力制御、AXI4フォーマル、FIFO等価性を実行できます。tagの再利用には下位応答も破棄する協調リセットが必要です。低電力はRTL動作モデル、等価性はSBY方式です。各例の制限を確認してください。
+
+[追加検証の7例](../examples/local-advanced-regression/README.md)には、AXI4-Stream、固定小数点、同一領域の競合、Cドライバ、cocotb、複数シミュレーター差分、進行条件と完了期限があります。Cコードは実際にコンパイルしてRTLへ接続します。差分の一致だけでは正しさとせず、通常実行は各バックエンドの参照モデル照合も要求します。
+
 [FIFOのフォーマル検証](../examples/gitlab-formal/README.md)は、専用のPythonパッケージをGitLabのジョブ内で準備して実行します。ローカルで試す場合の一時仮想環境の手順も用意しています。
 
 `tools/`はケーススタディの台帳・テスト・依存モジュールを前提とする参照実装です。このリポジトリだけでは動きません。一般化したJSON記録例を、そのまま照合キットへ投入できる形式とも扱わないでください。[ツールの復元先と依存](../tools/README.md)を参照してください。

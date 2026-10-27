@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "REQUEST",
+      "goals": [
+        "request/accepted",
+        "request/held",
+        "request/tag-exhausted"
+      ]
+    },
+    {
+      "id": "RESPONSE",
+      "goals": [
+        "response/okay",
+        "response/held",
+        "response/timeout",
+        "response/late-dropped",
+        "response/deadline-wins"
+      ]
+    },
+    {
+      "id": "RECOVERY",
+      "goals": [
+        "recovery/okay-after-timeout",
+        "reset/recovery"
+      ]
+    }
+  ]
+}
