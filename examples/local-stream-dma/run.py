@@ -15,11 +15,11 @@ def row(direction,address,byte_count,seed=17,mode=0,position=0):
     transferred=min(byte_count,completed*4) if not invalid else 0
     return [direction,address,byte_count,seed,mode,position,error,transferred]
 def vectors(seed,iterations,parameters,boundary=False):
-    rows=[row(0,256,31),row(1,512,31),row(0,256,0),row(1,512,0),row(0,256,1),row(1,512,1),row(0,256,12,mode=1,position=1),row(1,512,12,mode=2,position=1),row(1,512,12,mode=3,position=1),row(1,512,12,mode=4,position=1),row(0,256,16,mode=5),row(1,512,16,mode=5),row(0,257,4),row(1,512,33)]
+    rows=[row(0,256,31),row(1,512,31),row(0,256,0),row(1,512,0),row(0,256,1),row(1,512,1),row(0,256,12,mode=1,position=1),row(1,512,12,mode=2,position=1),row(1,512,12,mode=3,position=1),row(1,512,12,mode=4,position=1),row(0,256,16,mode=5),row(1,512,16,mode=5),row(0,257,4),row(1,512,33),row(1,512,5,mode=6),row(1,512,31,mode=6)]
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):
-            d=rng.randrange(2);length=rng.randrange(33);mode=rng.choice((0,0,5,2,3,4) if d else (0,0,1,5)) if length else 0
+            d=rng.randrange(2);length=rng.randrange(33);mode=rng.choice((0,0,5,6,2,3,4) if d else (0,0,1,5)) if length else 0
             rows.append(row(d,4*rng.randrange(64,512),length,rng.getrandbits(32),mode,rng.randrange((length+3)//4) if length else 0))
     return rows
 

@@ -6,8 +6,8 @@ module owned_tb;
  owned_ring #(.DEPTH(DEPTH),.MUTATION(MUTATION))dut(.*);
  axi4_ram ram(.clk(clk),.rst_n(rst_n),.awvalid(awvalid&&gate),.awready(ram_awready),.awaddr(awaddr),.awlen(awlen),.awsize(3'd2),.awburst(2'd1),.awid(awid),.wvalid(wvalid&&gate),.wready(ram_wready),.wdata(wdata),.wstrb(wstrb),.wlast(wlast),.bvalid(bvalid),.bready(bready),.bid(bid),.bresp(bresp),.arvalid(arvalid&&gate),.arready(ram_arready),.araddr(araddr),.arlen(arlen),.arsize(3'd2),.arburst(2'd1),.arid(arid),.rvalid(rvalid),.rready(rready),.rdata(rdata),.rid(rid),.rresp(rresp),.rlast(rlast));
  assign arready=ram_arready&&gate;assign awready=ram_awready&&gate;assign wready=ram_wready&&gate;
- integer fd,n,checks=0,cycles,turn,slot,write_slot,write_beat,write_turn;reg[31:0]v[0:4];reg[7:0]expected_memory[0:8191];reg[31:0]digest,expected_word;string vectors,wave;
- function automatic[7:0]initial_byte(input integer a);initial_byte=(a*13+7)^v[0];endfunction
+ integer fd,n,checks=0,cycles,turn,slot,write_slot,write_beat,write_turn;reg[31:0]v[0:5];reg[7:0]expected_memory[0:8191];reg[31:0]digest,expected_word;string vectors,wave;
+ function automatic[7:0]initial_byte(input integer a);initial_byte=(a*13+7)^((a>>8)*8'h5b)^v[0];endfunction
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"row=%0d cycle=%0d retired=%0d",checks,cycles,retired);end endtask
  task tick;begin
  #1;if(rst_n && head!==3'(retired%DEPTH))fail("OWN_ORDER");
@@ -15,7 +15,7 @@ module owned_tb;
  write_slot=retired%DEPTH;write_turn=retired/DEPTH;write_beat=0;
  if(awaddr!=1024+32*write_slot || awid!=2 || awlen!=(write_slot+write_turn)%4)fail("OWN_BUS");end
  if(wvalid && wready)begin
- expected_word={initial_byte(256+128*write_turn+16*write_slot+4*write_beat+3),initial_byte(256+128*write_turn+16*write_slot+4*write_beat+2),initial_byte(256+128*write_turn+16*write_slot+4*write_beat+1),initial_byte(256+128*write_turn+16*write_slot+4*write_beat)};
+ expected_word={initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+3),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+2),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+1),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat)};
  if(wdata!==expected_word || wstrb!=15)fail("OWN_DATA");write_beat=write_beat+1;end
  if(busy)begin $display("COVER engine/busy");if(owners[2*head+:2]!=2)fail("OWN_STATE");end
  @(posedge clk);#1;@(negedge clk);cycles=cycles+1;gate=STALL_PERIOD==0 || cycles%STALL_PERIOD!=0;if(cycles>8000)fail("OWN_TIMEOUT");
@@ -30,7 +30,7 @@ module owned_tb;
  task reset_all;begin rst_n=0;host_valid=0;tick();rst_n=1;for(integer a=0;a<8192;a=a+1)begin ram.memory[a]=initial_byte(a);expected_memory[a]=initial_byte(a);end tick();end endtask
  task publish(input integer t,input integer s);
  integer source,destination,length;begin
- source=256+128*t+16*s;destination=1024+32*s;length=1+(s+t)%4;
+ source=v[5]+128*t+16*s;destination=1024+32*s;length=1+(s+t)%4;
  host_src=source+((v[2] && t==0 && s==DEPTH-1)?1:0);host_dst=destination;host_words=length;
  command(1,s,0);
  if(!(v[2] && t==0 && s==DEPTH-1))for(integer a=0;a<4*length;a=a+1)expected_memory[destination+a]=initial_byte(source+a);
@@ -38,7 +38,7 @@ module owned_tb;
  initial begin
  if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"args required");$dumpfile(wave);$dumpvars(0,owned_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"vectors missing");
  while(!$feof(fd))begin
- n=$fscanf(fd,"%h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4]);if(n!=5)$fatal(1,"bad row");cycles=0;reset_all();
+ n=$fscanf(fd,"%h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5]);if(n!=6)$fatal(1,"bad row");cycles=0;reset_all();
  if(v[3])begin host_src=256;host_dst=1024;host_words=4;command(1,0,0);command(3,0,0);while(!busy)tick();$display("COVER reset/pending");reset_all();$display("COVER reset/recovery");end
  command(2,0,1);command(7,0,1);command(1,DEPTH,1);
  for(turn=0;turn<v[1];turn=turn+1)begin

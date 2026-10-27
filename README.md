@@ -127,7 +127,7 @@ GitLabの利用枠を使わずに、共通ランナーで試せるシミュレ�
 - **[小規模キャッシュとDMA](examples/local-cache-dma/README.md)**：write-back、部分書込み、clean／invalidateとDMAの可視性を2構成・各15目標で確認します。
 - **[AXI4の応答順序入れ替え](examples/local-axi-reorder/README.md)**：共有RAMと応答バッファを接続し、ID別の順序・B/Rの保持を2構成・各10目標で確認します。
 - **[DMAリングの所有権](examples/local-dma-ownership/README.md)**：公開・実行・完了返却・回収・処理中追加を2構成・各11目標で確認します。
-- **[メモリ⇄Stream DMA](examples/local-stream-dma/README.md)**：有効バイト・パケット終端・待ち・エラー時の残存範囲を2構成・各12目標で確認します。
+- **[メモリ⇄Stream DMA](examples/local-stream-dma/README.md)**：有効バイト・パケット終端・待ち・エラー時の残存範囲を2構成・各13目標で確認します。
 - **[パケットCRC](examples/local-packet-crc/README.md)**：独立した多項式除算と既知ベクトルで、CRCフィールドと受信値検査を2構成・各8目標で確認します。
 - **[64ビットカウンター](examples/local-counter-snapshot/README.md)**：32ビットAPBでのスナップショット、桁上がり、一括反映・IRQを2構成・各10目標で確認します。
 - **[MBIST・March C−](examples/local-mbist/README.md)**：ビットセルの故障モデル、10N操作、最初の失敗位置、再開を2構成・各9目標で確認します。
@@ -171,7 +171,7 @@ UVMにはVerilator 5.052、C++20ビルド環境、Accellera UVM 2020-3.2を使�
 python3 examples/local-soc-regression/run.py --stage core
 ```
 
-全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件を含む現在の計画は443件（ローカル311件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
+全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件とレビュー追加5件を含む現在の計画は448件（ローカル316件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
 
 ### RAL接続・順序制御・DMA・CRC・時刻・MBISTの7例
 
@@ -181,7 +181,7 @@ python3 examples/local-soc-regression/run.py --stage core
 python3 examples/local-extension-regression/run.py --stage core
 ```
 
-全7例のsmoke／nightlyが成功し、親JUnitは各7件、子は99／127件です。追加の確認テスト36件も成功しました。生成RALには外部UVMとSystemRDL環境を使い、残る6例はPythonとIcarusで実行します。各例の前提・対応範囲・図表を手順へ記載しています。
+全7例のsmoke／nightlyが成功し、親JUnitは各7件、子は99／127件です。追加時の確認36件に、レビューでの再発防止5件を加えた41件も成功しました。生成RALには外部UVMとSystemRDL環境を使い、残る6例はPythonとIcarusで実行します。各例の前提・対応範囲・図表を手順へ記載しています。
 
 ### AHB／AXIのランダム・フォーマル検証
 
@@ -192,7 +192,7 @@ python3 examples/local-bus-formal/run.py --bus ahb
 python3 examples/local-bus-formal/run.py --bus axi
 ```
 
-フォーマルは各9タスク・全45件のJUnitで、シミュレーションの513／659件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件を含む、現在のローカル確認テストの計画は311件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
+フォーマルは各9タスク・全45件のJUnitで、シミュレーションの513／659件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件とレビュー追加5件を含む、現在のローカル確認テストの計画は316件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
 
 ### AHB／AXIの追加検査をまとめて実行する
 

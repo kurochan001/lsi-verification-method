@@ -8,7 +8,8 @@ module owned_ring #(parameter DEPTH=2,MUTATION=0)(
  wire copy_busy,copy_done,copy_error,copy_aborted,copy_irq;wire[2:0]copy_completed;
  wire carvalid,carready,crvalid,crready,crlast;wire[12:0]caraddr;wire[7:0]carlen;wire[1:0]carid,crid,crresp;wire[31:0]crdata;
  reg descriptor_active;reg[2:0]descriptor_slot;reg[1:0]descriptor_beat;
- wire descriptor_request=caraddr>=6144 && caraddr<6144+16*DEPTH;
+ // ID 0 fetches internal descriptors; ID 1 reads external copy data.
+ wire descriptor_request=carid==0 && caraddr>=6144 && caraddr<6144+16*DEPTH;
  assign arvalid=carvalid && !descriptor_request;assign araddr=caraddr;assign arlen=carlen;assign arid=carid;assign carready=descriptor_request ? !descriptor_active:arready;
  assign crvalid=descriptor_active ? 1'b1:rvalid;assign crdata=descriptor_active ? (descriptor_beat==0 ? {19'b0,src[descriptor_slot]}:descriptor_beat==1 ? {19'b0,dst[descriptor_slot]}:descriptor_beat==2 ? {26'b0,words[descriptor_slot]}:32'd1):rdata;
  assign crid=descriptor_active ? 0:rid;assign crresp=descriptor_active ? 0:rresp;assign crlast=descriptor_active ? descriptor_beat==3:rlast;assign rready=crready && !descriptor_active;

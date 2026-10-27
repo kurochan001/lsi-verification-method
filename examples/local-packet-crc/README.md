@@ -24,6 +24,36 @@ flowchart LR
 
 Pythonはメッセージ全体の整数を多項式除算し、RTLの逐次バイト・ビット更新を写しません。初期値0では`123456789`のCRC=0xF4も確認します（[CRC RevEngのCRC-8/SMBUS定義](https://reveng.sourceforge.io/crc-catalogue/all.htm#crc.cat.crc-8-smbus)）。初期値0xFFは本教材の比較用設定で、SMBus全体を検証した結果ではありません。
 
+## バイトレーンの並びと結果の保持
+
+固定ケースの`123456789`は、次の3ビートで入力します。16進数の表示順と処理順を取り違えないよう、下位バイトレーンから文字列へ戻して考えます。
+
+| ビート | s_data | s_keep | CRCへ取り込むバイト順 | s_last |
+| --- | --- | --- | --- | --- |
+| 0 | `0x34333231` | `1111` | `31 32 33 34`（1234） | 0 |
+| 1 | `0x38373635` | `1111` | `35 36 37 38`（5678） | 0 |
+| 2 | `0xEEEEEE39` | `0001` | `39`（9）。上位3バイトは除外 | 1 |
+
+INIT=0では、最後のビートを受理するとCRCフィールドは`0xF4`になります。INIT=0xFFの構成には、その初期値から計算した別の期待値を使います。
+
+```mermaid
+sequenceDiagram
+  accTitle: CRCのパケット計算と出力保持
+  accDescr: LAST受理で結果を確定し、結果が受理されるまで入力を止めてCRCとerrorを保持する。
+  participant S as 入力側
+  participant C as CRCエンジン
+  participant R as 結果受信側
+  S->>C: LAST=0を受理<br/>CRC更新
+  S->>C: LAST=1を受理<br/>CRC確定
+  C-->>R: m_valid=1、CRCとerrorを提示
+  Note over C,R: m_ready=0の間、結果を保持<br/>入力はs_ready=0で停止
+  R->>C: m_ready=1で結果を受理
+  Note over C: 次クロックから<br/>入力再開
+  S->>C: 次パケットをINITから計算
+```
+
+計算中は`s_ready=1`で入力を受け付け、結果保持中は`m_valid=1`・`s_ready=0`でCRCとerrorを保持します。結果を受理するクロックでも入力側は停止し、次のクロック区間から再開できます。リセットは計算途中のデータと未受理の結果を破棄します。ここで示したready／validの値はリセット解除中の値です。
+
 ## 実行
 
 ```sh

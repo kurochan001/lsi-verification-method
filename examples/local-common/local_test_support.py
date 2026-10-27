@@ -51,3 +51,31 @@ def assert_evidence(test,out,configurations,goal_count,executions,diagnostics=0)
         wave=result.parent/'wave.vcd'
         test.assertTrue(wave.exists(),str(wave))
         test.assertIn('$enddefinitions',wave.read_text())
+
+
+def simulate_vectors(example, rows, parameters=None, replacements=None):
+    """Compile real RTL with targeted vectors; optional source edits test the checker."""
+    import shutil
+    import tempfile
+    import unittest
+    if not (shutil.which('iverilog') and shutil.which('vvp')):
+        raise unittest.SkipTest('Icarus required')
+    with tempfile.TemporaryDirectory() as tmp:
+        out=Path(tmp);sources=[]
+        for index, source in enumerate(example.SOURCES):
+            edits=(replacements or {}).get(source.name,[])
+            if edits:
+                content=source.read_text()
+                for old,new in edits:
+                    if old not in content:raise ValueError(f'Edit target missing in {source}: {old}')
+                    content=content.replace(old,new)
+                source=out/f'{index}-{source.name}';source.write_text(content)
+            sources.append(str(source))
+        vectors=out/'vectors.txt'
+        vectors.write_text(''.join(' '.join(format(v,'x') for v in row)+'\n' for row in rows))
+        parameters=parameters or next(iter(example.CONFIGS.values()))
+        command=['iverilog','-g2012','-s',example.TOP,'-o',str(out/'sim.vvp'),f'-P{example.TOP}.MUTATION=0']
+        command += [f'-P{example.TOP}.{key}={value}' for key,value in parameters.items()]+sources
+        subprocess.run(command,capture_output=True,text=True,timeout=30,check=True)
+        return subprocess.run(['vvp',str(out/'sim.vvp'),f'+VECTORS={vectors}',f'+WAVE={out / "wave.vcd"}'],
+                              capture_output=True,text=True,timeout=30)

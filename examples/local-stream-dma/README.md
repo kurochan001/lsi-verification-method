@@ -24,7 +24,36 @@ flowchart TD
 
 S2MMは長さに応じた下位連続TKEEPだけを許し、疎なTKEEPの詰め替えは行いません。エラー後の未完了ソース提示は次の協調リセットまで保持します。途中までのパケットを正常な完了パケットと数えず、残ったFIFOビートを独立に照合します。
 
-Pythonはエラー位置と方向から、出力・書込みが残るバイト数を計算します。SVは実AR／AWの番地・ID・長さ、WデータとWSTRB、出力のKEEP・LAST・有効バイト、状態・IRQ、全RAMを比較します。R/BのエラーはRAMの実応答へ注入します。
+Pythonはエラー位置と方向から、出力・書込みが残るバイト数を計算します。SVは実AR／AWの番地・ID・長さ、WデータとWSTRB、出力のKEEP・LAST・有効バイト、状態・IRQ、全RAMを比較します。AWとWを別々に数え、完了時には方向ごとのAR・R・AW・W・Bの受理数とStream入出力数も照合します。B応答を受けずに完了する異常も検出します。R/BのエラーはRAMの実応答へ注入します。
+
+## 5バイト転送とW先行の例
+
+開始番地を`A`とした5バイト転送では、32ビットの2ビートを使います。2ビート目は下位1バイトだけが有効です。表は正常転送の値で、MM2SではTKEEP・TLAST、S2MMでは入力のTKEEP・TLASTとメモリ側のWSTRBを照合します。
+
+| ビート | メモリ番地 | 有効なバイトレーン | TKEEP／S2MMのWSTRB | TLAST |
+| --- | --- | --- | --- | --- |
+| 0 | A | 0・1・2・3 | `1111` | 0 |
+| 1 | A＋4 | 0のみ | `0001` | 1 |
+
+S2MMの2ビート目では、A＋5〜A＋7のRAMを変更しません。MM2Sではその3レーンのデータを有効データとして数えません。
+
+```mermaid
+sequenceDiagram
+  accTitle: S2MMでWをAWより先に受理する試験
+  accDescr: テスト用バッファがWを先に保持し、AWと保持データを実RAMへ渡してからB応答をDMAへ返す。
+  participant D as Stream DMA
+  participant A as テスト用バッファ
+  participant M as AXI4 RAM
+  D->>A: Wを提示・受理
+  Note over A: Wデータと属性を保持
+  D->>A: AWを受理（W受理より後）
+  A->>M: AWを転送・受理
+  A->>M: 保持したWを転送・受理
+  M-->>D: B応答を受理
+  Note over D: B受理後に次へ<br/>最終なら完了
+```
+
+図は1メモリアクセス分で、信号の提示開始時刻と待ちサイクルは省略しています。AWの受理とRAMへのAW転送は、同じハンドシェイクを二つの境界で表しています。DMAはAWとWを独立に提示し、テスト用バッファが受理順を作ります。B応答の前にdoneになる実装は、終了時の応答件数の照合で失敗にします。
 
 ## 実行
 
@@ -34,6 +63,6 @@ python3 examples/local-stream-dma/run.py --profile nightly
 python3 -m unittest discover -s examples/local-stream-dma/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。smoke18操作、nightly120操作×3 seedへ固定14操作を加え、各12目標を要求します。KEEP・LAST・WSTRB・データの4変異です。JUnit14／18件、確認5件です。
+[共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。S2MMでは1ビートのテスト用バッファでWを先に受理し、その後でAWと保持したWをRAMへ渡すケースも実行します。B応答は実RAMから返します。smoke18操作、nightly120操作×3 seedへ固定16操作を加え、各13目標を要求します。KEEP・LAST・WSTRB・データの4変異です。JUnit14／18件、確認7件です。
 
 Streamの基本信号は[AMDの説明](https://docs.amd.com/r/2023.1-English/ug1393-vitis-application-acceleration/Streaming-Interfaces)、メモリ側は[Arm AXI仕様](https://documentation-service.arm.com/static/602a9df190ee6824a1e02b98)を参照しています。商用DMAの実装・レジスタ配置・全属性・大規模バースト・全二重動作への適合性は対象外です。

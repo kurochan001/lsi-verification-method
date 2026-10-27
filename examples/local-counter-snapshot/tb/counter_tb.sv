@@ -2,7 +2,7 @@
 module counter_tb;
  parameter MUTATION=0,WAIT_CYCLES=0;
  reg clk=0;always #5 clk=~clk;
- reg rst_n=0,psel=0,penable=0,pwrite=0;reg[7:0]paddr=0;reg[31:0]pwdata=0;wire pready,pslverr,irq,pending,snapshot_valid;wire[31:0]prdata;wire[63:0]count;reg[63:0]old_count=0;reg old_pending=0,recovering=0;
+ reg rst_n=0,psel=0,penable=0,pwrite=0;reg[7:0]paddr=0;reg[31:0]pwdata=0;wire pready,pslverr,irq,pending,snapshot_valid;wire[31:0]prdata;wire[63:0]count;reg[63:0]old_count=0;reg old_pending=0,recovering=0;reg previous_increment=0;
  counter #(.MUTATION(MUTATION),.WAIT_CYCLES(WAIT_CYCLES)) dut(.*);
  integer fd,n,checks=0;reg[63:0]v[0:12];string vectors,wave;
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"cycle=%0d",checks);end endtask
@@ -24,7 +24,9 @@ module counter_tb;
  if(pending!==v[10][0] || irq!==v[11][0])fail("COUNT_IRQ");
  if(snapshot_valid!==v[12][0])fail("COUNT_SNAPSHOT");
  if(!rst_n)recovering=1;
- if(rst_n && count[63:32]!=old_count[63:32])$display("COVER count/low-roll");if(rst_n && old_count>64'hfffffffffffffff0 && count<16)$display("COVER count/full-wrap");
+ // Credit carry only for an enabled increment, never for LOADHI or reset.
+ if(rst_n && previous_increment && old_count[31:0]==32'hffffffff && count==old_count+64'd1)$display("COVER count/low-roll");
+ if(rst_n && previous_increment && old_count==64'hffffffffffffffff && count==0)$display("COVER count/full-wrap");
  if(rst_n && pending && !old_pending)$display("COVER irq/set");if(rst_n && !pending && old_pending)$display("COVER irq/clear");
  if(snapshot_valid && count[63:32]!=dut.snapshot_high)$display("COVER snapshot/held");
  if(pready)begin
@@ -33,7 +35,7 @@ module counter_tb;
  if(!pslverr && pwrite && paddr==8)$display("COVER load/staged");
  if(!pslverr && pwrite && paddr==28 && pwdata[0] && dut.match)$display("COVER irq/collision");
  if(recovering)begin $display("COVER reset/recovery");recovering=0;end
- end old_count=count;old_pending=pending;
+ end previous_increment=rst_n && dut.enabled && !(pready && !pslverr && pwrite && paddr==12);old_count=count;old_pending=pending;
  @(posedge clk);#1;checks=checks+1;@(negedge clk);
  end
  $display("COUNT steps=%0d",checks);$display("RESULT PASS checks=%0d",checks);$finish;

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "BEHAVIOR",
@@ -16,7 +16,8 @@
         "fault/keep",
         "request/error",
         "reset/pending",
-        "reset/recovery"
+        "reset/recovery",
+        "write/w-before-aw"
       ]
     }
   ]

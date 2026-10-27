@@ -26,6 +26,38 @@ RALの一致だけで合格にせず、手書きのCONFIG=8ビット・reset 0x1
 
 APB待ち0／2の各通常実行で9目標を要求します。smokeは固定12取引＋12回のCONFIG書込み・ミラー照合、nightlyは80回×3 seedです。データ列はseed付きの固定アルゴリズムで、SVの制約付きrandomizeではありません。
 
+## イベントで変わるPENDINGを確認する順序
+
+PENDINGはバス操作以外でも変わるため、イベントを止めて状態が落ち着いてから、独立scoreboardの予測値をRALへ渡します。図はW1Cとイベントを重ねる固定ケースの流れです。APBの待ちサイクルは省略しています。
+
+```mermaid
+sequenceDiagram
+  accTitle: ハードウェアイベント後のRAL予測と実読出し
+  accDescr: W1Cとイベントを重ね、独立モデルからミラー値を予測した後にfrontdoorで読み戻す。
+  participant T as テスト
+  participant R as UVM RAL
+  participant D as APB RTL
+  participant S as 独立scoreboard
+  T->>D: events=3を提示
+  T->>R: PENDINGへW1Cの3を書込み
+  R->>D: agent経由でAPB書込み
+  D-->>S: monitor経由で通知<br/>アクセス・イベント・状態
+  Note over D,S: クリアとイベントの競合<br/>イベント優先
+  T->>D: events=0にして更新を止める
+  T->>R: scoreboardの予測値でpredict
+  T->>R: mirror(UVM_CHECK, UVM_FRONTDOOR)
+  R->>D: APB読出し
+  D-->>R: 実レジスタ値
+  Note over R,S: ミラー照合と独立した状態照合の両方を確認
+```
+
+| 判定層 | 期待値・入力の出所 | 主に見つける誤り |
+| --- | --- | --- |
+| 生成メタデータと独立契約 | 手書きの`contract.json` | フィールド幅・初期値・アクセス属性の生成誤り |
+| RALのfrontdoor・ミラー照合 | RALの予測値と実APB読出し | adapterの接続やミラー値の不一致 |
+| 独立scoreboard | 観測した操作・イベントと手書きの状態更新規則 | 応答・保持値・W1C優先順位の誤り |
+| ランナーの最終判定 | 転送件数・目標・UVMのseverityと警告ID | 検査の未実行・件数不足・予期しない警告 |
+
 ## 負の試験とUVMの警告
 
 生成RTLのreset・マスク・W1C優先順位の3変異を、予定したSTATE／PENDINGチェッカーで検出します。正常RTLへ誤ったミラー値を与える診断では、UVM_CHECKの不一致と最終reportの失敗を要求します。これはRTL変異率へ含めません。
