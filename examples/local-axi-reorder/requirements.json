@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BEHAVIOR",
+      "goals": [
+        "response/b-reorder",
+        "response/r-reorder",
+        "order/same-id",
+        "order/duplicate-id",
+        "burst/multiple",
+        "response/held",
+        "write/partial",
+        "write/zero",
+        "reset/pending",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

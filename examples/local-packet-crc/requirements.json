@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BEHAVIOR",
+      "goals": [
+        "packet/full",
+        "packet/sparse",
+        "packet/empty",
+        "packet/check-good",
+        "packet/check-bad",
+        "output/held",
+        "reset/partial",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

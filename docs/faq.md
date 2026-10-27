@@ -215,3 +215,7 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 ## UVMの本物の制約・covergroupや、仕様からのレジスタ生成も試せますか？
 
 [UVMランダム例](../examples/local-uvm-random/README.md)でSVの制約付きランダム化とネイティブcovergroupを、[SystemRDL例](../examples/local-register-spec/README.md)でRTL・Cヘッダー・RALの生成と独立契約による照合を実行できます。[反例再現](../examples/local-formal-replay/README.md)、優先順位付き割込み・リング式DMA・クレジット通信・小規模キャッシュも含めた[7例の集約手順](../examples/local-soc-regression/README.md)があります。GitLabの利用枠は使いません。
+
+## 既存例をさらに結合した教材はありますか？
+
+[RAL接続・AXI順序・DMA・CRC・時刻・MBISTの7例](../examples/local-extension-regression/README.md)があります。生成RALの実バス接続、ID別応答順序、DMA所有権、メモリとStreamの結合に加え、CRC・64ビットスナップショット・MBISTを扱います。いずれもローカル実行で、必要な環境と教材の制約を各READMEへ記載しています。

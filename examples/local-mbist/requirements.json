@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BEHAVIOR",
+      "goals": [
+        "fault/clean",
+        "fault/stuck0",
+        "fault/stuck1",
+        "fault/transition0",
+        "fault/transition1",
+        "fault/alias",
+        "fault/coupling",
+        "memory/stall",
+        "reset/restart"
+      ]
+    }
+  ]
+}

@@ -214,3 +214,5 @@ sequenceDiagram
 [UVMランダム例](../../examples/local-uvm-random/README.md)では、上記APBのagent・monitor・独立scoreboardを再利用し、SVの`rand`・`constraint`・`randomize()`とネイティブcovergroupを実行します。各待ち構成・各通常実行で24 binを要求し、DBのbin一覧とヒット、同一seedの再現を確認します。固定の境界操作も含むため、ランダム刺激だけの収束性能を測る例ではありません。
 
 [SystemRDL例](../../examples/local-register-spec/README.md)は、同じ仕様からRTL・Cヘッダー・RALを生成します。別に手書きした契約で共通の仕様誤りを検出し、RTL実行・Cコンパイル・実UVM RALの構造と属性を照合します。生成RALは生成RTLへfrontdoor接続していません。
+
+[生成RTL＋RALのfrontdoor結合例](../../examples/local-generated-ral/README.md)では、生成したモデルを既存adapter・agent経由で実RTLへ接続します。メタデータの独立契約、毎クロックの独立scoreboard、バス経由のミラー照合を併用し、誤ったミラー値を与えてUVM_CHECKが失敗することも確認します。

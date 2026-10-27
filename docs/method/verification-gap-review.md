@@ -286,3 +286,5 @@ mergeするDBの入力・構成・計測定義・除外を照合し、元の実�
 - [OpenTitanのSecurity Countermeasure Verification Framework](https://opentitan.org/book/doc/contributing/dv/sec_cm_dv_framework/index.html)：対策プリミティブへの故障注入・反応確認の実例です。
 
 領域の分類、試験の選び方、完了条件、割り込みの試験案は、このリポジトリで作成した運用案です。
+
+[MBISTの実行例](../../examples/local-mbist/README.md)は、小容量のビットセルとデジタル故障モデルを対象に、March C−の操作列・通知・失敗位置を検査します。実SRAM・製造試験や故障全体の網羅率とは範囲を分けます。[64ビットカウンター](../../examples/local-counter-snapshot/README.md)では、32ビットバスとの分割アクセスと桁上がりを検査できます。

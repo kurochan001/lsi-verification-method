@@ -47,3 +47,7 @@ python3 -m unittest discover -s examples/local-descriptor-dma/tests -v
 ```
 
 [共通手順](../local-common/README.md)を使います。smoke 20操作、nightly 160操作×3 seedに固定12操作を加えます。2構成のJUnitは14／18件、確認テストは5件です。キャッシュ・CPU・OS・仮想アドレス・任意個数の未完了要求を含むDMAシステムの検証ではありません。
+
+## 所有権と継続的な再利用へ進む
+
+[DMA所有権の結合例](../local-dma-ownership/README.md)は、本制御を1記述子ずつ実行するコアとして再利用します。内部記述子RAMのFREE→OWNED→BUSY→DONEと、ホストの公開・回収・処理中追加・IRQ ACKを検査します。共有DRAM上のCPUキャッシュやメモリバリアをモデル化するものではありません。

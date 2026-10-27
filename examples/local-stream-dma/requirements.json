@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BEHAVIOR",
+      "goals": [
+        "direction/mm2s",
+        "direction/s2mm",
+        "length/zero",
+        "length/partial",
+        "stream/held",
+        "fault/read",
+        "fault/write",
+        "fault/last",
+        "fault/keep",
+        "request/error",
+        "reset/pending",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

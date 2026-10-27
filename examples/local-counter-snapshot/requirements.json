@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BEHAVIOR",
+      "goals": [
+        "count/low-roll",
+        "count/full-wrap",
+        "snapshot/read",
+        "snapshot/held",
+        "load/staged",
+        "irq/set",
+        "irq/clear",
+        "irq/collision",
+        "bus/error",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

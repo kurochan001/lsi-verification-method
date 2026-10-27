@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BEHAVIOR",
+      "goals": [
+        "host/publish",
+        "host/reject",
+        "host/reclaim",
+        "host/dynamic",
+        "engine/busy",
+        "ring/wrap",
+        "completion/error",
+        "completion/irq",
+        "irq/ack",
+        "reset/pending",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

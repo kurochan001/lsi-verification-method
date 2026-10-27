@@ -50,3 +50,7 @@ python3 -m unittest discover -s examples/local-axis/tests -v
 構成は`depth2`／`depth4`。smokeは32パケット×1 seed、nightlyは300×3 seedで、固定試験・途中パケットの破棄は別枠です。checksはクロックごとのベクトル数、JUnitは全構成14／18件です。
 
 TID／TDEST／TUSER／TSTRB、幅変換、CDC、Stream DMA、全AXI4-Streamの適合性を確認した例ではありません。信号の基本事項は[AMDのStreaming Interfaces](https://docs.amd.com/r/2023.1-English/ug1393-vitis-application-acceleration/Streaming-Interfaces)を参照し、容量・リセットの扱いは教材の仕様です。
+
+## メモリとの転送も検査する
+
+[メモリ⇄Stream DMA](../local-stream-dma/README.md)は、本FIFOと既存AXI4 RAMを接続し、有効バイト・TLAST・エラー時の残存範囲を照合します。[CRC例](../local-packet-crc/README.md)では、有効レーンだけのCRC計算、受信CRC比較、パケット境界と初期化を検査できます。

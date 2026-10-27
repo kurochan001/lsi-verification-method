@@ -62,3 +62,7 @@ reset誤り・フィールドマスク誤り・W1C優先順位のRTL変異3件�
 生成ファイルとハッシュ、使用ライブラリsrcのハッシュ、コンパイラー版、入力、ビルド・実行ログ、RTL波形、JUnitを保存します。CとRALの検査は定数・モデルの検査で、波形を保存する実RTLの試験とは区別します。JUnitは17／21件、確認テストは6件です。
 
 [SystemRDL標準](https://www.accellera.org/downloads/standards/systemrdl)、[コンパイラーAPI](https://systemrdl-compiler.readthedocs.io/en/stable/api/compiler.html)、[プロパティの既定値](https://systemrdl-compiler.readthedocs.io/en/stable/properties.html)を参照しています。外部ライブラリのソースはリポジトリへ転載していません。
+
+## 生成したRTLとRALを実バスで接続する
+
+[frontdoor結合例](../local-generated-ral/README.md)は、本原本・生成器・独立契約を再利用し、実APB操作、独立scoreboard、UVM_CHECKのミラー照合まで行います。本例の構造・属性確認とは別の計画・JUnitです。PENDINGはvolatileのまま使い、その際の既知のUVM警告も件数・種類を照合します。

@@ -92,7 +92,7 @@ flowchart TD
 
 ## ローカル専用の実行例
 
-GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を26個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
+GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を32個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
 
 - **[ECCの故障注入](examples/local-ecc/README.md)**：8ビットデータのSECDED。全23,552パターンの0／1／2ビット誤り、97目標、4変異、3／4ビット誤りの限界を示す診断2件を実行します。
 - **[SPIのランダム検証](examples/local-spi/README.md)**：CPOL／CPHAの4モード×半周期2／4クロックの8構成。独立した予定時刻で送受信を照合し、各16目標と4変異、busy中start、転送中リセットを確認します。
@@ -125,6 +125,12 @@ GitLabの利用枠を使わずに、共通ランナーで試せるシミュレ�
 - **[リング式ディスクリプタDMA](examples/local-descriptor-dma/README.md)**：既存DMAにつなぎ、リング巡回・取得エラー・中断・IRQを2構成・各13目標で確認します。
 - **[クレジット方式のフロー制御](examples/local-credit-link/README.md)**：2仮想チャネルの受付・送信・返却・保持・リセットを2構成・各10目標で確認します。
 - **[小規模キャッシュとDMA](examples/local-cache-dma/README.md)**：write-back、部分書込み、clean／invalidateとDMAの可視性を2構成・各15目標で確認します。
+- **[AXI4の応答順序入れ替え](examples/local-axi-reorder/README.md)**：共有RAMと応答バッファを接続し、ID別の順序・B/Rの保持を2構成・各10目標で確認します。
+- **[DMAリングの所有権](examples/local-dma-ownership/README.md)**：公開・実行・完了返却・回収・処理中追加を2構成・各11目標で確認します。
+- **[メモリ⇄Stream DMA](examples/local-stream-dma/README.md)**：有効バイト・パケット終端・待ち・エラー時の残存範囲を2構成・各12目標で確認します。
+- **[パケットCRC](examples/local-packet-crc/README.md)**：独立した多項式除算と既知ベクトルで、CRCフィールドと受信値検査を2構成・各8目標で確認します。
+- **[64ビットカウンター](examples/local-counter-snapshot/README.md)**：32ビットAPBでのスナップショット、桁上がり、一括反映・IRQを2構成・各10目標で確認します。
+- **[MBIST・March C−](examples/local-mbist/README.md)**：ビットセルの故障モデル、10N操作、最初の失敗位置、再開を2構成・各9目標で確認します。
 
 ```sh
 python3 examples/local-ecc/run.py
@@ -143,7 +149,7 @@ python3 examples/local-dsp/run.py
 python3 examples/local-memory-order/run.py
 ```
 
-各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。共通シミュレーションランナーの現在の計画は26例・61構成、回帰JUnitは全構成合計でsmoke 429件、nightly 551件です。今回の4回路・8構成の56／72件は、下記の新しい7例の回帰にも含まれるため重複集計しません。実行した範囲と結果は各集約手順と[由来の記録](PROVENANCE.md)へ残します。GitLab例の50ジョブ・311／384件やランナー確認132件とは別集計です。GitLabのCI設定への追加・CI起動は行っていません。
+各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。共通シミュレーションランナーの現在の計画は32例・73構成、回帰JUnitはsmoke 513件・nightly 659件です。今回の6回路・12構成の84／108件も含みます。同じ回路を各集約ランナーから呼ぶ結果は重複集計しません。実行範囲と結果は各手順と[由来の記録](PROVENANCE.md)へ残します。GitLab例の50ジョブ・311／384件やランナー確認132件とは別集計です。GitLabのCI設定への追加・CI起動は行っていません。
 
 ### 失敗の縮小・カバレッジ収束・結合・UVMの7例
 
@@ -165,7 +171,17 @@ UVMにはVerilator 5.052、C++20ビルド環境、Accellera UVM 2020-3.2を使�
 python3 examples/local-soc-regression/run.py --stage core
 ```
 
-全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、現在の全確認テスト407件（ローカル275件＋GitLab例132件）が成功しました。生成RALは構造・属性の照合で、生成RTLへのfrontdoor接続は行いません。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
+全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件を含む現在の計画は443件（ローカル311件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
+
+### RAL接続・順序制御・DMA・CRC・時刻・MBISTの7例
+
+[7例の集約手順](examples/local-extension-regression/README.md)から、上記6回路と[生成RTL＋UVM RALのfrontdoor結合](examples/local-generated-ral/README.md)を実行できます。生成例では、従来の構造・属性照合から実バス操作へ進み、独立scoreboardとミラー比較を併用します。
+
+```sh
+python3 examples/local-extension-regression/run.py --stage core
+```
+
+全7例のsmoke／nightlyが成功し、親JUnitは各7件、子は99／127件です。追加の確認テスト36件も成功しました。生成RALには外部UVMとSystemRDL環境を使い、残る6例はPythonとIcarusで実行します。各例の前提・対応範囲・図表を手順へ記載しています。
 
 ### AHB／AXIのランダム・フォーマル検証
 
@@ -176,7 +192,7 @@ python3 examples/local-bus-formal/run.py --bus ahb
 python3 examples/local-bus-formal/run.py --bus axi
 ```
 
-フォーマルは各9タスク・全45件のJUnitで、シミュレーションの429／551件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の36件と今回のレビュー修正5件を加え、現在のローカル確認テストの計画は275件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
+フォーマルは各9タスク・全45件のJUnitで、シミュレーションの513／659件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件を含む、現在のローカル確認テストの計画は311件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
 
 ### AHB／AXIの追加検査をまとめて実行する
 
@@ -187,7 +203,7 @@ python3 examples/local-bus-validation/run.py
 python3 examples/local-bus-validation/run.py --profile nightly
 ```
 
-親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記26例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
+親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記32例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
 
 ### 結合・復旧・低電力・等価性まで進める
 
@@ -262,7 +278,7 @@ examples/local-i2c/             I²CのACK・NACK・Repeated START・ストレ�
 examples/local-apb-timer/       APBからタイマー・ウォッチドッグ・IRQまでの結合検証
 examples/local-ahb/             AHB-Liteのパイプライン・バイトレーン・ERROR応答の検証
 examples/local-axi/             AXI4-Liteの独立チャネル・WSTRB・応答保持の検証
-examples/local-common/          ローカル26例の共通ランナーと異常系の確認
+examples/local-common/          ローカル32例の共通ランナーと異常系の確認
 examples/local-soc-regression/  UVMランダム化・仕様生成・反例再現・4回路の集約
 examples/local-bus-formal/      AHB・AXIの安全性証明・有界データ・到達性と感度確認
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
