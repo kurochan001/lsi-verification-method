@@ -192,3 +192,5 @@ seed数、生成した操作数、総実行時間、カバレッジの増加量�
 ## ローカルで試す追加例
 
 [失敗した操作列の縮小例](../../examples/local-failure-reduction/README.md)と[観測カバレッジによる刺激調整例](../../examples/local-coverage-feedback/README.md)をローカルで実行できます。前者は同じ違反の再現を保つ削除、後者は固定した比較・合格基準を維持した探索の変更です。
+
+[SV制約付きランダム化の実行例](../../examples/local-uvm-random/README.md)も用意しています。`randomize()`の戻り値、生成値の合法性、独立scoreboardの比較、24個のネイティブbin、同一seedでの入力再現を確認します。充足不能な制約と収集無効化を別々の負の試験で検出し、通常ケースのカバレッジへ加算しません。

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "FLOW",
+      "goals": [
+        "channel/zero",
+        "channel/one",
+        "credit/exhausted",
+        "credit/return",
+        "credit/simultaneous",
+        "credit/bad-return"
+      ]
+    },
+    {
+      "id": "QUEUE",
+      "goals": [
+        "queue/blocked",
+        "queue/simultaneous"
+      ]
+    },
+    {
+      "id": "RESET",
+      "goals": [
+        "reset/clear",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

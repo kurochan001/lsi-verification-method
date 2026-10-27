@@ -40,3 +40,7 @@ python3 -m unittest discover -s examples/local-dma/tests -v
 smokeは24コマンド×1 seed、nightlyは200×3 seed。固定14ケースは別枠です。1ベクトルが1コマンドで、リセット試験では破棄するstartをもう1回発行します。JUnitは全2構成で14／18件です。
 
 CPU・実ドライバ、キャッシュ整合性、仮想アドレス、重複領域、非整列コピー、クロック跨ぎ、合成後タイミング、DMA全体のフォーマル証明は対象外です。APBのレジスタ仕様・中断・エラー時の残存範囲は教材独自の仕様です。AXIの規則は[Arm IHI 0022E](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)を参照しています。
+
+## 次に試す結合例
+
+[リング式ディスクリプタDMA](../local-descriptor-dma/README.md)は、本DMAコアを変更せずに使い、メモリ上の記述子の取得、リング巡回、エラー・中断・IRQを検査します。[キャッシュとDMA](../local-cache-dma/README.md)は別の小規模モデルで、clean／invalidateによる可視性を扱います。後者は本AXI DMAや実CPUキャッシュを接続した例ではありません。

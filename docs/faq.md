@@ -186,3 +186,7 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 [失敗の縮小](../examples/local-failure-reduction/README.md)は、同じチェッカーで不具合を再現する操作列を削り、元の正常RTLでは合格することまで確認します。[カバレッジによる刺激調整](../examples/local-coverage-feedback/README.md)は、実RTLの観測から未達を選び、同じサイクル予算で固定分布のランダム刺激と比較します。到達数と結果の正しさは別々に判定します。
 
 [幅変換・アクセス保護・ECCメモリ・クロック停止／リセット・UVMを含む7例](../examples/local-workflow-regression/README.md)としてまとめて実行できます。GitLabの利用枠は使いません。
+
+## UVMの本物の制約・covergroupや、仕様からのレジスタ生成も試せますか？
+
+[UVMランダム例](../examples/local-uvm-random/README.md)でSVの制約付きランダム化とネイティブcovergroupを、[SystemRDL例](../examples/local-register-spec/README.md)でRTL・Cヘッダー・RALの生成と独立契約による照合を実行できます。[反例再現](../examples/local-formal-replay/README.md)、優先順位付き割込み・リング式DMA・クレジット通信・小規模キャッシュも含めた[7例の集約手順](../examples/local-soc-regression/README.md)があります。GitLabの利用枠は使いません。

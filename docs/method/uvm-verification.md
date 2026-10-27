@@ -183,3 +183,9 @@ bindしたチェッカーの適用先、enable、クロック・リセット、a
 [実行手順](../../examples/local-uvm/README.md)から、既存APB RTLをUVMで検証できます。待ち0／2の各構成で9目標を要求し、通常のfrontdoor操作はauto prediction、ハードウェアイベントの更新は操作終了後の明示的なpredictionで扱います。独立したscoreboardと`mirror(UVM_CHECK)`による実読出しの照合を併用します。
 
 この教材はUVMの構成とRALの具体例です。SystemVerilogの制約付き`randomize()`、ネイティブcovergroup DB、本文のUARTエージェントや全項目を実装したものではありません。3種類のRTL変異と誤った期待値の診断、native UVM summary、終了状態・件数・VCDを照合します。ライブラリは外部へ準備し、使用版とソースハッシュを証跡へ保存します。
+
+## 14. 制約付きランダム化・covergroupと仕様生成
+
+[UVMランダム例](../../examples/local-uvm-random/README.md)では、上記APBのagent・monitor・独立scoreboardを再利用し、SVの`rand`・`constraint`・`randomize()`とネイティブcovergroupを実行します。各待ち構成・各通常実行で24 binを要求し、DBのbin一覧とヒット、同一seedの再現を確認します。固定の境界操作も含むため、ランダム刺激だけの収束性能を測る例ではありません。
+
+[SystemRDL例](../../examples/local-register-spec/README.md)は、同じ仕様からRTL・Cヘッダー・RALを生成します。別に手書きした契約で共通の仕様誤りを検出し、RTL実行・Cコンパイル・実UVM RALの構造と属性を照合します。生成RALは生成RTLへfrontdoor接続していません。

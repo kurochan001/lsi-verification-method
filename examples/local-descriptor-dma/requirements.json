@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DESCRIPTOR",
+      "goals": [
+        "ring/empty",
+        "ring/full",
+        "ring/wrap",
+        "transfer/completed",
+        "fault/type1",
+        "fault/type2",
+        "fault/type3",
+        "fault/type4",
+        "abort/type1",
+        "abort/type2",
+        "command/invalid",
+        "reset/active",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

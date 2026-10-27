@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "OPERATIONS",
+      "goals": [
+        "cpu/read",
+        "cpu/write",
+        "dma/read",
+        "dma/write",
+        "maintenance/clean",
+        "maintenance/invalidate",
+        "maintenance/dirty-denied"
+      ]
+    },
+    {
+      "id": "FLOW",
+      "goals": [
+        "cache/eviction",
+        "response/held",
+        "reset/pending",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "VISIBILITY",
+      "goals": [
+        "visibility/stale-before-clean",
+        "visibility/stale-before-invalidate"
+      ]
+    },
+    {
+      "id": "BYTES",
+      "goals": [
+        "strobe/partial",
+        "strobe/zero"
+      ]
+    }
+  ]
+}

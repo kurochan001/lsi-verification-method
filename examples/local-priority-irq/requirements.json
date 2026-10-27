@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SELECT",
+      "goals": [
+        "select/claim",
+        "select/empty",
+        "select/tie",
+        "select/priority"
+      ]
+    },
+    {
+      "id": "POLICY",
+      "goals": [
+        "policy/threshold",
+        "policy/claim-below-threshold",
+        "pending/masked"
+      ]
+    },
+    {
+      "id": "SERVICE",
+      "goals": [
+        "service/complete",
+        "service/invalid",
+        "service/blocked-event"
+      ]
+    },
+    {
+      "id": "BUS",
+      "goals": [
+        "bus/error",
+        "reset/clear"
+      ]
+    }
+  ]
+}

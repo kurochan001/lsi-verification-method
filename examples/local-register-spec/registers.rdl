@@ -1,0 +1,5 @@
+addrmap demo {
+ reg {field {sw=rw;hw=r;reset=8'h12;} value[7:0];} cfg @ 0x0;
+ reg {field {sw=r;hw=r;reset=32'h52444c31;} value[31:0];} idreg @ 0x4;
+ reg {field {sw=rw;hw=w;onwrite=woclr;reset=0;} value[3:0];} pending @ 0x8;
+};

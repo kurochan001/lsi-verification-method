@@ -1,6 +1,6 @@
 # ローカル専用の検証例を実行する
 
-[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
+[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先順位付き割込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
 
 ## 準備と実行
 
@@ -105,11 +105,11 @@ python3 -m unittest discover -s examples/local-memory-order/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。今回の[7例](../local-workflow-regression/README.md)の44件を含む計画は234件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。[UVM等の7例](../local-workflow-regression/README.md)とレビュー時の追加44件を含む計画は234件でした。[今回の7例](../local-soc-regression/README.md)の36件を加えた計画は270件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
-[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子回帰として呼ぶこともできます。フォーマル45件・本共通ランナー22例の373／479件とは、実行内容とJUnitの階層を分けて確認してください。
+[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子回帰として呼ぶこともできます。フォーマル45件・本共通ランナー26例の429／551件とは、実行内容とJUnitの階層を分けて確認してください。
 
 ```sh
 python3 examples/local-bus-validation/run.py
@@ -136,4 +136,15 @@ python3 examples/local-clock-reset/run.py
 python3 examples/local-workflow-regression/run.py --stage core
 ```
 
-本共通ランナーの現在の計画は22例・53構成、JUnit 373／479件です。従来18例・45構成の317／407件へ、4例・8構成の56／72件を加えた値です。確認テストは従来のシミュレーション・共通127件に4回路24件を加え151件で、探索・UVM等は別に数えます。元の18例の確認結果を、新規例の実行結果として流用しません。
+前回追加までの計画は22例・53構成、JUnit 373／479件です。従来18例・45構成の317／407件へ、4例・8構成の56／72件を加えた値です。確認テストは従来のシミュレーション・共通127件に4回路24件を加え151件で、探索・UVM等は別に数えます。元の18例の確認結果を、新規例の実行結果として流用しません。
+
+## 優先順位付き割込み・リング式DMA・クレジット・キャッシュ
+
+[新しい7例の集約手順](../local-soc-regression/README.md)のうち、4回路は本共通ランナーで動きます。各2構成・4変異、合計8構成のJUnitはsmoke 56件／nightly 72件です。4回路各5件の確認テストも用意しています。
+
+```sh
+python3 examples/local-soc-regression/run.py --stage core
+python3 examples/local-soc-regression/run.py --stage core --profile nightly
+```
+
+現在の共通シミュレーションの計画は26例・61構成、JUnit 429／551件です。シミュレーション・共通の確認テストは151＋20＝171件です。今回のツール連携・反例再現・集約の確認16件は別枠で、ローカル確認全体の計画は270件です。今回実行した範囲は新規7例のsmoke／nightlyと追加36件です。従来の例の実行結果を、新規例の結果へ流用しません。

@@ -235,3 +235,5 @@ flowchart TD
 ## ローカルで試す追加例
 
 [観測カバレッジによる刺激調整例](../../examples/local-coverage-feedback/README.md)では、実RTLの到達ログから次の操作を選びます。固定分布との比較は同じサイクル予算で行い、失敗した実行の到達を加算しません。教材用の手続き的な目標集計で、ネイティブcovergroup DBの実行例とは区別します。
+
+[ネイティブcovergroupの実行例](../../examples/local-uvm-random/README.md)では、APB完了の実観測からアドレス・読書き・エラーとクロス、イベントとW1Cの競合をsampleします。Verilatorの`coverage.dat`に含まれる24 binの一覧・ヒット数を、各構成・各通常実行で照合します。固定境界操作とランダム刺激を併用し、失敗時や収集無効化時のDBを通常回帰へ足しません。
