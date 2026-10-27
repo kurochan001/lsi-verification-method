@@ -188,3 +188,7 @@ seed数、生成した操作数、総実行時間、カバレッジの増加量�
 - [Verilatorの実行時引数](https://verilator.org/guide/latest/exe_sim.html)：seedとソルバログの設定例を確認しました。採用環境では、その版のツールの仕様を確認します。
 
 計画・完了条件・割り込みの9実行の例は、本リポジトリで定めた運用案です。
+
+## ローカルで試す追加例
+
+[失敗した操作列の縮小例](../../examples/local-failure-reduction/README.md)と[観測カバレッジによる刺激調整例](../../examples/local-coverage-feedback/README.md)をローカルで実行できます。前者は同じ違反の再現を保つ削除、後者は固定した比較・合格基準を維持した探索の変更です。

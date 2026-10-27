@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "WIDTH",
+      "goals": [
+        "strobe/zero",
+        "strobe/full",
+        "strobe/partial",
+        "strobe/upper-only",
+        "strobe/lower-only",
+        "request/w-before-aw",
+        "request/aw-before-w",
+        "request/read",
+        "response/write-stall",
+        "response/read-stall",
+        "error/alignment",
+        "error/lower",
+        "error/upper",
+        "reset/partial",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+# 解析・収束・結合・UVMの7例をまとめて実行する
+
+次のローカル例を順に起動し、子の終了状態・予定件数・全チェックの完了と合格を要求します。GitLabの登録・CI実行・CI設定変更は行いません。
+
+1. [失敗した操作列の自動縮小](../local-failure-reduction/README.md)
+2. [カバレッジによる刺激調整](../local-coverage-feedback/README.md)
+3. [AXI4-Liteの64→32ビット幅変換](../local-width-converter/README.md)
+4. [APBアクセス保護・設定ロック](../local-access-control/README.md)
+5. [ECC付きメモリとスクラビング](../local-ecc-memory/README.md)
+6. [クロック停止・再開とリセット制御](../local-clock-reset/README.md)
+7. [SystemVerilog UVMとRAL](../local-uvm/README.md)
+
+## 実行
+
+共通にPython 3.10以上とIcarusを使います。UVMにはVerilator 5.052、C++20ビルド環境、別途準備したUVM 2020-3.2が必要です。
+
+```sh
+python3 examples/local-uvm/setup_uvm.py --out /tmp/lsi-uvm-library
+python3 examples/local-workflow-regression/run.py \
+  --uvm-home /tmp/lsi-uvm-library/1800.2-2020.3.2 \
+  --out artifacts/workflow-smoke
+python3 examples/local-workflow-regression/run.py \
+  --uvm-home /tmp/lsi-uvm-library/1800.2-2020.3.2 \
+  --profile nightly --out artifacts/workflow-nightly
+```
+
+UVMの準備前には`--stage core`で残る6例、UVMだけなら`--stage uvm --uvm-home ...`を指定できます。選んだ範囲だけの合格であり、未選択の例を合格に数えません。`--child-timeout`は子回帰1本ごとの上限秒数です。通常のUVMビルドは1回で両待ち構成・全変異を作ります。
+
+## 件数と確認範囲
+
+親JUnitは7件の集約ゲート、子JUnitの合計はsmoke 83件／nightly 111件です。内訳は4回路・8構成56／72件、縮小6件、刺激調整8／16件、UVM 13／17件です。探索中のRTL実行数は各子の`executions.json`へ別に保存します。親と子、既存の同じ回路の回帰を二重計上しません。
+
+新規4回路の目標は各構成ごとに幅変換15、アクセス保護14、ECCメモリ11、クロック・リセット10です。刺激調整は既存Streamの11、UVMは9目標です。故障モデルと前提・対象外は各READMEに記載しています。100%はそれぞれの教材カタログの達成です。
+
+各出力先の`manifest.json`、子ログと実行記録、子の`summary.json`・`junit.xml`・詳細証跡を照合します。未知の異常終了、空の計画、未完了、負の試験だけで得たカバーを成功にしません。
+
+```sh
+python3 -m unittest discover -s examples/local-workflow-regression/tests -v
+```
+
+追加の確認テストは、4回路各5、縮小5、刺激調整4、UVM判定5、共通証跡3、集約3の計40件です。UVMの判定テストはコンパイルを行わず、実際のUVM実行は上の回帰で別に確認します。
+
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版、Verilator 5.052、Accellera UVM 2020-3.2で全7例のsmoke／nightlyと追加40テストが成功しました。各子のマニフェストのソースSHA-256が現行ソースと一致することも確認しました。過去の190テストは今回の40件へ重複集計していません。

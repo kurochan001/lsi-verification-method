@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "READ",
+      "goals": [
+        "read/clean",
+        "read/corrected",
+        "read/uncorrectable"
+      ]
+    },
+    {
+      "id": "SCRUB",
+      "goals": [
+        "scrub/corrected",
+        "scrub/uncorrectable",
+        "scrub/wrap"
+      ]
+    },
+    {
+      "id": "RACE",
+      "goals": [
+        "race/write-wins",
+        "race/read-and-scrub"
+      ]
+    },
+    {
+      "id": "FAULT",
+      "goals": [
+        "fault/single",
+        "fault/double"
+      ]
+    },
+    {
+      "id": "RESET",
+      "goals": [
+        "reset/read-zero"
+      ]
+    }
+  ]
+}

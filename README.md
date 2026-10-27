@@ -33,7 +33,7 @@ flowchart TD
 ケーススタディ文書の最終取り込みは2026-10-26のkirimasim-tests [`0da4f2fc`](https://github.com/kurochan001/kirimasim-tests/commit/0da4f2fc247bfcee27fc407b8ef0cd8d8f768dfc)、参照ツールの同期基準は2026-10-25の[`3faf239`](https://github.com/kurochan001/kirimasim-tests/commit/3faf239af2614fd8d65cf31c54b0f297108704dd)です。下記の集計値は、2026-10-26に確認した上流[`5fb3c45d`](https://github.com/kurochan001/kirimasim-tests/commit/5fb3c45d73e4946d99690389752b82c86eecaa50)の値へ更新しています。一般化した手順書と実行例には、このリポジトリ独自の追記・改訂があります。由来と更新範囲は[PROVENANCE.md](PROVENANCE.md)を参照してください。
 
 - **手法の一般化文書**：[デジタルLSIの仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体検証に関する一般的な情報をまとめ、仕様から検証パターンを作る流れを整理した資料です。実際の製品開発で機能検証と併せて必要な、クロック・リセット、低電力、タイミング、DFT・量産テスト、物理設計、信頼性、システム統合、ポストシリコンの項目も14節に整理しています。
-- **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、回帰の合格条件をまとめています。実行可能なUVMテストベンチは今後の適用で用意します。
+- **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、回帰の合格条件をまとめています。[APBを使うUVM・RALの実行例](examples/local-uvm/README.md)も用意しています。
 - **機能間の検証**：[機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md)。依存関係の洗い出し、同時動作・順序・中断、クロス目標の選定と合格条件をまとめています。イベントとW1Cクリアの競合を、12目標の例として示しています。
 - **ランダム検証**：[制約付きランダム検証の計画・実行・完了判定](docs/method/constrained-random-verification.md)。制約、分布、seed、回帰計画、未達への調整、失敗の再現・縮小をまとめています。クロス検証の12目標を探索する、9実行の計画例も示しています。
 - **SVAによる検証**：[SVAのアサーションとカバーによる検証](docs/method/sva-verification.md)。assert・assume・cover、サンプリング、vacuous pass、リセット、シミュレーションとフォーマル検証の完了判定をまとめています。イベントとW1Cの競合を使ったチェッカー例も示しています。
@@ -67,7 +67,7 @@ flowchart TD
 
 ## ローカル専用の実行例
 
-GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を18個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
+GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を22個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
 
 - **[ECCの故障注入](examples/local-ecc/README.md)**：8ビットデータのSECDED。全23,552パターンの0／1／2ビット誤り、97目標、4変異、3／4ビット誤りの限界を示す診断2件を実行します。
 - **[SPIのランダム検証](examples/local-spi/README.md)**：CPOL／CPHAの4モード×半周期2／4クロックの8構成。独立した予定時刻で送受信を照合し、各16目標と4変異、busy中start、転送中リセットを確認します。
@@ -92,6 +92,10 @@ GitLabの利用枠を使わずに、共通ランナーで試せるシミュレ�
 - **[AXI4-Stream](examples/local-axis/README.md)**：深さ2／4。パケット境界・有効バイト・途中リセットを各11目標で確認します。
 - **[固定小数点DSP](examples/local-dsp/README.md)**：2タップFIRの符号・丸め・上下限・飽和・履歴を2構成・各10目標で確認します。
 - **[同一領域の競合](examples/local-memory-order/README.md)**：既存AXI接続の読書き・書込み同士の競合を、取込み時刻に基づく9目標で確認します。
+- **[AXI4-Liteの幅変換](examples/local-width-converter/README.md)**：64→32ビット、部分書込み、応答集約、途中リセットを2構成・各15目標で確認します。
+- **[アクセス保護](examples/local-access-control/README.md)**：PPROT、設定ロック、禁止読出しと書込みの無副作用を2構成・各14目標で確認します。
+- **[ECC付きメモリ](examples/local-ecc-memory/README.md)**：読出し修復、スクラビング、通常書込みとの競合を2構成・各11目標で確認します。
+- **[クロック停止とリセット](examples/local-clock-reset/README.md)**：排出・停止・再開、停止中の非同期リセットと同期解除を2構成・各10目標で確認します。
 
 ```sh
 python3 examples/local-ecc/run.py
@@ -110,7 +114,19 @@ python3 examples/local-dsp/run.py
 python3 examples/local-memory-order/run.py
 ```
 
-各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。2026-10-27に全45構成のsmoke／nightlyとシミュレーション・共通の確認テスト127件がローカルで成功しました。共通シミュレーションランナーの回帰JUnitは全構成合計でsmoke 317件、nightly 407件です。下記のGitLab例の50ジョブ・311／384件やランナー確認130件には含めません。GitLabのCI設定への追加・CI起動は行っていません。
+各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。2026-10-27に従来45構成のsmoke／nightlyとシミュレーション・共通の確認テスト127件がローカルで成功しました。今回の4例・8構成を含む共通シミュレーションランナーの計画は全53構成、回帰JUnitは全構成合計でsmoke 373件、nightly 479件です。今回追加分の実行結果は[7例の手順](examples/local-workflow-regression/README.md)を参照してください。下記のGitLab例の50ジョブ・311／384件やランナー確認130件には含めません。GitLabのCI設定への追加・CI起動は行っていません。
+
+### 失敗の縮小・カバレッジ収束・結合・UVMの7例
+
+[7例のローカル回帰](examples/local-workflow-regression/README.md)では、上記4回路に加え、[失敗した操作列の自動縮小](examples/local-failure-reduction/README.md)、[未達カバレッジからの刺激調整](examples/local-coverage-feedback/README.md)、[SystemVerilog UVM・RAL](examples/local-uvm/README.md)をまとめて実行します。縮小は同じチェッカーでの再現と単一操作削除の極小性を確認し、刺激調整は同じサイクル予算で固定分布のランダム検証と比較します。
+
+```sh
+python3 examples/local-workflow-regression/run.py --stage core
+python3 examples/local-uvm/setup_uvm.py --out /tmp/lsi-uvm-library
+python3 examples/local-workflow-regression/run.py --uvm-home /tmp/lsi-uvm-library/1800.2-2020.3.2
+```
+
+UVMにはVerilator 5.052、C++20ビルド環境、Accellera UVM 2020-3.2を使います。外部ライブラリはリポジトリへ取り込まず、明示的なセットアップで準備します。親JUnitは7件、子は83／111件で、上記4回路の56／72件も含みます。GitLabのCIへは追加しません。
 
 ### AHB／AXIのランダム・フォーマル検証
 
@@ -121,7 +137,7 @@ python3 examples/local-bus-formal/run.py --bus ahb
 python3 examples/local-bus-formal/run.py --bus axi
 ```
 
-フォーマルは各9タスク・全45件のJUnitで、シミュレーションの317／407件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。新しいシステム例の判定確認も含め、ローカルの確認テストは合計190件です。2026-10-27に各回帰と190テストが予定どおりの結果になることを確認しました。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
+フォーマルは各9タスク・全45件のJUnitで、シミュレーションの373／479件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。新しいシステム例の判定確認も含め、従来のローカル確認テストは190件で、今回の追加40件と合わせて230件の構成です。2026-10-27に各回帰と190テストが予定どおりの結果になることを確認しました。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
 
 ### AHB／AXIの追加検査をまとめて実行する
 
@@ -132,7 +148,7 @@ python3 examples/local-bus-validation/run.py
 python3 examples/local-bus-validation/run.py --profile nightly
 ```
 
-親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記18例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
+親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記22例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
 
 ### 結合・復旧・低電力・等価性まで進める
 

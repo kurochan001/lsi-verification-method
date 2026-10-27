@@ -1,6 +1,6 @@
 # ローカル専用の検証例を実行する
 
-[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
+[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
 
 ## 準備と実行
 
@@ -105,11 +105,11 @@ python3 -m unittest discover -s examples/local-memory-order/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、全ローカルの確認テストは190件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。今回の[7例](../local-workflow-regression/README.md)の40件を含む計画は230件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
-[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子回帰として呼ぶこともできます。フォーマル45件・本共通ランナー18例の317／407件とは、実行内容とJUnitの階層を分けて確認してください。
+[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子回帰として呼ぶこともできます。フォーマル45件・本共通ランナー22例の373／479件とは、実行内容とJUnitの階層を分けて確認してください。
 
 ```sh
 python3 examples/local-bus-validation/run.py
@@ -123,3 +123,17 @@ python3 -m unittest discover -s examples/local-bus-validation/tests -v
 ## C・cocotb・差分・完了期限
 
 [追加検証7例](../local-advanced-regression/README.md)は、上記3例に加え、Cドライバ・cocotb・シミュレーター差分と、進行条件を置く完了期限の証明を実行します。C等の3例は[別のホストランナー](../local-host-common/README.md)、完了期限は共通フォーマルランナーを使います。追加パッケージ、チェック単位、負の試験の注入先は各手順を参照してください。負の試験の件数は一律のRTL変異率ではありません。
+
+## 失敗の縮小・カバレッジ収束・保護・UVMへの追加
+
+[7例のローカル回帰](../local-workflow-regression/README.md)には、4つの新規回路（幅変換・アクセス保護・ECCメモリ・クロック停止とリセット）と、失敗の縮小・カバレッジによる刺激調整・UVMがあります。4回路は本共通ランナーを使い、残る例は[別の証跡補助コード](../local-exploration-common/README.md)を使います。
+
+```sh
+python3 examples/local-width-converter/run.py
+python3 examples/local-access-control/run.py
+python3 examples/local-ecc-memory/run.py
+python3 examples/local-clock-reset/run.py
+python3 examples/local-workflow-regression/run.py --stage core
+```
+
+本共通ランナーの現在の計画は22例・53構成、JUnit 373／479件です。従来18例・45構成の317／407件へ、4例・8構成の56／72件を加えた値です。確認テストは従来のシミュレーション・共通127件に4回路20件を加え147件で、探索・UVM等は別に数えます。元の18例の確認結果を、新規例の実行結果として流用しません。

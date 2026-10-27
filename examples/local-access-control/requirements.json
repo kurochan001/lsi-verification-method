@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ALLOW",
+      "goals": [
+        "access/public",
+        "access/config"
+      ]
+    },
+    {
+      "id": "DENY",
+      "goals": [
+        "deny/unprivileged",
+        "deny/nonsecure",
+        "deny/instruction",
+        "deny/unmapped",
+        "deny/write",
+        "deny/read"
+      ]
+    },
+    {
+      "id": "LOCK",
+      "goals": [
+        "lock/set",
+        "lock/cannot-unlock",
+        "lock/deny-write",
+        "reset/reconfigure"
+      ]
+    },
+    {
+      "id": "APB",
+      "goals": [
+        "apb/setup",
+        "apb/completed"
+      ]
+    }
+  ]
+}

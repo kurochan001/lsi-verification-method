@@ -2,7 +2,7 @@
 
 [一般化した検証手順](spec-to-verification-method.md)の9.7節を具体化した資料です。UVM（Universal Verification Methodology）は、SystemVerilogのクラスライブラリと共通の構成を使って、検証部品を再利用するための方法論です。APIの標準はIEEE 1800.2で、Accelleraが参照実装を提供しています。規格の版とライブラリのリリースは分けて固定します。[Accelleraの配布情報](https://www.accellera.org/downloads/standards/uvm)、[公式参照実装](https://github.com/accellera-official/uvm-core/blob/main/README.md)
 
-ここでは、UVMの構成を利用して要求・刺激・観測・判定・証跡をつなぐ運用を提案します。UVM自体が要求の抽出や要求カバレッジの承認を行うわけではありません。元のケーススタディはSystemVerilog言語規格の検証であり、UVM環境への適用実績ではありません。このリポジトリに実行可能なUVMテストベンチはまだありません。
+ここでは、UVMの構成を利用して要求・刺激・観測・判定・証跡をつなぐ運用を提案します。UVM自体が要求の抽出や要求カバレッジの承認を行うわけではありません。元のケーススタディはSystemVerilog言語規格の検証であり、UVM環境への適用実績ではありません。[APBを使うUVM・RALの実行例](../../examples/local-uvm/README.md)では、agent・monitor・独立したscoreboard・レジスタモデルを接続しています。Verilator 5.052とAccellera UVM 2020-3.2を使い、frontdoorの読書き、W1Cとイベント、リセット、変異の検出を確認できます。本文のUART記録例は引き続き説明用です。
 
 UARTの刺激・期待値・観測・競合を実行して確認する教材として、[UART単体例](../../examples/gitlab-uart/README.md)と[APB・UART・割込みの結合例](../../examples/gitlab-apb-uart/README.md)を追加しています。これらはPythonと手続き的なSystemVerilogテストベンチであり、本文のUVMエージェントやRALを実装したものではありません。
 
@@ -177,3 +177,9 @@ bindしたチェッカーの適用先、enable、クロック・リセット、a
 [フォーマル検証の手順](formal-verification.md)に従い、フォーマル検証のハーネスと仮定を、UVMの刺激・チェッカー・要求IDへ対応付けます。IP単体で仮定したバスや相手側のプロトコルは、接続先のassertやシミュレーションなどで統合時の成立を確認します。共有するSVAも、フロントエンド、初期状態、リセット、クロックのモデルの違いをレビューします。
 
 フォーマル検証の反例やcoverの到達トレースを、再現可能な直接テストや制約の調整へ戻します。到達トレースを得ただけではUVM回帰の合格やcovergroup DBのヒットに数えず、変換したテストを実行して必要なチェッカーと収集条件を確認します。証明済みの性質とシミュレーションで確認する統合シナリオを、それぞれの証跡へ結び付けます。
+
+## 13. APBで動かす最小のUVM・RAL例
+
+[実行手順](../../examples/local-uvm/README.md)から、既存APB RTLをUVMで検証できます。待ち0／2の各構成で9目標を要求し、通常のfrontdoor操作はauto prediction、ハードウェアイベントの更新は操作終了後の明示的なpredictionで扱います。独立したscoreboardと`mirror(UVM_CHECK)`による実読出しの照合を併用します。
+
+この教材はUVMの構成とRALの具体例です。SystemVerilogの制約付き`randomize()`、ネイティブcovergroup DB、本文のUARTエージェントや全項目を実装したものではありません。3種類のRTL変異と誤った期待値の診断、native UVM summary、終了状態・件数・VCDを照合します。ライブラリは外部へ準備し、使用版とソースハッシュを証跡へ保存します。

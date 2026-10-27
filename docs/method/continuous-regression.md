@@ -169,3 +169,7 @@ GitLabの利用枠が限られる場合は、[ローカル専用の共通ラン�
 - [GitLabのcompute minutes](https://docs.gitlab.com/ci/pipelines/compute_minutes/)、[instance runnerの使用量](https://docs.gitlab.com/ci/pipelines/instance_runner_compute_minutes/)、[料金](https://about.gitlab.com/pricing/)：2026-10-25に確認した費用・quotaの参照先です。採用時に再確認します。
 
 回帰の段階、マニフェストと結果の照合、判定・証跡・費用の評価方法は、本リポジトリで定めた運用案です。
+
+## ローカルで試す追加例
+
+[解析・収束・結合・UVMの7例](../../examples/local-workflow-regression/README.md)をローカルで追加実行できます。親7ゲートと子83／111件を分け、失敗の縮小、観測による刺激調整、4回路の結合検証、実UVMの結果を保存します。GitLabのCIへは追加しません。

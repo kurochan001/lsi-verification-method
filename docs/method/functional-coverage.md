@@ -231,3 +231,7 @@ flowchart TD
 - [Verilatorのカバレッジ説明](https://verilator.org/guide/latest/simulating.html#covergroup-coverage)、[対応言語](https://verilator.org/guide/latest/languages.html)、[集計ツール](https://verilator.org/guide/latest/exe_verilator_coverage.html)：covergroupの対応範囲、有効化、DBの集計の確認先です。使用する版で未対応・無視された構文がないか確認します。
 
 モデル、コレクター、記録例は本リポジトリで作成した運用案です。規格のコード例を転載したものではありません。
+
+## ローカルで試す追加例
+
+[観測カバレッジによる刺激調整例](../../examples/local-coverage-feedback/README.md)では、実RTLの到達ログから次の操作を選びます。固定分布との比較は同じサイクル予算で行い、失敗した実行の到達を加算しません。教材用の手続き的な目標集計で、ネイティブcovergroup DBの実行例とは区別します。

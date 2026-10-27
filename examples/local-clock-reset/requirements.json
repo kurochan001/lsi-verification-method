@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "FLOW",
+      "goals": [
+        "request/accepted",
+        "request/completed",
+        "stop/drain",
+        "stop/blocked-request",
+        "clock/stopped",
+        "clock/resumed"
+      ]
+    },
+    {
+      "id": "RESET",
+      "goals": [
+        "reset/assert-stopped",
+        "reset/held-until-clock",
+        "reset/released",
+        "reset/active"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "UVM-ACCESS",
+      "goals": [
+        "access/id",
+        "access/error",
+        "config/write",
+        "config/readback"
+      ]
+    },
+    {
+      "id": "UVM-PENDING",
+      "goals": [
+        "pending/event",
+        "pending/event-wins",
+        "pending/clear"
+      ]
+    },
+    {
+      "id": "UVM-RAL",
+      "goals": [
+        "ral/mirror",
+        "reset/mirror"
+      ]
+    }
+  ]
+}

@@ -136,3 +136,7 @@ flowchart TD
 - [YosysHQ MCYの方法論](https://yosyshq.readthedocs.io/projects/mcy/en/latest/methodology.html)：元の回路の合格、動作差・等価性、検証環境との不一致を扱う考え方の参照先です。
 
 変異の選定手順、分類・集計、記録形式は、このリポジトリで定めた運用案です。
+
+## ローカルで試す追加例
+
+[失敗の縮小例](../../examples/local-failure-reduction/README.md)では、変異の検出ラベルを維持して操作列を短くします。[新しい結合・UVMの例](../../examples/local-workflow-regression/README.md)でも予定ラベルと非ゼロ終了を要求し、誤った期待値の診断はRTL変異の検出率と分けて記録します。
