@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SEC-ACCESS",
+      "goals": [
+        "access/secure-read",
+        "access/nonsecure-denied",
+        "access/unknown",
+        "access/write-only-read",
+        "reject/denied-write"
+      ]
+    },
+    {
+      "id": "SEC-LIFECYCLE",
+      "goals": [
+        "lock/set",
+        "lock/sticky",
+        "debug/success",
+        "debug/wrong",
+        "debug/lockout"
+      ]
+    },
+    {
+      "id": "SEC-TAMPER",
+      "goals": [
+        "tamper/zeroize",
+        "tamper/observable",
+        "irq/w1c"
+      ]
+    },
+    {
+      "id": "SEC-RESET",
+      "goals": [
+        "reset/recovery",
+        "status/observable"
+      ]
+    }
+  ]
+}

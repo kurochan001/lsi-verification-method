@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "JTAG-TAP",
+      "goals": [
+        "reset/tlr",
+        "reset/recovery",
+        "ir/shift",
+        "ir/update",
+        "ir/back-to-back"
+      ]
+    },
+    {
+      "id": "JTAG-DR",
+      "goals": [
+        "idcode/read",
+        "bypass/read",
+        "sample/capture",
+        "extest/update",
+        "pin/drive"
+      ]
+    },
+    {
+      "id": "JTAG-TDO",
+      "goals": [
+        "pause/exit2",
+        "tdo/lsb-first"
+      ]
+    }
+  ]
+}

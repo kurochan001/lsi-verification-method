@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CDC-TRANSFER",
+      "goals": [
+        "handshake/single",
+        "handshake/backpressure",
+        "handshake/back-to-back",
+        "data/zero",
+        "data/ones",
+        "data/alternating"
+      ]
+    },
+    {
+      "id": "CDC-CLOCK",
+      "goals": [
+        "clock/profile0",
+        "clock/profile1",
+        "clock/profile2"
+      ]
+    },
+    {
+      "id": "CDC-RESET",
+      "goals": [
+        "handshake/reset-during-request",
+        "handshake/recovery",
+        "pulse/reset"
+      ]
+    },
+    {
+      "id": "CDC-PULSE",
+      "goals": [
+        "pulse/single",
+        "pulse/back-to-back"
+      ]
+    }
+  ]
+}

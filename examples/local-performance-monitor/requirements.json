@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PERF-LATENCY",
+      "goals": [
+        "request/single",
+        "request/back-to-back",
+        "latency/max"
+      ]
+    },
+    {
+      "id": "PERF-OUTSTANDING",
+      "goals": [
+        "outstanding/two",
+        "outstanding/full",
+        "response/out-of-order"
+      ]
+    },
+    {
+      "id": "PERF-WINDOW",
+      "goals": [
+        "window/start",
+        "window/stop",
+        "window/boundary",
+        "throughput/measured"
+      ]
+    },
+    {
+      "id": "PERF-ERROR",
+      "goals": [
+        "response/invalid",
+        "error/sticky",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

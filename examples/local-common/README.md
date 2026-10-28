@@ -1,6 +1,6 @@
 # ローカル専用の検証例を実行する
 
-[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先順位付き割込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
+[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先順位付き割込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
 
 ## 実行から構成別判定まで
 
@@ -45,6 +45,7 @@ python3 examples/local-system-regression/run.py --stage simulation
 python3 examples/local-axis/run.py
 python3 examples/local-dsp/run.py
 python3 examples/local-memory-order/run.py
+python3 examples/local-gap-regression/run.py --stage core
 ```
 
 各例は、境界値の通常検証、seedを固定したランダム検証、意図的な不具合・期待値の誤りを加えた4種類の負の試験を実行します。ECCは保証範囲外の診断2件も別枠で実行します。カバレッジはSystemVerilogのcovergroupではなく、テストベンチが出力する`COVER`ログを集計する簡易実装です。
@@ -109,6 +110,13 @@ python3 -m unittest discover -s examples/local-power/tests -v
 python3 -m unittest discover -s examples/local-axis/tests -v
 python3 -m unittest discover -s examples/local-dsp/tests -v
 python3 -m unittest discover -s examples/local-memory-order/tests -v
+python3 -m unittest discover -s examples/local-secure-lifecycle/tests -v
+python3 -m unittest discover -s examples/local-performance-monitor/tests -v
+python3 -m unittest discover -s examples/local-cdc-handshake/tests -v
+python3 -m unittest discover -s examples/local-jtag-tap/tests -v
+python3 -m unittest discover -s examples/local-address-map/tests -v
+python3 -m unittest discover -s examples/local-lockstep-monitor/tests -v
+python3 -m unittest discover -s examples/local-gap-regression/tests -v
 ```
 
 従来18例の内訳は、共通14、ECC 6、SPI 4、タイマー・ウォッチドッグ6、非同期FIFO 6、I²C 5、APB結合7、AHB 9、AXI 9、バスブリッジ9、AXI4 6、DMA 6、複数マスター6、非同期APBブリッジ5、復旧6、低電力5、Stream 6、DSP 6、同一領域の競合6の計127テストです。実RTLの検証に加え、ビルド失敗、タイムアウト、無関係な異常終了、完了記録不足、件数の誤り・重複、通常検証のカバー欠落、要求未達、カタログ重複、出力先保護を確認します。これらは既存GitLab例のランナー確認132テストや、GitLab回帰のJUnit件数とは別です。
@@ -121,11 +129,11 @@ python3 -m unittest discover -s examples/local-memory-order/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。[UVM等の7例](../local-workflow-regression/README.md)とレビュー時の追加44件を含む計画は234件でした。[今回の7例](../local-soc-regression/README.md)の追加時点で270件でした。SystemRDLと4集約ランナーのレビュー修正を確認する5件を加え、そこまでのローカル確認は275件です。今回の追加36件とレビュー追加5件を含む現在の計画は316件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。[UVM等の7例](../local-workflow-regression/README.md)とレビュー時の追加44件を含む計画は234件でした。[今回の7例](../local-soc-regression/README.md)の追加時点で270件でした。SystemRDLと4集約ランナーのレビュー修正を確認する5件を加え、そこまでのローカル確認は275件です。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の37件を含む現在の計画は353件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
-[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子回帰として呼ぶこともできます。フォーマル45件・本共通ランナー32例の513／659件とは、実行内容とJUnitの階層を分けて確認してください。
+[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子回帰として呼ぶこともできます。フォーマル45件・本共通ランナー38例の597／767件とは、実行内容とJUnitの階層を分けて確認してください。
 
 ```sh
 python3 examples/local-bus-validation/run.py
@@ -174,4 +182,16 @@ python3 examples/local-extension-regression/run.py --stage core
 python3 examples/local-extension-regression/run.py --stage core --profile nightly
 ```
 
-現在の共通シミュレーションは32例・73構成、JUnit513／659件です。シミュレーション・共通の確認テストは171＋35＝206件。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件で、全ローカル確認の計画は316件です。今回実行した範囲は新しい7例のsmoke／nightlyと確認41件です。
+現在の共通シミュレーションは38例・85構成、JUnit597／767件です。シミュレーション・共通の確認テストは171＋35＝206件。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。検証領域を補う6例の37件を含む全ローカル確認の計画は353件です。この7例を追加した時点の実行範囲は、同7例のsmoke／nightlyと確認41件です。
+
+
+## セキュリティ・性能・CDC・JTAG・アドレスマップ・ロックステップ
+
+[検証領域を補う6例](../local-gap-regression/README.md)も本共通ランナーを使います。各2構成・4変異で、12構成のJUnitはsmoke 84件／nightly 108件です。子の通常目標はセキュリティ15、性能13、CDC14、JTAG12、アドレスマップ13、ロックステップ12で、6例の確認テストは33件、親の4件を加えると37件です。
+
+```sh
+python3 examples/local-gap-regression/run.py --stage core
+python3 examples/local-gap-regression/run.py --stage core --profile nightly
+```
+
+現在の共通シミュレーションは38例・85構成、JUnit597／767件です。今回実行した範囲は6例のsmoke／nightlyと確認37件です。GitLabのCI設定への追加・CI起動は行っていません。

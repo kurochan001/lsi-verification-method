@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "MAP-DECODE",
+      "goals": [
+        "decode/ram",
+        "decode/timer",
+        "decode/gpio",
+        "decode/unmapped",
+        "decode/alias-check"
+      ]
+    },
+    {
+      "id": "MAP-BUS",
+      "goals": [
+        "bus/byte-strobe",
+        "bus/partial-reject",
+        "sideeffect/no-write"
+      ]
+    },
+    {
+      "id": "MAP-IRQ",
+      "goals": [
+        "irq/timer",
+        "irq/gpio",
+        "irq/w1c",
+        "irq/map"
+      ]
+    },
+    {
+      "id": "MAP-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

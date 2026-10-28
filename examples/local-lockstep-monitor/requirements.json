@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "LOCK-OP",
+      "goals": [
+        "op/add",
+        "op/xor",
+        "op/load",
+        "normal/no-false-error"
+      ]
+    },
+    {
+      "id": "LOCK-FAULT",
+      "goals": [
+        "fault/detected",
+        "fault/contained",
+        "fault/recovered",
+        "fault/persistent",
+        "output/frozen"
+      ]
+    },
+    {
+      "id": "LOCK-ERROR",
+      "goals": [
+        "illegal/detected",
+        "error/code",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

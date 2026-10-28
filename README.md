@@ -92,7 +92,7 @@ flowchart TD
 
 ## ローカル専用の実行例
 
-GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を32個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
+GitLabの利用枠を使わずに、共通ランナーで試せるシミュレーション例を38個用意しています。POSIX環境、Python 3.10以上、Icarus Verilogで動き、追加Pythonパッケージは不要です。[準備・実行・証跡の共通手順](examples/local-common/README.md)を参照してください。
 
 - **[ECCの故障注入](examples/local-ecc/README.md)**：8ビットデータのSECDED。全23,552パターンの0／1／2ビット誤り、97目標、4変異、3／4ビット誤りの限界を示す診断2件を実行します。
 - **[SPIのランダム検証](examples/local-spi/README.md)**：CPOL／CPHAの4モード×半周期2／4クロックの8構成。独立した予定時刻で送受信を照合し、各16目標と4変異、busy中start、転送中リセットを確認します。
@@ -131,6 +131,12 @@ GitLabの利用枠を使わずに、共通ランナーで試せるシミュレ�
 - **[パケットCRC](examples/local-packet-crc/README.md)**：独立した多項式除算と既知ベクトルで、CRCフィールドと受信値検査を2構成・各8目標で確認します。
 - **[64ビットカウンター](examples/local-counter-snapshot/README.md)**：32ビットAPBでのスナップショット、桁上がり、一括反映・IRQを2構成・各10目標で確認します。
 - **[MBIST・March C−](examples/local-mbist/README.md)**：ビットセルの故障モデル、10N操作、最初の失敗位置、再開を2構成・各9目標で確認します。
+- **[セキュリティ・ライフサイクル](examples/local-secure-lifecycle/README.md)**：セキュア属性、ロック、デバッグ鍵の試行制限、タンパー時の鍵消去、IRQのW1Cを2構成・各15目標で確認します。
+- **[性能モニター](examples/local-performance-monitor/README.md)**：タグ付き要求の未完了数、レイテンシ最大値、測定窓の完了数・経過サイクル、不正応答を2構成・各13目標で確認します。
+- **[CDCハンドシェイク](examples/local-cdc-handshake/README.md)**：複数ビットの4相req/ack、パルス同期、リセットの非同期アサート・同期デアサートを2構成・各14目標で確認します。
+- **[JTAG TAP](examples/local-jtag-tap/README.md)**：16状態のTAP、IR/DR、IDCODE、BYPASS、SAMPLE、EXTESTと8ビット境界走査を2構成・各12目標で確認します。
+- **[アドレスマップ](examples/local-address-map/README.md)**：RAM・タイマー・GPIOのデコード、別名、未割当、バイトストローブ、IRQ集約とW1Cを2構成・各13目標で確認します。
+- **[ロックステップ監視](examples/local-lockstep-monitor/README.md)**：2コア比較、1ビット故障注入、安全状態、復帰時の再同期、不正命令を2構成・各12目標で確認します。
 
 ```sh
 python3 examples/local-ecc/run.py
@@ -147,9 +153,10 @@ python3 examples/local-system-regression/run.py --stage simulation
 python3 examples/local-axis/run.py
 python3 examples/local-dsp/run.py
 python3 examples/local-memory-order/run.py
+python3 examples/local-gap-regression/run.py --stage core
 ```
 
-各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。共通シミュレーションランナーの現在の計画は32例・73構成、回帰JUnitはsmoke 513件・nightly 659件です。今回の6回路・12構成の84／108件も含みます。同じ回路を各集約ランナーから呼ぶ結果は重複集計しません。実行範囲と結果は各手順と[由来の記録](PROVENANCE.md)へ残します。GitLab例の50ジョブ・311／384件やランナー確認132件とは別集計です。GitLabのCI設定への追加・CI起動は行っていません。
+各例はRTL、独立した期待値、要求カタログ、変異検出、JUnit・ログ・VCDの保存を備えています。共通シミュレーションランナーの現在の計画は38例・85構成、回帰JUnitはsmoke 597件・nightly 767件です。今回追加した6例・12構成の84／108件も含みます。同じ回路を各集約ランナーから呼ぶ結果は重複集計しません。実行範囲と結果は各手順と[由来の記録](PROVENANCE.md)へ残します。GitLab例の50ジョブ・311／384件やランナー確認132件とは別集計です。GitLabのCI設定への追加・CI起動は行っていません。
 
 ### 失敗の縮小・カバレッジ収束・結合・UVMの7例
 
@@ -171,7 +178,7 @@ UVMにはVerilator 5.052、C++20ビルド環境、Accellera UVM 2020-3.2を使�
 python3 examples/local-soc-regression/run.py --stage core
 ```
 
-全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件とレビュー追加5件を含む現在の計画は448件（ローカル316件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
+全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の37件を含む現在の計画は485件（ローカル353件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
 
 ### RAL接続・順序制御・DMA・CRC・時刻・MBISTの7例
 
@@ -183,6 +190,17 @@ python3 examples/local-extension-regression/run.py --stage core
 
 全7例のsmoke／nightlyが成功し、親JUnitは各7件、子は99／127件です。追加時の確認36件に、レビューでの再発防止5件を加えた41件も成功しました。生成RALには外部UVMとSystemRDL環境を使い、残る6例はPythonとIcarusで実行します。各例の前提・対応範囲・図表を手順へ記載しています。
 
+### 検証領域の抜けを補う6例
+
+[6例の集約手順](examples/local-gap-regression/README.md)から、セキュリティ・ライフサイクル、性能モニター、CDCハンドシェイク、JTAG TAP、アドレスマップ、ロックステップ監視をまとめて実行できます。検証領域の点検で挙がった権限・デバッグ、性能と測定窓、複数ビットCDCとリセット同期、DFTアクセス、アドレスデコードとIRQ集約、比較・封じ込め・復帰を、独立した期待値と変異検出で確認します。
+
+```sh
+python3 examples/local-gap-regression/run.py --stage core --out artifacts/gap-smoke
+python3 examples/local-gap-regression/run.py --stage core --profile nightly --out artifacts/gap-nightly
+```
+
+6例・12構成の子JUnitはsmoke 84件／nightly 108件、親は6ゲートです。各例2構成・各4変異で、通常目標はセキュリティ15、性能13、CDC14、JTAG12、アドレスマップ13、ロックステップ12です。新しい確認テストは37件です。GitLabのCIへは追加していません。
+
 ### AHB／AXIのランダム・フォーマル検証
 
 AHBのランダム刺激にはINCR4・BUSYと転送中リセット、AXIには長めの応答待ちと片側要求・保留応答のリセットを追加しました。[フォーマル検証例](examples/local-bus-formal/README.md)では、同じRTLの5構成に対し、安全性の非有界証明、深さ12のデータBMC、到達性、各4変異と過剰な仮定の診断を実行します。Yosys・SBY・Z3用の一時仮想環境はリンク先の手順で用意します。
@@ -192,7 +210,7 @@ python3 examples/local-bus-formal/run.py --bus ahb
 python3 examples/local-bus-formal/run.py --bus axi
 ```
 
-フォーマルは各9タスク・全45件のJUnitで、シミュレーションの513／659件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件とレビュー追加5件を含む、現在のローカル確認テストの計画は316件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
+フォーマルは各9タスク・全45件のJUnitで、シミュレーションの597／767件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件とレビュー追加5件を含む、現在のローカル確認テストの計画は353件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
 
 ### AHB／AXIの追加検査をまとめて実行する
 
@@ -203,7 +221,7 @@ python3 examples/local-bus-validation/run.py
 python3 examples/local-bus-validation/run.py --profile nightly
 ```
 
-親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記32例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
+親JUnitは64件で、子のブリッジ28／36件とAXI4 7／9件は別ファイルです。子は上記38例にも含まれるため、同じ検証として重複集計しません。AHB／AXI-Liteの45タスクは元の回路に限定されます。AXI4には下記の別計画を用意しています。
 
 ### 結合・復旧・低電力・等価性まで進める
 
@@ -278,7 +296,8 @@ examples/local-i2c/             I²CのACK・NACK・Repeated START・ストレ�
 examples/local-apb-timer/       APBからタイマー・ウォッチドッグ・IRQまでの結合検証
 examples/local-ahb/             AHB-Liteのパイプライン・バイトレーン・ERROR応答の検証
 examples/local-axi/             AXI4-Liteの独立チャネル・WSTRB・応答保持の検証
-examples/local-common/          ローカル32例の共通ランナーと異常系の確認
+examples/local-common/          ローカル38例の共通ランナーと異常系の確認
+examples/local-gap-regression/  セキュリティ・性能・CDC・JTAG・アドレス・ロックステップの集約
 examples/local-soc-regression/  UVMランダム化・仕様生成・反例再現・4回路の集約
 examples/local-bus-formal/      AHB・AXIの安全性証明・有界データ・到達性と感度確認
 .gitlab-ci.yml                 GitLabへ置いた場合のCI設定の入口
