@@ -15,7 +15,7 @@ module address_map_tb;
         .pready(pready), .pslverr(pslverr), .irq(irq), .gpio_out(gpio_out));
     always #5 clk = ~clk;
     integer fd, n, checks=0;
-    reg [63:0] v[0:10];
+    reg [63:0] v[0:11];
     reg recovering=0;
     string vectors, wave;
     task fail(input string label);
@@ -27,15 +27,16 @@ module address_map_tb;
         fd = $fopen(vectors, "r"); if (!fd) $fatal(1, "vectors missing");
         repeat (2) @(negedge clk);
         while (!$feof(fd)) begin
-            n = $fscanf(fd, "%h %h %h %h %h %h %h %h %h %h %h\n",
-                v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10]);
-            if (n != 11) $fatal(1, "bad row");
+            n = $fscanf(fd, "%h %h %h %h %h %h %h %h %h %h %h %h\n",
+                v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11]);
+            if (n != 12) $fatal(1, "bad row");
             rst_n = v[0][0]; psel = v[1][0]; pwrite = v[2][0]; paddr = v[3][11:0];
             pwdata = v[4][31:0]; pstrb = v[5][3:0]; gpio_in = v[6][3:0];
             #1;
             if (pslverr !== v[8][0]) fail("MAP_DECODE");
             if (prdata !== v[7][31:0]) fail("MAP_DATA");
             if (irq !== v[10][1:0]) fail("MAP_IRQ");
+            if (gpio_out !== v[11][3:0]) fail("MAP_GPIO");
             if (pready !== v[9][0]) fail("MAP_DECODE");
             if (!rst_n) begin
                 recovering = 1;

@@ -203,6 +203,10 @@ def vectors(seed, iterations, parameters, boundary=False):
     p.fixed()
     if not boundary:
         p.random(random.Random(seed), iterations)
+    # Observe all readable state after the final randomized access/event.
+    for addr in sorted(KNOWN):
+        p.step(cs=1, re=1, addr=addr, secure=1)
+    p.step()
     return p.rows
 
 

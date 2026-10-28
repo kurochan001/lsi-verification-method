@@ -134,7 +134,7 @@ GitLabの利用枠を使わずに、共通ランナーで試せるシミュレ�
 - **[セキュリティ・ライフサイクル](examples/local-secure-lifecycle/README.md)**：セキュア属性、ロック、デバッグ鍵の試行制限、タンパー時の鍵消去、IRQのW1Cを2構成・各15目標で確認します。
 - **[性能モニター](examples/local-performance-monitor/README.md)**：タグ付き要求の未完了数、レイテンシ最大値、測定窓の完了数・経過サイクル、不正応答を2構成・各13目標で確認します。
 - **[CDCハンドシェイク](examples/local-cdc-handshake/README.md)**：複数ビットの4相req/ack、パルス同期、リセットの非同期アサート・同期デアサートを2構成・各14目標で確認します。
-- **[JTAG TAP](examples/local-jtag-tap/README.md)**：16状態のTAP、IR/DR、IDCODE、BYPASS、SAMPLE、EXTESTと8ビット境界走査を2構成・各12目標で確認します。
+- **[JTAG TAP](examples/local-jtag-tap/README.md)**：16状態のTAP、IR/DR、IDCODE、BYPASS、SAMPLE/PRELOAD、EXTESTと8ビット境界走査を2構成・各14目標で確認します。
 - **[アドレスマップ](examples/local-address-map/README.md)**：RAM・タイマー・GPIOのデコード、別名、未割当、バイトストローブ、IRQ集約とW1Cを2構成・各13目標で確認します。
 - **[ロックステップ監視](examples/local-lockstep-monitor/README.md)**：2コア比較、1ビット故障注入、安全状態、復帰時の再同期、不正命令を2構成・各12目標で確認します。
 
@@ -178,7 +178,7 @@ UVMにはVerilator 5.052、C++20ビルド環境、Accellera UVM 2020-3.2を使�
 python3 examples/local-soc-regression/run.py --stage core
 ```
 
-全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の37件を含む現在の計画は485件（ローカル353件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
+全7例の実行にはUVM・SystemRDL・フォーマル環境を準備します。2026-10-27のレビュー修正後にsmoke／nightlyが成功し、親JUnitは各7件・子114／138件です。同7例の確認テストは38件で、レビュー時の全407件が成功しました。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の49件を含む現在の計画は497件（ローカル365件＋GitLab例132件）です。この7例内のレジスタ生成は構造・属性の照合です。実際のfrontdoor接続は次項の追加例で扱います。キャッシュ例は1ワードのラインと直列要求を扱う教材です。各例の対象範囲を手順書に明記しています。
 
 ### RAL接続・順序制御・DMA・CRC・時刻・MBISTの7例
 
@@ -199,7 +199,7 @@ python3 examples/local-gap-regression/run.py --stage core --out artifacts/gap-sm
 python3 examples/local-gap-regression/run.py --stage core --profile nightly --out artifacts/gap-nightly
 ```
 
-6例・12構成の子JUnitはsmoke 84件／nightly 108件、親は6ゲートです。各例2構成・各4変異で、通常目標はセキュリティ15、性能13、CDC14、JTAG12、アドレスマップ13、ロックステップ12です。新しい確認テストは37件です。GitLabのCIへは追加していません。
+6例・12構成の子JUnitはsmoke 84件／nightly 108件、親は6ゲートです。各例2構成・各4変異で、通常目標はセキュリティ15、性能13、CDC15、JTAG14、アドレスマップ13、ロックステップ12です。新しい確認テストは49件です。GitLabのCIへは追加していません。
 
 ### AHB／AXIのランダム・フォーマル検証
 
@@ -210,7 +210,7 @@ python3 examples/local-bus-formal/run.py --bus ahb
 python3 examples/local-bus-formal/run.py --bus axi
 ```
 
-フォーマルは各9タスク・全45件のJUnitで、シミュレーションの597／767件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件とレビュー追加5件を含む、現在のローカル確認テストの計画は353件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
+フォーマルは各9タスク・全45件のJUnitで、シミュレーションの597／767件へ合算しません。通常モデルの到達目標はAHB 8×3構成＋AXI 12×2構成の計48件です。フォーマルの判定テストは12件です。前回の全体レビューではローカル確認テスト234件が成功しました。その後の追加・レビュー修正と今回の36件とレビュー追加5件を含む、現在のローカル確認テストの計画は365件です。証明と有界検査の範囲を区別し、仮定・ソース・証跡を保存します。GitLabへは追加していません。
 
 ### AHB／AXIの追加検査をまとめて実行する
 

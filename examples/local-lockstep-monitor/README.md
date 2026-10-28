@@ -34,10 +34,37 @@ flowchart LR
 
 - 2つのコアは同じ`op`と`operand`を受け、8ビットのアキュムレータを持ちます。
 - `fault_inject=1`のとき、コア1の次値の`FAULT_BIT`を反転します。比較で不一致なら`error=1`、`safe=1`、`error_code=1`、`result=0`にします。
-- `safe=1`の間は新しい操作を受け付けません。`done`は操作を受理したサイクルだけ1です。
+- `safe=1`の間は新しい操作を受け付けません。`done`は操作を受理したエッジ直後の1サイクルだけ1です。
 - `recover=1`かつ`error=1`なら、コア1をコア0へ再同期し、`error`・`safe`・`error_code`をクリアします。同じサイクルに操作があっても復帰を優先します。
 - 不正命令は比較前の監視で検出し、`error_code=2`にします。コアの状態は更新しません。
 - `FAULT_BIT`は構成パラメーターで、0と7を切り替えます。
+
+## 不一致をコミットせず、最後の正常値から復帰する
+
+不一致が出た演算の次値は、両コアともアキュムレータへ反映しません。最後の正常値を維持し、復帰時にコア1をコア0へ合わせます。
+
+```mermaid
+stateDiagram-v2
+  accTitle: ロックステップの正常動作・安全状態・復帰
+  accDescr: 不一致または不正命令で出力を0へ固定し、復帰エッジでは操作を実行せず最後の正常値へ戻す。
+  direction LR
+  [*] --> Normal: リセット
+  state "正常状態" as Normal
+  state "安全状態：result=0" as Safe
+  Normal --> Normal: 一致
+  Normal --> Safe: 異常検出
+  Safe --> Safe: 操作を無視
+  Safe --> Normal: recover
+```
+
+| 入力・時点 | 保持するアキュムレータ | result | error／safe／code | done |
+| --- | --- | --- | --- | --- |
+| 正常値0xAAから、ADD 1へ故障注入 | 0xAAを維持 | 0 | 1／1／1 | 1 |
+| 安全状態でLOADを提示 | 0xAAを維持 | 0 | 1／1／1 | 0 |
+| recoverと操作を同時に提示 | 0xAAへ再同期し、操作は未実行 | 0xAA | 0／0／0 | 0 |
+| その後の正常なADD 1 | 0xABへ更新 | 0xAB | 0／0／0 | 1 |
+
+表は各エッジ後の値です。error_codeを全サイクルで照合し、recoverの提示ではなく復帰後の状態を確認して目標を加算します。最終操作後にも観測サイクルを置き、最後の結果・done・エラーを比較します。
 
 ## 独立した期待値と構成
 
@@ -69,10 +96,12 @@ python3 examples/local-lockstep-monitor/run.py --profile nightly --out artifacts
 python3 -m unittest discover -s examples/local-lockstep-monitor/tests -v
 ```
 
-smokeは120操作×1 seed、nightlyは600操作×3 seedを固定シナリオへ加えます。各構成7／9件、全体14／18件のJUnitで、確認テストは5件です。
+smokeは120操作×1 seed、nightlyは600操作×3 seedを固定シナリオへ加えます。各構成7／9件、全体14／18件のJUnitで、確認テストは7件です。
 
 ## 確認範囲
 
 2026-10-28にPython 3.14.7、Icarus Verilog 14.0開発版で両構成のsmoke／nightly、12目標、4変異、確認5件が成功しました。
+
+2026-10-29のレビュー修正後も両構成のsmoke／nightlyが成功し、確認テストは7件です。再発防止ケースと図表を追加し、実行したソースハッシュを現行ファイルと照合しています。
 
 この教材は8ビットの演算コアと1ビットの故障注入によるデジタルな監視動作です。実CPUのロックステップ、遅延・クロック・電源の故障、共通原因故障、故障注入の物理的な実現、安全度水準、診断網羅率、ISO 26262などの認証を保証しません。`recover`は教材の再同期操作で、製品の安全復帰手順そのものではありません。

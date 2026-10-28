@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "JTAG-TAP",
@@ -19,7 +19,9 @@
         "bypass/read",
         "sample/capture",
         "extest/update",
-        "pin/drive"
+        "pin/drive",
+        "preload/update",
+        "preload/drive"
       ]
     },
     {

@@ -14,7 +14,7 @@ module lockstep_monitor_tb;
     always #5 clk = ~clk;
     integer fd, n, checks=0;
     reg [63:0] v[0:10];
-    reg recovering=0, recovered_once=0;
+    reg recovering=0, recovered_once=0, pending_recovery=0;
     reg [1:0] prev_op=0;
     string vectors, wave;
     task fail(input string label);
@@ -37,8 +37,9 @@ module lockstep_monitor_tb;
             if (safe !== v[8][0]) fail("LOCKSTEP_CONTAIN");
             if (result !== v[6][7:0]) fail("LOCKSTEP_RESULT");
             if (done !== v[10][0]) fail("LOCKSTEP_RESULT");
+            if (error_code !== v[9][1:0]) fail("LOCKSTEP_CODE");
             if (!rst_n) begin
-                recovering = 1; recovered_once = 0;
+                recovering = 1; recovered_once = 0; pending_recovery=0;
             end else begin
                 if (op_valid && !safe) begin
                     if (op == 2'b00) $display("COVER op/add");
@@ -50,17 +51,18 @@ module lockstep_monitor_tb;
                 if (error && error_code != 0) $display("COVER error/code");
                 if (safe && result == 0) begin
                     $display("COVER fault/contained");
-                    $display("COVER output/frozen");
+                    if (op_valid && !recover) $display("COVER output/frozen");
                 end
-                if (recover && error) begin
+                if (pending_recovery && !error && !safe) begin
                     $display("COVER fault/recovered"); recovered_once = 1;
                 end
-                if (recovered_once && error && error_code == 1) $display("COVER fault/persistent");
+                if (recovered_once && error && error_code == 1 && done) $display("COVER fault/persistent");
                 if (done && !error) begin
                     $display("COVER normal/no-false-error");
                     if (recovering) begin $display("COVER reset/recovery"); recovering = 0; end
                 end
             end
+            pending_recovery = rst_n && recover && error;
             prev_op = op;
             checks = checks + 1;
             @(posedge clk); #1;

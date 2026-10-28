@@ -20,7 +20,9 @@ module perf_monitor_tb;
     reg [63:0] v[0:14];
     reg prev_accept=0, recovering=0;
     reg [7:0] prev_total_max=0;
-    reg [15:0] oldest_time;
+    integer oldest_time, accept_serial=0;
+    integer accept_order[0:3];
+    reg pending_tag[0:3];
     reg [1:0] oldest_tag;
     reg found;
     string vectors, wave;
@@ -44,7 +46,8 @@ module perf_monitor_tb;
             if (error !== v[14][0]) fail("PERF_ERROR");
             if (total_max !== v[9][7:0]) fail("PERF_LATENCY");
             if (!rst_n) begin
-                recovering = 1; prev_total_max = 0;
+                recovering = 1; prev_total_max = 0; accept_serial = 0;
+                for (i=0; i<4; i=i+1) begin pending_tag[i]=0; accept_order[i]=0; end
             end else begin
                 if (req_valid && req_ready) begin
                     $display("COVER request/single");
@@ -53,21 +56,25 @@ module perf_monitor_tb;
                 end
                 if (active_count >= 2) $display("COVER outstanding/two");
                 if (active_count == SLOTS) $display("COVER outstanding/full");
-                found = 0; oldest_time = 16'hffff; oldest_tag = 0;
+                found = 0; oldest_time = 0; oldest_tag = 0;
                 for (i = 0; i < SLOTS; i = i + 1) begin
-                    if (dut.outstanding[i] && (!found || dut.start_time[i] < oldest_time)) begin
-                        found = 1; oldest_time = dut.start_time[i]; oldest_tag = i;
+                    if (pending_tag[i] && (!found || accept_order[i] < oldest_time)) begin
+                        found = 1; oldest_time = accept_order[i]; oldest_tag = i;
                     end
                 end
-                if (resp_valid && dut.outstanding[resp_tag]) begin
+                if (resp_valid && resp_tag < SLOTS && pending_tag[resp_tag]) begin
                     if (found && active_count > 1 && resp_tag != oldest_tag) $display("COVER response/out-of-order");
                 end else if (resp_valid) $display("COVER response/invalid");
                 if (start) $display("COVER window/start");
                 if (stop) $display("COVER window/stop");
-                if ((start || stop) && resp_valid && dut.outstanding[resp_tag]) $display("COVER window/boundary");
+                if ((start || stop) && resp_valid && resp_tag < SLOTS && pending_tag[resp_tag]) $display("COVER window/boundary");
                 if (window_cycles > 0 && window_done > 0) $display("COVER throughput/measured");
                 if (total_max > prev_total_max) $display("COVER latency/max");
                 if (error) $display("COVER error/sticky");
+                if (resp_valid && resp_tag < SLOTS) pending_tag[resp_tag]=0;
+                if (req_valid && req_ready) begin
+                    pending_tag[req_tag]=1; accept_order[req_tag]=accept_serial; accept_serial=accept_serial+1;
+                end
             end
             prev_accept = req_valid && req_ready;
             prev_total_max = total_max;

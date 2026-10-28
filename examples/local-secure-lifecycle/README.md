@@ -9,7 +9,7 @@ flowchart LR
   accTitle: セキュリティ・ライフサイクルの判定
   accDescr: バス属性とライフサイクルで読み書きを許可し、失敗試行とタンパーで状態を更新する。
   B["バス：addr・we・re・secure"] --> P["デコードと権限判定"]
-  L["ライフサイクル<br/>TEST/LOCKED/RMA"] --> P
+  L["ライフサイクル<br/>TEST=0／その他=1〜3"] --> P
   P --> R["KEY・CFG・STATUS<br/>SCRATCH・IRQ・LOCK・DEBUG"]
   D["デバッグ鍵"] --> A["試行回数・ロックアウト"]
   T["tamper"] --> Z["鍵を消去・状態を記録"]
@@ -26,17 +26,43 @@ flowchart LR
 | 0x00 / 0x04 | KEY0 / KEY1 | 可 | `secure`、TEST、未ロック、非タンパー |
 | 0x08 | CFG | 可 | 同上 |
 | 0x0C | STATUS | 可 | 書込みはエラー |
-| 0x10 | SCRATCH | 可（非セキュアも可） | 常に可 |
+| 0x10 | SCRATCH | 可（非セキュアも可） | タンパー入力が0なら可 |
 | 0x14 | IRQ | 可 | `secure`、ビットごとのW1C |
-| 0x18 | LOCK | 0を返す | `secure`、TEST、未ロック、`wdata[0]=1` |
-| 0x1C | DEBUG | 0を返す | `secure`、TEST、未ロック、試行制限内 |
+| 0x18 | LOCK | 0を返す | `secure`、TEST、未ロック、`wdata[0]=1`でロックを設定 |
+| 0x1C | DEBUG | 0を返す | `secure`、TEST、未ロック、非タンパー、試行制限内、認証未成立 |
 
 - `secure=0`でセキュアレジスタを読書きするとエラーになり、値は変わりません。
 - `LOCK`の書込みは一度だけ有効で、以後のKEY・CFG・LOCK・DEBUG書込みは拒否されます。
-- `DEBUG`へ正しい鍵を書くと`debug_unlocked=1`になります。誤りは試行回数を増やし、上限で`debug_lockout=1`とIRQ[1]を立てます。
-- `tamper=1`のサイクルでKEY0/KEY1を0にし、`tamper_latched=1`とIRQ[0]を立てます。タンパー中の書込みは拒否します。
+- `DEBUG`アクセス時の専用入力`debug_key`へ正しい鍵を提示すると`debug_unlocked=1`になります。誤りは試行回数を増やし、上限で`debug_lockout=1`とIRQ[1]を立てます。
+- `tamper=1`のクロック立上りでKEY0/KEY1を0にし、`tamper_latched=1`とIRQ[0]を立てます。タンパー中の書込みは拒否します。
 - STATUSは`[0]=locked`、`[1]=unlocked`、`[2]=tamper`、`[3]=lockout`、`[7:4]=attempts`です。
 - 未定義アドレス、未整列アクセス、読出し専用レジスタへの書込みはエラーです。
+
+## タンパー・ロック・認証履歴を分ける
+
+図はリセット解除中の優先関係です。`lifecycle`は外部から与える2ビットの入力で、0だけをTESTとして扱います。1〜3の区別や不可逆なライフサイクル遷移は実装していません。`debug_unlocked`はSTATUSで読む認証成功履歴です。実デバッグポートの認可出力ではなく、LOCKやタンパー後も履歴は残ります。
+
+```mermaid
+flowchart TD
+  accTitle: タンパーとバス書込みの優先関係
+  accDescr: タンパー入力があれば鍵消去を優先する。それ以外の書込みはレジスタごとの権限と状態で判定する。
+  E["クロック立上り"] --> T{"tamper=1？"}
+  T -->|はい| Z["KEY0・KEY1を消去<br/>tamper履歴をセット<br/>IRQ0をセット"]
+  T -->|いいえ| W{"バス書込みあり？"}
+  W -->|なし| H["状態を保持"]
+  W -->|あり| P{"番地・属性・状態の条件を満たす？"}
+  P -->|いいえ| R["エラー応答・書込みなし"]
+  P -->|はい| C["対象レジスタを更新"]
+```
+
+| 状態・入力 | KEY・CFG・LOCK・DEBUGの書込み | SCRATCHの書込み | IRQのW1C |
+| --- | --- | --- | --- |
+| TEST・未ロック・タンパー履歴なし | セキュア属性など各レジスタの条件で許可 | 非セキュアも許可 | セキュアなら許可 |
+| LOCK設定後、または非TEST | 拒否 | 許可 | セキュアなら許可 |
+| タンパー履歴あり・現在の入力は0 | 拒否 | 許可 | セキュアなら許可 |
+| 現在のtamper=1 | 拒否し、鍵消去を優先 | 拒否 | 拒否し、IRQ0をセット |
+
+DEBUGは認証成立後またはロックアウト後も拒否します。LOCKへ0を書いた場合は、許可条件内なら受理しますがロックを解除しません。IRQ ACKは履歴やロックアウトを消さず、リセットがこれらを初期化します。
 
 ## 独立した期待値と構成
 
@@ -68,10 +94,12 @@ python3 examples/local-secure-lifecycle/run.py --profile nightly --out artifacts
 python3 -m unittest discover -s examples/local-secure-lifecycle/tests -v
 ```
 
-smokeは120操作×1 seed、nightlyは600操作×3 seedを固定シナリオへ加えます。各構成7／9件、全体14／18件のJUnitで、確認テストは5件です。
+smokeは120操作×1 seed、nightlyは600操作×3 seedを固定シナリオへ加えます。各構成7／9件、全体14／18件のJUnitで、確認テストは6件です。
 
 ## 確認範囲
 
 2026-10-28にPython 3.14.7、Icarus Verilog 14.0開発版で両構成のsmoke／nightly、15目標、4変異、確認5件が成功しました。
+
+2026-10-29のレビュー修正後も両構成のsmoke／nightlyが成功し、確認テストは6件です。再発防止ケースと図表を追加し、実行したソースハッシュを現行ファイルと照合しています。
 
 この教材はデジタルな権限判定と状態遷移の確認です。鍵の真正性、暗号処理、サイドチャネル、物理的なタンパー検出、セキュアブート、実OTP、ライフサイクル制御の量産手順、UPFによる電源・リセット分離は対象外です。STATUSと鍵スロットの読出しは試験用の可視化で、製品の秘密情報保護を表しません。

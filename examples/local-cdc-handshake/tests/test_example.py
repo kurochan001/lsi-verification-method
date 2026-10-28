@@ -2,14 +2,14 @@ from pathlib import Path
 import sys, unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'local-common'))
 from system_test_support import SystemContract
-from local_test_support import load_example
+from local_test_support import load_example, simulate_vectors
 
 P = load_example('local-cdc-handshake')
 
 
 class ExampleTests(SystemContract, unittest.TestCase):
     EXAMPLE = 'local-cdc-handshake'
-    GOALS = 14
+    GOALS = 15
 
     def test_data_and_pulse_reach_destination(self):
         p = P.Plan(2)
@@ -40,6 +40,27 @@ class ExampleTests(SystemContract, unittest.TestCase):
         after = [row for row in p.rows if row[2] and row[12] == 0]
         self.assertTrue(after)
         self.assertEqual(p.rows[-1][12], 1)
+
+
+    def test_one_pulse_is_not_credited_as_back_to_back(self):
+        for parameters in P.CONFIGS.values():
+            p=P.Plan(parameters['SYNC_STAGES']);p.reset_ticks();p.pulse()
+            for _ in range(120):p.step(dready=1)
+            result=simulate_vectors(P,p.rows,parameters)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            self.assertEqual(result.stdout.count('COVER pulse/single'),1)
+            self.assertNotIn('COVER pulse/back-to-back',result.stdout)
+
+    def test_transport_queue_catches_an_error_shared_by_rtl_and_cycle_model(self):
+        p=P.Plan(2);p.reset_ticks();p.send(0x55);p.send(0xaa)
+        for _ in range(120):p.step(dready=1)
+        rows=[list(row) for row in p.rows]
+        for row in rows:
+            if row[9]:row[10]^=1
+        result=simulate_vectors(P,rows,{'SYNC_STAGES':2},replacements={'cdc_handshake.sv':[
+            ("assign dst_data = MUTATION == 1 ? (data_reg ^ 8'h01) : data_reg;","assign dst_data = data_reg ^ 8'h01;")]})
+        self.assertNotEqual(result.returncode,0,result.stdout)
+        self.assertIn('CHECK_FAIL CDC_QUEUE',result.stdout)
 
 
 if __name__ == '__main__':

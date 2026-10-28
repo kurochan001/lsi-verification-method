@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module jtag_tap_tb;
-    parameter IDCODE=32'h12345678, MUTATION=0;
+    parameter IDCODE=32'h12345679, MUTATION=0;
     reg tck=0, tms=0, tdi=0, trst_n=1;
     reg [7:0] pin_in=0;
     wire tdo;
@@ -11,7 +11,7 @@ module jtag_tap_tb;
     integer fd, n, checks=0, last_ir_update=-1000;
     integer shift_dr=0, shift_ir=0;
     reg [63:0] v[0:8];
-    reg prev_tck=0, recovering=0;
+    reg prev_tck=0, recovering=0, preloaded=0;
     reg [3:0] prev_state=0;
     string vectors, wave;
     task fail(input string label);
@@ -32,7 +32,7 @@ module jtag_tap_tb;
             if (tdo !== v[5][0]) fail("JTAG_TDO");
             if (pin_out !== v[6][7:0]) fail("JTAG_BOUNDARY");
             if (!trst_n) begin
-                recovering = 1; shift_dr = 0; shift_ir = 0;
+                recovering = 1; shift_dr = 0; shift_ir = 0; preloaded=0;
                 $display("COVER reset/tlr");
             end else begin
                 if (prev_state == 0 && dut.state == 1 && recovering) begin
@@ -48,18 +48,22 @@ module jtag_tap_tb;
                     if (prev_state == 4) begin
                         shift_dr = shift_dr + 1; $display("COVER tdo/lsb-first");
                         if (dut.ir == 4'b0001 && shift_dr >= 32) $display("COVER idcode/read");
-                        if (dut.ir == 4'b1111 && shift_dr >= 1) $display("COVER bypass/read");
+                        if (dut.ir != 4'b0001 && dut.ir != 4'b0010 && dut.ir != 4'b0011 && shift_dr >= 1) $display("COVER bypass/read");
                     end
                     if (prev_state == 3 && dut.ir == 4'b0010) $display("COVER sample/capture");
-                    if (prev_state == 15) begin
+                end
+                if (!tck && prev_tck) begin
+                    if (dut.state == 15) begin
                         $display("COVER ir/update");
                         if (checks - last_ir_update < 200) $display("COVER ir/back-to-back");
                         last_ir_update = checks;
                     end
-                    if (prev_state == 8 && dut.ir == 4'b0011) begin
+                    if (dut.state == 8 && dut.ir == 4'b0011) begin
                         $display("COVER extest/update");
                         if (pin_out == dut.bsr) $display("COVER pin/drive");
                     end
+                    if (dut.state == 8 && dut.ir == 4'b0010) begin $display("COVER preload/update"); preloaded=1; end
+                    if (dut.state == 15 && dut.ir == 4'b0011 && preloaded && pin_out == dut.bsr_update) begin $display("COVER preload/drive"); preloaded=0; end
                 end
                 if (dut.state == 6 || dut.state == 7 || dut.state == 13 || dut.state == 14)
                     $display("COVER pause/exit2");

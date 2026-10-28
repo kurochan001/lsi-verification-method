@@ -129,7 +129,7 @@ python3 -m unittest discover -s examples/local-gap-regression/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。[UVM等の7例](../local-workflow-regression/README.md)とレビュー時の追加44件を含む計画は234件でした。[今回の7例](../local-soc-regression/README.md)の追加時点で270件でした。SystemRDLと4集約ランナーのレビュー修正を確認する5件を加え、そこまでのローカル確認は275件です。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の37件を含む現在の計画は353件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカル確認テストは190件です。[UVM等の7例](../local-workflow-regression/README.md)とレビュー時の追加44件を含む計画は234件でした。[今回の7例](../local-soc-regression/README.md)の追加時点で270件でした。SystemRDLと4集約ランナーのレビュー修正を確認する5件を加え、そこまでのローカル確認は275件です。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の49件を含む現在の計画は365件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
@@ -182,16 +182,16 @@ python3 examples/local-extension-regression/run.py --stage core
 python3 examples/local-extension-regression/run.py --stage core --profile nightly
 ```
 
-現在の共通シミュレーションは38例・85構成、JUnit597／767件です。シミュレーション・共通の確認テストは171＋35＝206件。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。検証領域を補う6例の37件を含む全ローカル確認の計画は353件です。この7例を追加した時点の実行範囲は、同7例のsmoke／nightlyと確認41件です。
+現在の共通シミュレーションは38例・85構成、JUnit597／767件です。シミュレーション・共通の確認テストは171＋35＝206件。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。検証領域を補う6例の49件を含む全ローカル確認の計画は365件です。この7例を追加した時点の実行範囲は、同7例のsmoke／nightlyと確認41件です。
 
 
 ## セキュリティ・性能・CDC・JTAG・アドレスマップ・ロックステップ
 
-[検証領域を補う6例](../local-gap-regression/README.md)も本共通ランナーを使います。各2構成・4変異で、12構成のJUnitはsmoke 84件／nightly 108件です。子の通常目標はセキュリティ15、性能13、CDC14、JTAG12、アドレスマップ13、ロックステップ12で、6例の確認テストは33件、親の4件を加えると37件です。
+[検証領域を補う6例](../local-gap-regression/README.md)も本共通ランナーを使います。各2構成・4変異で、12構成のJUnitはsmoke 84件／nightly 108件です。子の通常目標はセキュリティ15、性能13、CDC15、JTAG14、アドレスマップ13、ロックステップ12で、6例の確認テストは45件、親の4件を加えると49件です。
 
 ```sh
 python3 examples/local-gap-regression/run.py --stage core
 python3 examples/local-gap-regression/run.py --stage core --profile nightly
 ```
 
-現在の共通シミュレーションは38例・85構成、JUnit597／767件です。今回実行した範囲は6例のsmoke／nightlyと確認37件です。GitLabのCI設定への追加・CI起動は行っていません。
+現在の共通シミュレーションは38例・85構成、JUnit597／767件です。今回実行した範囲は6例のsmoke／nightlyと確認49件です。GitLabのCI設定への追加・CI起動は行っていません。

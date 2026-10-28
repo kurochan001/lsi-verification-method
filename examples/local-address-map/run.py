@@ -67,7 +67,7 @@ class Plan:
         pstrb &= 0xf
         gpio_in &= 0xf
         if not rst:
-            self.rows.append([0, 0, 0, paddr, 0, 0, 0, 0, 0, 1, 0])
+            self.rows.append([0, 0, 0, paddr, 0, 0, 0, 0, 0, 1, 0, 0])
             self.reset()
             return
         target, error = (None, 0)
@@ -77,7 +77,7 @@ class Plan:
             if not error:
                 data = self.read(target, gpio_in)
         self.rows.append([1, psel, pwrite, paddr, pwdata, pstrb, gpio_in,
-                          data, error, 1, (self.irq[0] | (self.irq[1] << 1))])
+                          data, error, 1, (self.irq[0] | (self.irq[1] << 1)), self.gpio_out])
         old_ctrl, old_count, old_match = self.ctrl, self.count, self.match
         old_edge, old_prev = self.edge, self.gpio_prev
         if psel and not error and pwrite:
@@ -147,6 +147,23 @@ class Plan:
         self.read_step(0x300)
         self.write(0x300, 0x99999999)
         self.read_step(0x000)
+        # Both IRQ sources must win over a simultaneous W1C.
+        self.step(rst=0)
+        self.write(0x108, 2)
+        self.write(0x100, 3)
+        self.idle()
+        self.write(0x10c, 1)
+        self.read_step(0x10c)
+        self.write(0x208, 1)
+        self.write(0x20c, 1, gpio_in=1)
+        self.read_step(0x20c, gpio_in=1)
+        self.write(0x0fc, 0x55aa33cc)
+        self.read_step(0x4fc)
+        self.read_step(0x0fc)
+        self.write(0x0fc, 0xffffffff, 0)
+        self.read_step(0x0fc)
+        self.write(0x003, 0x99999999)
+        self.read_step(0x000)
         self.step(rst=0)
         self.write(0x000, 0x0badf00d)
         self.read_step(0x000)
@@ -169,6 +186,10 @@ def vectors(seed, iterations, parameters, boundary=False):
     p.fixed()
     if not boundary:
         p.random(random.Random(seed), iterations)
+    # Read back every RAM word so a final write cannot escape checking.
+    for addr in range(0, 0x100, 4):
+        p.read_step(addr)
+    p.idle()
     return p.rows
 
 

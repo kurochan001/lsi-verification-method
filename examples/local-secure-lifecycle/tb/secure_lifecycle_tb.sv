@@ -46,8 +46,8 @@ module secure_lifecycle_tb;
             end else begin
                 if (cs) begin
                     if (re && !error) begin
-                        if (index == 8'h00 || index == 8'h04 || index == 8'h08 || index == 8'h0c ||
-                            index == 8'h10 || index == 8'h14) $display("COVER access/secure-read");
+                        if (secure && (index == 8'h00 || index == 8'h04 || index == 8'h08 || index == 8'h0c ||
+                            index == 8'h10 || index == 8'h14)) $display("COVER access/secure-read");
                         if (index == 8'h18 || index == 8'h1c) $display("COVER access/write-only-read");
                         if (index == 8'h0c) $display("COVER status/observable");
                         if (index == 8'h0c && rdata[2]) $display("COVER tamper/observable");
@@ -64,12 +64,16 @@ module secure_lifecycle_tb;
                 if (dut.debug_lockout && !prev_lockout) $display("COVER debug/lockout");
                 if (cs && we && index == 8'h1c && !dut.debug_unlocked && debug_key != DEBUG_KEY && !error)
                     $display("COVER debug/wrong");
-                if (tamper && (prev_key0 != 0 || prev_key1 != 0)) $display("COVER tamper/zeroize");
+
             end
             prev_unlocked = dut.debug_unlocked; prev_lockout = dut.debug_lockout;
             prev_key0 = dut.key0; prev_key1 = dut.key1;
             checks = checks + 1;
             @(posedge clk); #1;
+            if (rst_n && tamper) begin
+                if (dut.key0 !== 0 || dut.key1 !== 0 || !dut.tamper_latched || !irq) fail("SECURE_DATA");
+                if (prev_key0 != 0 || prev_key1 != 0) $display("COVER tamper/zeroize");
+            end
             @(negedge clk);
         end
         $fclose(fd);

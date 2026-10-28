@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "CDC-TRANSFER",
@@ -18,7 +18,8 @@
       "goals": [
         "clock/profile0",
         "clock/profile1",
-        "clock/profile2"
+        "clock/profile2",
+        "clock/profile3"
       ]
     },
     {

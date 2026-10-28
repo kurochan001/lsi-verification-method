@@ -9,7 +9,7 @@ HERE = Path(__file__).resolve().parent
 NAME = 'local-jtag-tap'
 TOP = 'jtag_tap_tb'
 CONFIGS = {
-    'id12345678': {'IDCODE': 0x12345678},
+    'id12345679': {'IDCODE': 0x12345679},
     'iddeadbeef': {'IDCODE': 0xdeadbeef},
 }
 ITERATIONS = {'smoke': 8, 'nightly': 20}
@@ -30,12 +30,19 @@ class Plan:
     def clear(self):
         self.state = TLR
         self.ir = IDCODE_IR
-        self.ir_shift = 1
-        self.id_shift = 0
-        self.bsr = 0
-        self.bypass = 0
+        self.ir_bits = [1, 0, 0, 0]
+        self.dr_bits = [0]
+        self.update_value = 0
         self.tdo = 0
         self.pin_out = 0
+
+    @property
+    def id_shift(self):
+        return sum(bit << i for i, bit in enumerate(self.dr_bits))
+
+    @staticmethod
+    def bits(value, width):
+        return [(value >> i) & 1 for i in range(width)]
 
     def transition(self, state, tms):
         table = {
@@ -53,56 +60,31 @@ class Plan:
     def step(self, tck=0, tms=0, tdi=0, trst=1, pin_in=0):
         if not trst:
             self.clear()
-            self.rows.append([tck, tms, tdi, 0, pin_in, 0, 0, TLR, IDCODE_IR])
-            self.prev_tck = tck
-            return
-        rise = tck and not self.prev_tck
-        fall = (not tck) and self.prev_tck
-        if rise:
-            old_state = self.state
-            old_ir = self.ir
-            next_state = self.transition(old_state, tms)
-            if old_state == TLR:
-                self.ir = IDCODE_IR
-            elif old_state == CAP_DR:
-                if old_ir == IDCODE_IR:
-                    self.id_shift = self.idcode
-                elif old_ir == BYPASS:
-                    self.bypass = 0
-                else:
-                    self.bsr = pin_in & 0xff
-            elif old_state == SHIFT_DR:
-                if old_ir == IDCODE_IR:
-                    self.id_shift = ((tdi & 1) << 31) | (self.id_shift >> 1)
-                elif old_ir == BYPASS:
-                    self.bypass = tdi & 1
-                else:
-                    self.bsr = (((tdi & 1) << 7) | (self.bsr >> 1)) & 0xff
-            elif old_state == UPD_DR:
-                if old_ir == EXTEST:
-                    self.pin_out = self.bsr
-                else:
-                    self.pin_out = pin_in & 0xff
-            elif old_state == CAP_IR:
-                self.ir_shift = 1
-            elif old_state == SHIFT_IR:
-                self.ir_shift = (((tdi & 1) << 3) | (self.ir_shift >> 1)) & 0xf
-            elif old_state == UPD_IR:
-                self.ir = self.ir_shift
-            self.state = next_state
-        if fall:
-            if self.state == SHIFT_DR:
-                if self.ir == IDCODE_IR:
-                    self.tdo = self.id_shift & 1
-                elif self.ir == BYPASS:
-                    self.tdo = self.bypass & 1
-                else:
-                    self.tdo = self.bsr & 1
-            elif self.state == SHIFT_IR:
-                self.tdo = self.ir_shift & 1
-            else:
-                self.tdo = 0
-        self.rows.append([tck, tms, tdi, 1, pin_in & 0xff, self.tdo,
+        else:
+            rise = tck and not self.prev_tck
+            fall = (not tck) and self.prev_tck
+            if rise:
+                old_state = self.state
+                if old_state == CAP_DR:
+                    value, width = (self.idcode, 32) if self.ir == IDCODE_IR else ((pin_in, 8) if self.ir in (SAMPLE, EXTEST) else (0, 1))
+                    self.dr_bits = self.bits(value, width)
+                elif old_state == SHIFT_DR:
+                    self.dr_bits = self.dr_bits[1:] + [tdi & 1]
+                elif old_state == CAP_IR:
+                    self.ir_bits = [1, 0, 0, 0]
+                elif old_state == SHIFT_IR:
+                    self.ir_bits = self.ir_bits[1:] + [tdi & 1]
+                self.state = self.transition(old_state, tms)
+            if fall:
+                if self.state == TLR:
+                    self.ir = IDCODE_IR
+                elif self.state == UPD_IR:
+                    self.ir = sum(bit << i for i, bit in enumerate(self.ir_bits))
+                if self.state == UPD_DR and self.ir in (SAMPLE, EXTEST):
+                    self.update_value = sum(bit << i for i, bit in enumerate(self.dr_bits))
+                self.tdo = self.dr_bits[0] if self.state == SHIFT_DR else (self.ir_bits[0] if self.state == SHIFT_IR else 0)
+        self.pin_out = self.update_value if self.ir == EXTEST else pin_in & 0xff
+        self.rows.append([tck, tms, tdi, trst, pin_in & 0xff, self.tdo,
                           self.pin_out, self.state, self.ir])
         self.prev_tck = tck
 
@@ -139,24 +121,29 @@ class Plan:
             self.clock(tms=int(index == len(bits) - 1), tdi=bit)
         self.exit_dr()
 
+    def boundary_scan(self, value, pin_value=0x5a):
+        self.clock(1, pin_in=pin_value); self.clock(0, pin_in=pin_value); self.clock(0, pin_in=pin_value)
+        for index, bit in enumerate(self.bits(value, 8)):
+            self.clock(tms=int(index == 7), tdi=bit, pin_in=pin_value)
+        self.clock(1, pin_in=pin_value); self.clock(0, pin_in=pin_value)
+
     def fixed(self):
         self.reset()
         self.clock(0)
         # IDCODE read: 32 shifts with the reset instruction.
         self.shift_dr([0] * 32)
-        # BYPASS, one shift, then SAMPLE capture and EXTEST drive.
-        self.load_ir([1, 1, 1, 1])
-        self.shift_dr([0])
-        self.load_ir([0, 1, 0, 0])
-        self.go_shift_dr()
-        for index in range(8):
-            self.clock(tms=int(index == 7), tdi=0)
-        self.exit_dr()
-        self.load_ir([1, 1, 0, 0])
-        self.go_shift_dr()
-        for index, bit in enumerate([1, 0, 1, 0, 0, 1, 0, 1]):
-            self.clock(tms=int(index == 7), tdi=bit)
-        self.exit_dr()
+        self.load_ir(self.bits(BYPASS, 4))
+        self.shift_dr([1, 0, 1])
+        self.load_ir(self.bits(SAMPLE, 4))
+        self.boundary_scan(0x3c)
+        # PRELOAD is applied as soon as EXTEST is updated, before another DR scan.
+        self.load_ir(self.bits(EXTEST, 4))
+        self.boundary_scan(0xa5, 0x96)
+        self.load_ir(self.bits(IDCODE_IR, 4))
+        self.step(tck=0, pin_in=0x69)
+        # An unimplemented instruction selects the one-bit BYPASS data register.
+        self.load_ir(self.bits(8, 4))
+        self.shift_dr([1, 0, 1])
         # PAUSE/EXIT2 path and a second IR update.
         self.load_ir([1, 1, 1, 1])
         self.go_shift_dr()
@@ -171,7 +158,7 @@ class Plan:
     def random(self, rng, count):
         self.reset()
         self.clock(0)
-        instructions = [[0, 0, 0, 1], [1, 1, 1, 1], [0, 1, 0, 0], [1, 1, 0, 0]]
+        instructions = [self.bits(value, 4) for value in (IDCODE_IR, BYPASS, SAMPLE, EXTEST, 8)]
         for _ in range(count):
             if rng.randrange(10) == 0:
                 self.reset()

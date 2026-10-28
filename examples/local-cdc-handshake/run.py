@@ -58,12 +58,13 @@ class Plan:
         self.pulse_prev = 0
         self.last_accept = 0
         self.last_srise = 0
+        self.last_drise = 0
         self.last_dst_valid = 0
         self.last_dst_accept = 0
 
-    def set_profile(self, profile):
+    def set_profile(self, profile, seed=17):
         self.profile = profile
-        self.clocks = make_clocks(profile, 12000, 17)
+        self.clocks = make_clocks(profile, 50000, seed)
         self.tick = 0
         self.prev_sc = self.prev_dc = 0
 
@@ -72,6 +73,7 @@ class Plan:
         srise = int(sc and not self.prev_sc)
         drise = int(dc and not self.prev_dc)
         self.last_srise = srise
+        self.last_drise = drise
         if not rst:
             self.reset_state()
             self.rows.append([sc, dc, 0, svalid, sdata, dready, spulse, self.profile,
@@ -151,24 +153,30 @@ class Plan:
             self.step(svalid=1, sdata=value, dready=0)
             if self.last_accept:
                 break
+        else:
+            raise ValueError('source handshake did not complete')
         for _ in range(300):
             if self.last_dst_accept:
                 break
             if self.last_dst_valid:
                 if stall:
                     self.step(svalid=0, dready=0)
-                    stall -= 1
+                    if self.last_drise and self.last_dst_valid:
+                        stall -= 1
                     continue
                 self.step(svalid=0, dready=1)
             else:
                 self.step(svalid=0, dready=0)
+
+        else:
+            raise ValueError('destination handshake did not complete')
 
     def pulse(self):
         for _ in range(30):
             self.step(spulse=1)
             if self.last_srise:
                 break
-        for _ in range(20):
+        for _ in range(40):
             self.step()
 
     def fixed(self):
@@ -204,7 +212,7 @@ class Plan:
         self.pulse()
 
     def random(self, rng, count):
-        self.set_profile(3)
+        self.set_profile(3, rng.getrandbits(32))
         self.reset_ticks()
         for _ in range(count):
             if rng.randrange(20) == 0:
@@ -219,6 +227,11 @@ def vectors(seed, iterations, parameters, boundary=False):
     p.fixed()
     if not boundary:
         p.random(random.Random(seed), iterations)
+    # Drain both req/ack return and delayed pulse observations before declaring pass.
+    for _ in range(120):
+        p.step(dready=1)
+    if p.req or p.ack or any(p.ack_sync) or any(p.req_sync):
+        raise ValueError('handshake still pending at end of plan')
     return p.rows
 
 

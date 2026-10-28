@@ -16,28 +16,27 @@ module perf_monitor #(parameter SLOTS=4, MUTATION=0)(
 );
     localparam MAX=4;
     reg outstanding [0:MAX-1];
-    reg [15:0] start_time [0:MAX-1];
-    reg [15:0] cycle;
+    reg [7:0] age [0:MAX-1];
     reg window_active;
-    integer i;
-    reg [15:0] latency;
+    reg [7:0] latency;
     wire window_count = window_active && !start;
 
-    assign req_ready = rst_n && !outstanding[req_tag];
+    assign req_ready = rst_n && req_tag < SLOTS && !outstanding[req_tag];
 
     always @* begin
         active_count = 0;
-        for (i = 0; i < SLOTS; i = i + 1) active_count = active_count + outstanding[i];
+        for (integer i = 0; i < SLOTS; i = i + 1) active_count = active_count + outstanding[i];
     end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            cycle <= 0; total_done <= 0; total_max <= 0;
+            total_done <= 0; total_max <= 0;
             window_done <= 0; window_cycles <= 0; window_max <= 0;
             window_active <= 0; error <= 0;
-            for (i = 0; i < MAX; i = i + 1) begin outstanding[i] <= 0; start_time[i] <= 0; end
+            for (integer i = 0; i < MAX; i = i + 1) begin outstanding[i] <= 0; age[i] <= 0; end
         end else begin
-            cycle <= cycle + 1;
+            for (integer i = 0; i < MAX; i = i + 1)
+                if (outstanding[i] && age[i] != 8'hff) age[i] <= age[i] + 1'b1;
             if (start) begin
                 if (MUTATION != 3) window_done <= 0;
                 window_cycles <= 0; window_max <= 0; window_active <= 1;
@@ -46,8 +45,8 @@ module perf_monitor #(parameter SLOTS=4, MUTATION=0)(
                 if (stop) window_active <= 0;
             end
             if (resp_valid) begin
-                if (outstanding[resp_tag]) begin
-                    latency = cycle - start_time[resp_tag];
+                if (resp_tag < SLOTS && outstanding[resp_tag]) begin
+                    latency = age[resp_tag] == 8'hff ? 8'hff : age[resp_tag] + 1'b1;
                     if (MUTATION != 4) outstanding[resp_tag] <= 0;
                     total_done <= total_done + 1;
                     if (MUTATION != 1) total_max <= latency[7:0] > total_max ? latency[7:0] : total_max;
@@ -59,7 +58,7 @@ module perf_monitor #(parameter SLOTS=4, MUTATION=0)(
             end
             if (req_valid && req_ready) begin
                 outstanding[req_tag] <= 1;
-                start_time[req_tag] <= cycle;
+                age[req_tag] <= 0;
             end
             if (start) error <= 0;
         end

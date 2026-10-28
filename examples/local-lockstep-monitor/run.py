@@ -111,6 +111,7 @@ def vectors(seed, iterations, parameters, boundary=False):
     p.fixed()
     if not boundary:
         p.random(random.Random(seed), iterations)
+    p.step()  # Check the effect of the final operation, including done/error.
     return p.rows
 
 

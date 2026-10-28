@@ -1,8 +1,8 @@
-module jtag_tap #(parameter IDCODE=32'h12345678, MUTATION=0)(
+module jtag_tap #(parameter IDCODE=32'h12345679, MUTATION=0)(
     input wire tck, tms, tdi, trst_n,
     input wire [7:0] pin_in,
     output wire tdo,
-    output reg [7:0] pin_out
+    output wire [7:0] pin_out
 );
     localparam TLR=0, RTI=1, SEL_DR=2, CAP_DR=3, SHIFT_DR=4, EXIT1_DR=5, PAUSE_DR=6,
                EXIT2_DR=7, UPD_DR=8, SEL_IR=9, CAP_IR=10, SHIFT_IR=11, EXIT1_IR=12,
@@ -13,12 +13,13 @@ module jtag_tap #(parameter IDCODE=32'h12345678, MUTATION=0)(
     reg [3:0] ir;
     reg [3:0] ir_shift;
     reg [31:0] id_shift;
-    reg [7:0] bsr;
+    reg [7:0] bsr, bsr_update;
     reg bypass_reg;
     reg tdo_reg;
     reg [3:0] next_state;
 
     assign tdo = tdo_reg;
+    assign pin_out = ir == EXTEST ? bsr_update : pin_in;
 
     always @* begin
         case (state)
@@ -44,36 +45,40 @@ module jtag_tap #(parameter IDCODE=32'h12345678, MUTATION=0)(
 
     always @(posedge tck or negedge trst_n) begin
         if (!trst_n) begin
-            state <= TLR; ir <= IDCODE_IR; ir_shift <= 4'b0001;
-            id_shift <= 0; bsr <= 0; bypass_reg <= 0; pin_out <= 0;
+            state <= TLR; ir_shift <= 4'b0001;
+            id_shift <= 0; bsr <= 0; bypass_reg <= 0;
         end else begin
             state <= next_state;
             case (state)
-                TLR: ir <= IDCODE_IR;
                 CAP_DR: begin
                     case (ir)
                         IDCODE_IR: id_shift <= IDCODE ^ (MUTATION == 1 ? 32'h1 : 32'h0);
-                        BYPASS: bypass_reg <= 0;
-                        default: bsr <= pin_in;
+                        SAMPLE, EXTEST: bsr <= pin_in;
+                        default: bypass_reg <= 0;
                     endcase
                 end
                 SHIFT_DR: begin
                     case (ir)
                         IDCODE_IR: id_shift <= {tdi, id_shift[31:1]};
-                        BYPASS: bypass_reg <= tdi;
-                        default: bsr <= {tdi, bsr[7:1]};
+                        SAMPLE, EXTEST: bsr <= {tdi, bsr[7:1]};
+                        default: bypass_reg <= tdi;
                     endcase
-                end
-                UPD_DR: begin
-                    if (MUTATION == 3 && ir == EXTEST) pin_out <= pin_in;
-                    else if (ir == EXTEST) pin_out <= bsr;
-                    else pin_out <= pin_in;
                 end
                 CAP_IR: ir_shift <= 4'b0001;
                 SHIFT_IR: ir_shift <= {tdi, ir_shift[3:1]};
-                UPD_IR: ir <= MUTATION == 2 ? (ir_shift ^ 4'b0001) : ir_shift;
                 default: begin end
             endcase
+        end
+    end
+
+    // Update latches are distinct from the capture/shift registers.
+    always @(negedge tck or negedge trst_n) begin
+        if (!trst_n) begin ir <= IDCODE_IR; bsr_update <= 0; end
+        else begin
+            if (state == TLR) ir <= IDCODE_IR;
+            else if (state == UPD_IR) ir <= MUTATION == 2 ? (ir_shift ^ 4'b0001) : ir_shift;
+            if (state == UPD_DR && (ir == SAMPLE || ir == EXTEST) && !(MUTATION == 3 && ir == EXTEST))
+                bsr_update <= bsr;
         end
     end
 
@@ -82,8 +87,8 @@ module jtag_tap #(parameter IDCODE=32'h12345678, MUTATION=0)(
         else if (state == SHIFT_DR) begin
             case (ir)
                 IDCODE_IR: tdo_reg <= id_shift[0];
-                BYPASS: tdo_reg <= bypass_reg;
-                default: tdo_reg <= bsr[0];
+                SAMPLE, EXTEST: tdo_reg <= bsr[0];
+                default: tdo_reg <= bypass_reg;
             endcase
         end else if (state == SHIFT_IR) tdo_reg <= ir_shift[0];
         else tdo_reg <= 0;

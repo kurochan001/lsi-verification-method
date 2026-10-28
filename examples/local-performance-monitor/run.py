@@ -42,7 +42,7 @@ class Plan:
                               0, 0, 0, 0, 0, 0, 0, 0])
             self.reset()
             return
-        req_ready = int(self.outstanding[req_tag] is None)
+        req_ready = int(req_tag < self.slots and self.outstanding[req_tag] is None)
         self.rows.append([rst, start, stop, req_valid, req_tag, resp_valid, resp_tag,
                           req_ready, self.total_done, self.total_max, self.window_done,
                           self.window_cycles, self.window_max, self.active(), self.error])
@@ -56,9 +56,9 @@ class Plan:
             if stop:
                 self.window_active = 0
         if resp_valid:
-            if self.outstanding[resp_tag] is not None:
-                latency = (self.cycle - self.start_time[resp_tag]) & 0xffff
-                latency8 = latency & 0xff
+            if resp_tag < self.slots and self.outstanding[resp_tag] is not None:
+                latency = self.cycle - self.start_time[resp_tag]
+                latency8 = min(latency, 255)
                 self.outstanding[resp_tag] = None
                 self.total_done = (self.total_done + 1) & 0xffff
                 self.total_max = max(self.total_max, latency8)
@@ -72,7 +72,7 @@ class Plan:
             self.start_time[req_tag] = self.cycle
         if start:
             self.error = 0
-        self.cycle = (self.cycle + 1) & 0xffff
+        self.cycle += 1
 
     def fixed(self):
         tags = list(range(self.slots))
@@ -105,6 +105,14 @@ class Plan:
         self.step()
         self.step(stop=1, resp_valid=1, resp_tag=tags[0])
         self.step()
+        # Long samples saturate; out-of-range tags never create hidden transactions.
+        self.step(req_valid=1, req_tag=tags[0])
+        for _ in range(260):
+            self.step()
+        self.step(resp_valid=1, resp_tag=tags[0])
+        if self.slots < 4:
+            self.step(req_valid=1, req_tag=self.slots)
+            self.step(resp_valid=1, resp_tag=self.slots)
         # Reset and recover with a fresh window.
         self.step(rst=0)
         self.step(start=1)
@@ -133,6 +141,7 @@ def vectors(seed, iterations, parameters, boundary=False):
     p.fixed()
     if not boundary:
         p.random(random.Random(seed), iterations)
+    p.step()  # Observe the state update caused by the final stimulus.
     return p.rows
 
 
