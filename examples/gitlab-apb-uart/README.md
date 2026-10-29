@@ -124,4 +124,4 @@ JUnitはsmokeが各8件（正常2＋変異5＋要求・カバーの合否判定1
 
 GitLabで確認したのはsmokeです。全例を含むscheduleの384件は今回GitLabで実行していません。その後MR !11はmainへマージされ、[mainのCI #2990167574](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990167574)も全50ジョブ成功、JUnit 311件・失敗／エラー0件です。
 
-確認記録と全体構成図の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)もmainへ取り込み済みです。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)で全50ジョブ・JUnit 311件・失敗／エラー0件を確認し、その後の[mainのCI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)も成功しています。現行構成は[実行例一覧](../../README.md#gitlab実行例の現在の構成)を参照してください。
+確認記録と全体構成図の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)もmainへ取り込み済みです。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)で全50ジョブ・JUnit 311件・失敗／エラー0件を確認し、その後の[mainのCI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)も成功しています。現行構成は[GitLab CIの構成と確認記録](../../README.md#gitlab-ciの構成と実行確認記録)を参照してください。

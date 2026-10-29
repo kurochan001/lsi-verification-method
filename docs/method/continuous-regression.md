@@ -6,7 +6,7 @@
 
 GitLabで試すための[実行可能な最小例](../../examples/gitlab-regression/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。ローカルの動作確認と、GitLab上での確認状況は実行例の末尾に記録しています。
 
-実行例は次の範囲まで実装しています。現行のジョブ数・JUnit件数と最新のCI確認先は[実行例一覧](../../README.md#gitlab実行例の現在の構成)に集約しています。
+実行例は次の範囲まで実装しています。現行CI設定のジョブ数・JUnit件数と、過去のCI実行の確認先は[GitLab CIの構成と確認記録](../../README.md#gitlab-ciの構成と実行確認記録)に集約しています。
 
 - [IRQ・CDC](../../examples/gitlab-regression/README.md)、[FIFOランダム](../../examples/gitlab-fifo/README.md)、[FIFOフォーマル](../../examples/gitlab-formal/README.md)：基本的な実行・判定・証跡保存と、方式ごとの合格条件。
 - [APBレジスタ](../../examples/gitlab-apb/README.md)、[APBと割り込み](../../examples/gitlab-apb-irq/README.md)、[APB・UART・割り込み](../../examples/gitlab-apb-uart/README.md)：バス操作から状態・通信・通知までの結合と競合。

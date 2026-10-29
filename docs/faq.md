@@ -152,9 +152,9 @@ pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存�
 
 CIの緑は設定したジョブの合格です。予定ケースの欠落、必須目標、未完了、チェッカーの実行結果をランナーが判定し、異常を非0の終了コードへ反映する必要があります。GitLabのJUnitレポートは結果表示用で、単独ではジョブの状態を変えません。[GitLab公式のJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)
 
-IRQ・FIFO・APB・APBと割り込み・ready/valid・UART・APBとUARTの結合などの手続き的なシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達ならリグレッションを失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[現行構成](../README.md#gitlab実行例の現在の構成)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
+IRQ・FIFO・APB・APBと割り込み・ready/valid・UART・APBとUARTの結合などの手続き的なシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達ならリグレッションを失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[GitLab CIの構成と確認記録](../README.md#gitlab-ciの構成と実行確認記録)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
 
-CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。2026-10-26に確認したmainは、APB・UART・割り込み結合検証のMR !11と確認記録のMR !12まで取り込み済みです。現行構成は全50ジョブ・通常JUnit 311件で、MR !12のCIの成功と、その後のmainのCIの成功を確認しています。追加例の状態は[構成一覧](../README.md#gitlab実行例の現在の構成)と各例の確認記録を参照してください。
+CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。2026-10-26に確認したmainは、APB・UART・割り込み結合検証のMR !11と確認記録のMR !12まで取り込み済みです。現行構成は全50ジョブ・通常JUnit 311件で、MR !12のCIの成功と、その後のmainのCIの成功を確認しています。追加例の状態は[GitLab CIの構成と確認記録](../README.md#gitlab-ciの構成と実行確認記録)と各例の確認記録を参照してください。
 
 現行設定ではREADMEだけの変更でも全50ジョブを起動します。MRが開いているブランチの重複したpushパイプラインは抑止しますが、文書だけの変更に対するリグレッションの縮退は実装していません。共有Runnerの計算時間の利用枠も確認してください。
 
