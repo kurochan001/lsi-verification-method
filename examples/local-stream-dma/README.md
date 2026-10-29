@@ -63,6 +63,6 @@ python3 examples/local-stream-dma/run.py --profile nightly
 python3 -m unittest discover -s examples/local-stream-dma/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。S2MMでは1ビートのテスト用バッファでWを先に受理し、その後でAWと保持したWをRAMへ渡すケースも実行します。B応答は実RAMから返します。smoke18操作、nightly120操作×3 seedへ固定16操作を加え、各13目標を要求します。KEEP・LAST・WSTRB・データの4変異です。JUnit14／18件、確認7件です。
+[共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。S2MMでは1ビートのテスト用バッファでWを先に受理し、その後でAWと保持したWをRAMへ渡すケースも実行します。B応答は実RAMから返します。smoke18操作、nightly120操作×3 seedへ固定16操作を加え、各13目標を要求します。KEEP・LAST・WSTRB・データの4種類の変異です。JUnit14／18件、確認7件です。
 
 Streamの基本信号は[AMDの説明](https://docs.amd.com/r/2023.1-English/ug1393-vitis-application-acceleration/Streaming-Interfaces)、メモリ側は[Arm AXI仕様](https://documentation-service.arm.com/static/602a9df190ee6824a1e02b98)を参照しています。商用DMAの実装・レジスタ配置・全属性・大規模バースト・全二重動作への適合性は対象外です。

@@ -1,6 +1,6 @@
-# 優先順位付き割込みのclaim・completeを検証する
+# 優先順位付き割り込みのclaim・completeを検証する
 
-4要因・1通知先の教材用コントローラにAPBを接続します。単なる割込み保持に加え、優先順位、threshold、処理中状態、ソフトウェアのclaim／completeを照合します。
+4要因・1通知先の教材用コントローラにAPBを接続します。単なる割り込み保持に加え、優先順位、threshold、処理中状態、ソフトウェアのclaim／completeを照合します。
 
 ## 通知とclaimの選択を分ける
 
@@ -41,7 +41,7 @@ IRQは有効なpendingの最高優先順位がthresholdより**大きい**とき
 
 Pythonは集合と優先順位から期待値を作り、APB応答・IRQ・pending・処理中状態を毎サイクル照合します。levelはAPB待ち1、edgeは待ち2で、各12目標です。smokeは32操作、nightlyは250操作×3 seedに固定シナリオを加えます。
 
-4変異は同順位の逆順選択、thresholdの等号誤り、処理中状態の設定漏れ、マスク中pendingの消失です。
+4種類の変異は同順位の逆順選択、thresholdの等号誤り、処理中状態の設定漏れ、マスク中pendingの消失です。
 
 ```sh
 python3 examples/local-priority-irq/run.py
@@ -49,4 +49,4 @@ python3 examples/local-priority-irq/run.py --profile nightly
 python3 -m unittest discover -s examples/local-priority-irq/tests -v
 ```
 
-[共通の準備・証跡・判定](../local-common/README.md)を使います。2構成のJUnitは14／18件、確認テストは5件です。CPUの例外受付や実際のネスト処理、任意のクロック境界は対象外です。
+[共通の準備・証跡・判定](../local-common/README.md)を使います。2構成のJUnitは14／18件、セルフテストは5件です。CPUの例外受付や実際のネスト処理、任意のクロック境界は対象外です。

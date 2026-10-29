@@ -72,7 +72,7 @@ python3 -m unittest discover -s examples/local-i2c/tests -v
 
 構成名は`half8`と`half12`です。BFMのSCLの通常の半周期を、ベースクロック8／12個分とします。シミュレーションではclk=10ns周期で動かしますが、この時間尺度でStandard-modeなどの電気的タイミングへの適合を確認したとは扱いません。
 
-smokeは32ランダム操作×1 seed、nightlyは256×3 seedを実行し、各seedの末尾に正常操作を1つ追加します。`checks`は操作数です。構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋ゲート1）。2構成の合計は**14／18件**です。
+smokeは32ランダム操作×1 seed、nightlyは256×3 seedを実行し、各seedの末尾に正常操作を1つ追加します。`checks`は操作数です。構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋合否判定1）。2構成の合計は**14／18件**です。
 
 ```sh
 python3 examples/local-i2c/run.py --configuration half8 --demo-bug 1 --out artifacts/i2c-intentional-failure
@@ -82,4 +82,4 @@ python3 examples/local-i2c/run.py --configuration half8 --demo-bug 1 --out artif
 
 ## 5. 実行確認
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で2構成のsmoke／nightly、各18目標・4変異、確認テスト5件が成功しました。GitLabへの追加・CI実行は行っていません。これはデジタル動作の教材で、実機やI²C規格全体の適合性を示す結果ではありません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で2構成のsmoke／nightly、各18目標・4種類の変異、セルフテスト5件が成功しました。GitLabへの追加・CI実行は行っていません。これはデジタル動作の教材で、実機やI²C規格全体の適合性を示す結果ではありません。

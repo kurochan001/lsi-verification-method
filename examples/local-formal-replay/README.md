@@ -1,20 +1,20 @@
 # フォーマル反例を入力だけでシミュレーションへ再現する
 
-[既存のFIFO等価性例](../local-equivalence/README.md)の2構成・4変異について、新しくBMCを実行して得たYosys Witnessを変換します。シミュレーションではトップのreset・valid・ready・dataだけを駆動し、内部メモリやポインターをforceしません。
+[既存のFIFO等価性例](../local-equivalence/README.md)の2構成・4種類の変異について、新しくBMCを実行して得たYosys Witnessを変換します。シミュレーションではトップのreset・valid・ready・dataだけを駆動し、内部メモリやポインターをforceしません。
 
-## 反例を回帰用の入力へ戻す
+## 反例をリグレッション用の入力へ戻す
 
 新しいBMC反例からトップ入力だけを取り出し、変異ありで同じ違反、正常RTLで合格を要求します。
 
 ```mermaid
 flowchart TD
-  accTitle: 反例を回帰用の入力へ戻す
+  accTitle: 反例をリグレッション用の入力へ戻す
   accDescr: 新しいBMC反例からトップ入力だけを取り出し、変異ありで同じ違反、正常RTLで合格を要求します。
   B["FIFO変異のBMCを実行"] --> W["Yosys Witness"] --> V["クロック・幅・既知値・初回リセットを検査"]
   V --> I["トップ入力の列へ変換"]
   I --> M["変異RTL：同じassert違反を再現"]
   I --> N["正常RTL：独立キューとも一致"]
-  M --> E["入力・版・ログ・波形を固定回帰として保存"]
+  M --> E["入力・版・ログ・波形を固定リグレッションとして保存"]
   N --> E
 ```
 
@@ -47,6 +47,6 @@ python3 -m unittest discover -s examples/local-formal-replay/tests -v
 
 各子BMCの上限は`--formal-timeout`、変換後のビルド・実行は`--timeout`です。`--profile nightly`でもフォーマルの固定計画は同じです。8個の新しいBMC、8個の変異再現、8個の正常RTL確認でJUnit 24件です。これは新しい証明8件という意味ではありません。
 
-子のマニフェスト・モデルのプロパティ一覧・反例、`reproducer.json`、`vectors.txt`、ビルド・シミュレーションログ・VCDを保存します。`reproducer.json`には内部状態を含めず、版と構成に対応する固定回帰用入力を残します。タイムアウトや異なるチェッカーの失敗は再現成功にしません。
+子のマニフェスト・モデルのプロパティ一覧・反例、`reproducer.json`、`vectors.txt`、ビルド・シミュレーションログ・VCDを保存します。`reproducer.json`には内部状態を含めず、版と構成に対応する固定リグレッション用入力を残します。タイムアウトや異なるチェッカーの失敗は再現成功にしません。
 
 [SBYの反例](https://yosyshq.readthedocs.io/projects/sby/en/stable/quickstart.html)、[YosysHQのトレース再生](https://yosyshq.readthedocs.io/projects/ap130/en/latest/)を参照した独自の限定変換です。Yosys生成のテストベンチをそのまま実行する例とは区別します。

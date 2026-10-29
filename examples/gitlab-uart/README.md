@@ -73,22 +73,22 @@ python3 -m unittest discover -s examples/gitlab-uart/tests -v
 python3 examples/gitlab-uart/run.py --parity 1 --demo-bug 4
 ```
 
-通常回帰内の「予定した変異を検出できた」という成功と、この失敗デモは別です。GitLabでは`UART_DEMO_BUG=1/2/3`を指定できます。`4`はパリティ有効時だけ適用できるため、全6構成のマトリクスで指定すると、パリティなしの2ジョブは引数エラーになります。変異4のデモは上記の単独構成で実行してください。
+通常リグレッション内の「予定した変異を検出できた」という成功と、この失敗デモは別です。GitLabでは`UART_DEMO_BUG=1/2/3`を指定できます。`4`はパリティ有効時だけ適用できるため、全6構成のマトリクスで指定すると、パリティなしの2ジョブは引数エラーになります。変異4のデモは上記の単独構成で実行してください。
 
 ## 6. GitLabと保存する証跡
 
 ルートの`.gitlab-ci.yml`が[CI設定](gitlab-ci.yml)を読み込みます。`uart-runner-tests`の成功後、分周数2種類×パリティ3種類の6ジョブを実行します。push・MR・webはsmoke、scheduleはnightlyです。seedは`UART_REGRESSION_SEED`で変更できます。
 
-smokeはパリティなし各6件、有効時各7件、合計40件のJUnitを出力します。nightlyは各8／9件、合計52件です。各件数には要求・カバーのゲート1件と変異検出を含み、ランナー確認13テストは別枠です。
+smokeはパリティなし各6件、有効時各7件、合計40件のJUnitを出力します。nightlyは各8／9件、合計52件です。各件数には要求・カバーの合否判定1件と変異検出を含み、ランナーのセルフテスト13件は別枠です。
 
 `artifacts/uart-div8-parity0/`などへ、全入力・seed・構成・ソースハッシュ、ツール版、ビルド結果、ケース別のログ・波形・判定、要求カタログ、カバーと除外理由、JUnitを保存します。`METRICS`の送受信完了数・リセット数・偽スタート数を予定入力と照合し、欠落や不一致をエラーにします。`clocks`は実際のシミュレーションのクロック数です。アーティファクトは`when: always`で14日間保存します。中断やRunner障害では回収できない場合があります。
 
 ## 7. 適用範囲と実行確認
 
-この例は説明用RTLの有限シミュレーションです。FIFO・オーバーラン、BREAK、5～9ビットの切替、2ストップビット、RTS/CTS、APBレジスタ・割込みとの結合、周波数ずれの限界、ジッター・ノイズの耐性、CDC構造解析、メタステーブルのアナログ挙動、製品UARTの規格適合性は対象外です。2段FFと位相変更だけでCDCの安全性を証明したとは扱いません。
+この例は説明用RTLの有限シミュレーションです。FIFO・オーバーラン、BREAK、5～9ビットの切替、2ストップビット、RTS/CTS、APBレジスタ・割り込みとの結合、周波数ずれの限界、ジッター・ノイズの耐性、CDC構造解析、メタステーブルのアナログ挙動、製品UARTの規格適合性は対象外です。2段FFと位相変更だけでCDCの安全性を証明したとは扱いません。
 
-ローカルで6構成のsmoke、ランナー確認13テスト、および各構成で3 seed×1000ランダム操作を確認しました。公開デモの[MR !10](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/10)で、[CI #2990037734](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990037734)の全40ジョブ成功、JUnit 239件・失敗／エラー0件を確認しました。
+ローカルで6構成のsmoke、ランナーのセルフテスト13件、および各構成で3 seed×1000ランダム操作を確認しました。公開デモの[MR !10](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/10)で、[CI #2990037734](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990037734)の全40ジョブ成功、JUnit 239件・失敗／エラー0件を確認しました。
 
-UARTの6ジョブはIcarus Verilog 11.0で実行され、保存済み証跡でも21/21または22/22目標、3／4変異、予定した全5／6ケースの完了、送受信完了数、入力ソースのハッシュとコミット`0bc95660`を確認しました。追加分のJUnitは40件です。GitLabで確認したのはsmokeで、全例を含むscheduleの294件は今回実行していません。その後MR !10はmainへマージされ、[mainのCI #2990074629](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990074629)でも全40ジョブ・JUnit 239件の成功を確認しました。
+UARTの6ジョブはIcarus Verilog 11.0で実行され、保存済み証跡でも21/21または22/22目標、3／4種類の変異、予定した全5／6ケースの完了、送受信完了数、入力ソースのハッシュとコミット`0bc95660`を確認しました。追加分のJUnitは40件です。GitLabで確認したのはsmokeで、全例を含むscheduleの294件は今回実行していません。その後MR !10はmainへマージされ、[mainのCI #2990074629](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990074629)でも全40ジョブ・JUnit 239件の成功を確認しました。
 
-APBレジスタ・割込みとの接続は、別の[結合検証例](../gitlab-apb-uart/README.md)で扱います。単体例の確認範囲とは分けて記録します。
+APBレジスタ・割り込みとの接続は、別の[結合検証例](../gitlab-apb-uart/README.md)で扱います。単体例の確認範囲とは分けて記録します。

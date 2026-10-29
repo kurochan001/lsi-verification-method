@@ -46,7 +46,7 @@ flowchart LR
 
 ターゲットクロックに初期位相を付けています。新しい例では固定クロック比を使い、ジッター探索は既存FIFO例で扱います。デジタルでの転送・破棄の検証であり、メタステーブルの物理モデル、静的CDC／RDC、MTBF、配置配線後の制約確認を実行したとは扱いません。
 
-[要求カタログ](requirements.json)は3要求・7目標。4変異はtag反転、APB番地変換の誤り、ターゲットリセット時の保留応答消去漏れ、エラーの隠蔽です。
+[要求カタログ](requirements.json)は3要求・7目標。4種類の変異はtag反転、APB番地変換の誤り、ターゲットリセット時の保留応答消去漏れ、エラーの隠蔽です。
 
 ## 実行
 
@@ -56,4 +56,4 @@ python3 examples/local-cdc-bridge/run.py --profile nightly
 python3 -m unittest discover -s examples/local-cdc-bridge/tests -v
 ```
 
-[共通手順](../local-common/README.md)を利用します。1ベクトルは1回の初期化・任意の破棄試験・5〜16要求の転送列です。smokeは12列×1 seed、nightlyは100×3 seedで、固定4列を別に実行します。JUnitは2構成合計14／18件です。クロック停止や片側だけの再開、リセット時に保持すべき取引の再送は別仕様になります。
+[共通手順](../local-common/README.md)を利用します。1ベクトルは1回の初期化・任意の破棄試験・5〜16要求の転送列です。smokeは12列×1 seed、nightlyは100×3 seedで、固定4列を別に実行します。JUnitは2構成合計14／18件です。クロック停止や片側だけの再開、リセット時に保持すべきトランザクションの再送は別仕様になります。

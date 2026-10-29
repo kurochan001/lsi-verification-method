@@ -91,7 +91,7 @@ Pythonは16状態の遷移表、IR/DRのビット列をLSB先頭のリストで�
 | 3 | EXTESTのUpdateでpin_outを駆動しない | JTAG_BOUNDARY |
 | 4 | Exit2-DRからShift-DRへ戻る遷移を誤る | JTAG_STATE |
 
-状態番号・IR・TDO・ピン出力を別々に比較するため、変異の影響を該当する判定へ対応付けられます。負の試験の観測は通常の14目標へ加算しません。
+状態番号・IR・TDO・ピン出力を別々に比較するため、変異の影響を該当する判定へ対応付けられます。ネガティブテストの観測は通常の14目標へ加算しません。
 
 ## 実行
 
@@ -101,12 +101,12 @@ python3 examples/local-jtag-tap/run.py --profile nightly --out artifacts/jtag-ni
 python3 -m unittest discover -s examples/local-jtag-tap/tests -v
 ```
 
-smokeは8回のランダム命令・DR操作×1 seed、nightlyは20回×3 seedを固定シナリオへ加えます。各構成7／9件、全体14／18件のJUnitで、確認テストは9件です。
+smokeは8回のランダム命令・DR操作×1 seed、nightlyは20回×3 seedを固定シナリオへ加えます。各構成7／9件、全体14／18件のJUnitで、セルフテストは9件です。
 
 ## 確認範囲
 
-2026-10-28にPython 3.14.7、Icarus Verilog 14.0開発版で両構成のsmoke／nightly、12目標、4変異、確認6件が成功しました。
+2026-10-28にPython 3.14.7、Icarus Verilog 14.0開発版で両構成のsmoke／nightly、12目標、4種類の変異、確認6件が成功しました。
 
-2026-10-29のレビュー修正後も両構成のsmoke／nightlyが成功し、確認テストは9件です。再発防止ケースと図表を追加し、実行したソースハッシュを現行ファイルと照合しています。
+2026-10-29のレビュー修正後も両構成のsmoke／nightlyが成功し、セルフテストは9件です。再発防止ケースと図表を追加し、実行したソースハッシュを現行ファイルと照合しています。
 
 この教材はTAPのデジタル動作と8ビット境界走査の教材であり、IEEE 1149.1の全命令・全必須動作の適合証明ではありません。実JTAGのTCK周波数、セットアップ・ホールド、TDOの実配線遅延、BSDL、ATPG、スキャンチェーン、故障検出率、実チップのDFTは対象外です。

@@ -1,10 +1,10 @@
 # GitLabでSVAのアサーションとカバーを実行する
 
-既存の[割込み回路](../gitlab-regression/rtl/irq_pending.sv)へ並行アサーションを接続し、Verilatorで実行する例です。`assert property`の違反検出と`cover property`の到達を分け、ログとネイティブの`coverage.dat`を照合します。GitLabのジョブ内でツールを準備でき、商用ライセンスは不要です。
+既存の[割り込み回路](../gitlab-regression/rtl/irq_pending.sv)へ並行アサーションを接続し、Verilatorで実行する例です。`assert property`の違反検出と`cover property`の到達を分け、ログとネイティブの`coverage.dat`を照合します。GitLabのジョブ内でツールを準備でき、商用ライセンスは不要です。
 
 ## 1. 要求とプロパティ
 
-対象は、イベントを保持し、W1Cでクリアし、許可中に割込みを出力する説明用の同期回路です。同一エッジのイベントとクリアはイベントを優先します。許可は保持状態の更新に影響しません。
+対象は、イベントを保持し、W1Cでクリアし、許可中に割り込みを出力する説明用の同期回路です。同一エッジのイベントとクリアはイベントを優先します。許可は保持状態の更新に影響しません。
 
 | 要求 | アサーション | 必須カバー |
 | --- | --- | --- |
@@ -24,7 +24,7 @@
 ```mermaid
 sequenceDiagram
   participant T as 入力列
-  participant D as 割込み回路
+  participant D as 割り込み回路
   participant C as SVAチェッカー
   T->>D: エッジkの前にイベント・クリアを設定
   D->>C: kで入力と更新前状態をサンプル
@@ -44,7 +44,7 @@ sequenceDiagram
 | ケース | 目的と判定 |
 | --- | --- |
 | 正常な境界・ランダム列 | 全assertに違反がなく、正常ケースだけで12カバーを達成 |
-| RTLの3変異 | クリア優先、許可で保持を抑止、リセット漏れを`ap_set_wins`・`ap_set_only`・`ap_reset`で検出 |
+| RTLの3種類の変異 | クリア優先、許可で保持を抑止、リセット漏れを`ap_set_wins`・`ap_set_only`・`ap_reset`で検出 |
 | チェッカー入力の3違反 | 観測値だけを故意に壊し、`ap_clear_only`・`ap_hold`・`ap_irq`の失敗経路を確認 |
 | 前件のない診断列 | イベント・クリアを発生させず、hold以外のカバーが0であることを確認 |
 
@@ -104,7 +104,7 @@ python3 examples/gitlab-sva/run.py --checker-off
 
 2026-10-26にPython 3.14.7・Verilator 5.052で、ランナー11テストとsmoke／nightlyを確認しました。要求6件・12目標を達成し、6種類の意図した違反をすべて検出しました。前件のない診断ではholdの2カバーだけが非0でした。`--checker-off`と3種類の`--demo-bug`はすべて終了コード1を確認しています。
 
-公開デモの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)で、[CI #2989571313](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989571313)の全27ジョブ成功、JUnit 160件・失敗／エラー0件を確認しました。SVAジョブはVerilator 5.006で実行され、保存済み証跡でも要求6件・12/12カバー、感度確認6件、診断1件、予定9ケースの完了、対象コミット`c75d5fd5`を確認しました。SVA追加分のJUnitは10件、ランナー確認は別枠の11テストです。
+公開デモの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)で、[CI #2989571313](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989571313)の全27ジョブ成功、JUnit 160件・失敗／エラー0件を確認しました。SVAジョブはVerilator 5.006で実行され、保存済み証跡でも要求6件・12/12カバー、感度確認6件、診断1件、予定9ケースの完了、対象コミット`c75d5fd5`を確認しました。SVA追加分のJUnitは10件、ランナーのセルフテストは別枠の11テストです。
 
 5.006のネイティブDBは`page=v_user/irq_checker`でユーザーカウンターを示し、5.052では`t=user`の項目も付きます。実際の両形式で、ラベル・ソース・階層・ログ件数の照合を確認しています。GitLabで確認したのはsmokeです。nightlyはローカルでseed 17〜19を各2,000サイクル実行しました。全例を含むscheduleの197件はGitLabで今回実行していません。
 
@@ -116,4 +116,4 @@ python3 examples/gitlab-sva/run.py --checker-off
 
 2026-10-26に、SVAを含むmainの[CI #2989619450](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989619450)も全27ジョブ・JUnit 160件で成功したことを確認しています。これらのマージはユーザーが行いました。
 
-2026-10-27の全体レビューでは、要求カタログの`assertion`を未実装の名前に変えても回帰が成功する問題を再現し、固定対応表との照合を追加しました。ランナー12テストで誤記・重複・カバーの取り違え・欠落の拒否を確認し、正常なカタログで実際のSVA回帰も成功しました。この修正の確認はローカルで行っており、上記GitLab CIの記録は修正前の版に対するものです。
+2026-10-27の全体レビューでは、要求カタログの`assertion`を未実装の名前に変えてもリグレッションが成功する問題を再現し、固定対応表との照合を追加しました。ランナー12テストで誤記・重複・カバーの取り違え・欠落の拒否を確認し、正常なカタログで実際のSVAリグレッションも成功しました。この修正の確認はローカルで行っており、上記GitLab CIの記録は修正前の版に対するものです。

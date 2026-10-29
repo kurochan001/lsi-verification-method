@@ -1,6 +1,6 @@
 # タイマーとウォッチドッグの境界・競合を検証する
 
-単発／周期タイマーの割込みと、ウォッチドッグのキック／タイムアウトを、独立した参照モデルで毎クロック比較します。カウンタ幅4／8の2構成、固定の境界・競合シナリオ、ランダム入力、4変異の検出をローカルで実行する教材です。
+単発／周期タイマーの割り込みと、ウォッチドッグのキック／タイムアウトを、独立した参照モデルで毎クロック比較します。カウンタ幅4／8の2構成、固定の境界・競合シナリオ、ランダム入力、4種類の変異の検出をローカルで実行する教材です。
 
 ## 独立した満了予測と2系統の通知
 
@@ -80,7 +80,7 @@ python3 -m unittest discover -s examples/local-timer-watchdog/tests -v
 
 構成名は`width4`と`width8`です。固定シナリオはそれぞれ92／572クロック、smokeは200ランダムクロック×1 seed、nightlyは2000×3 seedを追加します。各ランダムケースには先頭のresetと末尾のreset・待機2クロックを追加するため、検査数は指定iterations+4です。
 
-正常時のJUnitは構成当たりsmoke **7件**、nightly **9件**で、2構成の合計は**14／18件**です（固定1＋ランダム1／3＋変異4＋ゲート1）。
+正常時のJUnitは構成当たりsmoke **7件**、nightly **9件**で、2構成の合計は**14／18件**です（固定1＋ランダム1／3＋変異4＋合否判定1）。
 
 ```sh
 python3 examples/local-timer-watchdog/run.py --configuration width4 --demo-bug 2 --out artifacts/timer-intentional-failure
@@ -90,4 +90,4 @@ python3 examples/local-timer-watchdog/run.py --configuration width4 --demo-bug 2
 
 ## 5. 実行確認
 
-2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で両構成のsmoke／nightly、各20目標、各4変異、確認テスト6件をローカルで確認しました。GitLabへの追加・CI実行は行っていません。任意の無限の入力列を証明した結果や、実システムの安全性・リセット到達を確認した結果ではありません。
+2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で両構成のsmoke／nightly、各20目標、各4種類の変異、セルフテスト6件をローカルで確認しました。GitLabへの追加・CI実行は行っていません。任意の無限の入力列を証明した結果や、実システムの安全性・リセット到達を確認した結果ではありません。

@@ -67,7 +67,7 @@ SystemVerilogのチェッカーは、独立した線形キューで受理デー�
 
 深さ1は**要求8件・25目標**、深さ3は**要求9件・29目標**です。深さ1の中間占有状態は理由を記録して除外します。幅を含めた4構成を独立に判定し、他構成の観測で補いません。
 
-観測はそのサイクルの比較に合格してから出力し、正常ケース全体が完了した場合だけ集計します。変異ケースの観測は通常機能の達成には数えません。必須目標の未達は回帰を失敗させます。これは選定した機能目標であり、SVAやcovergroup DBの計測値ではありません。
+観測はそのサイクルの比較に合格してから出力し、正常ケース全体が完了した場合だけ集計します。変異ケースの観測は通常機能の達成には数えません。必須目標の未達はリグレッションを失敗させます。これは選定した機能目標であり、SVAやcovergroup DBの計測値ではありません。
 
 ## 4. ローカルで実行する
 
@@ -93,7 +93,7 @@ smokeは境界1ケース＋ランダム1 seed×200サイクル＋変異3ケー�
 | 2 | 満杯時の同時送受信で入力データを格納しない | `STREAM_DATA` |
 | 3 | 受信済みデータを解放せず再提示 | `STREAM_VALID` |
 
-通常回帰でも3変異を別々に実行し、所定の比較で検出する必要があります。正常ケースにも不具合を入れてCIを失敗させるデモは次です。
+通常リグレッションでも3種類の変異を別々に実行し、所定の比較で検出する必要があります。正常ケースにも不具合を入れてCIを失敗させるデモは次です。
 
 ```sh
 python3 examples/gitlab-stream/run.py --demo-bug 2
@@ -113,10 +113,10 @@ python3 examples/gitlab-stream/run.py --demo-bug 2
 
 ## 7. 実行確認
 
-2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版で13テストとnightly全4構成を確認しました。各構成で25/25または29/29目標を達成し、3変異を検出しました。nightlyはseed 17〜19を各2,000サイクル実行しています。
+2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版で13テストとnightly全4構成を確認しました。各構成で25/25または29/29目標を達成し、3種類の変異を検出しました。nightlyはseed 17〜19を各2,000サイクル実行しています。
 
-公開デモの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)で、[CI #2989066110](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989066110)の全25ジョブ成功、JUnit 150件・失敗／エラー0件を確認しました。ready/validの4ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも25/25または29/29目標、3変異の検出、予定5ケースの完了、対象コミット`91879757`を確認しています。追加分のJUnitは24件、ランナー確認は別枠の13テストです。
+公開デモの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)で、[CI #2989066110](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989066110)の全25ジョブ成功、JUnit 150件・失敗／エラー0件を確認しました。ready/validの4ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも25/25または29/29目標、3種類の変異の検出、予定5ケースの完了、対象コミット`91879757`を確認しています。追加分のJUnitは24件、ランナーのセルフテストは別枠の13テストです。
 
 境界ケースの転送数は深さ1で受理23・受信22・リセット破棄1、深さ3で受理51・受信48・リセット破棄3でした。幅8／16とも予定値とログが一致しました。GitLabで確認したのはsmokeです。ready/validのnightly全4構成はローカルで確認しており、全例を含むscheduleの185件をGitLabで実行した結果ではありません。その後、SVAのMR !7を含むMR !6がmainへマージされ、[mainのCI #2989619450](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989619450)も全27ジョブ・JUnit 160件で成功しています（2026-10-26確認）。
 
-有限のシミュレーションで確認した範囲です。任意の無限の待ちを含む活性証明や、非同期クロック間の転送を確認した結果ではありません。製品への展開では、データ幅・深さ、付加情報、リセットによる破棄の扱い、タイミングと帯域の仕様を照合してください。[ランダム検証](../../docs/method/constrained-random-verification.md)と[継続回帰](../../docs/method/continuous-regression.md)も参照してください。
+有限のシミュレーションで確認した範囲です。任意の無限の待ちを含む活性証明や、非同期クロック間の転送を確認した結果ではありません。製品への展開では、データ幅・深さ、付加情報、リセットによる破棄の扱い、タイミングと帯域の仕様を照合してください。[ランダム検証](../../docs/method/constrained-random-verification.md)と[継続リグレッション](../../docs/method/continuous-regression.md)も参照してください。

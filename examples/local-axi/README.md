@@ -93,7 +93,7 @@ python3 -m unittest discover -s examples/local-axi/tests -v
 
 構成名は`delay0`と`delay2`です。smokeは40ランダム操作×1 seed、nightlyは300×3 seedを実行します。1操作は読出しまたは書込みで、書込みに並行読出しを加える場合があります。末尾の4レジスタ読出しとリセットはiterationsに含みません。`checks`は入力サイクル数です。
 
-構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋ゲート1）。2構成の合計は**14／18件**です。
+構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋合否判定1）。2構成の合計は**14／18件**です。
 
 ```sh
 python3 examples/local-axi/run.py --configuration delay2 --demo-bug 3 --out artifacts/axi-intentional-failure
@@ -101,11 +101,11 @@ python3 examples/local-axi/run.py --configuration delay2 --demo-bug 3 --out arti
 
 このコマンドは通常回路にも応答保持の不具合を入れるため、終了コード1と`AXI_STABILITY`による失敗が期待結果です。
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全2構成のsmoke／nightly、各39目標・4変異、確認テスト9件が成功しました。GitLabへの追加・CI起動は行っていません。AXI4全体の検証例や、規格全体の適合性、無限の入力列の証明、実システムの性能評価を示す結果ではありません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全2構成のsmoke／nightly、各39目標・4種類の変異、セルフテスト9件が成功しました。GitLabへの追加・CI起動は行っていません。AXI4全体の検証例や、規格全体の適合性、無限の入力列の証明、実システムの性能評価を示す結果ではありません。
 
 ## 6. フォーマル検証も実行する
 
-[AHB／AXIのフォーマル例](../local-bus-formal/README.md)を追加しました。AXIは同じ2構成で、受付・応答・保持・因果関係・リセットと補助不変条件の11プロパティを非有界に証明し、データ・応答内容を含む12プロパティを既定深さ12で検査します。補助条件もassertによる証明対象で、入力のassumeへ追加するものではありません。12到達目標、4変異の反例、過剰な仮定の診断も実行します。
+[AHB／AXIのフォーマル例](../local-bus-formal/README.md)を追加しました。AXIは同じ2構成で、受付・応答・保持・因果関係・リセットと補助不変条件の11プロパティを非有界に証明し、データ・応答内容を含む12プロパティを既定深さ12で検査します。補助条件もassertによる証明対象で、入力のassumeへ追加するものではありません。12到達目標、4種類の変異の反例、過剰な仮定の診断も実行します。
 
 ```sh
 python3 examples/local-bus-formal/run.py --bus axi --out artifacts/axi-formal

@@ -28,7 +28,7 @@ flowchart TD
 | --- | --- | --- |
 | メタデータ | 独立契約と全項目を照合 | 共通原本の誤りを検出 |
 | 生成RTL | APBを駆動して機能を比較 | RO・W1C・reset・待ち |
-| C・RAL | C定数と実UVMモデル属性を照合 | RAL frontdoor接続は含まない |
+| C・RAL | C定数とUVM参照実装モデル属性を照合 | RAL フロントドアアクセスで接続は含まない |
 
 ## 原本と生成物の検査
 
@@ -57,12 +57,12 @@ python3 -m venv /tmp/lsi-rdl-venv
 
 Python 3.10以上、systemrdl-compiler 1.30.1、Icarus、Cコンパイラー、Verilator 5.052、[外部のUVMライブラリ](../local-uvm/README.md)を使います。Python依存はrequirementsへ固定しています。`--profile nightly`はRTLランダム操作を24×1 seedから150×3 seedへ増やします。固定10操作は各実行に含みます。
 
-reset誤り・フィールドマスク誤り・W1C優先順位のRTL変異3件、Cヘッダーの番地破損、構築したRALのreset破損・volatile属性の欠落も検出します。これらのC／RAL側の診断と原本の誤りの診断はRTL変異率へ加えません。予定ラベルと非ゼロ終了を要求します。
+reset誤り・フィールドマスク誤り・W1C優先順位のRTL変異3件、Cヘッダーの番地破損、構築したRALのreset破損・volatile属性の欠落も検出します。これらのC／RAL側の診断と原本の誤りの診断はRTL変異の検出率へ加えません。予定ラベルと非ゼロ終了を要求します。
 
-生成ファイルとハッシュ、使用ライブラリsrcのハッシュ、コンパイラー版、入力、ビルド・実行ログ、RTL波形、JUnitを保存します。CとRALの検査は定数・モデルの検査で、波形を保存する実RTLの試験とは区別します。JUnitは17／21件、確認テストは6件です。
+生成ファイルとハッシュ、使用ライブラリsrcのハッシュ、コンパイラー版、入力、ビルド・実行ログ、RTL波形、JUnitを保存します。CとRALの検査は定数・モデルの検査で、波形を保存する実RTLの試験とは区別します。JUnitは17／21件、セルフテストは6件です。
 
 [SystemRDL標準](https://www.accellera.org/downloads/standards/systemrdl)、[コンパイラーAPI](https://systemrdl-compiler.readthedocs.io/en/stable/api/compiler.html)、[プロパティの既定値](https://systemrdl-compiler.readthedocs.io/en/stable/properties.html)を参照しています。外部ライブラリのソースはリポジトリへ転載していません。
 
 ## 生成したRTLとRALを実バスで接続する
 
-[frontdoor結合例](../local-generated-ral/README.md)は、本原本・生成器・独立契約を再利用し、実APB操作、独立scoreboard、UVM_CHECKのミラー照合まで行います。本例の構造・属性確認とは別の計画・JUnitです。PENDINGはvolatileのまま使い、その際の既知のUVM警告も件数・種類を照合します。
+[フロントドアアクセスによる結合例](../local-generated-ral/README.md)は、本原本・生成器・独立契約を再利用し、実APB操作、独立したスコアボード、UVM_CHECKのミラー照合まで行います。本例の構造・属性確認とは別の計画・JUnitです。PENDINGはvolatileのまま使い、その際の既知のUVM警告も件数・種類を照合します。

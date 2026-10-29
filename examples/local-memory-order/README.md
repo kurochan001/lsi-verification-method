@@ -42,7 +42,7 @@ flowchart TD
 
 固定ケースは読出し前／後の書込み、同一エッジの競合、保留R応答中の書込み、2マスターの重なる部分書込み、ゼロWSTRB、書込み後の両マスターからの読出しです。両ターゲットで行い、ランダム検証では方向・長さ・ID・データ・マスク・開始遅延・応答待ちを変えます。
 
-[要求カタログ](requirements.json)は2要求・9目標。負の試験は、応答先・デコード先・Wデータの3種類のRTL変異と、同時エッジで書込みを先に反映する**誤った期待値モデル**1種類です。後者は正しいRTLを誤判定する例で、RTL変異の検出率に算入する意味ではありません。ランナーの変異件数は注入先を問わない検出確認件数です。
+[要求カタログ](requirements.json)は2要求・9目標。ネガティブテストは、応答先・デコード先・Wデータの3種類のRTL変異と、同時エッジで書込みを先に反映する**誤った期待値モデル**1種類です。後者は正しいRTLを誤判定する例で、RTL変異の検出率に算入する意味ではありません。ランナーの変異件数は注入先を問わない検出確認件数です。
 
 ```sh
 python3 examples/local-memory-order/run.py
@@ -50,6 +50,6 @@ python3 examples/local-memory-order/run.py --profile nightly
 python3 -m unittest discover -s examples/local-memory-order/tests -v
 ```
 
-[共通手順](../local-common/README.md)を利用します。構成は`two-by-two`、smokeは48ペア×1 seed、nightlyは500×3 seed。固定12ペアは別枠です。JUnitは7／9件です。確認テスト6件には、ターゲットと要求元の間へ意図的にRDATA破損を入れる検出確認もあります。
+[共通手順](../local-common/README.md)を利用します。構成は`two-by-two`、smokeは48ペア×1 seed、nightlyは500×3 seed。固定12ペアは別枠です。JUnitは7／9件です。セルフテスト6件には、ターゲットと要求元の間へ意図的にRDATA破損を入れる検出確認もあります。
 
 これは本RAMの可視化時点とストローブ規則の検証です。AXIが全マスター間へ単一のメモリ順序を要求するという説明ではありません。キャッシュ整合性、メモリバリア、排他アクセス、アウトオブオーダー、動作中リセットの計画は含めません。一般規則は[Arm AXI仕様](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)、対象回路の範囲は[元の接続例](../local-interconnect/README.md)を参照してください。

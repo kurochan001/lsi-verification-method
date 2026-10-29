@@ -36,7 +36,7 @@ flowchart LR
 
 Pythonの独立したキュー、未返却台帳、選択順から、受付、送信、データ、残クレジット、キュー件数、不正返却通知を照合します。両チャネル、クレジット枯渇・返却・同時送信、キュー満杯、リセット復帰の各10目標です。チャネル内の順序と、送信可能な場合の選択順も毎サイクル比較します。
 
-4変異は送信時の減算漏れ、返却チャネルの入替え、データ破損、誤った初期クレジットです。
+4種類の変異は送信時の減算漏れ、返却チャネルの入替え、データ破損、誤った初期クレジットです。
 
 ```sh
 python3 examples/local-credit-link/run.py
@@ -44,4 +44,4 @@ python3 examples/local-credit-link/run.py --profile nightly
 python3 -m unittest discover -s examples/local-credit-link/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。smokeは100サイクル、nightlyは1000サイクル×3 seedを固定シナリオへ追加し、最後に排出します。2構成のJUnitは14／18件、確認テストは5件です。実物の受信メモリ・物理リンク・CDCをモデル化した結果ではなく、受信完了を外部の返却入力として扱います。
+[共通手順](../local-common/README.md)を使います。smokeは100サイクル、nightlyは1000サイクル×3 seedを固定シナリオへ追加し、最後に排出します。2構成のJUnitは14／18件、セルフテストは5件です。実物の受信メモリ・物理リンク・CDCをモデル化した結果ではなく、受信完了を外部の返却入力として扱います。

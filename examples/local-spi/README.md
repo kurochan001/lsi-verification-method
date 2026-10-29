@@ -68,7 +68,7 @@ python3 examples/local-spi/run.py --profile nightly --out artifacts/spi-nightly
 python3 -m unittest discover -s examples/local-spi/tests -v
 ```
 
-構成名は`mode0-div2`から`mode3-div4`までの8構成（mode 0／1／2／3×div 2／4）です。smokeは各構成で32ランダム操作＋末尾の正常転送、nightlyは256操作＋末尾転送を3 seedで実行します。正常時のJUnitは、構成当たりsmoke **7件**、nightly **9件**で、全8構成では**56／72件**です（固定1＋ランダム1／3＋変異4＋ゲート1）。`checks`は操作の検査完了数であり、ベースクロック数ではありません。
+構成名は`mode0-div2`から`mode3-div4`までの8構成（mode 0／1／2／3×div 2／4）です。smokeは各構成で32ランダム操作＋末尾の正常転送、nightlyは256操作＋末尾転送を3 seedで実行します。正常時のJUnitは、構成当たりsmoke **7件**、nightly **9件**で、全8構成では**56／72件**です（固定1＋ランダム1／3＋変異4＋合否判定1）。`checks`は操作の検査完了数であり、ベースクロック数ではありません。
 
 ```sh
 python3 examples/local-spi/run.py --configuration mode0-div2 --demo-bug 4 --out artifacts/spi-intentional-failure
@@ -78,6 +78,6 @@ python3 examples/local-spi/run.py --configuration mode0-div2 --demo-bug 4 --out 
 
 ## 5. 適用範囲と実行確認
 
-2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で全8構成のsmoke／nightly、各16目標、各4変異、確認テスト4件をローカルで確認しました。GitLabへの追加・CI実行は行っていません。
+2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で全8構成のsmoke／nightly、各16目標、各4種類の変異、セルフテスト4件をローカルで確認しました。GitLabへの追加・CI実行は行っていません。
 
 単一スレーブの8ビット転送で、CSを保持した複数バイト、複数スレーブ、LSB first、動作中のモード／分周変更、APB接続は含みません。デジタルの決められたタイミングで比較する教材であり、実デバイスのsetup／hold、配線遅延、ノイズ、周波数限界や規格適合性を保証するものではありません。

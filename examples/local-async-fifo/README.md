@@ -70,7 +70,7 @@ python3 -m unittest discover -s examples/local-async-fifo/tests -v
 
 構成名は`depth4-sync2`、`depth4-sync3`、`depth8-sync2`、`depth8-sync3`です。smokeは600ランダムtick×1 seed、nightlyは5000×3 seedを追加します。`--iterations`はランダム区間の長さで、固定シナリオや末尾の排出区間は削減しません。`checks`はtick数です。
 
-構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋ゲート1）。全4構成の合計は**28／36件**です。
+構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋合否判定1）。全4構成の合計は**28／36件**です。
 
 ```sh
 python3 examples/local-async-fifo/run.py --configuration depth4-sync2 --demo-bug 4 --out artifacts/async-intentional-failure
@@ -80,6 +80,6 @@ python3 examples/local-async-fifo/run.py --configuration depth4-sync2 --demo-bug
 
 ## 5. 確認範囲と一次資料
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各17目標・4変異、確認テスト6件が成功しました。GitLabでのCI追加・実行は行っていません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各17目標・4種類の変異、セルフテスト6件が成功しました。GitLabでのCI追加・実行は行っていません。
 
 ジッターを加えたRTL検証だけで、CDCの物理的安全性、MTBF、Grayバスのスキューやリセット解除の安全性は確認できません。構造的なCDC/RDC解析、実装後のタイミング制約・解析は別に必要です。[AlteraのDCFIFOタイミング制約の資料](https://docs.altera.com/r/docs/683241/25.1.1/agilextm-7-embedded-memory-user-guide/user-configurable-timing-constraint)にも、実装遅延と制約の点検が説明されています。本例は製品FIFOや実メモリマクロの再現ではありません。

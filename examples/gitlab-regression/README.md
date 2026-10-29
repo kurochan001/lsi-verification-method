@@ -1,13 +1,13 @@
 # GitLabで割り込みの継続的リグレッションを動かす
 
-有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。GitLabへこの例を含むコミットを置くと、ランナーの確認テストと、説明用IRQ回路の回帰を実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
+有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。GitLabへこの例を含むコミットを置くと、ランナーのセルフテストと、説明用IRQ回路のリグレッションを実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
-同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)、[APBレジスタ検証例](../gitlab-apb/README.md)、[APBと割込みの結合検証例](../gitlab-apb-irq/README.md)、[ready/valid通信のランダム検証例](../gitlab-stream/README.md)、[SVAの実行例](../gitlab-sva/README.md)、[回帰の縮退の比較例](../gitlab-reduction/README.md)、[アービタの検証例](../gitlab-arbiter/README.md)、[UARTのランダム検証例](../gitlab-uart/README.md)、[APB・UART・割込みの結合検証例](../gitlab-apb-uart/README.md)も含まれます。現行の全体構成は[READMEの実行例一覧](../../README.md#gitlab実行例の現在の構成)、以下の件数は特記がなければIRQ・CDC回帰の内訳です。
+同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)、[APBレジスタ検証例](../gitlab-apb/README.md)、[APBと割り込みの結合検証例](../gitlab-apb-irq/README.md)、[ready/valid通信のランダム検証例](../gitlab-stream/README.md)、[SVAの実行例](../gitlab-sva/README.md)、[リグレッションの縮退の比較例](../gitlab-reduction/README.md)、[アービタの検証例](../gitlab-arbiter/README.md)、[UARTのランダム検証例](../gitlab-uart/README.md)、[APB・UART・割り込みの結合検証例](../gitlab-apb-uart/README.md)も含まれます。現行の全体構成は[READMEの実行例一覧](../../README.md#gitlab実行例の現在の構成)、以下の件数は特記がなければIRQ・CDCリグレッションの内訳です。
 
 ## 1. 実行するもの
 
 - [`.gitlab-ci.yml`](../../.gitlab-ci.yml)：下記のCI設定をincludeする入口。
-- [`gitlab-ci.yml`](gitlab-ci.yml)：依存ツールの準備、ランナー確認、回帰、JUnit・アーティファクト保存。
+- [`gitlab-ci.yml`](gitlab-ci.yml)：依存ツールの準備、ランナーのセルフテスト、リグレッション、JUnit・アーティファクト保存。
 - [`run.py`](run.py)：計画生成、コンパイル、ケース実行、判定、マニフェスト・JUnit・結果の作成。
 - [`irq_pending.sv`](rtl/irq_pending.sv)：説明用の回路と、検証用に選べる3個の変異。CDC受信回路側の1個と合わせて4個。
 - [`irq_tb.sv`](tb/irq_tb.sv)：仕様に基づく状態・IRQの比較。失敗ラベルと完了記録を出力する。
@@ -24,9 +24,9 @@
 - 時間関係の12ケース：初期PEND 2通り×IRQ_EN 2通り×イベントとclearの時間差−1／0／＋1。
 - 動作中リセットの3ケース：PEND保持中、イベント・clearとの競合、mask中。解除後の保持と最初のイベントも比較する。
 - CDCモデルの1ケース：2経路それぞれの−1／0／＋1受信サイクルの9組×立上がり・立下がり、計18目標。
-- 定期回帰のみ、3個のseedによる64操作ずつのランダム列を追加。
+- 定期リグレッションのみ、3個のseedによる64操作ずつのランダム列を追加。
 
-別に、クリア優先、maskによる保存停止、PEND=1でのリセット無視、CDC受信回路の早すぎる受理の4変異を、対応するチェッカーで検出します。さらに、状態へXを注入し、IRQまで伝搬した未知値をチェッカーが検出する自己確認を1件行います。**予定した変異・X注入の検出は、この確認項目の成功**です。通常回路の失敗とは区別して記録し、コンパイル不能や任意のクラッシュを検出成功にしません。
+別に、クリア優先、maskによる保存停止、PEND=1でのリセット無視、CDC受信回路の早すぎる受理の4種類の変異を、対応するチェッカーで検出します。さらに、状態へXを注入し、IRQまで伝搬した未知値をチェッカーが検出する自己確認を1件行います。**予定した変異・X注入の検出は、この確認項目の成功**です。通常回路の失敗とは区別して記録し、コンパイル不能や任意のクラッシュを検出成功にしません。
 
 | プロファイル | 通常回路のケース | 変異検出 | Xの自己確認 | 要求・カバレッジ判定 | JUnitの合計 |
 | --- | --- | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ python3 examples/gitlab-regression/run.py
 python3 examples/gitlab-regression/run.py --profile nightly --seed 17
 ```
 
-正常なら、ランナー確認の統合テストと回帰が合格します。回帰には次のような出力があります。
+正常なら、ランナーのセルフテストの統合テストとリグレッションが合格します。リグレッションには次のような出力があります。
 
 ```text
 PASS     atomic-p0-en0-op0: 3 checked cycles
@@ -78,9 +78,9 @@ python3 examples/gitlab-regression/run.py --demo-bug 1
 ```mermaid
 flowchart TD
   accTitle: 十一種類の検証例を実行するGitLabパイプライン
-  accDescr: workflowが許可した起動で十一種類のランナー確認を行い、成功後にIRQ、FIFO六構成、フォーマル二構成、APB三構成とAPB・割込み結合三構成、ready/valid四構成、SVA一構成、縮退比較、アービタ三構成、UART六構成、APB・UART・割込み九構成を実行して結果と証跡を保存する。
+  accDescr: workflowが許可した起動で十一種類のランナーのセルフテストを行い、成功後にIRQ、FIFO六構成、フォーマル二構成、APB三構成とAPB・割り込み結合三構成、ready/valid四構成、SVA一構成、縮退比較、アービタ三構成、UART六構成、APB・UART・割り込み九構成を実行して結果と証跡を保存する。
   T["push・MR・web・schedule"] --> W["workflow rulesで起動可否と重複を制御"]
-  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマル・APB・結合・ready/valid・SVA・縮退比較・アービタ・UART・APBとUARTの結合のランナー確認"]
+  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマル・APB・結合・ready/valid・SVA・縮退比較・アービタ・UART・APBとUARTの結合のランナーのセルフテスト"]
   V -- "合格" --> R["irq-regression：run.pyを実行"]
   V -- "合格" --> Q["fifo-regression：6構成のランダム検証"]
   V -- "合格" --> M["fifo-formal：ツールを準備し2構成を検査"]
@@ -88,22 +88,22 @@ flowchart TD
   V -- "合格" --> BI["apb-irq-regression：結合回路3構成を検査"]
   V -- "合格" --> S["stream-regression：ready/valid 4構成を検査"]
   V -- "合格" --> SV["sva-regression：VerilatorでSVAを実行"]
-  V -- "合格" --> RD["reduction-comparison：全件と選択回帰を比較"]
+  V -- "合格" --> RD["reduction-comparison：全件と選択リグレッションを比較"]
   V -- "合格" --> AR["arbiter-regression：要求元2／3／4を検査"]
   V -- "合格" --> U["uart-regression：分周数とパリティの6構成"]
   V -- "合格" --> AU["apb-uart-regression：待ちとパリティの9構成"]
-  V -- "失敗" --> F["パイプライン失敗、後段の回帰は実行しない"]
+  V -- "失敗" --> F["パイプライン失敗、後段のリグレッションは実行しない"]
   R --> G["IRQ：通常機能・変異・X検出・必須50目標を判定"]
-  Q --> GQ["FIFO：構成ごとの必須18／22目標・3変異を判定"]
+  Q --> GQ["FIFO：構成ごとの必須18／22目標・3種類の変異を判定"]
   M --> GM["フォーマル：証明・有界検査・到達性・診断を判定"]
-  B --> GB["APB：構成ごとの必須20／21目標・3変異を判定"]
-  BI --> GBI["結合：必須44／45目標・3変異を判定"]
-  S --> GS["ready/valid：必須25／29目標・3変異・転送数を判定"]
+  B --> GB["APB：構成ごとの必須20／21目標・3種類の変異を判定"]
+  BI --> GBI["結合：必須44／45目標・3種類の変異を判定"]
+  S --> GS["ready/valid：必須25／29目標・3種類の変異・転送数を判定"]
   SV --> GSV["SVA：assert 6個・cover 12目標・感度確認を判定"]
   RD --> GRD["縮退：実行量・19目標・検出力を18件に集約して判定"]
-  AR --> GAR["アービタ：21／31／49目標・3変異・受理と待ちを判定"]
-  U --> GU["UART：21／22目標・3／4変異・完了数を判定"]
-  AU --> GAU["APB＋UART＋IRQ：60／61／69／70目標・5変異・完了数"]
+  AR --> GAR["アービタ：21／31／49目標・3種類の変異・受理と待ちを判定"]
+  U --> GU["UART：21／22目標・3／4種類の変異・完了数を判定"]
+  AU --> GAU["APB＋UART＋IRQ：60／61／69／70目標・5種類の変異・完了数"]
   G -- "終了コード0 / 非0" --> J["各ジョブの成否をGitLabへ反映"]
   GQ --> J
   GM --> J
@@ -128,7 +128,7 @@ flowchart TD
   GAU --> A
 ```
 
-IRQ・FIFO・APB・APBと割込みの結合検証・ready/valid・SVA・縮退比較・アービタ・UART・APBとUARTの結合はscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
+IRQ・FIFO・APB・APBと割り込みの結合検証・ready/valid・SVA・縮退比較・アービタ・UART・APBとUARTの結合はscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
 
 GitLab上に空のプロジェクトを用意し、この例を含むコミットをpushします。新規プロジェクトではREADMEなどで初期化しない方法が簡単です。未コミットのファイルはpushでは送られないため、例のファイルを含むコミットを使います。
 
@@ -147,12 +147,12 @@ GitLabのパイプライン画面で次を確認します。
 
 1. `runner-tests`が合格する。
 2. `irq-regression`が合格し、ログ末尾に`Regression: PASS`がある。
-3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナー確認132テストはこの件数とは別に実行する。
+3. `irq-regression`のTests表示に38項目あり、失敗・errorが0である。現行の通常パイプライン全体では11例・JUnit 311項目になる。ランナーのセルフテスト132件はこの件数とは別に実行する。
 4. アーティファクトの`summary.json`で通常回路32合格・変異4検出・Xの自己確認1検出を、`coverage.json`で8要求・50/50目標の合格を確認する。
 
 プロジェクトのCI Lint／Pipeline editorでも、includeを含む設定を検査します。ジョブがpendingのままなら、適合するRunner・untaggedの受付・利用枠を確認します。依存パッケージの取得で失敗した場合は環境の失敗で、回路の不具合とは分けます。
 
-MRでは、ルートの`workflow:rules`がMRパイプラインを有効にし、MRが開いているブランチのpushパイプラインを抑止します。現行設定ではランナー確認11ジョブと回帰39ジョブ、計50ジョブを実行します。GitLab側では、対象プロジェクトの「Pipelines must succeed」などのマージ条件を有効にし、必要なブランチ保護も設定します。ローカルのYAML変更だけでプロジェクトのマージ条件が有効になるわけではありません。
+MRでは、ルートの`workflow:rules`がMRパイプラインを有効にし、MRが開いているブランチのpushパイプラインを抑止します。現行設定ではランナーのセルフテスト11ジョブとリグレッション39ジョブ、計50ジョブを実行します。GitLab側では、対象プロジェクトの「Pipelines must succeed」などのマージ条件を有効にし、必要なブランチ保護も設定します。ローカルのYAML変更だけでプロジェクトのマージ条件が有効になるわけではありません。
 
 実行先では、作業ブランチをpushしてMRを作成・更新し、必要な50ジョブが含まれることと、失敗したMRのマージが止まることを確認します。パイプラインの重複はイベントと対象SHAを照合して確認します。[GitLabのMR設定](https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/)と[workflowの説明](https://docs.gitlab.com/ci/yaml/workflow/)が参照先です。
 
@@ -166,7 +166,7 @@ MRでは、ルートの`workflow:rules`がMRパイプラインを有効にし、
 - `irq-regression`は通常回路としてクリア優先の誤実装を実行し、終了コード1で失敗する。
 - Testsに通常回路の8失敗と要求・カバレッジ判定の1失敗が表示され、失敗時もJUnit・ログ・波形がアーティファクトへ保存される。
 
-次の正常回帰では`IRQ_DEMO_BUG=0`を使います。デモで失敗したパイプラインの記録は残します。変数を1のままスケジュールやプロジェクトの既定へ保存すると、その回帰も意図的に失敗する設定になります。
+次の正常リグレッションでは`IRQ_DEMO_BUG=0`を使います。デモで失敗したパイプラインの記録は残します。変数を1のままスケジュールやプロジェクトの既定へ保存すると、そのリグレッションも意図的に失敗する設定になります。
 
 JUnitのアップロードだけではジョブを失敗させられません。この例では、Pythonランナーが失敗・errorを終了コード1へ反映します。[GitLabのJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)
 
@@ -200,28 +200,28 @@ CIでは`artifacts/irq/`を失敗時も含めて14日間保存します。
 
 ケースの成功だけで目標への到達を推測せず、宣言した目標と実際の`COVER`記録を照合します。途中の観測はログへ残しても、失敗した通常ケースや、正しさを壊した変異ケースから、正常機能の到達を補いません。Xの自己確認では、その検出に対応する目標だけを採用します。
 
-`requirements-and-coverage`は、予定したケースとは別のJUnit項目です。全ケースが成功しても要求の必須目標が欠ければ、この項目が失敗し、回帰も終了コード1になります。汎用の要求台帳を更新する機能ではなく、この例の要求スナップショットを判定する実装です。
+`requirements-and-coverage`は、予定したケースとは別のJUnit項目です。全ケースが成功しても要求の必須目標が欠ければ、この項目が失敗し、リグレッションも終了コード1になります。汎用の要求台帳を更新する機能ではなく、この例の要求スナップショットを判定する実装です。
 
-タイムアウトでは起動時に分離したプロセスグループを停止します。ランナーへのSIGTERM／SIGINTでも実行中のグループを停止して異常終了します。途中のマニフェスト・個別ログは残しますが、中断した回帰の最終JUnit・summaryの完成は保証しません。外部計算機ファームの取消や、別sessionへ離脱したプロセスの停止は別の実装が必要です。
+タイムアウトでは起動時に分離したプロセスグループを停止します。ランナーへのSIGTERM／SIGINTでも実行中のグループを停止して異常終了します。途中のマニフェスト・個別ログは残しますが、中断したリグレッションの最終JUnit・summaryの完成は保証しません。外部計算機ファームの取消や、別sessionへ離脱したプロセスの停止は別の実装が必要です。
 
-この最小例は1個の回帰ジョブ内でケースを順番に実行します。ケースの分散実行、外部計算機ファームの取消、商用ライセンスの全体制御、カバレッジDBのmerge、要求台帳の自動更新は未実装です。実案件へ拡張する場合は[継続回帰の運用](../../docs/method/continuous-regression.md)に従います。
+この最小例は1個のリグレッションジョブ内でケースを順番に実行します。ケースの分散実行、外部計算機ファームの取消、商用ライセンスの全体制御、カバレッジDBのmerge、要求台帳の自動更新は未実装です。実案件へ拡張する場合は[継続リグレッションの運用](../../docs/method/continuous-regression.md)に従います。
 
 コンテナのタグとaptのパッケージは、将来同じバイナリを指すとは限りません。この例では実行時のツール版・ソースを記録します。厳密な再現が必要なら、検証済みのイメージを作成しdigest・ツール版を固定します。
 
 ## 7. 確認した範囲
 
-2026-10-25にmacOS、Python 3.14.7、Icarus Verilog 14.0 devel（`s20260301-411-gca6b8d376`）で、12個の統合テストを実行しました。smokeの通常32ケース、4変異・X自己確認、8要求・50目標の合格に加え、nightly、デモの8失敗とカバレッジ判定、コンパイラ不足・タイムアウト・完了記録欠落・別チェッカーによる失敗、子プロセス停止、未達カバレッジと変異からの混入防止を確認しました。
+2026-10-25にmacOS、Python 3.14.7、Icarus Verilog 14.0 devel（`s20260301-411-gca6b8d376`）で、12個の統合テストを実行しました。smokeの通常32ケース、4種類の変異・X自己確認、8要求・50目標の合格に加え、nightly、デモの8失敗とカバレッジ判定、コンパイラ不足・タイムアウト・完了記録欠落・別チェッカーによる失敗、子プロセス停止、未達カバレッジと変異からの混入防止を確認しました。
 
 GitLab用YAMLは、公開されている[公式JSONスキーマ](https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/assets/javascripts/editor/schema/ci.json)でローカル検査しました。
 
-同日に、[GitLabデモプロジェクト](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)を作成し、Web IDEからこの回帰例とルートCI設定・ライセンスを登録しました。教材全体のミラーではなく、独立した初期コミットから作った`demo/expanded-regression`ブランチと[MR !1](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/1)です。検証時は非公開で、その後同日にPublicへ変更しました。現在はログインなしでソース・履歴・CIの実行記録を閲覧できます。
+同日に、[GitLabデモプロジェクト](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)を作成し、Web IDEからこのリグレッション例とルートCI設定・ライセンスを登録しました。教材全体のミラーではなく、独立した初期コミットから作った`demo/expanded-regression`ブランチと[MR !1](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/1)です。検証時は非公開で、その後同日にPublicへ変更しました。現在はログインなしでソース・履歴・CIの実行記録を閲覧できます。
 
 GitLab-hosted Linux Runner、`debian:bookworm-slim`、Python 3.11.2、Icarus 11.0で次を確認しました。初回はアカウント未確認で停止し、その解除後はCDCモデルの`input integer`でコンパイルエラーになりました。入力を明示的な32ビット符号付きwireへ修正し、コンパイル診断をCIログにも表示するようにしました。
 
-- [通常回帰 #2986024650](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986024650)：両ジョブ成功、ランナーの12テスト合格、[JUnit 38件・失敗0・error 0](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986024650/test_report)、必須目標50/50。取得したアーティファクトの入力8ファイルのSHA-256を、手元の実装と照合しました。
-- [不具合デモ #2986027250](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986027250)：`runner-tests`成功、回帰失敗。[JUnit 38件中9失敗・error 0](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986027250/test_report)で、機能8件と要求・カバレッジ判定1件の失敗を確認しました。失敗時もアーティファクトを取得でき、MRに`Merge blocked: 1 check failed`が表示されました。
+- [通常リグレッション #2986024650](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986024650)：両ジョブ成功、ランナーの12テスト合格、[JUnit 38件・失敗0・error 0](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986024650/test_report)、必須目標50/50。取得したアーティファクトの入力8ファイルのSHA-256を、手元の実装と照合しました。
+- [不具合デモ #2986027250](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986027250)：`runner-tests`成功、リグレッション失敗。[JUnit 38件中9失敗・error 0](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986027250/test_report)で、機能8件と要求・カバレッジ判定1件の失敗を確認しました。失敗時もアーティファクトを取得でき、MRに`Merge blocked: 1 check failed`が表示されました。
 - [正常設定へ復帰 #2986030185](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030185)：両ジョブ成功、MRが`Ready to merge!`へ戻りました。
-- [schedule実行 #2986030512](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030512)：同じ`d37f6400`をnightly・seed 17で実行し、[JUnit 41件・失敗0・error 0](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030512/test_report)、機能35件・4変異・X自己確認・必須目標50/50の成功をアーティファクトでも確認しました。
+- [schedule実行 #2986030512](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030512)：同じ`d37f6400`をnightly・seed 17で実行し、[JUnit 41件・失敗0・error 0](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030512/test_report)、機能35件・4種類の変異・X自己確認・必須目標50/50の成功をアーティファクトでも確認しました。
 
 GitLabのPipeline editorで構文正常を確認し、展開した設定をCI Lintでも検査しました。MRが開いているブランチのpushを模擬すると、`workflow:rules`によりパイプラインが作成されません。実際の変更ではMR パイプラインに両ジョブが含まれます。
 
@@ -229,10 +229,10 @@ GitLabのPipeline editorで構文正常を確認し、展開した設定をCI Li
 
 2026-10-26にはFIFOのMR !2、フォーマル検証のMR !3もmainへマージされました。[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)で全12ジョブ・JUnit 90件の成功を確認しています。上記の38／41件・2ジョブという数値は、IRQ例だけを実行していた当時の記録です。
 
-その後、APB・UART・割込みのMR !11と確認記録のMR !12までmainへ取り込まれました。2026-10-26に最新main `ec594de7`の[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しました。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)は全50ジョブ・JUnit 311件・失敗／エラー0件です。全例を含むscheduleの384件は予定値で、今回GitLabで実行した結果ではありません。
+その後、APB・UART・割り込みのMR !11と確認記録のMR !12までmainへ取り込まれました。2026-10-26に最新main `ec594de7`の[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しました。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)は全50ジョブ・JUnit 311件・失敗／エラー0件です。全例を含むscheduleの384件は予定値で、今回GitLabで実行した結果ではありません。
 
 ## タイムアウト後の停止処理
 
 共通のプロセス実行処理は、タイムアウト時にプロセスグループの停止を試みます。停止APIがエラーになった場合も、直接の子プロセスへの停止を試み、後処理の待ち時間を制限して、エラーを実行結果とログへ残します。子孫全体の停止を確認できなかった場合は、その事実をエラーとして残し、変異の検出成功には数えません。後処理の例外で通常の集計・JUnit作成が中断される問題を修正しました。外部からの強制終了でファイル保存が完了することまでは保証しません。
 
-この処理の追加確認2件を含み、IRQランナーの確認テストは14件です。GitLab全体の確認は132件で、以前のGitLab実行記録129件・前回のローカル確認130件とは版を分けて扱います。
+この処理の追加確認2件を含み、IRQランナーのセルフテストは14件です。GitLab全体の確認は132件で、以前のGitLab実行記録129件・前回のローカル確認130件とは版を分けて扱います。

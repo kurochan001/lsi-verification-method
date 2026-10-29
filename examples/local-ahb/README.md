@@ -92,7 +92,7 @@ python3 -m unittest discover -s examples/local-ahb/tests -v
 
 構成名は`wait0`、`wait1`、`wait3`です。smokeは64ランダム操作×1 seed、nightlyは500×3 seedを実行します。1操作はSINGLE、4ビートのINCR4、または転送中リセットです。BUSYやIDLE、末尾の4レジスタ読出しとリセットの追加サイクルはiterationsに含みません。`checks`は入力サイクル数です。
 
-構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋ゲート1）。3構成の合計は**21／27件**です。
+構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋合否判定1）。3構成の合計は**21／27件**です。
 
 ```sh
 python3 examples/local-ahb/run.py --configuration wait1 --demo-bug 1 --out artifacts/ahb-intentional-failure
@@ -100,11 +100,11 @@ python3 examples/local-ahb/run.py --configuration wait1 --demo-bug 1 --out artif
 
 このコマンドは通常回路側にもアドレス対応の不具合を入れるため、終了コード1と`AHB_STATE`による失敗が期待結果です。
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全3構成のsmoke／nightly、各21目標・4変異、確認テスト9件が成功しました。GitLabへの追加・CI起動は行っていません。AHB全体への適合、任意の入力列の証明や製品への適用実績を示す結果ではありません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全3構成のsmoke／nightly、各21目標・4種類の変異、セルフテスト9件が成功しました。GitLabへの追加・CI起動は行っていません。AHB全体への適合、任意の入力列の証明や製品への適用実績を示す結果ではありません。
 
 ## 7. フォーマル検証も実行する
 
-[AHB／AXIのフォーマル例](../local-bus-formal/README.md)を追加しました。AHBは同じ3構成で、応答・ERROR・リセットの3プロパティを非有界に証明し、データを含む4プロパティを既定深さ12で検査します。8到達目標、4変異の反例、過剰な仮定の診断も実行します。証明の仮定と適用範囲、ツールの準備はリンク先を参照してください。
+[AHB／AXIのフォーマル例](../local-bus-formal/README.md)を追加しました。AHBは同じ3構成で、応答・ERROR・リセットの3プロパティを非有界に証明し、データを含む4プロパティを既定深さ12で検査します。8到達目標、4種類の変異の反例、過剰な仮定の診断も実行します。証明の仮定と適用範囲、ツールの準備はリンク先を参照してください。
 
 ```sh
 python3 examples/local-bus-formal/run.py --bus ahb --out artifacts/ahb-formal

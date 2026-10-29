@@ -16,7 +16,7 @@ flowchart TD
   C --> E["生JUnit・FST・集約結果"]
 ```
 
-cocotbの生JUnitとランナーのJUnitは、同じ試験の別階層として保存します。
+cocotbが出力するJUnitとランナーのJUnitは、同じ試験の別階層として保存します。
 
 | 確認する場面 | 期待する動作 | 主な照合対象 |
 | --- | --- | --- |
@@ -39,7 +39,7 @@ cocotb 2.1.0と依存パッケージを固定しています。Python runnerのA
 
 ## 検査内容
 
-各取引のSETUPとACCESSをPythonから直接駆動し、SETUPで未完了のまま値が変わらないこと、規定の待ち数、PREADY・PSLVERR、読出しデータ、更新後のCONFIG／PENDINGを確認します。期待値はレジスタ属性とイベント優先順位から計算します。
+各トランザクションのSETUPとACCESSをPythonから直接駆動し、SETUPで未完了のまま値が変わらないこと、規定の待ち数、PREADY・PSLVERR、読出しデータ、更新後のCONFIG／PENDINGを確認します。期待値はレジスタ属性とイベント優先順位から計算します。
 
 固定試験はCONFIG読書き、ID読出し、IDへの不正書込み、未定義・非整列番地、イベントとW1Cの同時成立です。新しいイベントをクリアより優先します。読出し値は完了エッジの更新前、レジスタ状態はエッジ後を照合します。ランダム試験では番地・方向・データ・SETUP／完了時イベントを変えます。
 
@@ -52,8 +52,8 @@ python3 examples/local-cocotb/run.py --profile nightly
 COCOTB_PYTHON=/tmp/lsi-cocotb-venv/bin/python python3 -m unittest discover -s examples/local-cocotb/tests -v
 ```
 
-smokeは固定10取引と32ランダム取引×1 seed、nightlyは300×3 seedです。ランダムケースの冒頭にも固定10取引を入れます。checksはAPB取引数で、クロック数ではありません。JUnitは2構成合計14／18件です。
+smokeは固定10トランザクションと32ランダムトランザクション×1 seed、nightlyは300×3 seedです。ランダムケースの冒頭にも固定10トランザクションを入れます。checksはAPBトランザクション数で、クロック数ではありません。JUnitは2構成合計14／18件です。
 
-[共通ホスト手順](../local-host-common/README.md)の証跡に加え、各ケースにcocotbの生JUnitとFST波形を保存します。予定した生JUnitの件数・成功／失敗と、波形の存在も要求します。生JUnitを親のJUnitへ再合算しません。診断・変異は通常カバーへ加えません。
+[共通ホスト手順](../local-host-common/README.md)の証跡に加え、各ケースにcocotbが出力するJUnitとFST波形を保存します。予定した生JUnitの件数・成功／失敗と、波形の存在も要求します。生JUnitを親のJUnitへ再合算しません。診断・変異は通常実行のカバレッジへ加えません。
 
-確認テストは5件で、実cocotb、seed、件数、診断分類、指定コンパイラーが無い場合の拒否を含みます。UVM、covergroup DB、cocotbの全シミュレーターへの互換性を検証した例ではありません。
+セルフテストは5件で、実cocotb、seed、件数、診断分類、指定コンパイラーが無い場合の拒否を含みます。UVM、covergroup DB、cocotbの全シミュレーターへの互換性を検証した例ではありません。

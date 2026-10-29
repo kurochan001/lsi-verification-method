@@ -27,7 +27,7 @@ flowchart TD
 | binが未達 | [機能カバレッジ](method/functional-coverage.md) | 刺激・制約・収集時点・適用範囲 |
 | 失敗を再現できない | [ランダム検証](method/constrained-random-verification.md) | seedに加え版・構成・実入力 |
 | formalがPASS | [フォーマル検証](method/formal-verification.md) | 仮定・証明方式・到達・深さ |
-| 回帰が完了しない | [継続回帰](method/continuous-regression.md) | 予定と実績・欠落・期限 |
+| リグレッションが完了しない | [継続リグレッション](method/continuous-regression.md) | 予定と実績・欠落・期限 |
 
 ## 目次
 
@@ -56,7 +56,7 @@ flowchart TD
 
 ### Q4. UVMは必須ですか
 
-必須ではありません。直接テスト、手続き的チェッカー、SVA、フォーマルなどでも要求との対応は作れます。UVMは操作や監視部品の再利用、複数インターフェースの協調などに役立ちますが、導入しただけで要求の抜けや期待値の誤りが解消するわけではありません。本リポジトリには[UVM資料](method/uvm-verification.md)に加え、[APBを使うUVM・RALの実行例](../examples/local-uvm/README.md)があります。Verilatorと外部のUVMライブラリを準備して実行します。
+必須ではありません。ディレクテッドテスト、手続き的チェッカー、SVA、フォーマルなどでも要求との対応は作れます。UVMは操作や監視部品の再利用、複数インターフェースの協調などに役立ちますが、導入しただけで要求の抜けや期待値の誤りが解消するわけではありません。本リポジトリには[UVM資料](method/uvm-verification.md)に加え、[APBを使うUVM・RALの実行例](../examples/local-uvm/README.md)があります。Verilatorと外部のUVMライブラリを準備して実行します。
 
 ## 2. 要求とカバレッジ
 
@@ -84,7 +84,7 @@ flowchart TD
 
 ### Q10. seedは何個回せば十分ですか
 
-一律の個数では決めません。要求、必須構成、境界・相互作用、負荷・時間、到達と判定、既知バグや変異の検出から計画します。未達には重み・シナリオの調整や直接テストを足します。新しいbinが増えなくなったことや予算を使い切ったことは、バグがない証明ではありません。未実行・残リスクも報告します。[ランダム検証の計画](method/constrained-random-verification.md)を参照してください。
+一律の個数では決めません。要求、必須構成、境界・相互作用、負荷・時間、到達と判定、既知バグや変異の検出から計画します。未達には重み・シナリオの調整やディレクテッドテストを足します。新しいbinが増えなくなったことや予算を使い切ったことは、バグがない証明ではありません。未実行・残リスクも報告します。[ランダム検証の計画](method/constrained-random-verification.md)を参照してください。
 
 ### Q11. seedだけ保存すれば失敗を再現できますか
 
@@ -140,11 +140,11 @@ assumeを書くだけでシミュレーションの刺激が自動的に制約�
 
 ### Q22. 検証が膨大です。pairwiseへ減らせばよいですか
 
-pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存や操作順序を保証しません。依存の強い組は高次・直接シナリオとして残し、同値分割、境界値、代表構成、目標とテストの対応による選択も組み合わせます。削減後は必須目標・チェッカー・既知バグ・代表的な変異の検出を確認し、広い定期回帰と再評価条件を残します。[縮退の手順](method/verification-reduction.md)を参照してください。
+pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存や操作順序を保証しません。依存の強い組は高次・狙いを定めたシナリオとして残し、同値分割、境界値、代表構成、目標とテストの対応による選択も組み合わせます。削減後は必須目標・チェッカー・既知バグ・代表的な変異の検出を確認し、広い定期リグレッションと再評価条件を残します。[縮退の手順](method/verification-reduction.md)を参照してください。
 
 ### Q23. 小さい幅・FIFO深さの合格を、大きい構成へ流用できますか
 
-一般化の根拠が必要です。幅や深さで境界、アドレス折返し、占有数、仲裁、時間関係が変わる可能性があります。代表構成にできる条件、残す境界・例外、形式的に性質を保存する根拠を記録します。根拠がなければ小さいモデルの結果として扱い、製品の必須構成を合格にしません。[構成・抽象化の縮退](method/verification-reduction.md)と[構成別の判定](method/spec-to-verification-method.md#95-構成とバリアント)を参照してください。
+一般化の根拠が必要です。幅や深さで境界、アドレス折り返し、占有数、仲裁、時間関係が変わる可能性があります。代表構成にできる条件、残す境界・例外、形式的に性質を保存する根拠を記録します。根拠がなければ小さいモデルの結果として扱い、製品の必須構成を合格にしません。[構成・抽象化の縮退](method/verification-reduction.md)と[構成別の判定](method/spec-to-verification-method.md#95-構成とバリアント)を参照してください。
 
 ## 7. GitLabと実行例
 
@@ -152,33 +152,33 @@ pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存�
 
 CIの緑は設定したジョブの合格です。予定ケースの欠落、必須目標、未完了、チェッカーの実行結果をランナーが判定し、異常を非0の終了コードへ反映する必要があります。GitLabのJUnitレポートは結果表示用で、単独ではジョブの状態を変えません。[GitLab公式のJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)
 
-IRQ・FIFO・APB・APBと割込み・ready/valid・UART・APBとUARTの結合などの手続き的なシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達なら回帰を失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[現行構成](../README.md#gitlab実行例の現在の構成)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
+IRQ・FIFO・APB・APBと割り込み・ready/valid・UART・APBとUARTの結合などの手続き的なシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達ならリグレッションを失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[現行構成](../README.md#gitlab実行例の現在の構成)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
 
-CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。2026-10-26に確認したmainは、APB・UART・割込み結合検証のMR !11と確認記録のMR !12まで取り込み済みです。現行構成は全50ジョブ・通常JUnit 311件で、MR !12のCIの成功と、その後のmainのCIの成功を確認しています。追加例の状態は[構成一覧](../README.md#gitlab実行例の現在の構成)と各例の確認記録を参照してください。
+CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。2026-10-26に確認したmainは、APB・UART・割り込み結合検証のMR !11と確認記録のMR !12まで取り込み済みです。現行構成は全50ジョブ・通常JUnit 311件で、MR !12のCIの成功と、その後のmainのCIの成功を確認しています。追加例の状態は[構成一覧](../README.md#gitlab実行例の現在の構成)と各例の確認記録を参照してください。
 
-現行設定ではREADMEだけの変更でも全50ジョブを起動します。MRが開いているブランチの重複したpushパイプラインは抑止しますが、文書だけの変更に対する回帰の縮退は実装していません。共有Runnerの計算時間の利用枠も確認してください。
+現行設定ではREADMEだけの変更でも全50ジョブを起動します。MRが開いているブランチの重複したpushパイプラインは抑止しますが、文書だけの変更に対するリグレッションの縮退は実装していません。共有Runnerの計算時間の利用枠も確認してください。
 
 ### Q25. このリポジトリだけで何を実行できますか
 
-`examples/gitlab-regression/`の説明用IRQ回帰は、Python 3.10以上とIcarus Verilogの`iverilog`・`vvp`があればローカルで実行できます。[ローカル手順](../examples/gitlab-regression/README.md#2-まずローカルで実行する)にコマンドがあります。通常回路、変異、X注入、要求・50目標の照合を行い、手続き的チェッカーの観測記録を集計します。UVM、SVAのカバレッジ、covergroup DB、フォーマルをそのジョブで実行する例ではありません。
+`examples/gitlab-regression/`の説明用IRQリグレッションは、Python 3.10以上とIcarus Verilogの`iverilog`・`vvp`があればローカルで実行できます。[ローカル手順](../examples/gitlab-regression/README.md#2-まずローカルで実行する)にコマンドがあります。通常回路、変異、X注入、要求・50目標の照合を行い、手続き的チェッカーの観測記録を集計します。UVM、SVAのカバレッジ、covergroup DB、フォーマルをそのジョブで実行する例ではありません。
 
-同じ環境で[同期FIFOのランダム検証](../examples/gitlab-fifo/README.md)も実行できます。参照キューによる比較、境界テストとseed付き操作列、リセット、3変異の検出を行います。深さと幅を変えた6構成をそれぞれ判定するGitLab設定もあります。
+同じ環境で[同期FIFOのランダム検証](../examples/gitlab-fifo/README.md)も実行できます。参照キューによる比較、境界テストとseed付き操作列、リセット、3種類の変異の検出を行います。深さと幅を変えた6構成をそれぞれ判定するGitLab設定もあります。
 
 [APBレジスタ検証](../examples/gitlab-apb/README.md)も同じ環境で実行できます。3種類の待ち時間、アドレス分類×操作、エラー応答、W1Cとイベントの競合、リセットを比較し、構成ごとの必須目標を判定します。
 
-[APBと割込みの結合検証](../examples/gitlab-apb-irq/README.md)では、既存のAPB回路を使い、マスク中のイベント保持、W1Cと再発生、マスク更新、複数要因、リセットを組み合わせます。4要因×マスク×クリア×イベントの32クロスを含め、構成ごとに44／45目標を判定します。
+[APBと割り込みの結合検証](../examples/gitlab-apb-irq/README.md)では、既存のAPB回路を使い、マスク中のイベント保持、W1Cと再発生、マスク更新、複数要因、リセットを組み合わせます。4要因×マスク×クリア×イベントの32クロスを含め、構成ごとに44／45目標を判定します。
 
 [ready/valid通信のランダム検証](../examples/gitlab-stream/README.md)では、受信側の待ちを入れ、validとデータの保持、同時送受信、欠落・重複・順序を確認します。最後まで排出し、受理数・受信数・リセット破棄数も照合します。深さ1／3×幅8／16の4構成で必須25／29目標を判定します。
 
 [SVAの実行例](../examples/gitlab-sva/README.md)はVerilatorとC++コンパイラ・makeを使います。GitLabのジョブ内で準備し、6個のassert、12個のネイティブカバー、6種類の違反、前件不足の診断を実行します。ローカルでは`--checker-off`で無効化を合格にしない確認もできます。2値シミュレーションなので、X/Zの検証は別に行います。
 
-[回帰の縮退の比較](../examples/gitlab-reduction/README.md)では、全件、目標だけの選択、ストレス保持を別々に実行します。目標19件を満たしても履歴依存の変異を見逃す例を含め、検査サイクル数と検出力の両方を比較します。比較教材のCI成功を、そのまま縮退方式の製品承認には使いません。
+[リグレッションの縮退の比較](../examples/gitlab-reduction/README.md)では、全件、目標だけの選択、ストレス保持を別々に実行します。目標19件を満たしても履歴依存の変異を見逃す例を含め、検査サイクル数と検出力の両方を比較します。比較教材のCI成功を、そのまま縮退方式の製品承認には使いません。
 
 [アービタの検証](../examples/gitlab-arbiter/README.md)では、排他制御、ラウンドロビン順序、待ち中の選択保持、公平性を確認します。受信側が受理できる機会と実クロック数を分け、停止中を飢餓の検査済みに数えません。2／3／4要求元で21／31／49目標を判定し、専用テストで公平性モニター単独の違反検出も確認します。
 
 [UARTのランダム検証](../examples/gitlab-uart/README.md)はIcarus Verilogで8N1／8E1／8O1の送受信を確認します。データと位相の変更、パリティ・フレーミングエラー、偽スタート、転送中リセットを含みます。ビット周期は一致させており、周波数ずれやアナログのCDC安全性を検証したとは扱いません。
 
-[APB・UART・割込みの結合検証](../examples/gitlab-apb-uart/README.md)では、APBから実際に送信し、受信データを読み、完了・エラーの割込みを確認します。マスク中の保持、W1Cと新規イベント、RXDATA読出しと新規受信を同時に起こし、9構成と5変異で判定します。受信保持は1バイトで、CPUや実ドライバは実行していません。
+[APB・UART・割り込みの結合検証](../examples/gitlab-apb-uart/README.md)では、APBから実際に送信し、受信データを読み、完了・エラーの割り込みを確認します。マスク中の保持、W1Cと新規イベント、RXDATA読出しと新規受信を同時に起こし、9構成と5種類の変異で判定します。受信保持は1バイトで、CPUや実ドライバは実行していません。
 
 GitLabの利用枠を使わずに追加の教材を試す場合は、[ECCの故障注入](../examples/local-ecc/README.md)、[SPIのランダム検証](../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../examples/local-timer-watchdog/README.md)があります。[共通手順](../examples/local-common/README.md)に従ってIcarus Verilogでローカル実行します。さらに、[非同期FIFO](../examples/local-async-fifo/README.md)、[I²C](../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../examples/local-apb-timer/README.md)も同じ共通ランナーで動きます。[AHB-Lite](../examples/local-ahb/README.md)と[AXI4-Lite](../examples/local-axi/README.md)では、パイプラインや独立チャネルの受付・応答も確認できます。AHB／AXIのランダム刺激を拡張し、[ローカルのフォーマル例](../examples/local-bus-formal/README.md)も追加しました。仮定付きの安全性証明、深さ12のデータBMC、到達性と不具合検出を別々に判定します。これらはGitLab CIへ組み込んでいません。
 
@@ -192,9 +192,9 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 
 `tools/`はケーススタディの台帳・テスト・依存モジュールを前提とする参照実装です。このリポジトリだけでは動きません。一般化したJSON記録例を、そのまま照合キットへ投入できる形式とも扱わないでください。[ツールの復元先と依存](../tools/README.md)を参照してください。
 
-### Q26. 回帰が失敗したら、何から確認しますか
+### Q26. リグレッションが失敗したら、何から確認しますか
 
-予定と実行結果の欠落、ビルド、実行環境、DUTの比較失敗、チェッカー・期待値、必須目標の未達を切り分けます。マニフェスト、ツール版、ビルドログ、ケース別ログ・波形、summary、カバレッジ、JUnitを実行IDでたどります。実行例では意図した変異・X検出が成功項目になるので、通常回路の失敗と区別してください。再実行で合格しても最初の失敗は残します。中断時は最終JUnitやsummaryが完成しない場合もあるため、途中の記録から調べます。[保存する証跡](../examples/gitlab-regression/README.md#6-保存するものと判定)と[継続回帰の手順](method/continuous-regression.md)を参照してください。
+予定と実行結果の欠落、ビルド、実行環境、DUTの比較失敗、チェッカー・期待値、必須目標の未達を切り分けます。マニフェスト、ツール版、ビルドログ、ケース別ログ・波形、summary、カバレッジ、JUnitを実行IDでたどります。実行例では意図した変異・X検出が成功項目になるので、通常回路の失敗と区別してください。再実行で合格しても最初の失敗は残します。中断時は最終JUnitやsummaryが完成しない場合もあるため、途中の記録から調べます。[保存する証跡](../examples/gitlab-regression/README.md#6-保存するものと判定)と[継続リグレッションの手順](method/continuous-regression.md)を参照してください。
 
 ## 8. 変更後の再確認と完了判断
 
@@ -214,8 +214,8 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 
 ## UVMの本物の制約・covergroupや、仕様からのレジスタ生成も試せますか？
 
-[UVMランダム例](../examples/local-uvm-random/README.md)でSVの制約付きランダム化とネイティブcovergroupを、[SystemRDL例](../examples/local-register-spec/README.md)でRTL・Cヘッダー・RALの生成と独立契約による照合を実行できます。[反例再現](../examples/local-formal-replay/README.md)、優先順位付き割込み・リング式DMA・クレジット通信・小規模キャッシュも含めた[7例の集約手順](../examples/local-soc-regression/README.md)があります。GitLabの利用枠は使いません。
+[UVMランダム例](../examples/local-uvm-random/README.md)でSVの制約付きランダム化とネイティブcovergroupを、[SystemRDL例](../examples/local-register-spec/README.md)でRTL・Cヘッダー・RALの生成と独立契約による照合を実行できます。[反例再現](../examples/local-formal-replay/README.md)、優先順位付き割り込み・リング式DMA・クレジット通信・小規模キャッシュも含めた[7例の集約手順](../examples/local-soc-regression/README.md)があります。GitLabの利用枠は使いません。
 
 ## 既存例をさらに結合した教材はありますか？
 
-[RAL接続・AXI順序・DMA・CRC・時刻・MBISTの7例](../examples/local-extension-regression/README.md)があります。生成RALの実バス接続、ID別応答順序、DMA所有権、メモリとStreamの結合に加え、CRC・64ビットスナップショット・MBISTを扱います。いずれもローカル実行で、必要な環境と教材の制約を各READMEへ記載しています。
+[RAL接続・AXI順序・DMA・CRC・カウンター・MBISTの7例](../examples/local-extension-regression/README.md)があります。生成RALの実バス接続、ID別応答順序、DMA所有権、メモリとStreamの結合に加え、CRC・64ビットスナップショット・MBISTを扱います。いずれもローカル実行で、必要な環境と教材の制約を各READMEへ記載しています。

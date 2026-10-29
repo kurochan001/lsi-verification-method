@@ -84,7 +84,7 @@ python3 examples/gitlab-apb/run.py --wait 1 --seed 73 --transactions 40 --out ar
 | 2 | 同時発生時にイベントよりW1Cを優先する | `APB_W1C` |
 | 3 | エラー書込みでCONFIGを変更する | `APB_ERROR_SIDE_EFFECT` |
 
-通常回帰でも3変異を別々に実行し、所定の比較で検出できることを要求します。下記は正常ケースにも不具合を入れ、終了コード1とJUnitのfailureを確認するデモです。
+通常リグレッションでも3種類の変異を別々に実行し、所定の比較で検出できることを要求します。下記は正常ケースにも不具合を入れ、終了コード1とJUnitのfailureを確認するデモです。
 
 ```sh
 python3 examples/gitlab-apb/run.py --wait 1 --demo-bug 2
@@ -107,12 +107,12 @@ python3 examples/gitlab-apb/run.py --wait 1 --demo-bug 2
 
 ## 6. 実行確認
 
-2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版でランナー12テストと、wait=0/1/3のnightly全構成を確認しました。各構成で20/20または21/21目標を達成し、3変異を検出しました。nightlyは既定seed 17〜19を各2,000転送実行しています。
+2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版でランナー12テストと、wait=0/1/3のnightly全構成を確認しました。各構成で20/20または21/21目標を達成し、3種類の変異を検出しました。nightlyは既定seed 17〜19を各2,000転送実行しています。
 
-公開デモの[MR !4](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/4)で、[CI #2988642917](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988642917)の全16ジョブ成功、JUnit 108件・失敗／エラー0件を確認しました。APBの3ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも各構成の目標達成、3変異の検出、予定5ケースの完了と対象コミット`d623c595`を確認しています。APB追加分のJUnitは18件、ランナー確認は別枠の12テストです。
+公開デモの[MR !4](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/4)で、[CI #2988642917](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988642917)の全16ジョブ成功、JUnit 108件・失敗／エラー0件を確認しました。APBの3ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも各構成の目標達成、3種類の変異の検出、予定5ケースの完了と対象コミット`d623c595`を確認しています。APB追加分のJUnitは18件、ランナーのセルフテストは別枠の12テストです。
 
 確認したGitLab実行はsmokeです。nightlyのAPB 3構成はローカルで確認しており、全例を含むscheduleの129件をGitLabで実行した結果ではありません。その後、MR !4はmainへマージされ、[mainのCI #2988663611](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988663611)も全16ジョブ・JUnit 108件で成功しています（2026-10-26確認）。
 
-設計例を製品へ適用する場合は、実際のレジスタ仕様、リセット方式、アクセス属性、バイトイネーブル、割込みとの接続、ソフトウェアの操作順を追加してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続回帰](../../docs/method/continuous-regression.md)も参照してください。
+設計例を製品へ適用する場合は、実際のレジスタ仕様、リセット方式、アクセス属性、バイトイネーブル、割り込みとの接続、ソフトウェアの操作順を追加してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続リグレッション](../../docs/method/continuous-regression.md)も参照してください。
 
-この回路へ割込み出力を接続する[APBと割込みの結合検証例](../gitlab-apb-irq/README.md)も用意しました。マスク、W1C、イベント、複数要因を組み合わせた検証へ進めます。
+この回路へ割り込み出力を接続する[APBと割り込みの結合検証例](../gitlab-apb-irq/README.md)も用意しました。マスク、W1C、イベント、複数要因を組み合わせた検証へ進めます。

@@ -1,6 +1,6 @@
 # APB＋タイマー＋ウォッチドッグの結合検証
 
-APB経由でタイマーとウォッチドッグを設定し、カウント、割込み、リセット要求まで照合するローカル教材です。[既存タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)のRTLをそのまま使い、APBレジスタとIRQマスクを追加します。幅4／8×待ち状態0／2の4構成で検証します。
+APB経由でタイマーとウォッチドッグを設定し、カウント、割り込み、リセット要求まで照合するローカル教材です。[既存タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)のRTLをそのまま使い、APBレジスタとIRQマスクを追加します。幅4／8×待ち状態0／2の4構成で検証します。
 
 ## レジスタ操作から満了・通知へ
 
@@ -91,7 +91,7 @@ python3 -m unittest discover -s examples/local-apb-timer/tests -v
 
 構成名は`width4-wait0`、`width4-wait2`、`width8-wait0`、`width8-wait2`です。smokeは各40ランダム操作×1 seed、nightlyは300×3 seedを実行します。1操作はAPB転送またはリセット中断に後続の待機0〜4クロックを加えたもので、`checks`は入力ベクトルのサイクル数です。
 
-構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋ゲート1）。4構成の合計は**28／36件**です。
+構成当たりのJUnitはsmoke **7件**、nightly **9件**（固定1＋ランダム1／3＋変異4＋合否判定1）。4構成の合計は**28／36件**です。
 
 ```sh
 python3 examples/local-apb-timer/run.py --configuration width4-wait2 --demo-bug 3 --out artifacts/apb-timer-intentional-failure
@@ -101,6 +101,6 @@ python3 examples/local-apb-timer/run.py --configuration width4-wait2 --demo-bug 
 
 ## 6. 確認範囲
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各24目標・4変異、確認テスト7件が成功しました。GitLabへの追加・CI実行は行っていません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各24目標・4種類の変異、セルフテスト7件が成功しました。GitLabへの追加・CI実行は行っていません。
 
-単一クロックのAPB3信号サブセットであり、CPU・実ドライバー、割込みコントローラー、システムのリセット配線、CDC、APB4/5の追加信号や製品の安全性は対象外です。バスとコアが正常でも、ソフトウェアの設定手順やシステム全体の要求は別途検証します。
+単一クロックのAPB3信号サブセットであり、CPU・実ドライバー、割り込みコントローラー、システムのリセット配線、CDC、APB4/5の追加信号や製品の安全性は対象外です。バスとコアが正常でも、ソフトウェアの設定手順やシステム全体の要求は別途検証します。

@@ -42,7 +42,7 @@ python3 examples/local-bus-formal/run.py --bus axi --configuration axi-delay2 --
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-既定は全5構成です。AHBは`ahb-wait0`／`ahb-wait1`／`ahb-wait3`、AXIは`axi-delay0`／`axi-delay2`を選べます。確認テスト12件はフォーマルツールなしでも実行でき、実際の証明を実行するコマンドとは別です。
+既定は全5構成です。AHBは`ahb-wait0`／`ahb-wait1`／`ahb-wait3`、AXIは`axi-delay0`／`axi-delay2`を選べます。セルフテスト12件はフォーマルツールなしでも実行でき、実際の証明を実行するコマンドとは別です。
 
 ## 2. タスクと保証範囲
 
@@ -53,7 +53,7 @@ python3 -m unittest discover -s examples/local-bus-formal/tests -v
 | safety-proof | proveのPASSと帰納法完了 | 下記の安全性プロパティを仮定の下で非有界に証明 |
 | data-bmc | bmcのPASS、既定深さ12 | データ・応答比較を含む対象プロパティに、その深さまで反例なし |
 | scenario-cover | 全目標の到達とwitness | AHB 8／AXI 12目標へ至る経路を取得 |
-| detect-mutation1〜4 | 予定したassertのFAILと反例 | 既存4変異を検出する検証環境の感度確認 |
+| detect-mutation1〜4 | 予定したassertのFAILと反例 | 既存4種類の変異を検出する検証環境の感度確認 |
 | overconstrained-proof | proveのPASS | 診断として常時リセットを仮定した場合の結果 |
 | detect-overconstraint | 全正常目標が深さ12で未到達 | 上記の過剰な仮定で正常動作を確認できないことを検出 |
 
@@ -114,7 +114,7 @@ AXI4-Liteには複数未完了転送を扱える実装もありますが、こ�
 python3 examples/local-bus-formal/run.py --bus ahb --configuration ahb-wait0 --demo-bug 1 --out artifacts/formal-intentional-failure
 ```
 
-これは通常モデル側にも変異1を入れ、回帰の終了コード1を期待するデモです。AHBでは安全性証明がPASSしてもデータBMCがFAILすることを確認できます。通常のcoverと変異検出ケースは、それぞれ元回路・専用変異のまま実行します。
+これは通常モデル側にも変異1を入れ、リグレッションの終了コード1を期待するデモです。AHBでは安全性証明がPASSしてもデータBMCがFAILすることを確認できます。通常のcoverと変異検出ケースは、それぞれ元回路・専用変異のまま実行します。
 
 ## 6. 判定と証跡
 
@@ -126,6 +126,6 @@ python3 examples/local-bus-formal/run.py --bus ahb --configuration ahb-wait0 --d
 
 ## 7. 実行確認
 
-2026-10-27に、固定版のYoWASP・Z3とPython 3.14.7を使い、AHB 3構成27タスクとAXI 2構成18タスク、計45タスクが予定どおりの結果になりました。正常の48到達目標、20変異の反例、5構成の過剰な仮定の診断を確認しました。AHBのdemo-bug 1では、安全性証明がPASS、データBMCがFAILとなり、回帰が終了コード1になりました。判定・証跡の確認テスト12件も成功しました。
+2026-10-27に、固定版のYoWASP・Z3とPython 3.14.7を使い、AHB 3構成27タスクとAXI 2構成18タスク、計45タスクが予定どおりの結果になりました。正常の48到達目標、20種類の変異の反例、5構成の過剰な仮定の診断を確認しました。AHBのdemo-bug 1では、安全性証明がPASS、データBMCがFAILとなり、リグレッションが終了コード1になりました。判定・証跡のセルフテスト12件も成功しました。
 
 ランダム検証も拡張し、AHBのバースト・BUSY・動作中リセット、AXIの長い応答待ちとAWのみ／Wのみ／B保留／R保留でのリセットを追加しました。全5構成のsmoke／nightlyが成功しています。GitLabへの登録・CI起動や既存CI設定の変更は行っていません。

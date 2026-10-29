@@ -50,7 +50,7 @@ dirtyな行のinvalidateはエラーとし、データを保持します。dirty
 
 Pythonはメモリ配列とキャッシュの対応を別に保持し、応答・エラー・全メモリのデバッグ読出しを照合します。デバッグ観測を期待値の生成には使いません。CPU/DMA、保守操作、dirty拒否、追出し、保持、途中リセット・復帰、保守前の古い値、部分／ゼロストローブの各15目標です。
 
-4変異は書戻し欠落、無効化欠落、タグ比較無視、DMA書込み欠落です。通常実行は古いデータが見える仕様を含めて合格し、誤実装なら出力またはメモリ比較で失敗します。
+4種類の変異は書戻し欠落、無効化欠落、タグ比較無視、DMA書込み欠落です。通常実行は古いデータが見える仕様を含めて合格し、誤実装なら出力またはメモリ比較で失敗します。
 
 ```sh
 python3 examples/local-cache-dma/run.py
@@ -58,4 +58,4 @@ python3 examples/local-cache-dma/run.py --profile nightly
 python3 -m unittest discover -s examples/local-cache-dma/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。one-lineは処理待ち1、two-linesは3で、smoke 40操作、nightly 250操作×3 seedに固定シナリオを加えます。2構成のJUnitは14／18件、確認テストは5件です。AXIバス、キャッシュラインの複数ビート転送、複数CPU、物理メモリ特性は対象外です。
+[共通手順](../local-common/README.md)を使います。one-lineは処理待ち1、two-linesは3で、smoke 40操作、nightly 250操作×3 seedに固定シナリオを加えます。2構成のJUnitは14／18件、セルフテストは5件です。AXIバス、キャッシュラインの複数ビート転送、複数CPU、物理メモリ特性は対象外です。

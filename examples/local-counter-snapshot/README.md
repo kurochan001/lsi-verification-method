@@ -63,7 +63,7 @@ flowchart TD
 
 ## 確認と実行
 
-Pythonの広い整数と64ビットマスクから、APBの応答、カウンター、スナップショット、IRQを毎クロック予測します。下位の桁上がりを挟むLO／HI、64ビット全体の折返し、書込み途中の保持、比較とクリアの競合、リセットを検査します。桁上がりと全体折返しのカバレッジは、有効な加算で実際に境界を越えた場合だけを数え、LOAD_HIやリセットによる値の変化では加算しません。
+Pythonの広い整数と64ビットマスクから、APBの応答、カウンター、スナップショット、IRQを毎クロック予測します。下位の桁上がりを挟むLO／HI、64ビット全体の折り返し、書込み途中の保持、比較とクリアの競合、リセットを検査します。桁上がりと全体折り返しのカバレッジは、有効な加算で実際に境界を越えた場合だけを数え、LOAD_HIやリセットによる値の変化では加算しません。
 
 ```sh
 python3 examples/local-counter-snapshot/run.py --out artifacts/counter-snapshot
@@ -71,4 +71,4 @@ python3 examples/local-counter-snapshot/run.py --profile nightly
 python3 -m unittest discover -s examples/local-counter-snapshot/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。APB待ち0／2の各10目標。smoke20操作列、nightly150列×3 seedを固定シナリオへ加えます。上位の生値読出し、下位だけの加算、クリア誤優先、LOAD_LOの早期反映の4変異です。JUnit14／18件、確認6件。実時間精度・クロック誤差・CPU命令の原子性・特定製品のタイマー互換性は対象外です。
+[共通手順](../local-common/README.md)を使います。APB待ち0／2の各10目標。smoke20操作列、nightly150列×3 seedを固定シナリオへ加えます。保存した上位値ではなく現在の上位値を返す、下位だけを加算する、イベントよりクリアを優先する、LOAD_LOの書込み時点で値を反映する、という4種類の変異を検出します。JUnit14／18件、確認6件。実時間精度・クロック誤差・CPU命令の原子性・特定製品のタイマー互換性は対象外です。

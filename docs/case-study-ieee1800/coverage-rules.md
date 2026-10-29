@@ -299,7 +299,7 @@ python3 tools/requirement_source.py --index /tmp/requirement-source-index.json
 
 ## CIとnightly
 
-Checkは台帳・基準・ハッシュ・観測点・レポートの整合性と集計器の回帰テストを検証します。
+Checkは台帳・基準・ハッシュ・観測点・レポートの整合性と集計器のリグレッションテストを検証します。
 Nightlyはその回の全ランナーのJSONから再計測し、`results` ブランチへ次を保存します。
 
 - `behavior-coverage.md`: その回の動作別・環境別の結果。テストへのリンクは実行時のコミットを指します。

@@ -1,19 +1,19 @@
 # UVMの制約付きランダム化とネイティブcovergroup
 
-[既存のUVM APB例](../local-uvm/README.md)のagent・driver・monitor・独立scoreboardを再利用し、新しいテストとsubscriberを接続します。SystemVerilogの`rand`・`constraint`・`randomize()`と、実際のcoverpoint・crossを使うローカル教材です。
+[既存のUVM APB例](../local-uvm/README.md)のagent・driver・monitor・独立したスコアボードを再利用し、新しいテストとsubscriberを接続します。SystemVerilogの`rand`・`constraint`・`randomize()`と、実際のcoverpoint・crossを使うローカル教材です。
 
 ## ランダム刺激と観測カバレッジ
 
-randomizeの成功後にAPBへ送り、実完了の観測を独立scoreboardとネイティブcovergroupへ渡します。
+randomizeの成功後にAPBへ送り、実完了の観測を独立したスコアボードとネイティブcovergroupへ渡します。
 
 ```mermaid
 flowchart TD
   accTitle: ランダム刺激と観測カバレッジ
-  accDescr: randomizeの成功後にAPBへ送り、実完了の観測を独立scoreboardとネイティブcovergroupへ渡します。
+  accDescr: randomizeの成功後にAPBへ送り、実完了の観測を独立したスコアボードとネイティブcovergroupへ渡します。
   R["rand・constraint・randomize"] --> V{"成功・合法な値？"}
   V -- "はい" --> D["既存UVM driver"] --> U["APB RTL"] --> M["monitor：実完了を観測"]
   V -- "いいえ" --> F["送信中断・失敗"]
-  M --> S["独立scoreboard"]
+  M --> S["独立したスコアボード"]
   M --> C["subscriberのcovergroup"] --> B["coverage.datの24 binを照合"]
 ```
 
@@ -46,12 +46,12 @@ python3 -m unittest discover -s examples/local-uvm-random/tests -v
 
 `--profile nightly`、`--seed`、`--timeout`、`--build-timeout`、`--verilator`を指定できます。seedは0〜2147483644です。同じseedを独立したプロセスで再実行し、生成した操作列の一致も要求します。同じツール・ソルバー・ソースの版を再現条件に含めます。
 
-## 負の試験と証跡
+## ネガティブテストと証跡
 
 既存のRTL変異3件に加え、番地制約と矛盾する`addr==1`のinline制約、およびsubscriberのsample無効化を試します。前者は`CRV_RANDOMIZE`、後者は`CRV_COVERAGE`と非ゼロ終了が必要です。これら2件はRTL変異の検出率へ含めません。
 
 `coverage.dat`の実際のcovergroupカウンターを読み、名前24個の固定集合、重複なし、全ヒットを確認します。`get_inst_coverage()`の表示だけで合格にしません。通常実行は転送数・読書き数・エラー数・生成数、UVM report、VCDも必要です。既存のDPIなし構成で出る既知の2警告だけを許可します。
 
-ソース・外部ライブラリのハッシュ、ビルド、ツール版、ソルバー、生成操作、ネイティブbinの内訳、通常／負の結果を保存します。JUnitはビルド・各実行・構成別binゲートを含め17／21件です。負の試験の観測は通常カバーへ加算しません。
+ソース・外部ライブラリのハッシュ、ビルド、ツール版、ソルバー、生成操作、ネイティブbinの内訳、通常実行／ネガティブテストの結果を保存します。JUnitはビルド・各実行・構成ごとのbin達成判定を含め17／21件です。ネガティブテストの観測は通常実行のカバレッジへ加算しません。
 
 [Verilatorのcovergroup収集](https://verilator.org/guide/latest/simulating.html)と[カバレッジ形式](https://verilator.org/guide/latest/exe_verilator_coverage.html)を参照しています。商用VIPや全APB適合性、異なるライブラリ版間の互換性を認定する例ではありません。

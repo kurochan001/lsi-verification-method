@@ -38,7 +38,7 @@ flowchart TD
 
 Pythonが順番・完了数・エラー・中断・取得数・書込みの残るスロットを独立に計算します。SVは取得の実アドレス・長さ、コピー先・ID・Wデータ・ストローブ・最終ビート、最終状態・IRQ、RAM全8192バイトを照合します。ディスクリプタ自身や転送先以外の変化も失敗です。
 
-空／全件／周回、4種類のエラー、取得／コピー中のabort、head・件数の不正、動作中リセットと再実行を各13目標で確認します。ring2は待ちなし、ring4-stallsはAR/AW/Wの受付を周期的に止めます。4変異はリング位置の進め方、flags無視、IRQ欠落、コピーのデータ破損です。
+空／全件／周回、4種類のエラー、取得／コピー中のabort、head・件数の不正、動作中リセットと再実行を各13目標で確認します。ring2は待ちなし、ring4-stallsはAR/AW/Wの受付を周期的に止めます。4種類の変異はリング位置の進め方、flags無視、IRQ欠落、コピーのデータ破損です。
 
 ```sh
 python3 examples/local-descriptor-dma/run.py
@@ -46,7 +46,7 @@ python3 examples/local-descriptor-dma/run.py --profile nightly
 python3 -m unittest discover -s examples/local-descriptor-dma/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。smoke 20操作、nightly 160操作×3 seedに固定12操作を加えます。2構成のJUnitは14／18件、確認テストは5件です。キャッシュ・CPU・OS・仮想アドレス・任意個数の未完了要求を含むDMAシステムの検証ではありません。
+[共通手順](../local-common/README.md)を使います。smoke 20操作、nightly 160操作×3 seedに固定12操作を加えます。2構成のJUnitは14／18件、セルフテストは5件です。キャッシュ・CPU・OS・仮想アドレス・任意個数の未完了要求を含むDMAシステムの検証ではありません。
 
 ## 所有権と継続的な再利用へ進む
 
