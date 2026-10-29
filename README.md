@@ -65,7 +65,7 @@ flowchart TD
 
 - **仕様に基づく検証手順**：[デジタルLSIの仕様書から検証パターンを作る手順](docs/method/spec-to-verification-method.md)。半導体検証に関する一般的な情報をまとめ、仕様から検証パターンを作る流れを整理した資料です。実際の製品開発で機能検証と併せて必要な、クロック・リセット、低電力、タイミング、DFT・量産テスト、物理設計、信頼性、システム統合、ポストシリコンの項目も14節に整理しています。
 - **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、リグレッションの合格条件をまとめています。[APBを使うUVM・RALの実行例](examples/local-uvm/README.md)も用意しています。
-- **機能間の検証**：[機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md)。依存関係の洗い出し、同時動作・順序・中断、クロス目標の選定と合格条件をまとめています。イベントとW1Cクリアの競合を、12目標の例として示しています。[機能クロス網羅の提案](docs/feature-interaction-coverage-proposal.md)を基に、因子・水準・制約・可変次数、既存テストから未達を補う手順、計画・到達・合格の区別も取り込みました。[記録の雛形](docs/templates/interaction-coverage-plan.md)を用意しています。APB教材での比較試行は計画段階です。
+- **機能間の検証**：[機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md)。依存関係の洗い出し、同時動作・順序・中断、クロス目標の選定と合格条件をまとめています。イベントとW1Cクリアの競合を、12目標の例として示しています。[機能クロス網羅の提案](docs/feature-interaction-coverage-proposal.md)を基に、因子・水準・制約・可変次数、既存テストから未達を補う手順、計画・到達・合格の区別も取り込みました。[記録の雛形](docs/templates/interaction-coverage-plan.md)を用意しています。[APB＋割り込みの実行例](examples/local-apb-irq-coverage/README.md)で、既存テストを保持した追加候補の選択、再実行による目標・検出力・コストの比較をローカルで試せます。
 - **ランダム検証**：[制約付きランダム検証の計画・実行・完了判定](docs/method/constrained-random-verification.md)。制約、分布、seed、リグレッション計画、未達への調整、失敗の再現・縮小をまとめています。クロス検証の12目標を探索する、9実行の計画例も示しています。
 - **SVAによる検証**：[SVAのアサーションとカバーによる検証](docs/method/sva-verification.md)。assert・assume・cover、サンプリング、vacuous pass、リセット、シミュレーションとフォーマル検証の完了判定をまとめています。イベントとW1Cの競合を使ったチェッカー例も示しています。
 - **covergroupによる機能網羅**：[covergroupで機能を体系的に網羅する](docs/method/functional-coverage.md)。機能一覧からcoverpoint・bin・crossを選ぶ方法、観測と判定、除外とインスタンス別の集計をまとめています。基本動作の16目標を収集するコレクター例も示しています。
@@ -208,6 +208,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [Cドライバ＋DMA RTL](examples/local-c-driver/README.md) | ホスト上のCからAPBで起動・監視し、実DMAのIRQ・エラー・復旧を確認 | Verilator＋C |
 | [cocotbによるAPB検証](examples/local-cocotb/README.md) | Pythonコルーチンによる刺激・位相モニター・独立したレジスタモデル | Icarus＋cocotb |
 | [Icarus／Verilatorの差分検証](examples/local-differential/README.md) | 共通入力の有効な観測を比較し、差分検出とX検査を別々に判定 | Icarus＋Verilator |
+| [APB＋割り込みのクロス網羅と選択](examples/local-apb-irq-coverage/README.md) | 2因子・重点・時間関係の実観測、既存目標の保持、追加ケースの選択と再実行の比較 | Icarus |
 | [リグレッションの縮退](examples/gitlab-reduction/README.md) | 全件・目標だけの選択・ストレス保持を比較し、実行量・目標・検出力を評価 | Icarus |
 | [失敗した操作列の自動縮小](examples/local-failure-reduction/README.md) | 同じチェッカーで失敗を再現し、単一操作削除に対する極小性を確認 | Icarus |
 | [未達カバレッジからの刺激調整](examples/local-coverage-feedback/README.md) | 観測に基づく刺激と固定分布のランダム刺激を同じサイクル予算で比較 | Icarus |

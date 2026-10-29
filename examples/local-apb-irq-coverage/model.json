@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "description": "APB IRQ interaction model; each bit and wait configuration is independent",
+  "bits": [0, 1, 2, 3],
+  "binary_factors": ["pending", "mask", "clear", "event"],
+  "pairwise_strength": 2,
+  "priority_pending": 1,
+  "event_offsets": [-1, 0, 1],
+  "wait_configurations": [0, 1, 3],
+  "extra_goals": {}
+}

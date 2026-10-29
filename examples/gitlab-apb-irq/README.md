@@ -105,3 +105,9 @@ python3 examples/gitlab-apb-irq/run.py --wait 1 --demo-bug 1
 確認したGitLab実行はsmokeで、結合検証のnightly全3構成はローカルで確認しました。全例を含むscheduleの153件をGitLabで実行した結果ではありません。その後、MR !5はmainへマージされ、[mainのCI #2988757915](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988757915)も全20ジョブ・JUnit 126件で成功しています（2026-10-26確認）。
 
 製品への展開では、割り込みの極性・レベル／パルス方式、CPU側の確認応答、優先順位・共有割り込み、CDC、実際のレジスタ仕様とソフトウェアの順序制約を照合してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続リグレッション](../../docs/method/continuous-regression.md)も参照してください。
+
+## クロスモデルの計測と追加ケースの選択
+
+[ローカルの比較例](../local-apb-irq-coverage/README.md)では、本例の通常RTL・カタログ・境界／ランダムケースを保持し、事前PENDINGを含む2因子目標、重点クロス、前後1エッジの時間関係を別に計測します。実観測から追加候補を選び、学習結果を流用しない再実行で、元の44／45目標と6種類の誤実装の検出、実行量を比較します。
+
+本例のテストベンチに、任意の`+TRACE=path`出力と、検出力確認用の`REGISTER_MUTATION`（既定0）を追加しました。通常のコマンド・出力・JUnit件数とCI設定は維持しています。新しい比較例はローカル専用で、GitLabの利用枠を使いません。

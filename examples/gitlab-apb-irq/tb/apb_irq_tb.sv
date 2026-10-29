@@ -2,6 +2,8 @@
 module apb_irq_tb;
   parameter integer WAIT_CYCLES = 0;
   parameter integer MUTATION = 0;
+  // Optional local comparison probes; defaults keep the existing regression unchanged.
+  parameter integer REGISTER_MUTATION = 0;
   reg clk = 0, rst_n = 0, psel = 0, penable = 0, pwrite = 0;
   reg [7:0] paddr = 0;
   reg [31:0] pwdata = 0;
@@ -24,14 +26,21 @@ module apb_irq_tb;
   bit expected_irq, before_irq, recovering = 0;
   integer before_active_count, after_active_count;
   string vectors, wave, address_class;
+  string trace;
+  integer trace_fd = 0;
+  reg [31:0] observed_config;
+  reg [3:0] observed_pending;
+  bit observed_ready, observed_error;
   apb_irq #(.WAIT_CYCLES(WAIT_CYCLES), .MUTATION(MUTATION)) dut (
     clk, rst_n, psel, penable, pwrite, paddr, pwdata, events,
     pready, pslverr, prdata, config_value, pending, irq
   );
+  defparam dut.regs.MUTATION = REGISTER_MUTATION;
   always #5 clk = !clk;
   task fail(input string label);
     begin
       $display("CHECK_FAIL %s", label);
+      if (trace_fd) $fflush(trace_fd);
       $fatal(1, "cycle=%0d addr=%h config=%h expected=%h pending=%h expected=%h",
              checks, paddr, config_value, model_config, pending, model_pending);
     end
@@ -66,6 +75,8 @@ module apb_irq_tb;
         end
       end
       before_config = model_config; before_pending = model_pending;
+      observed_config = config_value; observed_pending = pending;
+      observed_ready = pready; observed_error = pslverr;
       before_irq = 0;
       for (integer b = 0; b < 4; b = b + 1)
         if (before_config[b] && before_pending[b]) before_irq = 1;
@@ -84,6 +95,12 @@ module apb_irq_tb;
       end
       #1;
       checks = checks + 1;
+      // Record actual pre/post-edge DUT ports before a checker can terminate the run.
+      if (trace_fd)
+        $fdisplay(trace_fd, "OBS %0d %h %h %h %h %h %h %h %h %h %h %h %h %h %h",
+                  checks, rst_n, psel, penable, pwrite, paddr, pwdata, events,
+                  observed_ready, observed_error, observed_config, observed_pending,
+                  config_value, pending, irq);
       if (config_value !== model_config) begin
         if (accepted && invalid && pwrite) fail("APB_ERROR_SIDE_EFFECT");
         else fail("APB_STATE");
@@ -102,6 +119,7 @@ module apb_irq_tb;
         else fail("APB_IRQ_OUTPUT");
       end
       // Every observation follows the complete response/state/IRQ comparison.
+      if (trace_fd) $fdisplay(trace_fd, "OK %0d", checks);
       if (!rst_n) begin
         recovering = before_irq;
         if (before_irq) $display("COVER reset/active-irq");
@@ -146,6 +164,10 @@ module apb_irq_tb;
   endtask
   initial begin
     if (!$value$plusargs("VECTORS=%s", vectors)) $fatal(1, "Missing VECTORS");
+    if ($value$plusargs("TRACE=%s", trace)) begin
+      trace_fd = $fopen(trace, "w");
+      if (!trace_fd) $fatal(1, "Cannot open trace");
+    end
     if ($value$plusargs("WAVE=%s", wave)) begin $dumpfile(wave); $dumpvars(0, apb_irq_tb); end
     fd = $fopen(vectors, "r");
     if (!fd) $fatal(1, "Cannot open vectors");
@@ -155,6 +177,7 @@ module apb_irq_tb;
       cycle();
     end
     $fclose(fd);
+    if (trace_fd) $fclose(trace_fd);
     $display("RESULT PASS checks=%0d", checks);
     $finish;
   end

@@ -95,4 +95,4 @@
 - レビュー担当・方法・日付、承認権限を持つ者の判断記録：
 - [サインオフ記録](signoff-record.md)の対応項目ID：
 
-APB＋割り込みを対象にする場合は、[未実施の試行計画](../feature-interaction-coverage-proposal.md#7-最初の試行apbと割り込みの結合例)を参照してください。モデルの説明、実行済みの証跡、製品への採用判断を分けて記録します。
+APB＋割り込みを対象にする場合は、[試行計画](../feature-interaction-coverage-proposal.md#7-最初の試行apbと割り込みの結合例)を参照してください。[ローカルの比較例](../../examples/local-apb-irq-coverage/README.md)では、この計画を具体化しています。モデルの説明、実行済みの証跡、製品への採用判断を分けて記録します。
