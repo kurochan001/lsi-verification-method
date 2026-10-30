@@ -35,6 +35,66 @@ flowchart TD
 | 未解決の論点 | 要求行と根拠を保持 | 都合よく分母から削除しない |
 | 解消した論点 | 照合根拠と更新経緯を保持 | IEEE公式の訂正確認とは区別 |
 
+## 論点の一覧
+
+各論点の節にある「2026-10-24の再検討」の記載から作った一覧です。根拠と、保留を続ける論点で決め手として欠けているものは、リンク先に記載しています。節は主な出典の節番号です。
+
+### 保留が続く19論点
+
+| 論点 | 節 | 内容 |
+| --- | --- | --- |
+| [STATIC-BLOCK-LIFETIME](#static-block-lifetime--ブロック変数の寿命) | 9.3.4 | ブロック変数の寿命 |
+| [CHANDLE-EVENT-CONTROL](#chandle-event-control--chandleのイベント式) | 6.14 | chandleのイベント式 |
+| [MULTICLOCK-SEQUENCE-STRENGTH](#multiclock-sequence-strength--マルチクロックのシーケンスプロパティ) | 16.13.2 | マルチクロックのシーケンス・プロパティ |
+| [FOUR-STATE-BIN-RESOLUTION](#four-state-bin-resolution--xzを含む明示的なビン) | 19.5.7 | x/zを含む明示的なビン |
+| [ENUM-AUTO-COVERAGE-DENOMINATOR](#enum-auto-coverage-denominator--enumの自動ビンの分母) | 19.11.1 | enumの自動ビンの分母 |
+| [TIMEFORMAT-PRECISION-DOMAIN](#timeformat-precision-domain--時刻表示の小数桁数) | 20.4.3 | 時刻表示の小数桁数 |
+| [FILE-READ-OPEN-MODES](#file-read-open-modes--読み取り可能なファイルのモード) | 21.3.4 | 読み取り可能なファイルのモード |
+| [VIRTUAL-INTERFACE-SENSITIVITY](#virtual-interface-sensitivity--virtual-interfaceのイベント待ち) | 25.9 | virtual interfaceのイベント待ち |
+| [VIRTUAL-CLOCKING-MODPORT-SCOPE](#virtual-clocking-modport-scope--クロッキングブロックとmodport) | 25.9.2 | クロッキングブロックとmodport |
+| [AMBIGUOUS-STRENGTH-UNION](#ambiguous-strength-union--曖昧な強度範囲の結合) | 28.12.2 | 曖昧な強度範囲の結合 |
+| [WIDTH-COINCIDENT-EDGES](#width-coincident-edges--幅チェックの同時エッジ) | 31.4.4 | 幅チェックの同時エッジ |
+| [LIBRARY-MAP-CONTENTS](#library-map-contents--ライブラリマップの内容) | 33.3.2 | ライブラリマップの内容 |
+| [CONFIG-PARAMETER-OVERRIDE-GRAMMAR](#config-parameter-override-grammar--configのパラメータ初期化構文) | 33.4.3 | configのパラメータ初期化構文 |
+| [DIGEST-KEY-BLOCK-NAME](#digest-key-block-name--ダイジェスト鍵の格納先) | 34.5.16.2 | ダイジェスト鍵の格納先 |
+| [CALLBACK-RELATION-CARDINALITY](#callback-relation-cardinality--コールバック関係の多重度) | 37.80 | コールバック関係の多重度 |
+| [ASSERTION-SYSTEM-OFF-CALLBACKS](#assertion-system-off-callbacks--停止中のアサーションコールバック) | 39.4.1 | 停止中のアサーションコールバック |
+| [BIND-SEMICOLON-GRAMMAR](#bind-semicolon-grammar--bindの終端セミコロン) | A.1.4 | bindの終端セミコロン |
+| [DPI-SIGNED-BITS-MACRO](#dpi-signed-bits-macro--dpiの符号拡張マクロ) | H.10.1.2 | DPIの符号拡張マクロ |
+| [DISTRIBUTION-C-WIDTH](#distribution-c-width--乱数アルゴリズムのc整数幅) | N.2 | 乱数アルゴリズムのC整数幅 |
+
+### 解消した27論点
+
+| 論点 | 節 | 内容 |
+| --- | --- | --- |
+| [CONSTANT-TIMESCALE-NAME](#constant-timescale-name--定数式で使用できる関数名) | 11.2.1 | 定数式で使用できる関数名 |
+| [CROSS-RETAIN-OPTION-SCOPE](#cross-retain-option-scope--自動クロスビン保持オプションの配置) | 19.7 | 自動クロスビン保持オプションの配置 |
+| [CROSS-AUTO-COVERAGE-DENOMINATOR](#cross-auto-coverage-denominator--自動クロスビンを保持しない場合の分母) | 19.11.2 | 自動クロスビンを保持しない場合の分母 |
+| [GENERATE-REGION-CONTAINER](#generate-region-container--generate領域を置ける構文上の位置) | 27.3 | generate領域を置ける構文上の位置 |
+| [NOTIFIER-ARGUMENT-POSITION](#notifier-argument-position--notifierの引数位置) | 31.6 | notifierの引数位置 |
+| [DATA-KEYNAME-COMBINE](#data-keyname-combine--データ鍵の選択) | 34.5.12.2 | データ鍵の選択 |
+| [DIGEST-KEY-OWNER-SPELLING](#digest-key-owner-spelling--ダイジェスト鍵所有者の名前) | 34.5.22.2 | ダイジェスト鍵所有者の名前 |
+| [KEY-KEYNAME-DECRYPT-TARGET](#key-keyname-decrypt-target--復号対象のブロック) | 34.5.25.2 | 復号対象のブロック |
+| [REMOVE-CALLBACK-API-NAME](#remove-callback-api-name--コールバック解除api名) | 37.2.2 | コールバック解除API名 |
+| [ACTIVE-TIME-FORMAT-NAME](#active-time-format-name--時刻表示形式への関係名) | 37.82 | 時刻表示形式への関係名 |
+| [SCALAR-OBJECT-FORMAT-NAMES](#scalar-object-format-names--スカラー値形式の名前) | 38.15 | スカラー値形式の名前 |
+| [UDP-SYMBOL-BYTE-ORDER](#udp-symbol-byte-order--udpシンボルのバイト配置) | 38.15 | UDPシンボルのバイト配置 |
+| [ARRAY-SHORTREAL-FIELD](#array-shortreal-field--shortreal取得フィールド) | 38.16 | shortreal取得フィールド |
+| [PUT-ARRAY-SHORTREAL-FIELD](#put-array-shortreal-field--shortreal設定フィールド) | 38.35 | shortreal設定フィールド |
+| [ASSERTION-SYSTEM-FAIL-ACTION-EVENT](#assertion-system-fail-action-event--失敗アクションのイベント) | 39.4.1 | 失敗アクションのイベント |
+| [COVERAGE-MODULE-MACRO-NAME](#coverage-module-macro-name--モジュール範囲マクロ名) | 40.3.2.1 | モジュール範囲マクロ名 |
+| [CURRENT-COVERAGE-RETURN-TEXT](#current-coverage-return-text--現在値と最大値の戻り値) | 40.3.2.3 | 現在値と最大値の戻り値 |
+| [FSM-STATE-VALUE-ARGUMENT](#fsm-state-value-argument--fsm状態値api引数) | 40.5.2 | FSM状態値API引数 |
+| [VPI-COVERAGE-SAVE-CONSTANT](#vpi-coverage-save-constant--カバレッジ保存定数名) | 40.5.3 | カバレッジ保存定数名 |
+| [SEQUENCE-COPYOUT-DIRECTION](#sequence-copyout-direction--シーケンスのコピーアウト方向) | F.4.1.1 | シーケンスのコピーアウト方向 |
+| [VACUITY-NEXT-INDEX](#vacuity-next-index--nexttimeの非空虚性の添字) | F.5.3.3 | nexttimeの非空虚性の添字 |
+| [LOCAL-ACCEPT-CONTEXT](#local-accept-context--accept_on式のローカル文脈) | F.5.6.1 | accept_on式のローカル文脈 |
+| [LOCAL-PROPERTY-DISABLED-MARKER](#local-property-disabled-marker--ローカル宣言式のdisabled記号) | F.5.6.1 | ローカル宣言式のdisabled記号 |
+| [PAST-GATED-GROUPING](#past-gated-grouping--past式のゲートの括弧) | F.6.2 | $past式のゲートの括弧 |
+| [PAST-GLOBAL-INDEX](#past-global-index--past_gclkの条件と添字) | F.6.2 | $past_gclkの条件と添字 |
+| [FUTURE-GLOBAL-INDEX](#future-global-index--future_gclkの添字) | F.6.3 | $future_gclkの添字 |
+| [DPI-GET-USER-DATA-RETURN](#dpi-get-user-data-return--ユーザーデータ取得の戻り値) | I.3 | ユーザーデータ取得の戻り値 |
+
 ## STATIC-BLOCK-LIFETIME — ブロック変数の寿命
 
 - 出典: 9.3.4、PDF物理ページ230、B004。本文はブロック変数をすべてstaticとし、出入りで値が変わらないとしています。
