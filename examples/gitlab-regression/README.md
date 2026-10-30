@@ -2,7 +2,7 @@
 
 有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。GitLabへこの例を含むコミットを置くと、ランナーのセルフテストと、説明用IRQ回路のリグレッションを実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
-同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)、[APBレジスタ検証例](../gitlab-apb/README.md)、[APBと割り込みの結合検証例](../gitlab-apb-irq/README.md)、[ready/valid通信のランダム検証例](../gitlab-stream/README.md)、[SVAの実行例](../gitlab-sva/README.md)、[リグレッションの縮退の比較例](../gitlab-reduction/README.md)、[アービタの検証例](../gitlab-arbiter/README.md)、[UARTのランダム検証例](../gitlab-uart/README.md)、[APB・UART・割り込みの結合検証例](../gitlab-apb-uart/README.md)も含まれます。現行の全体構成は[GitLab CIの構成と確認記録](../../README.md#gitlab-ciの構成と実行確認記録)、以下の件数は特記がなければIRQ・CDCリグレッションの内訳です。
+同じCI設定には、[FIFOのランダム検証例](../gitlab-fifo/README.md)と[商用ツール不要のフォーマル検証例](../gitlab-formal/README.md)、[APBレジスタ検証例](../gitlab-apb/README.md)、[APBと割り込みの結合検証例](../gitlab-apb-irq/README.md)、[ready/valid通信のランダム検証例](../gitlab-stream/README.md)、[SVAの実行例](../gitlab-sva/README.md)、[リグレッションの削減の比較例](../gitlab-reduction/README.md)、[アービタの検証例](../gitlab-arbiter/README.md)、[UARTのランダム検証例](../gitlab-uart/README.md)、[APB・UART・割り込みの結合検証例](../gitlab-apb-uart/README.md)も含まれます。現行の全体構成は[GitLab CIの構成と確認記録](../../README.md#gitlab-ciの構成と実行確認記録)、以下の件数は特記がなければIRQ・CDCリグレッションの内訳です。
 
 ## 1. 実行するもの
 
@@ -78,9 +78,9 @@ python3 examples/gitlab-regression/run.py --demo-bug 1
 ```mermaid
 flowchart TD
   accTitle: 十一種類の検証例を実行するGitLabパイプライン
-  accDescr: workflowが許可した起動で十一種類のランナーのセルフテストを行い、成功後にIRQ、FIFO六構成、フォーマル二構成、APB三構成とAPB・割り込み結合三構成、ready/valid四構成、SVA一構成、縮退比較、アービタ三構成、UART六構成、APB・UART・割り込み九構成を実行して結果と証跡を保存する。
+  accDescr: workflowが許可した起動で十一種類のランナーのセルフテストを行い、成功後にIRQ、FIFO六構成、フォーマル二構成、APB三構成とAPB・割り込み結合三構成、ready/valid四構成、SVA一構成、削減比較、アービタ三構成、UART六構成、APB・UART・割り込み九構成を実行して結果と証跡を保存する。
   T["push・MR・web・schedule"] --> W["workflow rulesで起動可否と重複を制御"]
-  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマル・APB・結合・ready/valid・SVA・縮退比較・アービタ・UART・APBとUARTの結合のランナーのセルフテスト"]
+  W -- "許可された起動" --> V["validate：IRQ・FIFO・フォーマル・APB・結合・ready/valid・SVA・削減比較・アービタ・UART・APBとUARTの結合のランナーのセルフテスト"]
   V -- "合格" --> R["irq-regression：run.pyを実行"]
   V -- "合格" --> Q["fifo-regression：6構成のランダム検証"]
   V -- "合格" --> M["fifo-formal：ツールを準備し2構成を検査"]
@@ -100,7 +100,7 @@ flowchart TD
   BI --> GBI["結合：必須44／45目標・3種類の変異を判定"]
   S --> GS["ready/valid：必須25／29目標・3種類の変異・転送数を判定"]
   SV --> GSV["SVA：assert 6個・cover 12目標・感度確認を判定"]
-  RD --> GRD["縮退：実行量・19目標・検出力を18件に集約して判定"]
+  RD --> GRD["削減：実行量・19目標・検出力を18件に集約して判定"]
   AR --> GAR["アービタ：21／31／49目標・3種類の変異・受理と待ちを判定"]
   U --> GU["UART：21／22目標・3／4種類の変異・完了数を判定"]
   AU --> GAU["APB＋UART＋IRQ：60／61／69／70目標・5種類の変異・完了数"]
@@ -128,7 +128,7 @@ flowchart TD
   GAU --> A
 ```
 
-IRQ・FIFO・APB・APBと割り込みの結合検証・ready/valid・SVA・縮退比較・アービタ・UART・APBとUARTの結合はscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
+IRQ・FIFO・APB・APBと割り込みの結合検証・ready/valid・SVA・削減比較・アービタ・UART・APBとUARTの結合はscheduleではnightly、それ以外の上記の起動ではsmokeを既定とします。フォーマル検証は同じ8タスクを各構成で実行します。JUnitは結果表示用で、ジョブの成否はランナーの終了状態に反映します。中断やRunner障害ではアーティファクトを回収できない場合があり、MRのマージ制御にはGitLab側の設定も必要です。
 
 GitLab上に空のプロジェクトを用意し、この例を含むコミットをpushします。新規プロジェクトではREADMEなどで初期化しない方法が簡単です。未コミットのファイルはpushでは送られないため、例のファイルを含むコミットを使います。
 

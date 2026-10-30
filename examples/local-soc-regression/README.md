@@ -5,7 +5,7 @@
 1. [UVMの制約付きランダム化とネイティブcovergroup](../local-uvm-random/README.md)
 2. [SystemRDLからRTL・Cヘッダー・RALを生成して照合](../local-register-spec/README.md)
 3. [フォーマル反例のシミュレーション再現](../local-formal-replay/README.md)
-4. [優先順位付き割り込み](../local-priority-irq/README.md)
+4. [優先度付き割り込み](../local-priority-irq/README.md)
 5. [リング式ディスクリプタDMA](../local-descriptor-dma/README.md)
 6. [クレジット方式のフロー制御](../local-credit-link/README.md)
 7. [小規模キャッシュとDMA](../local-cache-dma/README.md)

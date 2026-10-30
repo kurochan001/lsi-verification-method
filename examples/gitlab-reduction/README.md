@@ -1,4 +1,4 @@
-# GitLabでリグレッションの縮退を比較する
+# GitLabでリグレッションの削減を比較する
 
 全件リグレッション、目標だけで選ぶリグレッション、重要なストレス試験を残すリグレッションを、実際のRTLシミュレーションで比較する例です。実行量を減らした結果と、目標を満たしても不具合を見逃す場合を分けて示します。PythonとIcarus Verilogを使い、商用ライセンスは不要です。
 
@@ -100,8 +100,8 @@ JUnitは**18件の集約判定**です。学習1件、選択1件、正常リグ�
 
 2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版で11テスト、smokeとnightly、保護対象を外すデモ、不具合デモを確認しました。nightly・seed 17の全件は26ケース・685検査サイクルで、選択後は42／47サイクル、3方式とも19目標を達成しました。
 
-公開デモの[MR !8](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/8)で、[CI #2989712015](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989712015)の全29ジョブ成功、JUnit 178件・失敗／エラー0件を確認しました。縮退比較はIcarus Verilog 11.0で実行され、保存済み`summary.json`・`manifest.json`・`selection.json`でもseed 17、候補24ケース、229回のシミュレーション、233／42／47検査サイクル、各方式19目標、M1〜M3の維持とM4の検出差を確認しました。対象コミットは`a5c63877`です。追加分のJUnitは18集約判定、ランナーのセルフテストは別枠の11テストです。
+公開デモの[MR !8](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/8)で、[CI #2989712015](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989712015)の全29ジョブ成功、JUnit 178件・失敗／エラー0件を確認しました。削減比較はIcarus Verilog 11.0で実行され、保存済み`summary.json`・`manifest.json`・`selection.json`でもseed 17、候補24ケース、229回のシミュレーション、233／42／47検査サイクル、各方式19目標、M1〜M3の維持とM4の検出差を確認しました。対象コミットは`a5c63877`です。追加分のJUnitは18集約判定、ランナーのセルフテストは別枠の11テストです。
 
 初回CIは共有Runnerの補助イメージ取得時の認証エラーで既存ジョブが準備段階で停止しました。検証コードを変更せず再実行し、上記の成功を確認しています。GitLabで確認したのはsmokeで、nightlyはローカルで実行しました。全例を含むscheduleの215件をGitLabで今回実行した結果ではありません。その後、MR !8はmainへマージされ、[mainのCI #2989744619](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989744619)も全29ジョブ・JUnit 178件で成功しています（2026-10-26確認）。
 
-製品への適用では、ここで省略した時間関係・長時間負荷・構成・独立した検査方式も評価してください。[検証の縮退の手順](../../docs/method/verification-reduction.md)と[継続リグレッション](../../docs/method/continuous-regression.md)が参照先です。
+製品への適用では、ここで省略した時間関係・長時間負荷・構成・独立した検査方式も評価してください。[検証の削減の手順](../../docs/method/verification-reduction.md)と[継続リグレッション](../../docs/method/continuous-regression.md)が参照先です。

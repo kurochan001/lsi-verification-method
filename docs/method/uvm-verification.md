@@ -113,7 +113,7 @@ UVMのレジスタモデルは、フィールド、アクセス属性、アド�
 
 `build_phase`・`connect_phase`で構築と接続を行い、`run_phase`などで刺激と観測を進め、`check_phase`で残件を検査し、`report_phase`で集計する構成が使えます。objectionは終了の調整に使う仕組みです。[公式の共通フェーズ](https://github.com/accellera-official/uvm-core/blob/main/src/base/uvm_common_phases.svh)、[objection](https://github.com/accellera-official/uvm-core/blob/main/src/base/uvm_objection.svh)
 
-この手法では、シーケンスの終了後も、必要な応答と比較が終わるまで待つよう設計します。objectionを下げただけ、あるいは規定時間が経過しただけで正常終了にはしません。待ち続ける不具合にはタイムアウトを設け、判定不能として記録します。
+この手法では、シーケンスの終了後も、必要な応答と比較が終わるまで待つよう設計します。objectionを下げただけ、あるいは規定時間が経過しただけで正常終了にはしません。待ち続ける場合に備えてランナーには実時間の上限を設け、上限到達は判定不能として記録します。一方、仕様で定めた応答期限の超過をチェッカーが検出した場合は、要求に対する失敗として記録します。
 
 リグレッションのランナーでは、少なくとも次を別々に確認します。
 

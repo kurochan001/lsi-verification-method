@@ -1,6 +1,8 @@
 # 附属書ヘッダ・VPIテストの追加と既存テストの照合（2026-10-23）
 
-[現在の集計](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/behavior-coverage-summary.md) / [照合台帳](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/test-requirement-matching.md) / [累積の進捗・指摘](existing-test-matching-review-20261022.md) / [シミュレータと規格の差異](simulator-differences.md)
+本資料はkirimasim-testsでの適用記録です。数値・ツール版・作業状況は本文に記載した確認時点のもので、パス・コマンド・CIは特記のない限り複製元の構成を前提とします。[実行に必要なファイルと復元先](../../tools/README.md#動作確認する場所と依存ファイル)も参照してください。
+
+[参照版の集計](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/behavior-coverage-summary.md) / [照合台帳](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/test-requirement-matching.md) / [累積の進捗・指摘](existing-test-matching-review-20261022.md) / [シミュレータと規格の差異](simulator-differences.md)
 
 20%超過の後、50%を目標に作業を続け、途中で区切りました。
 この記録は、そのうち独立した検証を終えた部分だけを台帳へ取り込んだ結果です。
@@ -11,7 +13,7 @@
 | 項目 | 前 | 後 |
 | --- | ---: | ---: |
 | 対応済み要求（暫定設計網羅率） | 2,465（20.009741%） | **3,889（31.569121%）** |
-| 新鮮な成功証跡のある要求（暫定実行確認率） | 1,292（10.487864%） | **2,396（19.449631%）** |
+| 現行入力に対応する成功証跡のある要求（暫定実行確認率） | 1,292（10.487864%） | **2,396（19.449631%）** |
 | 本文（1〜40章、9,486行）の対応済み要求 | 2,430（25.62%） | 2,779（29.30%） |
 | AND集合証拠のある要求 | 126 | 147 |
 | 保留判断（テスト数・判断数） | 406本・546件 | 433本・578件 |

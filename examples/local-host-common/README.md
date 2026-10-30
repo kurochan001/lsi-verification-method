@@ -1,6 +1,6 @@
 # C・cocotb・差分検証の結果を判定する
 
-[Cドライバ](../local-c-driver/README.md)、[cocotb](../local-cocotb/README.md)、[シミュレーター差分](../local-differential/README.md)が使う共通ランナーです。必要なツールは各例のREADMEを参照してください。
+[Cドライバ](../local-c-driver/README.md)、[cocotb](../local-cocotb/README.md)、[シミュレータ差分](../local-differential/README.md)が使う共通ランナーです。必要なツールは各例のREADMEを参照してください。
 
 ## 生の実行結果と集約判定
 

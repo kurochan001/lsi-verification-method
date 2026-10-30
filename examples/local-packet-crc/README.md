@@ -62,4 +62,4 @@ python3 examples/local-packet-crc/run.py --profile nightly
 python3 -m unittest discover -s examples/local-packet-crc/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。各構成8目標、多項式・TKEEP無視・パケット間初期化・検査結果の4種類の変異です。smoke30パケット、nightly200パケット×3 seedへ固定ケースを加えます。JUnit14／18件、確認5件。CRCの誤検出確率や任意の誤り検出能力の評価、Ethernetのフレーム全体の検証は含みません。
+[共通手順](../local-common/README.md)を使います。各構成8目標、多項式・TKEEP無視・パケット間初期化・検査結果の4種類の変異です。smoke30パケット、nightly200パケット×3 seedへ固定ケースを加えます。JUnit14／18件、確認5件。CRCによる誤りの見逃し確率や任意の誤りパターンの検出能力の評価、Ethernetのフレーム全体の検証は含みません。

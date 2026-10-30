@@ -1,6 +1,8 @@
 # 規格全動作の網羅率を管理する
 
-[現在の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage.md)は、
+本資料はkirimasim-testsでの適用記録です。数値・ツール版・作業状況は本文に記載した確認時点のもので、パス・コマンド・CIは特記のない限り複製元の構成を前提とします。[実行に必要なファイルと復元先](../../tools/README.md#動作確認する場所と依存ファイル)も参照してください。
+
+[参照版の集計概要](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)と[全項目の詳細](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage.md)は、
 節の引用数とは独立した指標です。全規格の要求台帳に対する**暫定値と確定値を併記**します。
 IEEE 1800-2023 の本文1–41章と附属書A–Q、1,740見出しを調査台帳に登録しています。
 **全1,740節の資料確認・要求抽出は完了しました。確定値の分母は未承認です。**
@@ -71,7 +73,7 @@ Nightlyの開始予定は毎日04:23 JSTです。公開は全ジョブ終了後�
   全資料の確認が終わっても、解釈保留の節は`in_progress`のままです。
   どちらもテストの動作網羅率とは別です。
 
-ここでの100%は、調査を完了した要求台帳のすべてに観測可能なテストがあるという意味です。
+設計網羅率100%は、登録された要求行のすべてに、観測点をレビューしたテスト対応があるという意味です。資料確認率100%や実行確認率100%とは区別します。
 無限の値・幅・プログラムの全組み合わせを試した証明ではありません。
 正常系、境界、エラー、条件分岐、例外は区別して登録してください。
 

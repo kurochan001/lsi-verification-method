@@ -1,6 +1,6 @@
-# 優先順位付き割り込みのclaim・completeを検証する
+# 優先度付き割り込みのclaim・completeを検証する
 
-4要因・1通知先の教材用コントローラにAPBを接続します。単なる割り込み保持に加え、優先順位、threshold、処理中状態、ソフトウェアのclaim／completeを照合します。
+4要因・1通知先の教材用コントローラにAPBを接続します。単なる割り込み保持に加え、優先度、threshold、処理中状態、ソフトウェアのclaim／completeを照合します。
 
 ## 通知とclaimの選択を分ける
 
@@ -29,9 +29,9 @@ flowchart TD
 
 ## 教材の仕様
 
-番地は0x00 ENABLE、0x04 THRESHOLD、0x08 PENDING（RO）、0x0C IN_SERVICE（RO）、0x10 CLAIM/COMPLETE、0x20〜0x2Cの4個が各PRIORITYです。要因IDは1〜4、優先順位は0〜3で、0は選択しません。同順位なら小さいIDを優先します。
+番地は0x00 ENABLE、0x04 THRESHOLD、0x08 PENDING（RO）、0x0C IN_SERVICE（RO）、0x10 CLAIM/COMPLETE、0x20〜0x2Cの4個が各PRIORITYです。要因IDは1〜4、優先度は0〜3で、0は選択しません。同じ優先度なら小さいIDを優先します。
 
-IRQは有効なpendingの最高優先順位がthresholdより**大きい**ときだけ立ちます。claimは0x10の読出し完了で行い、thresholdとは独立に最高の有効pending IDを返します。候補がなければ0です。claimした要因をpendingから除き、処理中にします。completeは0x10へのID書込みで、実際に処理中のIDだけを解除します。不正ID、RO書込み、未定義番地はエラー・無副作用です。
+IRQは有効なpendingの最高優先度がthresholdより**大きい**ときだけ立ちます。claimは0x10の読出し完了で行い、thresholdとは独立に、有効なpendingのうち最も優先度が高い要因のIDを返します。候補がなければ0です。claimした要因をpendingから除き、処理中にします。completeは0x10へのID書込みで、実際に処理中のIDだけを解除します。不正ID、RO書込み、未定義番地はエラー・無副作用です。
 
 `level`構成は入力highを捕捉し、complete後もhighなら再度pendingになります。`edge`構成は立上りを捕捉し、処理中の新しいエッジは捨てる仕様です。completeと同じエッジの新イベントも更新前の処理中状態で判定し、claimと同じ要因のイベントはclaimに含めます。マスク中のpendingは保持します。
 
@@ -39,9 +39,9 @@ IRQは有効なpendingの最高優先順位がthresholdより**大きい**とき
 
 ## 検査・実行
 
-Pythonは集合と優先順位から期待値を作り、APB応答・IRQ・pending・処理中状態を毎サイクル照合します。levelはAPB待ち1、edgeは待ち2で、各12目標です。smokeは32操作、nightlyは250操作×3 seedに固定シナリオを加えます。
+Pythonは集合と優先度から期待値を作り、APB応答・IRQ・pending・処理中状態を毎サイクル照合します。levelはAPB待ち1、edgeは待ち2で、各12目標です。smokeは32操作、nightlyは250操作×3 seedに固定シナリオを加えます。
 
-4種類の変異は同順位の逆順選択、thresholdの等号誤り、処理中状態の設定漏れ、マスク中pendingの消失です。
+4種類の変異は同じ優先度での逆順選択、thresholdの等号誤り、処理中状態の設定漏れ、マスク中pendingの消失です。
 
 ```sh
 python3 examples/local-priority-irq/run.py

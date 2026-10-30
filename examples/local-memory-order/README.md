@@ -2,13 +2,13 @@
 
 [既存インターコネクト](../local-interconnect/README.md)で除外していた、書込み同士・読書きの同一領域競合を別の検証計画で扱います。RTLは同じ2マスター×2 AXI4 RAMを使い、元の例の除外方針は変更しません。
 
-## 書込みと読出しの可視化時点
+## 書込みの反映時点と読出し値の確定時点
 
 ターゲットの実ハンドシェイクと読出し取込み時刻で、独立したバイトメモリを更新・参照します。
 
 ```mermaid
 flowchart TD
-  accTitle: 書込みと読出しの可視化時点
+  accTitle: 書込みの反映時点と読出し値の確定時点
   accDescr: ターゲットの実ハンドシェイクと読出し取込み時刻で、独立したバイトメモリを更新・参照します。
   W["実Wハンドシェイク"] --> D["発行元・ビート・データ・WSTRBを照合"]
   D --> M["独立バイトメモリを更新"]
@@ -52,4 +52,4 @@ python3 -m unittest discover -s examples/local-memory-order/tests -v
 
 [共通手順](../local-common/README.md)を利用します。構成は`two-by-two`、smokeは48ペア×1 seed、nightlyは500×3 seed。固定12ペアは別枠です。JUnitは7／9件です。セルフテスト6件には、ターゲットと要求元の間へ意図的にRDATA破損を入れる検出確認もあります。
 
-これは本RAMの可視化時点とストローブ規則の検証です。AXIが全マスター間へ単一のメモリ順序を要求するという説明ではありません。キャッシュ整合性、メモリバリア、排他アクセス、アウトオブオーダー、動作中リセットの計画は含めません。一般規則は[Arm AXI仕様](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)、対象回路の範囲は[元の接続例](../local-interconnect/README.md)を参照してください。
+これは本RAMの書込みの反映時点、読出し値の確定時点、ストローブ規則の検証です。AXIが全マスター間へ単一のメモリ順序を要求するという説明ではありません。キャッシュ整合性、メモリバリア、排他アクセス、アウトオブオーダー、動作中リセットの計画は含めません。一般規則は[Arm AXI仕様](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)、対象回路の範囲は[元の接続例](../local-interconnect/README.md)を参照してください。

@@ -7,7 +7,7 @@
 提案の背景と試行計画をこの文書に残し、日常の計画・計測・完了判断は次の手順へ統合しました。
 
 - [機能間クロス検証の4.1〜4.3節・6.1節](method/feature-interaction-verification.md#41-因子水準制約と必要な次数をモデルにする)：モデル化、重点範囲、既存テストからの追加、3種類の充足状況。
-- [検証規模の縮退の4因子・3水準の例](method/verification-reduction.md#4因子3水準の説明例)：9行で54件の2因子目標を覆う数学的な例。
+- [検証規模の削減の4因子・3水準の例](method/verification-reduction.md#4因子3水準の説明例)：9行で54件の2因子目標を覆う数学的な例。
 - [機能カバレッジの計画上の充足と観測を分ける手順](method/functional-coverage.md#組合せモデルの計画上の充足と観測を分ける)：計測の粒度とチェッカーとの対応。
 - [クロスモデルと検証結果の記録](templates/interaction-coverage-plan.md)：モデルの版、対象集合、既存の証跡、未達、比較コストを記録する雛形。
 
@@ -24,7 +24,7 @@ pairwiseをLSIの一般的なサインオフ基準とする提案ではありま
 本リポジトリには既に次の手順があります。
 
 - [機能間の相互作用とクロス検証](method/feature-interaction-verification.md)：共有資源、同時・順序・中断、クロス目標と合格条件。
-- [検証規模の縮退](method/verification-reduction.md)：同値分割、t-way、可変次数、代表構成、縮退の根拠。
+- [検証規模の削減](method/verification-reduction.md)：同値分割、t-way、可変次数、代表構成、削減の根拠。
 - [機能カバレッジ](method/functional-coverage.md)：観測からのサンプリング、bin・cross、除外、インスタンス別集計。
 - [制約付きランダム検証](method/constrained-random-verification.md)：探索、seed、未達への調整、再現・縮小。
 

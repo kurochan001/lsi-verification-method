@@ -1,6 +1,6 @@
 # ローカル専用の検証例を実行する
 
-[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先順位付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
+[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先度付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
 
 ## 実行から構成別判定まで
 
@@ -129,7 +129,7 @@ python3 -m unittest discover -s examples/local-gap-regression/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。下記のバス検証6件、共通フォーマル9件・AXI4計画3件・等価性計画2件・システム集約3件、さらにホスト共通8件・Cドライバ4件・cocotb 5件・差分5件・完了性3件・追加集約3件も含め、従来のローカルセルフテストは190件です。[UVM等の7例](../local-workflow-regression/README.md)とレビュー時の追加44件を含む計画は234件でした。[今回の7例](../local-soc-regression/README.md)の追加時点で270件でした。SystemRDLと4集約ランナーのレビュー修正を確認する5件を加え、そこまでのローカル確認は275件です。今回の追加36件とレビュー追加5件、さらに検証領域を補う6例の49件を含むその時点の計画は365件です。さらに[APBクロス網羅の比較例](../local-apb-irq-coverage/README.md)の16件を加えた現在の計画は381件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。現在のローカル例全体のセルフテストは381件です。このうち共通シミュレーション38例が237件、本共通ランナーが14件で、合計251件です。残る130件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。GitLab向けの132件を合わせると、全セルフテストは513件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
@@ -146,7 +146,7 @@ python3 -m unittest discover -s examples/local-bus-validation/tests -v
 
 ## C・cocotb・差分・完了期限
 
-[追加検証7例](../local-advanced-regression/README.md)は、上記3例に加え、Cドライバ・cocotb・シミュレーター差分と、進行条件を置く完了期限の証明を実行します。C等の3例は[別のホストランナー](../local-host-common/README.md)、完了期限は共通フォーマルランナーを使います。追加パッケージ、チェック単位、ネガティブテストの注入先は各手順を参照してください。ネガティブテストの件数は一律のRTL変異の検出率ではありません。
+[追加検証7例](../local-advanced-regression/README.md)は、上記3例に加え、Cドライバ・cocotb・シミュレータ差分と、進行条件を置く完了期限の証明を実行します。C等の3例は[別のホストランナー](../local-host-common/README.md)、完了期限は共通フォーマルランナーを使います。追加パッケージ、チェック単位、ネガティブテストの注入先は各手順を参照してください。ネガティブテストの件数は一律のRTL変異の検出率ではありません。
 
 ## 失敗の縮小・カバレッジ収束・保護・UVMへの追加
 
@@ -162,7 +162,7 @@ python3 examples/local-workflow-regression/run.py --stage core
 
 前回追加までの計画は22例・53構成、JUnit 373／479件です。従来18例・45構成の317／407件へ、4例・8構成の56／72件を加えた値です。セルフテストは従来のシミュレーション・共通127件に4回路24件を加え151件で、探索・UVM等は別に数えます。元の18例の確認結果を、新規例の実行結果として流用しません。
 
-## 優先順位付き割り込み・リング式DMA・クレジット・キャッシュ
+## 優先度付き割り込み・リング式DMA・クレジット・キャッシュ
 
 [新しい7例の集約手順](../local-soc-regression/README.md)のうち、4回路は本共通ランナーで動きます。各2構成・4種類の変異、合計8構成のJUnitはsmoke 56件／nightly 72件です。4回路各5件のセルフテストも用意しています。
 
@@ -182,7 +182,7 @@ python3 examples/local-extension-regression/run.py --stage core
 python3 examples/local-extension-regression/run.py --stage core --profile nightly
 ```
 
-現在の共通シミュレーションは38例・85構成、JUnit597／767件です。シミュレーション・共通のセルフテストは171＋35＝206件。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。検証領域を補う6例の49件を含むその時点の全ローカル確認の計画は365件です。APBクロス網羅の比較例の16件を加えた現在の計画は381件です。この7例を追加した時点の実行範囲は、同7例のsmoke／nightlyと確認41件です。
+この7例を追加した時点の共通シミュレーションは32例・73構成、JUnit513／659件、シミュレーション・共通のセルフテストは206件でした。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。その後、下記6例が加わった現在は38例・85構成、JUnit597／767件、シミュレーション・共通のセルフテスト251件です。ローカル全体の381件の内訳は、上記の「ランナー自体の確認」を参照してください。
 
 
 ## セキュリティ・性能・CDC・JTAG・アドレスマップ・ロックステップ

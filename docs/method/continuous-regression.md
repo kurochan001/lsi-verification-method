@@ -11,7 +11,7 @@ GitLabで試すための[実行可能な最小例](../../examples/gitlab-regress
 - [IRQ・CDC](../../examples/gitlab-regression/README.md)、[FIFOランダム](../../examples/gitlab-fifo/README.md)、[FIFOフォーマル](../../examples/gitlab-formal/README.md)：基本的な実行・判定・証跡保存と、方式ごとの合格条件。
 - [APBレジスタ](../../examples/gitlab-apb/README.md)、[APBと割り込み](../../examples/gitlab-apb-irq/README.md)、[APB・UART・割り込み](../../examples/gitlab-apb-uart/README.md)：バス操作から状態・通信・通知までの結合と競合。
 - [ready/valid通信](../../examples/gitlab-stream/README.md)、[アービタ](../../examples/gitlab-arbiter/README.md)、[UART](../../examples/gitlab-uart/README.md)：転送・受理・待ち・エラーと復帰の構成別判定。
-- [SVA](../../examples/gitlab-sva/README.md)、[リグレッションの縮退](../../examples/gitlab-reduction/README.md)：アサーション・カバー・前件不足と、目標維持・検出力・実行量の比較。
+- [SVA](../../examples/gitlab-sva/README.md)、[リグレッションの削減](../../examples/gitlab-reduction/README.md)：アサーション・カバー・前件不足と、目標維持・検出力・実行量の比較。
 
 現行構成はランナーのセルフテスト11ジョブとリグレッション39ジョブです。通常実行のJUnitは311件、ランナーのセルフテスト132件は別枠です（2026-10-27の全体レビュー修正後）。全例のscheduleは384件を予定しますが、その全体をGitLabで実行した結果ではありません。確認記録のMR !12までmainへ取り込まれ、最新mainの[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
 
@@ -38,7 +38,7 @@ GitLabと自前の計算資源で運用するRunnerは、有力な開始構成�
 比較する総費用には、少なくとも次を含めます。
 
 - 検証管理・CIの契約、必要な機能を使えるプラン。
-- シミュレーター・フォーマル検証・カバレッジ計測などのライセンスと同時実行枠。
+- シミュレータ・フォーマル検証・カバレッジ計測などのライセンスと同時実行枠。
 - CPU・メモリ・計算機／クラウド、共有ストレージ、転送・バックアップ。
 - CIサーバ・Runner・EDAアダプタの開発、更新・障害対応。
 - 失敗の分類・再現、カバレッジ収束、要求と証跡の管理に使う工数。
@@ -61,7 +61,7 @@ GitLabのcompute minutesの扱いは、サービス形態・Runnerの種類・�
 
 GitLabでは[スケジュール実行パイプライン](https://docs.gitlab.com/ci/pipelines/schedules/)などを使えます。予定時刻の設定だけでなく、実際に起動したこと、対象コミット、予定ケース、終了と結果収集まで監視します。起動されなかったリグレッションは、失敗が0件でも未実行です。
 
-影響に基づく選択やseedの縮約は、[検証規模の縮退](verification-reduction.md#6-リグレッションテストとseedを縮約する)に従います。新しいseedでの探索と、失敗を再現する固定seedの両方を持たせます。変更時の限定的なリグレッションが合格しても、定期実行やサインオフ時に要求されるリグレッションの合格とは扱いません。
+影響に基づく選択やseedの縮約は、[検証規模の削減](verification-reduction.md#6-リグレッションテストとseedを縮約する)に従います。新しいseedでの探索と、失敗を再現する固定seedの両方を持たせます。変更時の限定的なリグレッションが合格しても、定期実行やサインオフ時に要求されるリグレッションの合格とは扱いません。
 
 ## 4. 計画・ビルド・分散実行を同じリグレッションへ結ぶ
 

@@ -7,7 +7,7 @@
 - [同一領域の読書き競合](../local-memory-order/README.md)：実際の取込み時点に従う参照メモリで複数マスターを照合。
 - [固定小数点DSP](../local-dsp/README.md)：符号、丸め、上下限、飽和、履歴、出力待ち。
 - [cocotb](../local-cocotb/README.md)：Pythonの刺激・位相モニター・レジスタモデルで既存APBを検証。
-- [シミュレーター差分](../local-differential/README.md)：IcarusとVerilatorの仕様照合・有効観測列の比較。
+- [シミュレータ差分](../local-differential/README.md)：IcarusとVerilatorの仕様照合・有効観測列の比較。
 - [完了期限の証明](../local-progress/README.md)：受信側の進行条件を明記した証明と、その条件を外した反例。
 
 ## 7例の実行範囲と集計階層

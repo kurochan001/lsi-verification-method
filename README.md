@@ -3,7 +3,7 @@
 LSIの仕様に基づく検証計画の立案から、要求カバレッジによる検証完了の判断までをまとめたリポジトリです。
 仕様を、条件と期待結果を確認できる単位の要求に分け、要求ごとに実装の不具合を検出できるテストとチェッカーを用意します。作成者とは別の担当者が仕様との整合性と不具合の検出力をレビューし、仕様・RTL・検証環境のバージョンに対応した証跡で検証状況を管理します。
 
-初めて読む方は[用語集](docs/glossary.md)で略語・指標の意味を確認できます。[FAQ](docs/faq.md)には、導入、カバレッジ100%の意味、ランダム検証、SVA・フォーマル、CDC、縮退、CI運用や検証完了の判断に関する疑問をまとめています。
+初めて読む方は[用語集](docs/glossary.md)で略語・指標の意味を確認できます。[FAQ](docs/faq.md)には、導入、カバレッジ100%の意味、ランダム検証、SVA・フォーマル、CDC、削減、CI運用や検証完了の判断に関する疑問をまとめています。
 
 手法の説明と適用記録は[手法・ケーススタディ・参照ツール](#手法ケーススタディ参照ツール)にまとめています。実行できる検証例を探す場合は、[検証例一覧](#検証例一覧)から対象の回路・検証方式を選んでください。[まとめて実行する手順](#まとめて実行する手順)と[準備と実行](#準備と実行)も用意しています。
 
@@ -71,7 +71,7 @@ flowchart TD
 - **covergroupによる機能網羅**：[covergroupで機能を体系的に網羅する](docs/method/functional-coverage.md)。機能一覧からcoverpoint・bin・crossを選ぶ方法、観測と判定、除外とインスタンス別の集計をまとめています。基本動作の16目標を収集するコレクター例も示しています。
 - **フォーマル検証**：[フォーマル検証の計画・証明・完了判定](docs/method/formal-verification.md)。仮定・初期状態、抽象化・証明の分割、有界検査と非有界の証明、活性、反例・到達性、サインオフをまとめています。小さな割り込みモデルの証明と、誤実装・過剰な仮定の確認例も示しています。
 - **検証環境の検出力**：[ミューテーション検証で検証環境の検出力を確かめる](docs/method/mutation-verification.md)。回路へ意図的な誤りを入れ、刺激・チェッカー・SVAが検出するかを評価します。変異の選び方、未検出の分析、等価な変異、検出率と未完了の集計をまとめています。
-- **検証規模の縮退**：[検証の組み合わせ・構成・実行数を縮退する](docs/method/verification-reduction.md)。同値分割・境界値、直交表・t-way、対称性・代表構成、テスト・seedの縮約、変更影響によるリグレッション選択、形式的な抽象化を整理しています。削減の根拠、残す目標、検出力と実行コストの確認も記録します。
+- **検証規模の削減**：[検証の組み合わせ・構成・実行数を削減する](docs/method/verification-reduction.md)。同値分割・境界値、直交表・t-way、対称性・代表構成、テスト・seedの縮約、変更影響によるリグレッション選択、形式的な抽象化を整理しています。削減の根拠、残す目標、検出力と実行コストの確認も記録します。
 - **継続的リグレッション**：[継続的リグレッションの計画・実行・結果管理](docs/method/continuous-regression.md)。変更時・定期・サインオフのリグレッション、マニフェストと分散実行、ライセンス・計算資源、失敗・再実行・カバレッジ・証跡を整理しています。Cadence vManager／Verisium ManagerとGitLab CI/CDの役割分担、併用、総費用での比較も扱います。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
 - **手法の適用事例（IEEE 1800-2023）**：SystemVerilogの規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で、要求の抽出、テストとの対応付け、検証状況の管理に本手法を適用しました。2026-10-26に確認した[上流の集計（`5fb3c45d`）](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)は次のとおりです。
@@ -143,7 +143,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [APB＋UART＋割り込み](examples/gitlab-apb-uart/README.md) | レジスタ操作から実際の送受信・エラー検出・IRQ通知までの結合、同時操作の競合 | Icarus |
 | [タイマー・ウォッチドッグ](examples/local-timer-watchdog/README.md) | 単発・周期・停止、kick・IRQクリアと満了の競合、同時満了 | Icarus |
 | [APB＋タイマー＋ウォッチドッグ](examples/local-apb-timer/README.md) | バス完了と満了・kick・clearの競合、IRQマスク、リセット要求 | Icarus |
-| [優先順位付き割り込み](examples/local-priority-irq/README.md) | 優先順位・同順位、claim／complete、イベントとの競合 | Icarus |
+| [優先度付き割り込み](examples/local-priority-irq/README.md) | 優先順位・同順位、claim／complete、イベントとの競合 | Icarus |
 | [64ビットカウンター](examples/local-counter-snapshot/README.md) | 32ビットAPBからの一貫した読出し、スナップショット、桁上がり、一括反映 | Icarus |
 
 ### DMA・メモリ・順序制御
@@ -209,7 +209,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [cocotbによるAPB検証](examples/local-cocotb/README.md) | Pythonコルーチンによる刺激・位相モニター・独立したレジスタモデル | Icarus＋cocotb |
 | [Icarus／Verilatorの差分検証](examples/local-differential/README.md) | 共通入力の有効な観測を比較し、差分検出とX検査を別々に判定 | Icarus＋Verilator |
 | [APB＋割り込みのクロス網羅と選択](examples/local-apb-irq-coverage/README.md) | 2因子・重点・時間関係の実観測、既存目標の保持、追加ケースの選択と再実行の比較 | Icarus |
-| [リグレッションの縮退](examples/gitlab-reduction/README.md) | 全件・目標だけの選択・ストレス保持を比較し、実行量・目標・検出力を評価 | Icarus |
+| [リグレッションの削減](examples/gitlab-reduction/README.md) | 全件・目標だけの選択・ストレス保持を比較し、実行量・目標・検出力を評価 | Icarus |
 | [失敗した操作列の自動縮小](examples/local-failure-reduction/README.md) | 同じチェッカーで失敗を再現し、単一操作削除に対する極小性を確認 | Icarus |
 | [未達カバレッジからの刺激調整](examples/local-coverage-feedback/README.md) | 観測に基づく刺激と固定分布のランダム刺激を同じサイクル予算で比較 | Icarus |
 
@@ -328,10 +328,10 @@ PROVENANCE.md                   各ファイルの由来・改訂と実行確認
 | [APB＋割り込み結合検証](examples/gitlab-apb-irq/README.md) | 3ジョブ、待ち状態0／1／3 | 18（各6） | 24（各8） |
 | [ready/validランダム検証](examples/gitlab-stream/README.md) | 4ジョブ、深さ1／3×幅8／16 | 24（各6） | 32（各8） |
 | [SVAのアサーションとカバー](examples/gitlab-sva/README.md) | 1ジョブ、要求6件・カバー12目標 | 10 | 12 |
-| [リグレッションの縮退の比較](examples/gitlab-reduction/README.md) | 1ジョブ、全件／選択／ストレス保持の比較 | 18（集約判定） | 18（集約判定） |
+| [リグレッションの削減の比較](examples/gitlab-reduction/README.md) | 1ジョブ、全件／選択／ストレス保持の比較 | 18（集約判定） | 18（集約判定） |
 | [ラウンドロビン・アービタ](examples/gitlab-arbiter/README.md) | 3ジョブ、要求元2／3／4 | 21（各7） | 27（各9） |
 | [UARTランダム検証](examples/gitlab-uart/README.md) | 6ジョブ、分周数8／16×パリティなし／偶数／奇数 | 40（各6／7） | 52（各8／9） |
 | [APB・UART・割り込み結合検証](examples/gitlab-apb-uart/README.md) | 9ジョブ、待ち状態0／1／3×パリティなし／偶数／奇数 | 72（各8） | 90（各10） |
 | 合計 | リグレッション39ジョブ＋ランナーのセルフテスト11ジョブ | 311 | 384 |
 
-ランナーのセルフテストはIRQ 14件、FIFO 10件、フォーマル8件、APB 12件、APB＋割り込み12件、ready/valid 13件、SVA 12件、縮退比較11件、アービタ13件、UART 13件、APB・UART・割り込み14件の計132テストで、上表のJUnit件数とは別です。132件は2026-10-27の全体レビュー修正後の件数で、上記のGitLab確認記録は修正前の129件です。scheduleではシミュレーションと縮退比較の10例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。384件は設定から算出した予定件数で、GitLabで全例を含むschedule実行を確認した記録ではありません。各例の追加時点の実行記録と、このリポジトリの現行CI設定から算出した件数は区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+ランナーのセルフテストはIRQ 14件、FIFO 10件、フォーマル8件、APB 12件、APB＋割り込み12件、ready/valid 13件、SVA 12件、削減比較11件、アービタ13件、UART 13件、APB・UART・割り込み14件の計132テストで、上表のJUnit件数とは別です。132件は2026-10-27の全体レビュー修正後の件数で、上記のGitLab確認記録は修正前の129件です。scheduleではシミュレーションと削減比較の10例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。384件は設定から算出した予定件数で、GitLabで全例を含むschedule実行を確認した記録ではありません。各例の追加時点の実行記録と、このリポジトリの現行CI設定から算出した件数は区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。

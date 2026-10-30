@@ -1,13 +1,17 @@
 # IEEE 1800-2023 要求抽出の未解決事項
 
+本資料はkirimasim-testsでの適用記録です。数値・ツール版・作業状況は本文に記載した確認時点のもので、パス・コマンド・CIは特記のない限り複製元の構成を前提とします。[実行に必要なファイルと復元先](../../tools/README.md#動作確認する場所と依存ファイル)も参照してください。
+
 2026-10-22、本文1–41章と附属書A–Qの全1,740節・15,846出典ブロックの確認を終えました。
 資料確認率は100%です。未確認の節はありません。
-[抽出結果](requirement-extraction.md) / [現在の集計](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/behavior-coverage.md)
+[抽出結果](requirement-extraction.md) / [参照版の集計](https://github.com/kurochan001/kirimasim-tests/blob/c88b0c3/docs/behavior-coverage.md)
 
 要求の解釈には当初46論点、42節、49登録行の保留がありました。2026-10-24の再検討で27論点（22節）を規格内部の根拠で解消し、19論点、20節、21登録行の保留が残っています。
 該当する記述を要求台帳に残し、節を`in_progress`、該当行を`checks: []`としています。
 資料確認の100%を、解釈の確定や動作テストの100%と読み替えません。
 ここに記すのは提供されたPDF内の照合結果であり、IEEE公式の訂正・解釈の確認済みという意味ではありません。
+
+各論点の「状態」は当初の保留内容です。再検討後の判断は、末尾の「2026-10-24の再検討」とその根拠を参照してください。同じ節に別の未解決論点が残る場合は、個々の論点を解消しても節全体は`in_progress`のままです。
 
 ## 解釈保留を残したまま管理する
 
@@ -332,7 +336,7 @@ flowchart TD
 - 状態: 該当節を`in_progress`、該当行のテスト対応承認を保留。関連する正式定義との適用関係を根拠付きで確定してから更新します。
 - 2026-10-24の再検討（解消）: cbAssertionSysEnableFailAction / cbAssertionSysDisableFailAction は、アサーションシステム全体で fail action（失敗時に実行される動作）の実行が有効化・無効化されたことを知らせるコールバックとする。「vacuous and nonvacuous success について」という句は pass action の項目から写った誤記として扱い、成功に関する条件は付けない。
   根拠: 39.4.1 B003 の cbAssertionSysEnableFailAction / cbAssertionSysDisableFailAction の項目だけが、fail action を「vacuous/nonvacuous success について」有効・無効にすると書いている。同じ操作を定める側には、成功についての限定が一貫してない。システム制御 vpiAssertionSys{Enable,Disable}FailAction（39.5.1 B003）は、アサーションの fail action の実行を有効・無効にするとだけ定める。アサーション単位の cbAssertion{Enable,Disable}FailAction（39.4.2 B008）も「そのアサーションの fail action」とだけ書く。$assertcontrol の FailOn/FailOff（20.11 B035、既定の $error を含む）も同じ。fail action（fail statement）は失敗時に実行される文で（16.3 B010）、成功時に実行される fail action は規格のどこにもないため、限定句には指す対象がない。この限定句は、直後に並ぶ pass action の項目（39.4.1 B003、20.11 B035 の PassOn/PassOff）から写った文言と読める。どちらの読みでも、コールバックの契機（fail action の有効化・無効化）は変わらない。定義側が一貫しているので解消する。ただし 39.4.1 は ASSERTION-SYSTEM-OFF-CALLBACKS を keep とするため、節は in_progress のまま。
-  要求文・出典メモ・節台帳を更新し、節を完了にしました。独立した検証用エージェントの独立レビューを経た判断ですが、IEEEの公式な訂正・解釈ではありません。
+  要求文・出典メモ・節台帳を更新し、この論点の解釈保留を解消しました。別の未解決論点があるため、節は`in_progress`のままです。独立した検証用エージェントの独立レビューを経た判断ですが、IEEEの公式な訂正・解釈ではありません。
 
 ## ASSERTION-SYSTEM-OFF-CALLBACKS — 停止中のアサーションコールバック
 
@@ -495,7 +499,7 @@ I.3のコメントは成功時0、H.9.3は取得した非NULLデータポイン�
 - 状態: 該当節を`in_progress`、該当行のテスト対応承認を保留。関連する正式定義との適用関係を根拠付きで確定してから更新します。
 - 2026-10-24の再検討（解消）: svGetUserData は void* を返す。エラーのとき、および svPutUserData が呼ばれていないときは NULL を返す。成功時は、svPutUserData で保存した非 NULL のユーザーデータポインタを返す。I.3 の「成功時 0」は H.9.3 B017 に従って読む。
   根拠: I.3 B047 のコメントは「エラー時は NULL、成功時は 0」と書くが、戻り値の型は void* で、0 と NULL は同じヌルポインタ値になる。文字どおりでは成功とエラーを区別できず、同じコメントの冒頭（svPutUserData で保存したユーザーデータポインタを取り出す）とも矛盾する。同じ I.3 の B046（svPutUserData のコメント）は、userData に 0（NULL）を使うと svGetUserData のエラーを見分けられなくなるので避けるよう勧めている。この注意は、成功時に保存した userData がそのまま返る場合にだけ意味を持つ。H.9.3 B017 は同じ宣言について、成功時に非 NULL のユーザーデータポインタを返すと明示している。H.9.3 B004 も、put/get を後で取り出すための仕組みとして説明している。B047 の「0 upon success」は、直前の svPutUserData の文言（B046：エラー時 -1、成功時 0）を写したものと読める。I.3 自身の B046 と B047 冒頭、および H.9.3 が一貫しており、文字どおりの読みは I.3 の内部でも成り立たないので解消する。ただし I.3 の節は DPI-SIGNED-BITS-MACRO を keep とするため、in_progress のまま。
-  要求文・出典メモ・節台帳を更新し、節を完了にしました。独立した検証用エージェントの独立レビューを経た判断ですが、IEEEの公式な訂正・解釈ではありません。
+  要求文・出典メモ・節台帳を更新し、この論点の解釈保留を解消しました。別の未解決論点があるため、節は`in_progress`のままです。独立した検証用エージェントの独立レビューを経た判断ですが、IEEEの公式な訂正・解釈ではありません。
 
 ## DISTRIBUTION-C-WIDTH — 乱数アルゴリズムのC整数幅
 

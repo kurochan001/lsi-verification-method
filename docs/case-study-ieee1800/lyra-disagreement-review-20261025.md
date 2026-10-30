@@ -1,5 +1,7 @@
 # Lyra と一致しない「規格のみ」のテストの見直し（2026-10-25）
 
+本資料はkirimasim-testsでの適用記録です。数値・ツール版・作業状況は本文に記載した確認時点のもので、パス・コマンド・CIは特記のない限り複製元の構成を前提とします。[実行に必要なファイルと復元先](../../tools/README.md#動作確認する場所と依存ファイル)も参照してください。
+
 [シミュレータと規格の差異](simulator-differences.md) / [Nightly resultsの見方](https://github.com/kurochan001/kirimasim-tests/blob/3faf239/docs/nightly-results.md) / [手順書](requirements-to-tests-method.md)
 
 Lyra は `:oracle:` には使わず、比較用のシミュレータとして毎晩実行しています（[手順書](requirements-to-tests-method.md)の7.1と12節）。

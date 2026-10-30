@@ -53,4 +53,4 @@ python3 -m unittest discover -s examples/local-recovery/tests -v
 
 [共通手順](../local-common/README.md)を利用します。`timeout4`／`timeout8`の2構成、smokeは32要求×1 seed、nightlyは300×3 seedです。固定試験・連番枯渇時の協調リセットの追加クロックはiterationsとは別です。checksはクロックごとのベクトル数で、JUnitは14／18件です。
 
-任意の下位装置に対する安全な取消し、リセットを跨いで残る応答、無限時間の活性、実機の障害回復を保証する例ではありません。遅延応答・tagの寿命・再開の条件を先に仕様化する教材です。
+任意の下位装置に対する安全な取消し、リセット後も残る応答、無限時間の活性、実機の障害回復を保証する例ではありません。遅延応答・tagの寿命・再開の条件を先に仕様化する教材です。

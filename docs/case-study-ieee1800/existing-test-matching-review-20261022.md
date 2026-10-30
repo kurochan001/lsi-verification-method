@@ -1,10 +1,12 @@
 # 既存テストの要求照合で見つかった問題（2026-10-22開始、2026-10-23更新）
 
+本資料はkirimasim-testsでの適用記録です。数値・ツール版・作業状況は本文に記載した確認時点のもので、パス・コマンド・CIは特記のない限り複製元の構成を前提とします。[実行に必要なファイルと復元先](../../tools/README.md#動作確認する場所と依存ファイル)も参照してください。
+
 対象は既存テストと IEEE 1800-2023 の要求台帳との対応です。
 全テストの意味上の照合を完了したという報告ではありません。
 [全テストの照合台帳](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/test-requirement-matching.md)と
-[現在の計測結果](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/behavior-coverage-summary.md)を併せて参照してください。
-最新の続行結果は[未登録テストの照合（2026-10-25）](existing-test-matching-unregistered-20261025.md)です。
+[参照版の計測結果](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/behavior-coverage-summary.md)を併せて参照してください。
+その後の作業結果は[未登録テストの照合（2026-10-25）](existing-test-matching-unregistered-20261025.md)です。
 
 ## テストの存在と要求への対応を分ける
 
@@ -85,7 +87,7 @@ flowchart TD
 55本から442件の対応根拠を追加し、対応要求は810行から1,242行（+432行）になりました。
 暫定設計網羅率10.081987%で、10%超過を確認しました。実行確認は754行、6.12%です。
 M59–M64と39件の範囲別判断、5件のAND集合証拠を記録しました。既存入力・要求定義は保持しています。
-元テストの再実行は行わず、保存済み結果へ入力・ランナーの鮮度を照合しました。
+元テストの再実行は行わず、保存済み結果の入力・ランナーのハッシュを現行版と照合しました。
 その直前の[コンパイラ指令のレビュー結果](https://github.com/kurochan001/kirimasim-tests/blob/0da4f2fc/docs/existing-test-matching-preprocessor-20261023.md)では、
 32本・18要求行・85件の対応根拠を追加しました。M52–M58、5件の集合証拠と41件の範囲別判断を記録しています。
 既存の刺激・期待値・メタデータを変えず、保存済み実行証跡へ現在の入力ハッシュを照合しました。
