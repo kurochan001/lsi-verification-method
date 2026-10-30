@@ -73,10 +73,16 @@ def run(plugin, args):
     for configuration, parameters in configurations.items():
         for mutation in sorted({c['mutation'] for c in cases if c['configuration'] == configuration}):
             key = f'{configuration}-m{mutation}'
+            sources = plugin.SOURCES
+            if hasattr(plugin, 'build_sources'):  # e.g. a netlist synthesized for this configuration
+                sources, prepared = plugin.build_sources(args, configuration, parameters, mutation, out / key)
+                if prepared['error'] or prepared['returncode'] != 0:
+                    builds[key] = prepared
+                    continue
             command = [args.iverilog, '-g2012', '-s', plugin.TOP, '-o', str(out / (key + '.vvp')),
                        f'-P{plugin.TOP}.MUTATION={mutation}']
             command += [f'-P{plugin.TOP}.{name}={value}' for name, value in parameters.items()]
-            command += [str(p) for p in plugin.SOURCES]
+            command += [str(p) for p in sources]
             builds[key] = PROCESS.execute(command, out / (key + '-build.log'), args.timeout, out)
     PROCESS.write_json(out / 'builds.json', builds)
     results, hits = [], {name: {} for name in configurations}
@@ -163,6 +169,8 @@ def main(plugin):
     parser.add_argument('--requirements', type=Path, default=Path(plugin.__file__).parent / 'requirements.json')
     parser.add_argument('--timeout', type=float, default=10.0)
     parser.add_argument('--out', type=Path, default=Path('artifacts') / datetime.now(timezone.utc).strftime(plugin.NAME + '-%Y%m%dT%H%M%S%fZ'))
+    if hasattr(plugin, 'add_arguments'):
+        plugin.add_arguments(parser)
     args = parser.parse_args()
     if args.iterations is None:
         args.iterations = plugin.ITERATIONS[args.profile]

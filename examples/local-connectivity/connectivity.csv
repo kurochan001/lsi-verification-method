@@ -1,0 +1,27 @@
+id,to,from,when,delay,reset,note
+CLK,u_rst.clk_i u_sys.clk_i u_timer.clk_i u_uart.clk_i u_gpio.clk_i u_dma.clk_i u_dbg.clk_i u_irq.clk_i,clk,,0,,全ブロックに共通のクロック
+RST_SYNC,u_rst.rst_ni,rst_ni,,0,,端子のリセットはリセット同期化回路だけに入れる
+RST,u_sys.rst_ni u_timer.rst_ni u_uart.rst_ni u_gpio.rst_ni u_dma.rst_ni u_dbg.rst_ni u_irq.rst_ni,u_rst.rst_no,,0,,ほかのブロックは同期化したリセットを使う
+IRQ0,u_irq.src_i[0],1'b0,,0,,割り込み番号0は「割り込みなし」に予約
+IRQ1_TIMER,u_irq.src_i[1],u_timer.irq_o,,0,,割り込み番号1はタイマー
+IRQ2_UART,u_irq.src_i[2],u_uart.irq_o,,0,,割り込み番号2はUART
+IRQ3_GPIO,u_irq.src_i[3],u_gpio.irq_o,,0,,割り込み番号3はGPIO
+IRQ4_DMA,u_irq.src_i[4],u_dma.irq_o,,0,,割り込み番号4はDMAの完了
+IRQ5_DMA_ERR,u_irq.src_i[5],u_dma.err_o,,0,,割り込み番号5はDMAのエラー
+IRQ_UNUSED,u_irq.src_i[7:6],2'b00,,0,,割り込み番号6・7は未使用
+CPU_IRQ,cpu_irq,u_irq.irq_o,,1,u_rst.rst_no,CPUへの割り込みは1段のレジスタを通す
+DMA_REQ0,u_dma.req_i[0],u_uart.dma_req_o,,0,,DMAのチャネル0はUARTの転送要求
+DMA_UNUSED,u_dma.req_i[3:1],3'b000,,0,,DMAのチャネル1〜3は未使用
+GPIO_IN,u_gpio.gpio_i,pad_i,,0,,GPIOは全端子の入力を常に読める
+PAD0_UART,"{pad_oe[0],pad_o[0]}","{1'b1,u_uart.tx_o}",u_sys.pinmux_o[0],0,,端子0をUARTの送信に使う
+PAD0_GPIO,"{pad_oe[0],pad_o[0]}","{u_gpio.gpio_oe_o[0],u_gpio.gpio_o[0]}",!u_sys.pinmux_o[0],0,,端子0をGPIOに使う
+UART_RX,u_uart.rx_i,pad_i[1],u_sys.pinmux_o[1],0,,端子1をUARTの受信に使う
+UART_RX_IDLE,u_uart.rx_i,1'b1,!u_sys.pinmux_o[1],0,,受信を割り当てないときはアイドルの1
+PAD1_UART,"{pad_oe[1],pad_o[1]}",2'b00,u_sys.pinmux_o[1],0,,受信に使う端子は出力しない
+PAD1_GPIO,"{pad_oe[1],pad_o[1]}","{u_gpio.gpio_oe_o[1],u_gpio.gpio_o[1]}",!u_sys.pinmux_o[1],0,,端子1をGPIOに使う
+DBG_TDI,u_dbg.tdi_i,pad_i[2],u_sys.debug_en_o,0,,デバッグ有効時は端子2をTDIに使う
+DBG_TDI_OFF,u_dbg.tdi_i,1'b0,!u_sys.debug_en_o,0,,デバッグ無効時はTDIに0を入れる
+PAD2_DBG,"{pad_oe[2],pad_o[2]}",2'b00,u_sys.debug_en_o,0,,TDIに使う端子は出力しない
+PAD2_GPIO,"{pad_oe[2],pad_o[2]}","{u_gpio.gpio_oe_o[2],u_gpio.gpio_o[2]}",!u_sys.debug_en_o,0,,デバッグ無効時は端子2をGPIOに使う
+PAD3_DBG,"{pad_oe[3],pad_o[3]}","{1'b1,u_dbg.tdo_o}",u_sys.debug_en_o,0,,デバッグ有効時は端子3にTDOを出す
+PAD3_GPIO,"{pad_oe[3],pad_o[3]}","{u_gpio.gpio_oe_o[3],u_gpio.gpio_o[3]}",!u_sys.debug_en_o,0,,デバッグ無効時は端子3をGPIOに使い、TDOを出さない

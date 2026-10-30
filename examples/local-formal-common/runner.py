@@ -20,7 +20,7 @@ spec=importlib.util.spec_from_file_location('system_formal_process',PROCESS_PATH
 P=importlib.util.module_from_spec(spec);spec.loader.exec_module(P)
 
 def inventory(path,plugin,parameters,case):
-    data=json.loads(path.read_text());top=data['modules'][plugin.TOP]
+    data=json.loads(path.read_text());top=data['modules'][getattr(plugin,'PARAMETER_MODULE',plugin.TOP)]
     expected={**parameters,**case['parameters']}
     if any(int(top['parameter_default_values'][k],2)!=v for k,v in expected.items()):raise ValueError('compiled parameters differ')
     found={k:Counter() for k in ('assert','assume','cover')}
@@ -77,9 +77,10 @@ def run(plugin,args):
             for source in plugin.SOURCES:shutil.copy2(source,directory/source.name)
             properties=plugin.properties(parameters,case)
             commands=''.join(f'chparam -set {k} {v} {plugin.TOP}\n' for k,v in {**parameters,**case['parameters']}.items())
+            reading=plugin.prepare(parameters,case) if hasattr(plugin,'prepare') else 'read -formal -sv '+' '.join(p.name for p in plugin.SOURCES)+'\n'+commands
             text=(f"[options]\nmode {case['mode']}\ndepth {case['depth']}\ntimeout {max(1,int(args.timeout)-5)}\n"+
                 ('cover_assert on\n' if case['mode']=='cover' else '')+
-                '\n[engines]\nsmtbmc z3\n\n[script]\nread -formal -sv '+' '.join(p.name for p in plugin.SOURCES)+'\n'+commands+
+                '\n[engines]\nsmtbmc z3\n\n[script]\n'+reading+
                 f'prep -top {plugin.TOP}\nopt_clean\nopt_expr\nwrite_json ../model/inventory.json\nasync2sync\nmemory_map\nopt -full\n\n[files]\n'+'\n'.join(p.name for p in plugin.SOURCES)+'\n')
             (directory/'task.sby').write_text(text)
             execution=P.execute([args.sby,'--yosys',args.yosys,'--smtbmc',args.smtbmc,'--witness',args.witness,'task.sby'],directory/'console.log',args.timeout,directory)

@@ -1,6 +1,6 @@
 # システム教材のフォーマルリグレッションを実行する
 
-[AXI4のフォーマル例](../local-axi4-formal/README.md)、[FIFOの等価性例](../local-equivalence/README.md)、[完了期限の例](../local-progress/README.md)が使うSBYランナーです。各例の`run.py`から起動し、このファイルを直接実行するものではありません。
+[AXI4のフォーマル例](../local-axi4-formal/README.md)、[FIFOの等価性例](../local-equivalence/README.md)、[完了期限の例](../local-progress/README.md)、[Top-K選択の例](../local-topk/README.md)、[接続性の例](../local-connectivity/README.md)、[除算器の例](../local-divider/README.md)が使うSBYランナーです。各例の`run.py`から起動し、このファイルを直接実行するものではありません。
 
 ## モデル・タスク・証跡の対応
 
@@ -61,8 +61,10 @@ python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bm
 
 小規模メモリを`memory_map`で論理回路へ展開してから検査します。既存のAHB／AXI-Liteフォーマルランナーを置き換えるものではなく、そちらの45タスクは別計画です。
 
+通常は、全ソースを読み込んでから構成と変異のパラメーターを`TOP`へ設定します。プラグインが`prepare(parameters, case)`を定義していれば、その戻り値をこの読込み手順の代わりに使います。[接続性の例](../local-connectivity/README.md)は、SoCを平坦化して内部の端子を取り出してから検査回路を読むために使います。パラメーターを設定したモジュールが`TOP`と異なる場合は、`PARAMETER_MODULE`でその名前を指定し、コンパイル後のパラメーターをそこで照合します。
+
 ```sh
 python3 -m unittest discover -s examples/local-formal-common/tests -v
 ```
 
-判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護を確認する9テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。
+判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合を確認する10テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。

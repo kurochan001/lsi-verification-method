@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ISS-FORWARD",
+      "goals": [
+        "raw/distance-1",
+        "raw/distance-2",
+        "raw/distance-3",
+        "x0/write-then-read",
+        "mem/wait-forwarding"
+      ]
+    },
+    {
+      "id": "ISS-MEMORY",
+      "goals": [
+        "load/use",
+        "load/store-data",
+        "mem/wait-load",
+        "mem/wait-store"
+      ]
+    },
+    {
+      "id": "ISS-CONTROL",
+      "goals": [
+        "branch/taken",
+        "branch/not-taken",
+        "branch/forwarded-operand",
+        "branch/backward",
+        "jalr/forwarded-base"
+      ]
+    },
+    {
+      "id": "ISS-ISA",
+      "goals": [
+        "isa/every-instruction",
+        "halt/ebreak"
+      ]
+    }
+  ]
+}

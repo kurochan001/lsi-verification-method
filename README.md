@@ -109,6 +109,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 - [CDC・クロック・リセット・低電力](#cdcクロックリセット低電力)
 - [演算・故障注入・保護・性能・DFT](#演算故障注入保護性能dft)
 - [AI用回路](#ai用回路)
+- [プロセッサ](#プロセッサ)
 - [フォーマル検証・等価性・反例再現](#フォーマル検証等価性反例再現)
 - [SVA・UVM・仕様生成・ソフトウェア連携・検証効率](#svauvm仕様生成ソフトウェア連携検証効率)
 
@@ -204,6 +205,15 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [Top-K選択](examples/local-topk/README.md) | ソーティングネットワークの安定な上位K個を、すべての入力についてフォーマルに証明 | フォーマル＋Icarus |
 | [FP16／MXFP8／MXFP4のGEMM・量子化](examples/local-mxfp4/README.md) | 設計仕様とRTLの取り込み・精度拡張、厳密有理数モデルによるビット照合、RNE・FTZ・NaN、GEMMの完了時点、FIFO・near/far・gradual underflow | Verilator＋Z3 |
 
+### プロセッサ
+
+RISC-Vの命令の定義を期待値に使う2例です。
+
+| 検証例 | 主な検証内容 | 主なツール |
+| --- | --- | --- |
+| [RISC-VコアとISSの逐次比較](examples/local-riscv-iss/README.md) | 5段パイプラインの退出命令をISSと1命令ずつ照合、転送・ロード直後の使用・分岐の取消し・メモリ待ちとの重なり、固定とランダムの命令列 | Icarus |
+| [多サイクル除算器](examples/local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
+
 ### フォーマル検証・等価性・反例再現
 
 | 検証例 | 主な検証内容 | 主なツール |
@@ -214,6 +224,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [FIFOの等価性検証](examples/local-equivalence/README.md) | 最適化前後のmiterによる比較、意図的な誤実装に対する反例、仮定の確認 | フォーマル |
 | [進行条件と完了期限](examples/local-progress/README.md) | 環境の進行条件を明示した期限の検証、条件を外した場合の反例 | フォーマル |
 | [フォーマル反例の再現](examples/local-formal-replay/README.md) | Yosys Witnessを外部入力へ変換し、内部状態をforceせずシミュレーション再現 | フォーマル＋Icarus |
+| [SoCの接続性](examples/local-connectivity/README.md) | 接続表から生成した検査回路で、ブロックをブラックボックスにした上位配線を証明、表の漏れ・幅の検査、割り込み番号・端子の切替え・デバッグ信号の遮断 | フォーマル |
 
 ### SVA・UVM・仕様生成・ソフトウェア連携・検証効率
 
@@ -227,6 +238,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [Cドライバ＋DMA RTL](examples/local-c-driver/README.md) | ホスト上のCからAPBで起動・監視し、実DMAのIRQ・エラー・復旧を確認 | Verilator＋C |
 | [cocotbによるAPB検証](examples/local-cocotb/README.md) | Pythonコルーチンによる刺激・位相モニター・独立したレジスタモデル | Icarus＋cocotb |
 | [Icarus／Verilatorの差分検証](examples/local-differential/README.md) | 共通入力の有効な観測を比較し、差分検出とX検査を別々に判定 | Icarus＋Verilator |
+| [合成後ネットリストのシミュレーション](examples/local-gate-sim/README.md) | 同じテストベンチをRTLとYosysの合成結果で実行、`translate_off`・`parallel_case`・初期値・ブロッキング代入による食い違い、Xの現れ方 | Icarus＋Yosys |
 | [APB＋割り込みのクロス網羅と選択](examples/local-apb-irq-coverage/README.md) | 2因子・重点・時間関係の実観測、既存目標の保持、追加ケースの選択と再実行の比較 | Icarus |
 | [リグレッションの削減](examples/gitlab-reduction/README.md) | 全件・目標だけの選択・ストレス保持を比較し、実行量・目標・検出力を評価 | Icarus |
 | [失敗した操作列の自動縮小](examples/local-failure-reduction/README.md) | 同じチェッカーで失敗を再現し、単一操作削除に対する極小性を確認 | Icarus |
@@ -264,12 +276,12 @@ python3 examples/local-axi/run.py
 
 | 共通手順 | 確認できること |
 | --- | --- |
-| [Icarus共通シミュレーション](examples/local-common/README.md) | 42例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
+| [Icarus共通シミュレーション](examples/local-common/README.md) | 45例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
 | [フォーマル環境](examples/local-formal-common/README.md) | Yosys・SBY・Z3の固定版環境、各タスクの実行と判定 |
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は42例・93構成、各検証例が出力するJUnit件数の合計はsmoke 657件／nightly 843件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は45例・98構成、各検証例が出力するJUnit件数の合計はsmoke 692件／nightly 888件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 

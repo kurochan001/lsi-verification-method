@@ -68,6 +68,18 @@ class EvidenceTest(unittest.TestCase):
                 else:t['cells']['dut.ap_data']=t['cells']['ap_data']
                 path.write_text(json.dumps(bad))
                 with self.assertRaises(ValueError):R.inventory(path,EQ,params,case)
+    def test_parameters_may_live_on_a_module_below_the_checker(self):
+        CONN=load(EXAMPLES/'local-connectivity/run.py');case=CONN.plan(8,0)[2];props=CONN.properties({},case)
+        cells={n:dict(type='$check',parameters=dict(FLAVOR=k)) for k,names in props.items() for n in names}
+        model=dict(modules={CONN.TOP:dict(parameter_default_values={},cells=cells),
+                            CONN.PARAMETER_MODULE:dict(parameter_default_values=dict(MUTATION=format(1,'032b')),cells={})})
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'inventory.json';path.write_text(json.dumps(model))
+            self.assertEqual(R.inventory(path,CONN,{},case)['assume'],[])
+            model['modules'][CONN.PARAMETER_MODULE]['parameter_default_values']['MUTATION']=format(2,'032b')
+            path.write_text(json.dumps(model))
+            with self.assertRaises(ValueError):R.inventory(path,CONN,{},case)
+        self.assertIn('read -formal -sv conn_check.sv',CONN.prepare({},case))
     def test_missing_tools_cannot_be_success(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out';absent=str(Path(tmp)/'absent')

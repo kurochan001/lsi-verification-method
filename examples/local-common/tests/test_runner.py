@@ -41,6 +41,15 @@ class RunnerTest(unittest.TestCase):
         self.assert_rejected(self.run_cli('--iverilog',str(self.directory/'absent')))
         self.assertTrue(all(read_json(p)['status']=='error' for p in self.out.glob('*/result.json')))
 
+    def test_failed_source_preparation_is_a_build_error(self):
+        # build_sources and add_arguments: an absent synthesis tool fails only the netlist builds
+        process=run_example('local-gate-sim',self.out,'--iterations','2','--yosys',str(self.directory/'absent'))
+        self.assertEqual(process.returncode,1,process.stdout+process.stderr)
+        statuses={p.parent.name:read_json(p)['status'] for p in self.out.glob('*/result.json')}
+        self.assertTrue(all(v=='error' for k,v in statuses.items() if k.startswith('gate-')))
+        self.assertTrue(all(v=='pass' for k,v in statuses.items() if k.startswith('rtl-')))
+        self.assertIsNotNone(read_json(self.out/'builds.json')['gate-m0']['error'])
+
     def test_compiler_nonzero(self):
         self.assert_rejected(self.run_cli('--iverilog',self.wrapper('print("compiler failed");sys.exit(3)')))
 

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DIV-SPECIAL",
+      "goals": [
+        "special/zero-signed",
+        "special/zero-unsigned",
+        "special/overflow",
+        "short/smaller-magnitude"
+      ]
+    },
+    {
+      "id": "DIV-SIGN",
+      "goals": [
+        "normal/equal-magnitude",
+        "sign/negative-dividend",
+        "sign/negative-divisor",
+        "sign/both-negative",
+        "unsigned/top-bit",
+        "operand/extreme"
+      ]
+    },
+    {
+      "id": "DIV-FLOW",
+      "goals": [
+        "flow/held",
+        "flow/back-to-back"
+      ]
+    },
+    {
+      "id": "DIV-CANCEL",
+      "goals": [
+        "flush/last-step",
+        "flush/mid-division",
+        "flush/unread-result",
+        "reset/in-flight"
+      ]
+    }
+  ]
+}

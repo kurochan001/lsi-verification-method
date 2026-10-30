@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "GS-ARB",
+      "summary": "The lowest-numbered request wins, alone or in any conflict, and every requester can win.",
+      "goals": [
+        "grant/every-id",
+        "conflict/single",
+        "conflict/several",
+        "conflict/all-four",
+        "conflict/lowest-and-highest"
+      ]
+    },
+    {
+      "id": "GS-FLOW",
+      "summary": "A held request gets back-to-back bursts with one idle cycle between; no request keeps the arbiter idle.",
+      "goals": [
+        "flow/back-to-back",
+        "flow/idle"
+      ]
+    },
+    {
+      "id": "GS-COUNT",
+      "summary": "The burst counter wraps from 255 to 0.",
+      "goals": [
+        "count/wrap"
+      ]
+    },
+    {
+      "id": "GS-RESET",
+      "summary": "Reset during a burst returns every output and the counter to zero.",
+      "goals": [
+        "reset/mid-burst"
+      ]
+    }
+  ]
+}
