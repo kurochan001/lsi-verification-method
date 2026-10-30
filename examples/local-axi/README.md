@@ -101,7 +101,7 @@ python3 examples/local-axi/run.py --configuration delay2 --demo-bug 3 --out arti
 
 このコマンドは通常回路にも応答保持の不具合を入れるため、終了コード1と`AXI_STABILITY`による失敗が期待結果です。
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全2構成のsmoke／nightly、各39目標・4種類の変異、セルフテスト9件が成功しました。GitLabへの追加・CI起動は行っていません。AXI4全体の検証例や、規格全体の適合性、無限の入力列の証明、実システムの性能評価を示す結果ではありません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全2構成のsmoke／nightly、各39目標・4種類の変異、セルフテスト9件が成功しました。AXI4全体の検証例や、規格全体の適合性、無限の入力列の証明、実システムの性能評価を示す結果ではありません。
 
 ## 6. フォーマル検証も実行する
 

@@ -18,7 +18,7 @@ import xml.etree.ElementTree as ET
 
 HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
-SUPPORT_PATH=HERE.parent/'gitlab-regression/run.py'
+SUPPORT_PATH=HERE.parent/'local-irq-cdc/run.py'
 spec=importlib.util.spec_from_file_location('formal_process_support',SUPPORT_PATH)
 SUPPORT=importlib.util.module_from_spec(spec);spec.loader.exec_module(SUPPORT)
 CONFIGS={**{f'ahb-wait{n}':dict(bus='ahb',parameter='WAIT_CYCLES',value=n,rtl='ahb_regs.sv') for n in (0,1,3)},
@@ -120,7 +120,7 @@ def run(args):
     if not configurations:raise ValueError('configuration does not match selected bus')
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     cases=plan(args.demo_bug,args.bound)
-    inputs={Path(__file__),SUPPORT_PATH,HERE/'tools-requirements.txt',HERE.parent/'gitlab-formal/tools-requirements.txt'}
+    inputs={Path(__file__),SUPPORT_PATH,HERE/'tools-requirements.txt',HERE.parent/'local-fifo-formal/tools-requirements.txt'}
     for c in configurations.values():inputs.update((HERE/f"{c['bus']}_formal.sv",HERE.parent/f"local-{c['bus']}/rtl"/c['rtl']))
     versions={}
     for package in PACKAGES:

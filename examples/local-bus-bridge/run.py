@@ -9,7 +9,7 @@ NAME='local-bus-bridge';TOP='bridge_tb'
 CONFIGS={f'{b}-wait{w}':dict(BUS=i,WAIT_CYCLES=w) for i,b in enumerate(('ahb','axi')) for w in (0,2)}
 ITERATIONS={'smoke':32,'nightly':300}
 CHECK=HERE.parent/'local-bus-validation/checkers'
-SOURCES=[HERE/'rtl/bus_bridge.sv',HERE.parent/'gitlab-apb/rtl/apb_regs.sv',
+SOURCES=[HERE/'rtl/bus_bridge.sv',HERE.parent/'local-apb/rtl/apb_regs.sv',
          HERE.parent/'local-apb-timer/rtl/apb_timer.sv',HERE.parent/'local-timer-watchdog/rtl/timer_watchdog.sv',
          CHECK/'ahb_protocol_checker.sv',CHECK/'axi_lite_protocol_checker.sv',HERE/'tb/bridge_tb.sv']
 EXTRA_INPUTS=[HERE.parent/'local-apb-timer/run.py']

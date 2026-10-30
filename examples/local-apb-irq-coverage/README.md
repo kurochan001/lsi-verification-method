@@ -1,6 +1,6 @@
 # APB＋割り込みでクロス網羅と追加ケースの選択を実行する
 
-[機能クロス網羅の提案](../../docs/feature-interaction-coverage-proposal.md)を、既存の[APB＋割り込み回路](../gitlab-apb-irq/README.md)へ適用したローカル教材です。元のRTL、通常時の判定、44／45必須目標を使い、事前状態を含むクロスと時間関係を追加計測します。GitLabのCI設定・利用枠は使いません。Python 3.10以上とIcarus Verilogで実行します。
+[機能クロス網羅の提案](../../docs/feature-interaction-coverage-proposal.md)を、既存の[APB＋割り込み回路](../local-apb-irq/README.md)へ適用したローカル教材です。元のRTL、通常時の判定、44／45必須目標を使い、事前状態を含むクロスと時間関係を追加計測します。Python 3.10以上とIcarus Verilogで実行します。
 
 ## 1. 既存テストの実績から追加ケースを選ぶ
 

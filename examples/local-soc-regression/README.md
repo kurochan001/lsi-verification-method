@@ -1,6 +1,6 @@
 # UVM・仕様生成・反例再現・結合検証の7例
 
-次の7例をローカルでまとめて実行します。GitLabの利用枠は使いません。
+次の7例をローカルでまとめて実行します。
 
 1. [UVMの制約付きランダム化とネイティブcovergroup](../local-uvm-random/README.md)
 2. [SystemRDLからRTL・Cヘッダー・RALを生成して照合](../local-register-spec/README.md)

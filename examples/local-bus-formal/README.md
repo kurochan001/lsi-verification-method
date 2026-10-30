@@ -1,6 +1,6 @@
 # AHB-Lite／AXI4-Liteをローカルでフォーマル検証する
 
-[AHB-Lite](../local-ahb/README.md)と[AXI4-Lite](../local-axi/README.md)の実行例に対し、安全性の証明、データの有界検査、到達性、変異検出を追加する教材です。GitLabや商用EDAライセンスを使わず、Yosys・SymbiYosys（SBY）・Z3で実行します。ランダムシミュレーションとは別の検証計画・証跡として扱います。
+[AHB-Lite](../local-ahb/README.md)と[AXI4-Lite](../local-axi/README.md)の実行例に対し、安全性の証明、データの有界検査、到達性、変異検出を追加する教材です。商用EDAライセンスを使わず、Yosys・SymbiYosys（SBY）・Z3で実行します。ランダムシミュレーションとは別の検証計画・証跡として扱います。
 
 ## 同じ構成へ異なる問いを立てる
 
@@ -128,4 +128,4 @@ python3 examples/local-bus-formal/run.py --bus ahb --configuration ahb-wait0 --d
 
 2026-10-27に、固定版のYoWASP・Z3とPython 3.14.7を使い、AHB 3構成27タスクとAXI 2構成18タスク、計45タスクが予定どおりの結果になりました。正常の48到達目標、20種類の変異の反例、5構成の過剰な仮定の診断を確認しました。AHBのdemo-bug 1では、安全性証明がPASS、データBMCがFAILとなり、リグレッションが終了コード1になりました。判定・証跡のセルフテスト12件も成功しました。
 
-ランダム検証も拡張し、AHBのバースト・BUSY・動作中リセット、AXIの長い応答待ちとAWのみ／Wのみ／B保留／R保留でのリセットを追加しました。全5構成のsmoke／nightlyが成功しています。GitLabへの登録・CI起動や既存CI設定の変更は行っていません。
+ランダム検証も拡張し、AHBのバースト・BUSY・動作中リセット、AXIの長い応答待ちとAWのみ／Wのみ／B保留／R保留でのリセットを追加しました。全5構成のsmoke／nightlyが成功しています。

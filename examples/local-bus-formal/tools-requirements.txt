@@ -1,2 +1,2 @@
 # Same pinned portable toolchain as the existing FIFO formal example.
--r ../gitlab-formal/tools-requirements.txt
+-r ../local-fifo-formal/tools-requirements.txt

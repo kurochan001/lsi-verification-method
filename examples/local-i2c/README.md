@@ -82,4 +82,4 @@ python3 examples/local-i2c/run.py --configuration half8 --demo-bug 1 --out artif
 
 ## 5. 実行確認
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で2構成のsmoke／nightly、各18目標・4種類の変異、セルフテスト5件が成功しました。GitLabへの追加・CI実行は行っていません。これはデジタル動作の教材で、実機やI²C規格全体の適合性を示す結果ではありません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で2構成のsmoke／nightly、各18目標・4種類の変異、セルフテスト5件が成功しました。これはデジタル動作の教材で、実機やI²C規格全体の適合性を示す結果ではありません。

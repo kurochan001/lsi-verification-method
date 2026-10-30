@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the seven local system examples; no GitLab, CI edits or automatic installs."""
+"""Run the seven local system examples; no automatic installs."""
 import argparse
 from datetime import datetime,timezone
 import hashlib
@@ -12,7 +12,7 @@ import signal
 import sys
 import xml.etree.ElementTree as ET
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
-SUPPORT_PATH=HERE.parent/'gitlab-regression/run.py'
+SUPPORT_PATH=HERE.parent/'local-irq-cdc/run.py'
 spec=importlib.util.spec_from_file_location('system_regression_process',SUPPORT_PATH)
 P=importlib.util.module_from_spec(spec);spec.loader.exec_module(P)
 SIMULATIONS=['local-dma','local-interconnect','local-cdc-bridge','local-recovery','local-power']

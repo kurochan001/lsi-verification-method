@@ -32,7 +32,7 @@ python3 -m venv /tmp/lsi-bus-formal-venv
 python3 -m pip install -r examples/local-bus-formal/tools-requirements.txt
 ```
 
-ツールはYoWASP版Yosys・SBYとZ3です。商用ライセンス、GitLab、システム全体へのインストールは使いません。実際のパッケージ・ツール版を証跡へ残します。配布物とコマンドの位置は[既存の準備手順](../local-bus-formal/README.md)も参照してください。
+ツールはYoWASP版Yosys・SBYとZ3です。商用ライセンスやシステム全体へのインストールは使いません。実際のパッケージ・ツール版を証跡へ残します。配布物とコマンドの位置は[既存の準備手順](../local-bus-formal/README.md)も参照してください。
 
 ## 実行オプション
 

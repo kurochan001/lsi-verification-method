@@ -23,8 +23,8 @@ def load(name, path):
 
 
 M = load('apb_interaction_model', HERE / 'model.py')
-APB = load('apb_interaction_existing', HERE.parent / 'gitlab-apb-irq/run.py')
-REDUCTION = load('apb_interaction_selection', HERE.parent / 'gitlab-reduction/run.py')
+APB = load('apb_interaction_existing', HERE.parent / 'local-apb-irq/run.py')
+REDUCTION = load('apb_interaction_selection', HERE.parent / 'local-reduction/run.py')
 E = load('apb_interaction_evidence', HERE.parent / 'local-exploration-common/evidence.py')
 P = APB.SUPPORT
 # (integration mutation, register-block mutation, required checker)
@@ -125,9 +125,9 @@ class Simulator:
             command = [self.args.iverilog, '-g2012', '-s', 'apb_irq_tb',
                        f'-Papb_irq_tb.WAIT_CYCLES={wait}', f'-Papb_irq_tb.MUTATION={integration}',
                        f'-Papb_irq_tb.REGISTER_MUTATION={register}', '-o', str(binary),
-                       str(HERE.parent / 'gitlab-apb/rtl/apb_regs.sv'),
-                       str(HERE.parent / 'gitlab-apb-irq/rtl/apb_irq.sv'),
-                       str(HERE.parent / 'gitlab-apb-irq/tb/apb_irq_tb.sv')]
+                       str(HERE.parent / 'local-apb/rtl/apb_regs.sv'),
+                       str(HERE.parent / 'local-apb-irq/rtl/apb_irq.sv'),
+                       str(HERE.parent / 'local-apb-irq/tb/apb_irq_tb.sv')]
             build = P.execute(command, self.e.out / f'build-w{wait}-m{integration}-r{register}.log',
                               self.args.timeout, self.e.out)
             self.builds[key] = (binary, build)
@@ -211,9 +211,9 @@ def run(args):
     checks = ['tool-versions'] + [f'wait{wait}/{name}' for wait in waits for name in suffixes]
     inputs = [Path(__file__), HERE / 'model.py', args.model, args.requirements,
               Path(APB.__file__), Path(REDUCTION.__file__),
-              HERE.parent / 'gitlab-apb-irq/rtl/apb_irq.sv',
-              HERE.parent / 'gitlab-apb-irq/tb/apb_irq_tb.sv',
-              HERE.parent / 'gitlab-apb/rtl/apb_regs.sv']
+              HERE.parent / 'local-apb-irq/rtl/apb_irq.sv',
+              HERE.parent / 'local-apb-irq/tb/apb_irq_tb.sv',
+              HERE.parent / 'local-apb/rtl/apb_regs.sv']
     e = E.Evidence('local-apb-irq-coverage', args, inputs,
                    dict(configurations={str(k): v for k, v in plans.items()},
                         mutation_policy='stable candidate order; stop after first expected detection',
@@ -325,7 +325,7 @@ def main():
     parser.add_argument('--wait', choices=('all', '0', '1', '3'), default='all')
     parser.add_argument('--transactions', type=int)
     parser.add_argument('--model', type=Path, default=HERE / 'model.json')
-    parser.add_argument('--requirements', type=Path, default=HERE.parent / 'gitlab-apb-irq/requirements.json')
+    parser.add_argument('--requirements', type=Path, default=HERE.parent / 'local-apb-irq/requirements.json')
     parser.add_argument('--demo-bug', choices=tuple(MUTATIONS), help='diagnostic: inject a defect into normal runs')
     parser.add_argument('--omit-additions', action='store_true', help='diagnostic: retain only existing cases')
     args = parser.parse_args()

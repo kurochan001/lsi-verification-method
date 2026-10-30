@@ -85,7 +85,7 @@ python3 examples/local-ecc/run.py --demo-bug 1 --out artifacts/ecc-intentional-f
 
 ## 5. 適用範囲と参考資料
 
-2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7でsmoke／nightly、全数検査、4種類の変異、診断2件、セルフテスト6件をローカルで確認しました。GitLabでの実行やCI追加は行っていません。
+2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7でsmoke／nightly、全数検査、4種類の変異、診断2件、セルフテスト6件をローカルで確認しました。
 
 1符号語への論理的なビット反転を扱います。バースト誤り、インターリーブ、スクラビング、故障の継続性、実SRAMへのアクセス、割り込み・リセットとの結合は対象外です。製品では、符号・ビット配置・通知仕様を製品の仕様へ置き換えてください。
 

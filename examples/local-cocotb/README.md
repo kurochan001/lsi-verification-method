@@ -1,6 +1,6 @@
 # cocotbからAPB RTLを検証する
 
-Pythonのコルーチンで刺激・位相モニター・レジスタ参照モデルを動かす、実行可能なcocotb例です。[既存APBレジスタ](../gitlab-apb/README.md)を変更せずに使います。
+Pythonのコルーチンで刺激・位相モニター・レジスタ参照モデルを動かす、実行可能なcocotb例です。[既存APBレジスタ](../local-apb/README.md)を変更せずに使います。
 
 ## 駆動・観測・期待値を分ける
 

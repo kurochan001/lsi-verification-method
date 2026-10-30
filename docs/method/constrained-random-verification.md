@@ -2,11 +2,11 @@
 
 [一般化した検証手順](spec-to-verification-method.md)の9.9節を具体化した資料です。要求を満たす合法な入力・操作の範囲を定め、その範囲内で値、順序、タイミング、負荷を変化させて、ディレクテッドテストでは想定しにくい条件を探索します。生成した入力に対して、参照モデル・スコアボード・アサーションで正しさを判定し、観測した状態や相互作用をカバレッジへ記録します。
 
-これは製品へ今後適用する運用案です。[GitLabの実行例](../../examples/gitlab-regression/README.md)には、説明用のIRQ回路・テストベンチ・リグレッションランナーがあり、Pythonで生成したランダム操作列をnightlyで実行します。本資料の9節に示す3シナリオ・9実行は計画例であり、未実装です。SystemVerilogの制約付きランダム化を使うUVM環境は、末尾の実行例で扱います。ランダムに動かした回数や、失敗しなかったseed数だけで要求の検証完了とはしません。
+これは製品へ今後適用する運用案です。[IRQ・CDCの実行例](../../examples/local-irq-cdc/README.md)には、説明用のIRQ回路・テストベンチ・リグレッションランナーがあり、Pythonで生成したランダム操作列をnightlyで実行します。本資料の9節に示す3シナリオ・9実行は計画例であり、未実装です。SystemVerilogの制約付きランダム化を使うUVM環境は、末尾の実行例で扱います。ランダムに動かした回数や、失敗しなかったseed数だけで要求の検証完了とはしません。
 
-[FIFOの実行例](../../examples/gitlab-fifo/README.md)では、固定の境界テストと、Pythonで生成した書込み・読出し・リセットのランダム操作列を使い、独立した参照キューで比較します。seed・全入力列の保存、複数構成のリグレッション、未達による失敗、意図した不具合の検出を試せます。
+[FIFOの実行例](../../examples/local-fifo/README.md)では、固定の境界テストと、Pythonで生成した書込み・読出し・リセットのランダム操作列を使い、独立した参照キューで比較します。seed・全入力列の保存、複数構成のリグレッション、未達による失敗、意図した不具合の検出を試せます。
 
-[ready/valid通信](../../examples/gitlab-stream/README.md)、[アービタ](../../examples/gitlab-arbiter/README.md)、[UART](../../examples/gitlab-uart/README.md)、[APB・UART・割り込みの結合](../../examples/gitlab-apb-uart/README.md)にも、固定ケースとseed付き操作列を組み合わせた実行例があります。構成ごとの必須目標、変異検出、全入力・完了数の保存まで確認できます。これらはPythonで入力を生成する教材で、UVMやSystemVerilogの`randomize()`による実装ではありません。
+[ready/valid通信](../../examples/local-stream/README.md)、[アービタ](../../examples/local-arbiter/README.md)、[UART](../../examples/local-uart/README.md)、[APB・UART・割り込みの結合](../../examples/local-apb-uart/README.md)にも、固定ケースとseed付き操作列を組み合わせた実行例があります。構成ごとの必須目標、変異検出、全入力・完了数の保存まで確認できます。これらはPythonで入力を生成する教材で、UVMやSystemVerilogの`randomize()`による実装ではありません。
 
 ## 1. ディレクテッドテスト・クロス検証との役割分担
 

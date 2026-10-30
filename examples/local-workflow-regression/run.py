@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run seven local workflow/integration examples; GitLab is not used."""
+"""Run seven local workflow/integration examples."""
 import importlib.util
 import json
 from pathlib import Path

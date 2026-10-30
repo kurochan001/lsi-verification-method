@@ -37,7 +37,7 @@ flowchart TD
 - [SVAとフォーマル検証](#4-svaとフォーマル検証)
 - [CDCとリセット](#5-cdc検証)
 - [ミューテーションと削減](#6-ミューテーションと削減)
-- [GitLabと実行例](#7-gitlabと実行例)
+- [CIと実行例](#7-ciと実行例)
 - [変更後の再確認と完了判断](#8-変更後の再確認と完了判断)
 - [追加の実行例](#9-追加の実行例)
 
@@ -45,7 +45,7 @@ flowchart TD
 
 ### Q1. どこから読み始めればよいですか
 
-[一般化した検証手順](method/spec-to-verification-method.md)で、仕様→要求→刺激・観測・判定→証跡という対応を確認します。[検証領域の点検](method/verification-gap-review.md)と[適用範囲の雛形](templates/verification-scope.md)で担当・構成・開発段階を決め、小さなIPの少数の要求を対象に検証手順を一通り実施します。動く例から入る場合は[GitLabの実行例](../examples/gitlab-regression/README.md)をローカルで実行してください。
+[一般化した検証手順](method/spec-to-verification-method.md)で、仕様→要求→刺激・観測・判定→証跡という対応を確認します。[検証領域の点検](method/verification-gap-review.md)と[適用範囲の雛形](templates/verification-scope.md)で担当・構成・開発段階を決め、小さなIPの少数の要求を対象に検証手順を一通り実施します。動く例から入る場合は[IRQ・CDCの実行例](../examples/local-irq-cdc/README.md)を実行してください。
 
 ### Q2. この資料はどのような位置付けですか
 
@@ -121,7 +121,7 @@ assumeを書くだけでシミュレーションの刺激が自動的に制約�
 
 要求ごとに分担を決めます。小さな制御の不変条件を証明し、実バス・ソフトウェア・複数IPの長いシナリオをシミュレーションで確認する組み合わせもあります。抽象モデルや単体の証明の仮定は統合先で確認します。どちらでも、扱っていない構成・動作を台帳に残し、相手の方式で確認済みだと推測しません。[フォーマルの対象選定](method/formal-verification.md#1-何をフォーマル検証で確認するか)を参照してください。
 
-商用ツールがない場合も、[GitLabのフォーマル検証例](../examples/gitlab-formal/README.md)で、オープンソースのYosys・SBY・Z3を使えます。GitLabのジョブ内で準備するため、手元へのインストールは不要です。制御の証明とデータの有界検査を分けて結果を読めます。
+商用ツールがない場合も、[FIFOのフォーマル検証例](../examples/local-fifo-formal/README.md)で、オープンソースのYosys・SBY・Z3を使えます。Pythonの仮想環境に入れるため、管理権限でのインストールは不要です。制御の証明とデータの有界検査を分けて結果を読めます。
 
 ## 5. CDC検証
 
@@ -131,7 +131,7 @@ assumeを書くだけでシミュレーションの刺激が自動的に制約�
 
 ### Q20. そのCDC試験が合格すれば、実回路の同期器も安全ですか
 
-論理遅延モデルの合格だけでは、物理的なメタスタビリティの収束やMTBFは確認できません。CDC/RDCの構造・制約・除外のレビュー、転送方式ごとの欠落・重複・整合性、リセット解除、必要な物理条件をそれぞれ確認します。GitLab例は、送信値を保持するtoggle転送と2経路の再収束を扱う限定モデルです。短パルス、非同期FIFO、全CDCの検証済みとは扱いません。[CDC/RDCの範囲](method/verification-gap-review.md#4-cdcrdcとクロック制御)と[例の対象](../examples/gitlab-regression/README.md#1-実行するもの)を参照してください。
+論理遅延モデルの合格だけでは、物理的なメタスタビリティの収束やMTBFは確認できません。CDC/RDCの構造・制約・除外のレビュー、転送方式ごとの欠落・重複・整合性、リセット解除、必要な物理条件をそれぞれ確認します。IRQ・CDCの例は、送信値を保持するtoggle転送と2経路の再収束を扱う限定モデルです。短パルス、非同期FIFO、全CDCの検証済みとは扱いません。[CDC/RDCの範囲](method/verification-gap-review.md#4-cdcrdcとクロック制御)と[例の対象](../examples/local-irq-cdc/README.md#1-実行するもの)を参照してください。
 
 ## 6. ミューテーションと削減
 
@@ -149,41 +149,41 @@ pairwiseは選んだ2軸の合法な組を覆う方法で、3軸以上の依存�
 
 一般化の根拠が必要です。幅や深さで境界、アドレス折り返し、占有数、仲裁、時間関係が変わる可能性があります。代表構成にできる条件、残す境界・例外、形式的に性質を保存する根拠を記録します。根拠がなければ小さいモデルの結果として扱い、製品の必須構成を合格にしません。[構成・抽象化の削減](method/verification-reduction.md)と[構成別の判定](method/spec-to-verification-method.md#95-構成とバリアント)を参照してください。
 
-## 7. GitLabと実行例
+## 7. CIと実行例
 
 ### Q24. CIが緑なら要求も合格していますか。JUnitだけで失敗させられますか
 
-CIの緑は設定したジョブの合格です。予定ケースの欠落、必須目標、未完了、チェッカーの実行結果をランナーが判定し、異常を非0の終了コードへ反映する必要があります。GitLabのJUnitレポートは結果表示用で、単独ではジョブの状態を変えません。[GitLab公式のJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)
+CIの緑は設定したジョブの合格です。予定ケースの欠落、必須目標、未完了、チェッカーの実行結果をランナーが判定し、異常を非0の終了コードへ反映する必要があります。CIのJUnit表示は結果表示用で、単独ではジョブの状態を変えません。例えばGitLabの[公式のJUnit説明](https://docs.gitlab.com/ci/testing/unit_test_reports/)に、この関係が書かれています。
 
-IRQ・FIFO・APB・APBと割り込み・ready/valid・UART・APBとUARTの結合などの手続き的なシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達ならリグレッションを失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。MRのマージ制御にはGitLab側の設定も必要です。手動・未起動・skipしたパイプラインを含む規則も確認してください。[GitLab CIの構成と確認記録](../README.md#gitlab-ciの構成と実行確認記録)と[例のGitLab設定](../examples/gitlab-regression/README.md#3-gitlabへ置いて実行する)を参照してください。
+IRQ・FIFO・APB・APBと割り込み・ready/valid・UART・APBとUARTの結合などの手続き的なシミュレーション例は`requirements-and-coverage`で必須目標を照合し、未達ならリグレッションを失敗させます。フォーマル例は、読み込んだプロパティ・仮定、モード、実際の状態と証跡を照合します。CIの結果でマージを止めるには、CIサービス側のマージ条件の設定も必要です。手動・未起動・skipしたパイプラインの扱いも確認してください。
 
-CIが成功していても、MRがDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。Draftを解除する操作は「Mark as ready」です。2026-10-26に確認したmainは、APB・UART・割り込み結合検証のMR !11と確認記録のMR !12まで取り込み済みです。現行構成は全50ジョブ・通常JUnit 311件で、MR !12のCIの成功と、その後のmainのCIの成功を確認しています。追加例の状態は[GitLab CIの構成と確認記録](../README.md#gitlab-ciの構成と実行確認記録)と各例の確認記録を参照してください。
+CIが成功していても、MR（GitHubではPR）がDraftならマージはブロックされます。マージ条件の表示で、パイプラインの失敗、Draft、承認待ち、コンフリクトなどを切り分けます。このリポジトリが過去にGitLab CIで実行した記録は、[初期の11例の構成と過去のCI実行記録](../README.md#初期の11例の構成と過去のci実行記録)にあります。
 
 現行設定ではREADMEだけの変更でも全50ジョブを起動します。MRが開いているブランチの重複したpushパイプラインは抑止しますが、文書だけの変更に対するリグレッションの削減は実装していません。共有Runnerの計算時間の利用枠も確認してください。
 
 ### Q25. このリポジトリだけで何を実行できますか
 
-`examples/gitlab-regression/`の説明用IRQリグレッションは、Python 3.10以上とIcarus Verilogの`iverilog`・`vvp`があればローカルで実行できます。[ローカル手順](../examples/gitlab-regression/README.md#2-まずローカルで実行する)にコマンドがあります。通常回路、変異、X注入、要求・50目標の照合を行い、手続き的チェッカーの観測記録を集計します。UVM、SVAのカバレッジ、covergroup DB、フォーマルをそのジョブで実行する例ではありません。
+`examples/local-irq-cdc/`の説明用IRQリグレッションは、Python 3.10以上とIcarus Verilogの`iverilog`・`vvp`があればローカルで実行できます。[ローカル手順](../examples/local-irq-cdc/README.md#2-まずローカルで実行する)にコマンドがあります。通常回路、変異、X注入、要求・50目標の照合を行い、手続き的チェッカーの観測記録を集計します。UVM、SVAのカバレッジ、covergroup DB、フォーマルをそのジョブで実行する例ではありません。
 
-同じ環境で[同期FIFOのランダム検証](../examples/gitlab-fifo/README.md)も実行できます。参照キューによる比較、境界テストとseed付き操作列、リセット、3種類の変異の検出を行います。深さと幅を変えた6構成をそれぞれ判定するGitLab設定もあります。
+同じ環境で[同期FIFOのランダム検証](../examples/local-fifo/README.md)も実行できます。参照キューによる比較、境界テストとseed付き操作列、リセット、3種類の変異の検出を行います。深さと幅を変えた6構成を、それぞれ判定できます。
 
-[APBレジスタ検証](../examples/gitlab-apb/README.md)も同じ環境で実行できます。3種類の待ち時間、アドレス分類×操作、エラー応答、W1Cとイベントの競合、リセットを比較し、構成ごとの必須目標を判定します。
+[APBレジスタ検証](../examples/local-apb/README.md)も同じ環境で実行できます。3種類の待ち時間、アドレス分類×操作、エラー応答、W1Cとイベントの競合、リセットを比較し、構成ごとの必須目標を判定します。
 
-[APBと割り込みの結合検証](../examples/gitlab-apb-irq/README.md)では、既存のAPB回路を使い、マスク中のイベント保持、W1Cと再発生、マスク更新、複数要因、リセットを組み合わせます。4要因×マスク×クリア×イベントの32クロスを含め、構成ごとに44／45目標を判定します。
+[APBと割り込みの結合検証](../examples/local-apb-irq/README.md)では、既存のAPB回路を使い、マスク中のイベント保持、W1Cと再発生、マスク更新、複数要因、リセットを組み合わせます。4要因×マスク×クリア×イベントの32クロスを含め、構成ごとに44／45目標を判定します。
 
-[ready/valid通信のランダム検証](../examples/gitlab-stream/README.md)では、受信側の待ちを入れ、validとデータの保持、同時送受信、欠落・重複・順序を確認します。最後まで排出し、受理数・受信数・リセット破棄数も照合します。深さ1／3×幅8／16の4構成で必須25／29目標を判定します。
+[ready/valid通信のランダム検証](../examples/local-stream/README.md)では、受信側の待ちを入れ、validとデータの保持、同時送受信、欠落・重複・順序を確認します。最後まで排出し、受理数・受信数・リセット破棄数も照合します。深さ1／3×幅8／16の4構成で必須25／29目標を判定します。
 
-[SVAの実行例](../examples/gitlab-sva/README.md)はVerilatorとC++コンパイラ・makeを使います。GitLabのジョブ内で準備し、6個のassert、12個のネイティブカバー、6種類の違反、前件不足の診断を実行します。ローカルでは`--checker-off`で無効化を合格にしない確認もできます。2値シミュレーションなので、X/Zの検証は別に行います。
+[SVAの実行例](../examples/local-sva/README.md)はVerilatorとC++コンパイラ・makeを使います。6個のassert、12個のネイティブカバー、6種類の違反、前件不足の診断を実行します。`--checker-off`で無効化を合格にしない確認もできます。2値シミュレーションなので、X/Zの検証は別に行います。
 
-[リグレッションの削減の比較](../examples/gitlab-reduction/README.md)では、全件、目標だけの選択、ストレス保持を別々に実行します。目標19件を満たしても履歴依存の変異を見逃す例を含め、検査サイクル数と検出力の両方を比較します。比較教材のCI成功を、そのまま削減方式の製品承認には使いません。
+[リグレッションの削減の比較](../examples/local-reduction/README.md)では、全件、目標だけの選択、ストレス保持を別々に実行します。目標19件を満たしても履歴依存の変異を見逃す例を含め、検査サイクル数と検出力の両方を比較します。比較教材のCI成功を、そのまま削減方式の製品承認には使いません。
 
-[アービタの検証](../examples/gitlab-arbiter/README.md)では、排他制御、ラウンドロビン順序、待ち中の選択保持、公平性を確認します。受信側が受理できる機会と実クロック数を分け、停止中を飢餓の検査済みに数えません。2／3／4要求元で21／31／49目標を判定し、専用テストで公平性モニター単独の違反検出も確認します。
+[アービタの検証](../examples/local-arbiter/README.md)では、排他制御、ラウンドロビン順序、待ち中の選択保持、公平性を確認します。受信側が受理できる機会と実クロック数を分け、停止中を飢餓の検査済みに数えません。2／3／4要求元で21／31／49目標を判定し、専用テストで公平性モニター単独の違反検出も確認します。
 
-[UARTのランダム検証](../examples/gitlab-uart/README.md)はIcarus Verilogで8N1／8E1／8O1の送受信を確認します。データと位相の変更、パリティ・フレーミングエラー、偽スタート、転送中リセットを含みます。ビット周期は一致させており、周波数ずれやアナログのCDC安全性を検証したとは扱いません。
+[UARTのランダム検証](../examples/local-uart/README.md)はIcarus Verilogで8N1／8E1／8O1の送受信を確認します。データと位相の変更、パリティ・フレーミングエラー、偽スタート、転送中リセットを含みます。ビット周期は一致させており、周波数ずれやアナログのCDC安全性を検証したとは扱いません。
 
-[APB・UART・割り込みの結合検証](../examples/gitlab-apb-uart/README.md)では、APBから実際に送信し、受信データを読み、完了・エラーの割り込みを確認します。マスク中の保持、W1Cと新規イベント、RXDATA読出しと新規受信を同時に起こし、9構成と5種類の変異で判定します。受信保持は1バイトで、CPUや実ドライバは実行していません。
+[APB・UART・割り込みの結合検証](../examples/local-apb-uart/README.md)では、APBから実際に送信し、受信データを読み、完了・エラーの割り込みを確認します。マスク中の保持、W1Cと新規イベント、RXDATA読出しと新規受信を同時に起こし、9構成と5種類の変異で判定します。受信保持は1バイトで、CPUや実ドライバは実行していません。
 
-GitLabの利用枠を使わずに追加の教材を試す場合は、[ECCの故障注入](../examples/local-ecc/README.md)、[SPIのランダム検証](../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../examples/local-timer-watchdog/README.md)があります。[共通手順](../examples/local-common/README.md)に従ってIcarus Verilogでローカル実行します。さらに、[非同期FIFO](../examples/local-async-fifo/README.md)、[I²C](../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../examples/local-apb-timer/README.md)も同じ共通ランナーで動きます。[AHB-Lite](../examples/local-ahb/README.md)と[AXI4-Lite](../examples/local-axi/README.md)では、パイプラインや独立チャネルの受付・応答も確認できます。AHB／AXIのランダム刺激を拡張し、[ローカルのフォーマル例](../examples/local-bus-formal/README.md)も追加しました。仮定付きの安全性証明、深さ12のデータBMC、到達性と不具合検出を別々に判定します。これらはGitLab CIへ組み込んでいません。
+追加の教材を試す場合は、[ECCの故障注入](../examples/local-ecc/README.md)、[SPIのランダム検証](../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../examples/local-timer-watchdog/README.md)があります。[共通手順](../examples/local-common/README.md)に従ってIcarus Verilogでローカル実行します。さらに、[非同期FIFO](../examples/local-async-fifo/README.md)、[I²C](../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../examples/local-apb-timer/README.md)も同じ共通ランナーで動きます。[AHB-Lite](../examples/local-ahb/README.md)と[AXI4-Lite](../examples/local-axi/README.md)では、パイプラインや独立チャネルの受付・応答も確認できます。AHB／AXIのランダム刺激を拡張し、[ローカルのフォーマル例](../examples/local-bus-formal/README.md)も追加しました。仮定付きの安全性証明、深さ12のデータBMC、到達性と不具合検出を別々に判定します。
 
 AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リセット・性能・lint／コードカバレッジ](../examples/local-bus-validation/README.md)をまとめて実行できます。[APBブリッジ](../examples/local-bus-bridge/README.md)は4構成、[AXI4のバースト・ID・複数未完了転送](../examples/local-axi4/README.md)は別RTLの1構成です。AHB-Lite／AXI4-Liteの45タスクは元の回路に限定されます。AXI4には別の[小構成の制御証明・データBMC](../examples/local-axi4-formal/README.md)があり、新しいブリッジの証明結果ではありません。
 
@@ -191,13 +191,13 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 
 [追加検証の7例](../examples/local-advanced-regression/README.md)には、AXI4-Stream、固定小数点、同一領域の競合、Cドライバ、cocotb、複数シミュレータ差分、進行条件と完了期限があります。Cコードは実際にコンパイルしてRTLへ接続します。差分の一致だけでは正しさとせず、通常実行は各バックエンドの参照モデル照合も要求します。
 
-[FIFOのフォーマル検証](../examples/gitlab-formal/README.md)は、専用のPythonパッケージをGitLabのジョブ内で準備して実行します。ローカルで試す場合の一時仮想環境の手順も用意しています。
+[FIFOのフォーマル検証](../examples/local-fifo-formal/README.md)は、専用のPythonパッケージを一時仮想環境に入れて実行します。
 
 `tools/`はケーススタディの台帳・テスト・依存モジュールを前提とする参照実装です。このリポジトリだけでは動きません。一般化したJSON記録例を、そのまま照合キットへ投入できる形式とも扱わないでください。[ツールの復元先と依存](../tools/README.md)を参照してください。
 
 ### Q26. リグレッションが失敗したら、何から確認しますか
 
-予定と実行結果の欠落、ビルド、実行環境、DUTの比較失敗、チェッカー・期待値、必須目標の未達を切り分けます。マニフェスト、ツール版、ビルドログ、ケース別ログ・波形、summary、カバレッジ、JUnitを実行IDでたどります。実行例では意図した変異・X検出が成功項目になるので、通常回路の失敗と区別してください。再実行で合格しても最初の失敗は残します。中断時は最終JUnitやsummaryが完成しない場合もあるため、途中の記録から調べます。[保存する証跡](../examples/gitlab-regression/README.md#6-保存するものと判定)と[継続リグレッションの手順](method/continuous-regression.md)を参照してください。
+予定と実行結果の欠落、ビルド、実行環境、DUTの比較失敗、チェッカー・期待値、必須目標の未達を切り分けます。マニフェスト、ツール版、ビルドログ、ケース別ログ・波形、summary、カバレッジ、JUnitを実行IDでたどります。実行例では意図した変異・X検出が成功項目になるので、通常回路の失敗と区別してください。再実行で合格しても最初の失敗は残します。中断時は最終JUnitやsummaryが完成しない場合もあるため、途中の記録から調べます。[保存する証跡](../examples/local-irq-cdc/README.md#4-保存するものと判定)と[継続リグレッションの手順](method/continuous-regression.md)を参照してください。
 
 ## 8. 変更後の再確認と完了判断
 
@@ -215,11 +215,11 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 
 [失敗の縮小](../examples/local-failure-reduction/README.md)は、同じチェッカーで不具合を再現する操作列を削り、元の正常RTLでは合格することまで確認します。[カバレッジによる刺激調整](../examples/local-coverage-feedback/README.md)は、実RTLの観測から未達を選び、同じサイクル予算で固定分布のランダム刺激と比較します。到達数と結果の正しさは別々に判定します。
 
-[幅変換・アクセス保護・ECCメモリ・クロック停止／リセット・UVMを含む7例](../examples/local-workflow-regression/README.md)としてまとめて実行できます。GitLabの利用枠は使いません。
+[幅変換・アクセス保護・ECCメモリ・クロック停止／リセット・UVMを含む7例](../examples/local-workflow-regression/README.md)としてまとめて実行できます。
 
 ### Q30. SystemVerilogの制約付きランダム化・covergroupや、仕様からのレジスタ生成も試せますか
 
-[UVMランダム例](../examples/local-uvm-random/README.md)でSVの制約付きランダム化とネイティブcovergroupを、[SystemRDL例](../examples/local-register-spec/README.md)でRTL・Cヘッダー・RALの生成と独立契約による照合を実行できます。[反例再現](../examples/local-formal-replay/README.md)、優先度付き割り込み・リング式DMA・クレジット通信・小規模キャッシュも含めた[7例の集約手順](../examples/local-soc-regression/README.md)があります。GitLabの利用枠は使いません。
+[UVMランダム例](../examples/local-uvm-random/README.md)でSVの制約付きランダム化とネイティブcovergroupを、[SystemRDL例](../examples/local-register-spec/README.md)でRTL・Cヘッダー・RALの生成と独立契約による照合を実行できます。[反例再現](../examples/local-formal-replay/README.md)、優先度付き割り込み・リング式DMA・クレジット通信・小規模キャッシュも含めた[7例の集約手順](../examples/local-soc-regression/README.md)があります。
 
 ### Q31. 既存例をさらに結合した教材はありますか
 

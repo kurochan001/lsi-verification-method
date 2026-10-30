@@ -77,7 +77,7 @@ flowchart TD
 - **フォーマル検証**：[フォーマル検証の計画・証明・完了判定](docs/method/formal-verification.md)。仮定・初期状態、抽象化・証明の分割、有界検査と非有界の証明、活性、反例・到達性、サインオフをまとめています。小さな割り込みモデルの証明と、誤実装・過剰な仮定の確認例も示しています。
 - **検証環境の検出力**：[ミューテーション検証で検証環境の検出力を確かめる](docs/method/mutation-verification.md)。回路へ意図的な誤りを入れ、刺激・チェッカー・SVAが検出するかを評価します。変異の選び方、未検出の分析、等価な変異、検出率と未完了の集計をまとめています。
 - **検証規模の削減**：[検証の組み合わせ・構成・実行数を削減する](docs/method/verification-reduction.md)。同値分割・境界値、直交表・t-way、対称性・代表構成、テスト・seedの縮約、変更影響によるリグレッション選択、形式的な抽象化を整理しています。削減の根拠、残す目標、検出力と実行コストの確認も記録します。
-- **継続的リグレッション**：[継続的リグレッションの計画・実行・結果管理](docs/method/continuous-regression.md)。変更時・定期・サインオフのリグレッション、マニフェストと分散実行、ライセンス・計算資源、失敗・再実行・カバレッジ・証跡を整理しています。Cadence vManager／Verisium ManagerとGitLab CI/CDの役割分担、併用、総費用での比較も扱います。
+- **継続的リグレッション**：[継続的リグレッションの計画・実行・結果管理](docs/method/continuous-regression.md)。変更時・定期・サインオフのリグレッション、マニフェストと分散実行、ライセンス・計算資源、失敗・再実行・カバレッジ・証跡を整理しています。Cadence vManager／Verisium ManagerとCIサービスの役割分担、併用、総費用での比較も扱います。
 - **検証領域の抜けの点検**：[検証計画の抜けを点検し、試験へ展開する](docs/method/verification-gap-review.md)。lint、リセット・X伝搬、CDC/RDC、プロトコル・データ、異常・故障と復帰、性能、低電力、セキュリティ、コードカバレッジ、等価性・統合などの12領域を整理しました。試験・観測・合格基準と、[適用範囲の記録の雛形](docs/templates/verification-scope.md)を用意しています。
 - **手法の適用事例（IEEE 1800-2023）**：SystemVerilogの規格を仕様書とみなし、公開のテストスイート[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)で、要求の抽出、テストとの対応付け、検証状況の管理に本手法を適用しました。2026-10-26に確認した[上流の集計（`5fb3c45d`）](https://github.com/kurochan001/kirimasim-tests/blob/5fb3c45d73e4946d99690389752b82c86eecaa50/docs/behavior-coverage-summary.md)は次のとおりです。
   - 全1,740節を確認し、要求12,319行を登録した。
@@ -100,7 +100,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 
 ## 検証例一覧
 
-GitLabへの掲載状況にかかわらず、このリポジトリにある検証例を分野別にまとめています。各リンク先に、対象範囲、実行手順、合格条件、証跡を記載しています。
+このリポジトリにある検証例を分野別にまとめています。各リンク先に、対象範囲、実行手順、合格条件、証跡を記載しています。
 
 - [バス・レジスタ・アドレス](#バスレジスタアドレス)
 - [FIFO・通信・仲裁](#fifo通信仲裁)
@@ -119,7 +119,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
-| [APBレジスタ](examples/gitlab-apb/README.md) | 読出し・書込み、待ち状態、エラー、W1Cとイベントの競合 | Icarus |
+| [APBレジスタ](examples/local-apb/README.md) | 読出し・書込み、待ち状態、エラー、W1Cとイベントの競合 | Icarus |
 | [AHB-Lite](examples/local-ahb/README.md) | アドレス／データのパイプライン、バイトレーン、2サイクルERROR、ランダム転送 | Icarus |
 | [AXI4-Lite](examples/local-axi/README.md) | AW／Wの独立受付、WSTRB、応答保持、読書き競合、ランダム転送 | Icarus |
 | [AXI4のバースト・ID](examples/local-axi4/README.md) | INCRバースト、複数未完了転送、ID、RLAST、4KiB境界 | Icarus |
@@ -132,10 +132,10 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
-| [同期FIFOのランダム検証](examples/gitlab-fifo/README.md) | 参照キュー、空／満杯、同時要求、データ順序、深さ・幅の構成変更 | Icarus |
-| [ready/validのランダム検証](examples/gitlab-stream/README.md) | バックプレッシャー、valid・データ保持、欠落・重複・順序、排出 | Icarus |
-| [ラウンドロビン・アービタ](examples/gitlab-arbiter/README.md) | 排他制御、待ち中の選択保持、受理順序、条件付きの公平性 | Icarus |
-| [UARTのランダム検証](examples/gitlab-uart/README.md) | 8N1／8E1／8O1、独立した送受信照合、エラー、偽スタート、リセット復帰 | Icarus |
+| [同期FIFOのランダム検証](examples/local-fifo/README.md) | 参照キュー、空／満杯、同時要求、データ順序、深さ・幅の構成変更 | Icarus |
+| [ready/validのランダム検証](examples/local-stream/README.md) | バックプレッシャー、valid・データ保持、欠落・重複・順序、排出 | Icarus |
+| [ラウンドロビン・アービタ](examples/local-arbiter/README.md) | 排他制御、待ち中の選択保持、受理順序、条件付きの公平性 | Icarus |
+| [UARTのランダム検証](examples/local-uart/README.md) | 8N1／8E1／8O1、独立した送受信照合、エラー、偽スタート、リセット復帰 | Icarus |
 | [SPIのランダム検証](examples/local-spi/README.md) | CPOL／CPHAの4モード、独立した送受信タイミング、busy中のstart要求 | Icarus |
 | [I²Cのランダム検証](examples/local-i2c/README.md) | ACK／NACK、Repeated START、クロックストレッチ、途中リセット | Icarus |
 | [AXI4-Stream](examples/local-axis/README.md) | パケット境界、TKEEP・TLAST、データ順序、途中パケットの破棄 | Icarus |
@@ -145,9 +145,9 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
-| [割り込み・CDCと継続的リグレッション](examples/gitlab-regression/README.md) | イベント保持、W1C、リセット、CDC遅延モデル、要求とカバレッジの判定 | Icarus |
-| [APB＋割り込み](examples/gitlab-apb-irq/README.md) | マスク中の保持、W1Cクリアとイベント再発生、マスク更新の競合、機能間クロス | Icarus |
-| [APB＋UART＋割り込み](examples/gitlab-apb-uart/README.md) | レジスタ操作から実際の送受信・エラー検出・IRQ通知までの結合、同時操作の競合 | Icarus |
+| [割り込み・CDCと継続的リグレッション](examples/local-irq-cdc/README.md) | イベント保持、W1C、リセット、CDC遅延モデル、要求とカバレッジの判定 | Icarus |
+| [APB＋割り込み](examples/local-apb-irq/README.md) | マスク中の保持、W1Cクリアとイベント再発生、マスク更新の競合、機能間クロス | Icarus |
+| [APB＋UART＋割り込み](examples/local-apb-uart/README.md) | レジスタ操作から実際の送受信・エラー検出・IRQ通知までの結合、同時操作の競合 | Icarus |
 | [タイマー・ウォッチドッグ](examples/local-timer-watchdog/README.md) | 単発・周期・停止、kick・IRQクリアと満了の競合、同時満了 | Icarus |
 | [APB＋タイマー＋ウォッチドッグ](examples/local-apb-timer/README.md) | バス完了と満了・kick・clearの競合、IRQマスク、リセット要求 | Icarus |
 | [優先度付き割り込み](examples/local-priority-irq/README.md) | 優先順位・同順位、claim／complete、イベントとの競合 | Icarus |
@@ -218,7 +218,7 @@ RISC-Vの命令の定義を期待値に使う2例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
-| [FIFOのフォーマル検証](examples/gitlab-formal/README.md) | 制御の非有界証明、データの有界検査、到達性、意図的な誤実装と過剰な仮定の検出 | フォーマル |
+| [FIFOのフォーマル検証](examples/local-fifo-formal/README.md) | 制御の非有界証明、データの有界検査、到達性、意図的な誤実装と過剰な仮定の検出 | フォーマル |
 | [AHB-Lite／AXI4-Liteのフォーマル検証](examples/local-bus-formal/README.md) | 安全性の非有界証明、深さ12のデータBMC、到達性、変異検出 | フォーマル |
 | [AXI4のフォーマル検証](examples/local-axi4-formal/README.md) | 小規模メモリ構成の制御証明、条件を限定したデータBMC、到達性 | フォーマル |
 | [FIFOの等価性検証](examples/local-equivalence/README.md) | 最適化前後のmiterによる比較、意図的な誤実装に対する反例、仮定の確認 | フォーマル |
@@ -230,7 +230,7 @@ RISC-Vの命令の定義を期待値に使う2例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
-| [SVAのアサーションとカバー](examples/gitlab-sva/README.md) | assert／cover、前件が成立しない場合の診断、違反注入、ネイティブcoverage.datとの照合 | Verilator |
+| [SVAのアサーションとカバー](examples/local-sva/README.md) | assert／cover、前件が成立しない場合の診断、違反注入、ネイティブcoverage.datとの照合 | Verilator |
 | [SystemVerilog UVM・RAL](examples/local-uvm/README.md) | APB agent・monitor・独立したスコアボード、RALとレジスタ操作 | UVM |
 | [UVMの制約付きランダム検証](examples/local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
 | [SystemRDLによる仕様生成](examples/local-register-spec/README.md) | RTL・Cヘッダー・RALの生成、生成物の構造・属性・動作を、独立に定めた期待値と照合 | SystemRDL＋Icarus＋UVM＋C |
@@ -240,7 +240,7 @@ RISC-Vの命令の定義を期待値に使う2例です。
 | [Icarus／Verilatorの差分検証](examples/local-differential/README.md) | 共通入力の有効な観測を比較し、差分検出とX検査を別々に判定 | Icarus＋Verilator |
 | [合成後ネットリストのシミュレーション](examples/local-gate-sim/README.md) | 同じテストベンチをRTLとYosysの合成結果で実行、`translate_off`・`parallel_case`・初期値・ブロッキング代入による食い違い、Xの現れ方 | Icarus＋Yosys |
 | [APB＋割り込みのクロス網羅と選択](examples/local-apb-irq-coverage/README.md) | 2因子・重点・時間関係の実観測、既存目標の保持、追加ケースの選択と再実行の比較 | Icarus |
-| [リグレッションの削減](examples/gitlab-reduction/README.md) | 全件・目標だけの選択・ストレス保持を比較し、実行量・目標・検出力を評価 | Icarus |
+| [リグレッションの削減](examples/local-reduction/README.md) | 全件・目標だけの選択・ストレス保持を比較し、実行量・目標・検出力を評価 | Icarus |
 | [失敗した操作列の自動縮小](examples/local-failure-reduction/README.md) | 同じチェッカーで失敗を再現し、単一操作削除に対する極小性を確認 | Icarus |
 | [未達カバレッジからの刺激調整](examples/local-coverage-feedback/README.md) | 観測に基づく刺激と固定分布のランダム刺激を同じサイクル予算で比較 | Icarus |
 
@@ -267,12 +267,12 @@ RISC-Vの命令の定義を期待値に使う2例です。
 まず試す場合は、POSIX環境（macOS／Linux）、Python 3.10以上、Icarus Verilog（`iverilog`・`vvp`）を用意します。例えば、次のコマンドで同期FIFOのランダム検証、AHB-Lite、AXI4-Liteを実行できます。
 
 ```sh
-python3 examples/gitlab-fifo/run.py
+python3 examples/local-fifo/run.py
 python3 examples/local-ahb/run.py
 python3 examples/local-axi/run.py
 ```
 
-ディレクトリ名が`gitlab-*`の例もローカルで実行できます。上記の3例にGitLabのアカウントや利用枠は不要です。フォーマル、UVM、SystemRDL、cocotbなどを使う例は、それぞれの専用環境を準備してください。
+フォーマル、UVM、SystemRDL、cocotbなどを使う例は、それぞれの専用環境を準備してください。
 
 | 共通手順 | 確認できること |
 | --- | --- |
@@ -293,7 +293,6 @@ docs/case-study-ieee1800/        手法の適用記録（IEEE 1800-2023）
 docs/templates/                 製品開発で使う記録の雛形
 examples/                       回路別・方式別の検証例、集約ランナー、共通処理
 tools/                          ケーススタディの照合・生成・計測の参照実装
-.gitlab-ci.yml                  おまけのGitLab CI構成の入口
 PROVENANCE.md                   各ファイルの由来・改訂と実行確認の記録
 ```
 
@@ -337,33 +336,27 @@ PROVENANCE.md                   各ファイルの由来・改訂と実行確認
 
 参照先のIEEE規格、外部の文書・ソフトウェアには、それぞれの権利者の利用条件が適用されます。本リポジトリのライセンスは、それらの転載・再配布の許諾を与えるものではありません。
 
-## おまけ：GitLab CIでの実行について
+## 初期の11例の構成と過去のCI実行記録
 
-当初はすべての検証例をGitLabにも掲載し、CIで実行する予定でしたが、追加の途中で無料枠の利用制限に達したため、一部の例までの掲載にとどまっています。その後に追加した例も、このリポジトリで公開しています。掲載の有無は検証内容による分類ではないため、全体は本文の[検証例一覧](#検証例一覧)から参照できます。
+最初に作った11例は、例ごとの独自のランナーを持ち、当初は[公開GitLabデモ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)のCIでも実行していました。GitLabの無料枠の制約から、2026-10-31にGitLabでの実行をやめました。ディレクトリ名を`gitlab-*`から`local-*`へ改め、CIの設定も削除しています。今はほかの例と同じく、このリポジトリを取得した手元の環境で実行します。デモのプロジェクトはアーカイブし、当時のCIの実行記録を閲覧できるように残しています。
 
-[公開GitLabデモ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)には、下表の11例を含むCI構成があります。ディレクトリ名の`gitlab-*`は、そのCI教材として作成した際の名前です。
+11例の構成と件数を下表に示します。追加した9構成の目標・変異・完了記録の照合結果は[結合例の実行記録](examples/local-apb-uart/README.md#7-適用範囲と実行確認)に記載しています。
 
-以下は過去の実行確認記録です。現在のパイプライン状態や利用枠の残量を示すものではありません。
-
-### GitLab CIの構成と実行確認記録
-
-2026-10-26に、実装の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)と確認記録・構成図の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)がmainへ取り込まれたことを確認しました。その時点のmainは`ec594de7`で、[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しました。[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)では全50ジョブ成功、JUnit 311件・失敗／エラー0件を確認済みです。MR !12はドキュメントだけの変更で、その時点のCI設定・実装は同じです。
-
-このリポジトリのGitLab CI設定に含まれる構成を下表に示します。追加した9構成の目標・変異・完了記録の照合結果は[結合例の実行記録](examples/gitlab-apb-uart/README.md#7-適用範囲と実行確認)に記載しています。
-
-| 実行例 | リグレッションジョブ数・対象 | 通常実行のJUnit件数 | schedule実行の予定件数 |
+| 実行例 | 構成・対象 | smokeのJUnit件数 | nightlyのJUnit件数 |
 | --- | --- | --- | --- |
-| [IRQ・CDC](examples/gitlab-regression/README.md) | 1ジョブ、要求8件・目標50件 | 38 | 41 |
-| [FIFOランダム検証](examples/gitlab-fifo/README.md) | 6ジョブ、深さ1／3／8×幅8／16 | 36（各6） | 48（各8） |
-| [FIFOフォーマル検証](examples/gitlab-formal/README.md) | 2ジョブ、幅8・深さ1／3 | 16（各8） | 16（各8） |
-| [APBレジスタ検証](examples/gitlab-apb/README.md) | 3ジョブ、待ち状態0／1／3 | 18（各6） | 24（各8） |
-| [APB＋割り込み結合検証](examples/gitlab-apb-irq/README.md) | 3ジョブ、待ち状態0／1／3 | 18（各6） | 24（各8） |
-| [ready/validランダム検証](examples/gitlab-stream/README.md) | 4ジョブ、深さ1／3×幅8／16 | 24（各6） | 32（各8） |
-| [SVAのアサーションとカバー](examples/gitlab-sva/README.md) | 1ジョブ、要求6件・カバー12目標 | 10 | 12 |
-| [リグレッションの削減の比較](examples/gitlab-reduction/README.md) | 1ジョブ、全件／選択／ストレス保持の比較 | 18（集約判定） | 18（集約判定） |
-| [ラウンドロビン・アービタ](examples/gitlab-arbiter/README.md) | 3ジョブ、要求元2／3／4 | 21（各7） | 27（各9） |
-| [UARTランダム検証](examples/gitlab-uart/README.md) | 6ジョブ、分周数8／16×パリティなし／偶数／奇数 | 40（各6／7） | 52（各8／9） |
-| [APB・UART・割り込み結合検証](examples/gitlab-apb-uart/README.md) | 9ジョブ、待ち状態0／1／3×パリティなし／偶数／奇数 | 72（各8） | 90（各10） |
-| 合計 | リグレッション39ジョブ＋ランナーのセルフテスト11ジョブ | 311 | 384 |
+| [IRQ・CDC](examples/local-irq-cdc/README.md) | 1構成、要求8件・目標50件 | 38 | 41 |
+| [FIFOランダム検証](examples/local-fifo/README.md) | 6構成、深さ1／3／8×幅8／16 | 36（各6） | 48（各8） |
+| [FIFOフォーマル検証](examples/local-fifo-formal/README.md) | 2構成、幅8・深さ1／3 | 16（各8） | 16（各8） |
+| [APBレジスタ検証](examples/local-apb/README.md) | 3構成、待ち状態0／1／3 | 18（各6） | 24（各8） |
+| [APB＋割り込み結合検証](examples/local-apb-irq/README.md) | 3構成、待ち状態0／1／3 | 18（各6） | 24（各8） |
+| [ready/validランダム検証](examples/local-stream/README.md) | 4構成、深さ1／3×幅8／16 | 24（各6） | 32（各8） |
+| [SVAのアサーションとカバー](examples/local-sva/README.md) | 1構成、要求6件・カバー12目標 | 10 | 12 |
+| [リグレッションの削減の比較](examples/local-reduction/README.md) | 1構成、全件／選択／ストレス保持の比較 | 18（集約判定） | 18（集約判定） |
+| [ラウンドロビン・アービタ](examples/local-arbiter/README.md) | 3構成、要求元2／3／4 | 21（各7） | 27（各9） |
+| [UARTランダム検証](examples/local-uart/README.md) | 6構成、分周数8／16×パリティなし／偶数／奇数 | 40（各6／7） | 52（各8／9） |
+| [APB・UART・割り込み結合検証](examples/local-apb-uart/README.md) | 9構成、待ち状態0／1／3×パリティなし／偶数／奇数 | 72（各8） | 90（各10） |
+| 合計 | 39構成 | 311 | 384 |
 
-ランナーのセルフテストはIRQ 14件、FIFO 10件、フォーマル8件、APB 12件、APB＋割り込み12件、ready/valid 13件、SVA 12件、削減比較11件、アービタ13件、UART 13件、APB・UART・割り込み14件の計132テストで、上表のJUnit件数とは別です。132件は2026-10-27の全体レビュー修正後の件数で、上記のGitLab確認記録は修正前の129件です。scheduleではシミュレーションと削減比較の10例がnightlyとなり、フォーマル検証は通常実行と同じタスクを実行します。384件は設定から算出した予定件数で、GitLabで全例を含むschedule実行を確認した記録ではありません。各例の追加時点の実行記録と、このリポジトリの現行CI設定から算出した件数は区別します。定期運用にはGitLab側でスケジュールの対象と有効状態を確認してください。
+ランナーのセルフテストはIRQ 14件、FIFO 10件、フォーマル8件、APB 12件、APB＋割り込み12件、ready/valid 13件、SVA 12件、削減比較11件、アービタ13件、UART 13件、APB・UART・割り込み14件の計132テストで、上表のJUnit件数とは別です。nightlyでは、シミュレーションと削減比較の10例がランダム操作を増やし、フォーマル検証は通常実行と同じタスクを実行します。
+
+GitLab CIでは、2026-10-26に実装の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)と確認記録の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)をmainへ取り込み、[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)で11例の全50ジョブの成功（JUnit 311件、失敗・エラー0件）を確認しました。これはsmokeの実行で、セルフテスト129件の版（2026-10-27の全体レビューの修正前）に対する記録です。nightlyの384件は、GitLabでは実行していません。各例の当時の記録は、それぞれのREADMEにあります。

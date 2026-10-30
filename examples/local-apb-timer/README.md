@@ -101,6 +101,6 @@ python3 examples/local-apb-timer/run.py --configuration width4-wait2 --demo-bug 
 
 ## 6. 確認範囲
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各24目標・4種類の変異、セルフテスト7件が成功しました。GitLabへの追加・CI実行は行っていません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各24目標・4種類の変異、セルフテスト7件が成功しました。
 
 単一クロックのAPB3信号サブセットであり、CPU・実ドライバー、割り込みコントローラー、システムのリセット配線、CDC、APB4/5の追加信号や製品の安全性は対象外です。バスとコアが正常でも、ソフトウェアの設定手順やシステム全体の要求は別途検証します。

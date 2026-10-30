@@ -55,7 +55,7 @@ flowchart TD
 | FSM（Finite State Machine） | 有限状態機械。状態と入力から遷移・出力を決めるモデル。状態の到達と遷移・出力の正しさを分けて確認する |
 | CSR／UART／APB | 制御・状態レジスタ（Control and Status Register）／非同期シリアル送受信器（Universal Asynchronous Receiver/Transmitter）／周辺回路向けバス（Advanced Peripheral Bus）。UARTのレジスタをAPB経由で読む例などで使う |
 
-参照：[一般化した検証手順](method/spec-to-verification-method.md)、[割り込みの実行例](../examples/gitlab-regression/README.md)。
+参照：[一般化した検証手順](method/spec-to-verification-method.md)、[割り込みの実行例](../examples/local-irq-cdc/README.md)。
 
 ## 2. 要求・照合・証跡
 
@@ -195,14 +195,14 @@ flowchart TD
 | 集約ランナー（親）／個別ランナー（子） | 複数の個別リグレッションを起動し結果をまとめるランナー／個々の検証環境を実行するランナー。親と子のJUnit件数は重複集計しない |
 | 集約時の合否判定 | 個別ランナーの実行結果、完了数、カバレッジなどを照合する処理。回路の論理ゲートやクロックゲーティングとは異なる |
 | smoke／nightly | 短い基本リグレッション／定期的に探索範囲を広げるリグレッションの呼び方。この実行例ではプロファイル名で、名前だけで夜間スケジュールは作られない |
-| CI/CD／pipeline／job／Runner | 継続的インテグレーション・デリバリー等の自動化／処理全体／個別の処理単位／ジョブを実行する基盤。ここでのGitLab例はリグレッションのCIを扱う |
-| MR（Merge Request） | GitLabで変更のレビュー・統合を依頼する単位。パイプラインの結果表示と、マージを許可するプロジェクトの設定を対応付ける |
+| CI/CD／pipeline／job／Runner | 継続的インテグレーション・デリバリー等の自動化／処理全体／個別の処理単位／ジョブを実行する基盤 |
+| MR（Merge Request）／PR（Pull Request） | 変更のレビュー・統合を依頼する単位。GitLabではMR、GitHubではPRと呼ぶ。パイプラインの結果表示と、マージを許可するプロジェクトの設定を対応付ける |
 | manifest（実行計画・入力記録） | 予定ケース、構成、seed、入力の版などを固定する記録。実行結果と照合し、未実行・欠落を検出する |
 | JUnit XML／artifact | CIへケース別結果を伝える形式／保存するログ・波形・DB等の成果物。JUnitの表示とジョブの終了コードは別に確認する |
 | retry／flaky | 再実行／同条件のつもりでも結果が揺れる試験。最初の失敗を残し、再試行で成功した事実だけで置き換えない |
 | timeout／判定不能 | 実行時間の上限到達／結論が得られない状態。ランナーの実時間タイムアウト、仕様上の応答期限違反、形式証明の未完了を分ける |
 
-参照：[継続的リグレッション](method/continuous-regression.md)、[GitLabの実行例](../examples/gitlab-regression/README.md)。GitLabのJUnitとジョブ状態の関係は[公式資料](https://docs.gitlab.com/ci/testing/unit_test_reports/)に説明があります。
+参照：[継続的リグレッション](method/continuous-regression.md)、[IRQ・CDCの実行例](../examples/local-irq-cdc/README.md)。CIでのJUnitとジョブ状態の関係は、例えばGitLabの[公式資料](https://docs.gitlab.com/ci/testing/unit_test_reports/)に説明があります。
 
 ## 11. 実装・製造に関わる検証
 

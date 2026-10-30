@@ -1,6 +1,6 @@
 # AHB／AXI-LiteからAPBへ接続して検証する
 
-AHB-Lite→APB3とAXI4-Lite→APB3の教材用ブリッジを作り、既存の[APBレジスタ](../gitlab-apb/README.md)と[APBタイマー・ウォッチドッグ](../local-apb-timer/README.md)へ接続します。バス単体の合格だけでは分からない、アドレス変換、応答の対応、周辺機能の動作を確認します。GitLabには追加しません。
+AHB-Lite→APB3とAXI4-Lite→APB3の教材用ブリッジを作り、既存の[APBレジスタ](../local-apb/README.md)と[APBタイマー・ウォッチドッグ](../local-apb-timer/README.md)へ接続します。バス単体の合格だけでは分からない、アドレス変換、応答の対応、周辺機能の動作を確認します。
 
 ## バス変換と接続先
 

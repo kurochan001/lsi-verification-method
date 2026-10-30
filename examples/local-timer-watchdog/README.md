@@ -90,4 +90,4 @@ python3 examples/local-timer-watchdog/run.py --configuration width4 --demo-bug 2
 
 ## 5. 実行確認
 
-2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で両構成のsmoke／nightly、各20目標、各4種類の変異、セルフテスト6件をローカルで確認しました。GitLabへの追加・CI実行は行っていません。任意の無限の入力列を証明した結果や、実システムの安全性・リセット到達を確認した結果ではありません。
+2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で両構成のsmoke／nightly、各20目標、各4種類の変異、セルフテスト6件をローカルで確認しました。任意の無限の入力列を証明した結果や、実システムの安全性・リセット到達を確認した結果ではありません。

@@ -78,6 +78,6 @@ python3 examples/local-spi/run.py --configuration mode0-div2 --demo-bug 4 --out 
 
 ## 5. 適用範囲と実行確認
 
-2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で全8構成のsmoke／nightly、各16目標、各4種類の変異、セルフテスト4件をローカルで確認しました。GitLabへの追加・CI実行は行っていません。
+2026-10-27にIcarus Verilog 14.0開発版とPython 3.14.7で全8構成のsmoke／nightly、各16目標、各4種類の変異、セルフテスト4件をローカルで確認しました。
 
 単一スレーブの8ビット転送で、CSを保持した複数バイト、複数スレーブ、LSB first、動作中のモード／分周変更、APB接続は含みません。デジタルの決められたタイミングで比較する教材であり、実デバイスのsetup／hold、配線遅延、ノイズ、周波数限界や規格適合性を保証するものではありません。

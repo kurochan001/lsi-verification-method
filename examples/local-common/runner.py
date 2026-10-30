@@ -1,4 +1,4 @@
-"""Local-only Icarus regression support; no GitLab API or CI integration."""
+"""Local Icarus regression support shared by the simulation examples."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-PROCESS_PATH = HERE.parent / 'gitlab-regression/run.py'
+PROCESS_PATH = HERE.parent / 'local-irq-cdc/run.py'
 spec = importlib.util.spec_from_file_location('local_process_support', PROCESS_PATH)
 PROCESS = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(PROCESS)

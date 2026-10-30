@@ -4,7 +4,7 @@
 
 ここでは、UVMの構成を利用して要求・刺激・観測・判定・証跡をつなぐ運用を提案します。UVM自体が要求の抽出や要求カバレッジの承認を行うわけではありません。元のケーススタディはSystemVerilog言語規格の検証であり、UVM環境への適用実績ではありません。[APBを使うUVM・RALの実行例](../../examples/local-uvm/README.md)では、エージェント・モニター・独立したスコアボード・レジスタモデルを接続しています。Verilator 5.052とAccellera UVM 2020-3.2を使い、frontdoorの読書き、W1Cとイベント、リセット、変異の検出を確認できます。本文のUART記録例は引き続き説明用です。
 
-UARTの刺激・期待値・観測・競合を実行して確認する教材として、[UART単体例](../../examples/gitlab-uart/README.md)と[APB・UART・割り込みの結合例](../../examples/gitlab-apb-uart/README.md)を追加しています。これらはPythonと手続き的なSystemVerilogテストベンチであり、本文のUVMエージェントやRALを実装したものではありません。
+UARTの刺激・期待値・観測・競合を実行して確認する教材として、[UART単体例](../../examples/local-uart/README.md)と[APB・UART・割り込みの結合例](../../examples/local-apb-uart/README.md)を追加しています。これらはPythonと手続き的なSystemVerilogテストベンチであり、本文のUVMエージェントやRALを実装したものではありません。
 
 ## 1. 導入する範囲
 

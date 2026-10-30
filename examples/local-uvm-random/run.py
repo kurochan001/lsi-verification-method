@@ -10,7 +10,7 @@ import sys
 HERE=Path(__file__).resolve().parent
 spec=importlib.util.spec_from_file_location('crv_evidence',HERE.parent/'local-exploration-common/evidence.py');E=importlib.util.module_from_spec(spec);spec.loader.exec_module(E)
 BASE=HERE.parent/'local-uvm'
-SOURCES=[BASE/'tb/apb_if.sv',BASE/'tb/uvm_apb_pkg.sv',HERE/'tb/random_pkg.sv',HERE.parent/'gitlab-apb/rtl/apb_regs.sv',HERE/'tb/top.sv']
+SOURCES=[BASE/'tb/apb_if.sv',BASE/'tb/uvm_apb_pkg.sv',HERE/'tb/random_pkg.sv',HERE.parent/'local-apb/rtl/apb_regs.sv',HERE/'tb/top.sv']
 EXPECTED_BINS=({f'__vlAnonCG_bus_cg.a.{n}' for n in ('cfg','idreg','pending','invalid')}|
  {f'__vlAnonCG_bus_cg.w.{n}' for n in ('read','write')}|{f'__vlAnonCG_bus_cg.e.{n}' for n in ('okay','error')}|
  {f'__vlAnonCG_bus_cg.aw.{a}_x_{w}' for a in ('cfg','idreg','pending','invalid') for w in ('read','write')}|

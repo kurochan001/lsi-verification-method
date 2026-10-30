@@ -1,6 +1,6 @@
 # 失敗したランダム操作列を自動で縮小する
 
-既存の[AXI4-Stream FIFO](../local-axis/README.md)へ、seedで再現するbeat・idle・resetの操作列を与えます。データ反転のRTL変異で`AXIS_DATA`違反を発生させ、操作を削っても同じ違反になるか、毎回Icarusで実行して判断します。GitLabの利用枠は使いません。
+既存の[AXI4-Stream FIFO](../local-axis/README.md)へ、seedで再現するbeat・idle・resetの操作列を与えます。データ反転のRTL変異で`AXIS_DATA`違反を発生させ、操作を削っても同じ違反になるか、毎回Icarusで実行して判断します。
 
 ## 同じ違反を保って操作を削る
 

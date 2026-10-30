@@ -7,7 +7,7 @@ import re
 import sys
 HERE=Path(__file__).resolve().parent
 spec=importlib.util.spec_from_file_location('uvm_evidence',HERE.parent/'local-exploration-common/evidence.py');E=importlib.util.module_from_spec(spec);spec.loader.exec_module(E)
-SOURCES=[HERE/'tb/apb_if.sv',HERE/'tb/uvm_apb_pkg.sv',HERE.parent/'gitlab-apb/rtl/apb_regs.sv',HERE/'tb/top.sv']
+SOURCES=[HERE/'tb/apb_if.sv',HERE/'tb/uvm_apb_pkg.sv',HERE.parent/'local-apb/rtl/apb_regs.sv',HERE/'tb/top.sv']
 _,GOALS=E.C.catalog(HERE/'requirements.json')
 
 def evaluate(case,execution,log):

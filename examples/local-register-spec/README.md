@@ -1,6 +1,6 @@
 # SystemRDLからRTL・Cヘッダー・RALを生成して照合する
 
-`registers.rdl`を実際のSystemRDLコンパイラーでエラボレーションし、独自の小さなexporterでAPB RTL、Cヘッダー、UVM RALを生成します。生成物は実行先に保存し、別に手書きした`contract.json`と照合します。GitLabは使いません。
+`registers.rdl`を実際のSystemRDLコンパイラーでエラボレーションし、独自の小さなexporterでAPB RTL、Cヘッダー、UVM RALを生成します。生成物は実行先に保存し、別に手書きした`contract.json`と照合します。
 
 ## 共通生成物と独立契約の照合
 

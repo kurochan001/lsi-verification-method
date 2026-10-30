@@ -100,7 +100,7 @@ python3 examples/local-ahb/run.py --configuration wait1 --demo-bug 1 --out artif
 
 このコマンドは通常回路側にもアドレス対応の不具合を入れるため、終了コード1と`AHB_STATE`による失敗が期待結果です。
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全3構成のsmoke／nightly、各21目標・4種類の変異、セルフテスト9件が成功しました。GitLabへの追加・CI起動は行っていません。AHB全体への適合、任意の入力列の証明や製品への適用実績を示す結果ではありません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全3構成のsmoke／nightly、各21目標・4種類の変異、セルフテスト9件が成功しました。AHB全体への適合、任意の入力列の証明や製品への適用実績を示す結果ではありません。
 
 ## 7. フォーマル検証も実行する
 

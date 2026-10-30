@@ -2,20 +2,20 @@
 
 [一般化した検証手順](spec-to-verification-method.md)の段階Gを具体化した資料です。RTL・検証環境・構成・ツールの変更に対し、繰り返し検証を実行し、失敗・未実行・網羅の変化を追跡します。短い変更時のリグレッションと、探索・サインオフに必要な広いリグレッションを計画として管理します。
 
-以下は本リポジトリの運用案です。製品向けのリグレッションランナー、GitLab CI/CD、Cadenceの検証管理ツールを導入・接続したものではありません。既存のケーススタディの実行実績とは分けて扱います。
+以下は本リポジトリの運用案です。製品向けのリグレッションランナー、CIサービス、Cadenceの検証管理ツールを導入・接続したものではありません。既存のケーススタディの実行実績とは分けて扱います。
 
-GitLabで試すための[実行可能な最小例](../../examples/gitlab-regression/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。ローカルの動作確認と、GitLab上での確認状況は実行例の末尾に記録しています。
+[実行可能な最小例](../../examples/local-irq-cdc/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。動作確認と、過去にGitLab CIで実行した記録は、実行例の末尾にあります。
 
-実行例は次の範囲まで実装しています。現行CI設定のジョブ数・JUnit件数と、過去のCI実行の確認先は[GitLab CIの構成と確認記録](../../README.md#gitlab-ciの構成と実行確認記録)に集約しています。
+実行例は次の範囲まで実装しています。構成・JUnit件数と過去のCI実行の記録は、[初期の11例の構成と過去のCI実行記録](../../README.md#初期の11例の構成と過去のci実行記録)にまとめています。
 
-- [IRQ・CDC](../../examples/gitlab-regression/README.md)、[FIFOランダム](../../examples/gitlab-fifo/README.md)、[FIFOフォーマル](../../examples/gitlab-formal/README.md)：基本的な実行・判定・証跡保存と、方式ごとの合格条件。
-- [APBレジスタ](../../examples/gitlab-apb/README.md)、[APBと割り込み](../../examples/gitlab-apb-irq/README.md)、[APB・UART・割り込み](../../examples/gitlab-apb-uart/README.md)：バス操作から状態・通信・通知までの結合と競合。
-- [ready/valid通信](../../examples/gitlab-stream/README.md)、[アービタ](../../examples/gitlab-arbiter/README.md)、[UART](../../examples/gitlab-uart/README.md)：転送・受理・待ち・エラーと復帰の構成別判定。
-- [SVA](../../examples/gitlab-sva/README.md)、[リグレッションの削減](../../examples/gitlab-reduction/README.md)：アサーション・カバー・前件不足と、目標維持・検出力・実行量の比較。
+- [IRQ・CDC](../../examples/local-irq-cdc/README.md)、[FIFOランダム](../../examples/local-fifo/README.md)、[FIFOフォーマル](../../examples/local-fifo-formal/README.md)：基本的な実行・判定・証跡保存と、方式ごとの合格条件。
+- [APBレジスタ](../../examples/local-apb/README.md)、[APBと割り込み](../../examples/local-apb-irq/README.md)、[APB・UART・割り込み](../../examples/local-apb-uart/README.md)：バス操作から状態・通信・通知までの結合と競合。
+- [ready/valid通信](../../examples/local-stream/README.md)、[アービタ](../../examples/local-arbiter/README.md)、[UART](../../examples/local-uart/README.md)：転送・受理・待ち・エラーと復帰の構成別判定。
+- [SVA](../../examples/local-sva/README.md)、[リグレッションの削減](../../examples/local-reduction/README.md)：アサーション・カバー・前件不足と、目標維持・検出力・実行量の比較。
 
-現行構成はランナーのセルフテスト11ジョブとリグレッション39ジョブです。通常実行のJUnitは311件、ランナーのセルフテスト132件は別枠です（2026-10-27の全体レビュー修正後）。全例のscheduleは384件を予定しますが、その全体をGitLabで実行した結果ではありません。確認記録のMR !12までmainへ取り込まれ、最新mainの[CI #2990241122](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990241122)の成功を確認しています。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
+11例は39構成で、JUnitはsmoke 311件、nightly 384件です。ランナーのセルフテスト132件は別枠です。本文の分散farmや商用ライセンス制御などの製品向け運用案とは、実装範囲を分けて扱います。
 
-実行例では、動作中リセット、CDC遅延の観測、X注入を加え、要求ID・改訂と必須の観測目標を照合します。通常ケースの合格だけでなく要求・カバレッジの未達もCIへ失敗として返します。意図した変異検出の途中の観測で正常機能の未達を埋めず、タイムアウト・中断時には実行中のプロセスグループを停止します。MRの起動条件はルートYAMLに定義し、プロジェクトのマージ条件はGitLab側で別に確認します。
+実行例では、動作中リセット、CDC遅延の観測、X注入を加え、要求ID・改訂と必須の観測目標を照合します。通常ケースの合格だけでなく、要求・カバレッジの未達も終了コードで失敗として返します。意図した変異検出の途中の観測で正常機能の未達を埋めず、タイムアウト・中断時には実行中のプロセスグループを停止します。
 
 ## 1. vManager／Verisium ManagerとGitLabの役割
 
@@ -45,7 +45,7 @@ GitLabと自前の計算資源で運用するRunnerは、有力な開始構成�
 
 GitLabのcompute minutesの扱いは、サービス形態・Runnerの種類・設定で確認します。[公式の説明](https://docs.gitlab.com/ci/pipelines/instance_runner_compute_minutes/)では、instance runnerのquotaとproject/group runnerを区別しています。自社Runnerの実行でも、計算資源・EDAライセンス・保存領域が無料になるわけではありません。プランと料金・容量は[料金ページ](https://about.gitlab.com/pricing/)と採用時の契約で確認し、固定の「最安」とは決めません。
 
-すでにGitHubなどで運用している場合は、既存CI＋自社Runnerを続ける費用と移行工数も比較します。このリポジトリはGitHubに置かれていますが、今回の資料追加はGitLabへの移行やCIの有効化を行うものではありません。
+すでにGitHubなどで運用している場合は、既存CI＋自社Runnerを続ける費用と移行工数も比較します。このリポジトリ自体には、CIの設定はありません。
 
 ## 3. リグレッションを段階に分ける
 
@@ -80,7 +80,7 @@ flowchart TD
   A -. "再実行は別試行、元の結果を保持" .-> R
 ```
 
-図は製品向けの運用案です。リグレッション管理には専用製品や自社ランナーを使えます。下記のGitLab最小例は、このうち1ジョブ内の逐次実行を実装したものです。再実行を許す原因・回数は先に定めます。
+図は製品向けの運用案です。リグレッション管理には専用製品や自社ランナーを使えます。下記の最小例は、このうち1回の実行の中での逐次実行を実装したものです。再実行を許す原因・回数は先に定めます。
 
 リグレッションを起動するときに、実行対象の一覧を持つマニフェストを確定します。キャンペーンID、計画版、コミット、構成、テスト・シナリオ、seed、チェッカー、ツールと入力、必要なケースIDを記録します。実行中に対象を追加・削除する場合も、計画の変更として残します。
 
@@ -166,7 +166,7 @@ CI設定からツールのコマンド・判定を直接大量に埋め込む前
 
 必要なカバレッジ収束・多数の利用者・構成・拠点を管理する工数が大きくなったら、専用の検証管理製品との統合を比較します。評価には同じ代表リグレッションを使い、設定・失敗解析・カバレッジ対応・運用の工数、待ち時間・実行量・費用を測ります。導入費だけの比較で決めません。
 
-GitLabの利用枠が限られる場合は、[ローカル専用の共通ランナー](../../examples/local-common/README.md)で[ECC](../../examples/local-ecc/README.md)、[SPI](../../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../../examples/local-timer-watchdog/README.md)を実行できます。構成別のカバレッジ、予定・完了数、変異検出、JUnit・ログ・波形を同様に保存し、実行場所にかかわらず証跡を残します。[非同期FIFO](../../examples/local-async-fifo/README.md)、[I²C](../../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../../examples/local-apb-timer/README.md)も同じ共通ランナーを使います。[AHB-Lite](../../examples/local-ahb/README.md)と[AXI4-Lite](../../examples/local-axi/README.md)も同じ方式で実行します。AHB／AXIには、証明・有界検査・到達性を区別する[ローカルのフォーマルリグレッション](../../examples/local-bus-formal/README.md)も用意しています。これらは既存のGitLab CIには追加していません。
+[共通ランナー](../../examples/local-common/README.md)で[ECC](../../examples/local-ecc/README.md)、[SPI](../../examples/local-spi/README.md)、[タイマー・ウォッチドッグ](../../examples/local-timer-watchdog/README.md)を実行できます。構成別のカバレッジ、予定・完了数、変異検出、JUnit・ログ・波形を同様に保存し、実行場所にかかわらず証跡を残します。[非同期FIFO](../../examples/local-async-fifo/README.md)、[I²C](../../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../../examples/local-apb-timer/README.md)も同じ共通ランナーを使います。[AHB-Lite](../../examples/local-ahb/README.md)と[AXI4-Lite](../../examples/local-axi/README.md)も同じ方式で実行します。AHB／AXIには、証明・有界検査・到達性を区別する[ローカルのフォーマルリグレッション](../../examples/local-bus-formal/README.md)も用意しています。
 
 [バス検証の追加ランナー](../../examples/local-bus-validation/README.md)では、独立SVA・構成別クロス・X／リセット・性能・line／toggleをまとめ、[APBブリッジ](../../examples/local-bus-bridge/README.md)と[AXI4](../../examples/local-axi4/README.md)を子リグレッションとして実行します。親の子リグレッション判定と子の個別JUnitは階層を分け、同じ試験を二重計上しません。コードカバレッジの未到達と警告の扱いも証跡へ保存します。
 
@@ -190,7 +190,7 @@ GitLabの利用枠が限られる場合は、[ローカル専用の共通ラン�
 
 ## ローカルで試す追加例
 
-[解析・収束・結合・UVMの7例](../../examples/local-workflow-regression/README.md)をローカルで追加実行できます。親7件の合否判定と子83／111件を分け、失敗の縮小、観測による刺激調整、4回路の結合検証、UVM参照実装の結果を保存します。GitLabのCIへは追加しません。
+[解析・収束・結合・UVMの7例](../../examples/local-workflow-regression/README.md)をローカルで追加実行できます。親7件の合否判定と子83／111件を分け、失敗の縮小、観測による刺激調整、4回路の結合検証、UVM参照実装の結果を保存します。
 
 [UVMランダム化・仕様生成・反例再現・結合検証の7例](../../examples/local-soc-regression/README.md)は、同じローカルの親ランナーから実行できます。親7件の合否判定、子114／138件、反例生成の入れ子BMC 8件を階層別に保存し、二重計上しません。4回路8構成の56／72件は共通シミュレーション全体429／551件にも含まれます。2026-10-27のレビュー修正後に7例のsmoke／nightlyと、同7例の確認38件が成功しました。
 

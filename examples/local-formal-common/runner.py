@@ -15,7 +15,7 @@ import signal
 import sys
 import xml.etree.ElementTree as ET
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
-PROCESS_PATH=HERE.parent/'gitlab-regression/run.py'
+PROCESS_PATH=HERE.parent/'local-irq-cdc/run.py'
 spec=importlib.util.spec_from_file_location('system_formal_process',PROCESS_PATH)
 P=importlib.util.module_from_spec(spec);spec.loader.exec_module(P)
 
@@ -59,7 +59,7 @@ def run(plugin,args):
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     configs=plugin.CONFIGS if args.configuration=='all' else {args.configuration:plugin.CONFIGS[args.configuration]}
     cases=[c for c in plugin.plan(args.bound,args.demo_bug) if args.task=='all' or c['id']==args.task];inputs=[Path(__file__),Path(plugin.__file__),PROCESS_PATH,*plugin.SOURCES,
-        HERE.parent/'local-bus-formal/tools-requirements.txt',HERE.parent/'gitlab-formal/tools-requirements.txt']
+        HERE.parent/'local-bus-formal/tools-requirements.txt',HERE.parent/'local-fifo-formal/tools-requirements.txt']
     versions={}
     for name in ('yowasp-yosys','z3-solver','yowasp-runtime','wasmtime'):
         try:versions[name]=importlib.metadata.version(name)

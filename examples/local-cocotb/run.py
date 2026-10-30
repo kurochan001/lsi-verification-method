@@ -7,7 +7,7 @@ import sys
 HERE=Path(__file__).resolve().parent
 spec=importlib.util.spec_from_file_location('host_runner',HERE.parent/'local-host-common/runner.py');H=importlib.util.module_from_spec(spec);spec.loader.exec_module(H)
 NAME='local-cocotb';CONFIGS={'wait0':0,'wait2':2};ITERATIONS={'smoke':32,'nightly':300}
-INPUTS=[HERE/'test_apb.py',HERE/'worker.py',HERE/'tools-requirements.txt',HERE.parent/'gitlab-apb/rtl/apb_regs.sv']
+INPUTS=[HERE/'test_apb.py',HERE/'worker.py',HERE/'tools-requirements.txt',HERE.parent/'local-apb/rtl/apb_regs.sv']
 def operations(seed,iterations,boundary=False):
     # Each transaction has setup/access events. New events win over W1C on completion.
     fixed=[[0,1,0x12345678,0,0],[0,0,0,0,0],[4,0,0,0,0],[8,1,15,3,3],[8,0,0,0,0],

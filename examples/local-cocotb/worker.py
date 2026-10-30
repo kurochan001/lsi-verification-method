@@ -14,7 +14,7 @@ if iverilog.parent!=vvp.parent:raise ValueError('Icarus and vvp must be in one t
 os.environ['PATH']=str(iverilog.parent)+os.pathsep+os.environ['PATH']
 here=Path(__file__).resolve().parent
 runner=get_runner('icarus')
-runner.build(sources=[here.parent/'gitlab-apb/rtl/apb_regs.sv'],hdl_toplevel='apb_regs',parameters=dict(WAIT_CYCLES=case['wait'],MUTATION=case['mutation']),build_dir=out/'build',always=True,waves=True,timescale=("1ns","1ps"))
+runner.build(sources=[here.parent/'local-apb/rtl/apb_regs.sv'],hdl_toplevel='apb_regs',parameters=dict(WAIT_CYCLES=case['wait'],MUTATION=case['mutation']),build_dir=out/'build',always=True,waves=True,timescale=("1ns","1ps"))
 runner.test(hdl_toplevel='apb_regs',test_module='test_apb',test_dir=out,build_dir=out/'build',results_xml=out/'cocotb-junit.xml',waves=True,seed=case['seed'],extra_env={'CASE_JSON':str(case_path),'PYTHONPATH':str(here)+os.pathsep+os.environ.get('PYTHONPATH','')})
 root=ET.parse(out/'cocotb-junit.xml').getroot();nodes=list(root.iter('testcase'))
 if len(nodes)!=1 or any(list(n.iter('failure')) or list(n.iter('error')) for n in nodes):sys.exit(1)

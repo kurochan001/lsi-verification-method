@@ -9,7 +9,7 @@ NAME='local-cdc-bridge';TOP='cdc_bridge_tb'
 CONFIGS={'source-fast':dict(SRC_HALF=3,DST_HALF=7,SYNC_STAGES=2,WAIT_CYCLES=2),
          'target-fast':dict(SRC_HALF=7,DST_HALF=3,SYNC_STAGES=3,WAIT_CYCLES=0)}
 ITERATIONS={'smoke':12,'nightly':100}
-SOURCES=[HERE/'rtl/packet_fifo.sv',HERE/'rtl/cdc_apb_bridge.sv',HERE.parent/'gitlab-apb/rtl/apb_regs.sv',HERE/'tb/cdc_bridge_tb.sv']
+SOURCES=[HERE/'rtl/packet_fifo.sv',HERE/'rtl/cdc_apb_bridge.sv',HERE.parent/'local-apb/rtl/apb_regs.sv',HERE/'tb/cdc_bridge_tb.sv']
 def expected(n,seed):
     value=checksum=errors=0
     for index in range(n):

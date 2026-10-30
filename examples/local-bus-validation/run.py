@@ -15,7 +15,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
-SUPPORT_PATH=HERE.parent/'gitlab-regression/run.py'
+SUPPORT_PATH=HERE.parent/'local-irq-cdc/run.py'
 def module(name,path):
     spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 SUPPORT=module('bus_process_support',SUPPORT_PATH)

@@ -80,6 +80,6 @@ python3 examples/local-async-fifo/run.py --configuration depth4-sync2 --demo-bug
 
 ## 5. 確認範囲と一次資料
 
-2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各17目標・4種類の変異、セルフテスト6件が成功しました。GitLabでのCI追加・実行は行っていません。
+2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版で全4構成のsmoke／nightly、各17目標・4種類の変異、セルフテスト6件が成功しました。
 
 ジッターを加えたRTL検証だけで、CDCの物理的安全性、MTBF、Grayバスのスキューやリセット解除の安全性は確認できません。構造的なCDC/RDC解析、実装後のタイミング制約・解析は別に必要です。[AlteraのDCFIFOタイミング制約の資料](https://docs.altera.com/r/docs/683241/25.1.1/agilextm-7-embedded-memory-user-guide/user-configurable-timing-constraint)にも、実装遅延と制約の点検が説明されています。本例は製品FIFOや実メモリマクロの再現ではありません。

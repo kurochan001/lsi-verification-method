@@ -1,6 +1,6 @@
 # ローカル専用の検証例を実行する
 
-[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先度付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)、[INT8シストリックアレイ](../local-systolic-array/README.md)、[再量子化](../local-requantize/README.md)、[活性化関数](../local-activation/README.md)、[畳み込みのラインバッファ](../local-conv-window/README.md)、[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)の共通ランナーです。GitLabのプロジェクト、Runner、利用枠は使いません。ルートの`.gitlab-ci.yml`からも呼び出しません。
+[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先度付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)、[INT8シストリックアレイ](../local-systolic-array/README.md)、[再量子化](../local-requantize/README.md)、[活性化関数](../local-activation/README.md)、[畳み込みのラインバッファ](../local-conv-window/README.md)、[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)の共通ランナーです。
 
 ## 実行から構成別判定まで
 
@@ -50,7 +50,7 @@ python3 examples/local-gap-regression/run.py --stage core
 
 各例は、境界値の通常検証、seedを固定したランダム検証、意図的な不具合・期待値の誤りを加えた4種類のネガティブテストを実行します。ECCは保証範囲外の診断2件も別枠で実行します。カバレッジはSystemVerilogのcovergroupではなく、テストベンチが出力する`COVER`ログを集計する簡易実装です。
 
-各例の`run.py`が刺激と期待値を作り、このディレクトリの`runner.py`が実行・集計します。[既存IRQ例](../gitlab-regression/run.py)のプロセス起動、タイムアウト、終了判定を再利用するため、例のディレクトリだけを抜き出さず、リポジトリ全体を取得してください。
+各例の`run.py`が刺激と期待値を作り、このディレクトリの`runner.py`が実行・集計します。[既存IRQ例](../local-irq-cdc/run.py)のプロセス起動、タイムアウト、終了判定を再利用するため、例のディレクトリだけを抜き出さず、リポジトリ全体を取得してください。
 
 ## オプションと再現
 
@@ -127,7 +127,7 @@ python3 -m unittest discover -s examples/local-divider/tests -v
 python3 -m unittest discover -s examples/local-riscv-iss/tests -v
 ```
 
-従来18例の内訳は、共通14、ECC 6、SPI 4、タイマー・ウォッチドッグ6、非同期FIFO 6、I²C 5、APB結合7、AHB 9、AXI 9、バスブリッジ9、AXI4 6、DMA 6、複数マスター6、非同期APBブリッジ5、復旧6、低電力5、Stream 6、DSP 6、同一領域の競合6の計127テストです。実RTLの検証に加え、ビルド失敗、タイムアウト、無関係な異常終了、完了記録不足、件数の誤り・重複、通常検証のカバー欠落、要求未達、カタログ重複、出力先保護を確認します。これらは既存GitLab例のランナーのセルフテスト132件や、GitLabリグレッションのJUnit件数とは別です。
+従来18例の内訳は、共通14、ECC 6、SPI 4、タイマー・ウォッチドッグ6、非同期FIFO 6、I²C 5、APB結合7、AHB 9、AXI 9、バスブリッジ9、AXI4 6、DMA 6、複数マスター6、非同期APBブリッジ5、復旧6、低電力5、Stream 6、DSP 6、同一領域の競合6の計127テストです。実RTLの検証に加え、ビルド失敗、タイムアウト、無関係な異常終了、完了記録不足、件数の誤り・重複、通常検証のカバー欠落、要求未達、カタログ重複、出力先保護を確認します。これらは初期の11例のランナーのセルフテスト132件や、そのJUnit件数とは別です。
 
 ## AHB／AXIのフォーマル検証
 
@@ -137,7 +137,7 @@ python3 -m unittest discover -s examples/local-riscv-iss/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。現在のローカル例全体のセルフテストは472件です。このうち共通シミュレーション45例が289件、本共通ランナーが15件で、合計304件です。残る168件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの19件、Top-Kの4件、AI用回路の集約手順の5件、接続性の9件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。GitLab向けの132件を合わせると、全セルフテストは604件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。現在のローカル例全体のセルフテストは472件です。このうち共通シミュレーション45例が289件、本共通ランナーが15件で、合計304件です。残る168件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの19件、Top-Kの4件、AI用回路の集約手順の5件、接続性の9件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。初期の11例の132件を合わせると、全セルフテストは604件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
@@ -202,7 +202,7 @@ python3 examples/local-gap-regression/run.py --stage core
 python3 examples/local-gap-regression/run.py --stage core --profile nightly
 ```
 
-この6例を追加した時点の共通シミュレーションは38例・85構成、JUnit597／767件です。追加時に実行した範囲は6例のsmoke／nightlyと確認49件です。GitLabのCI設定への追加・CI起動は行っていません。
+この6例を追加した時点の共通シミュレーションは38例・85構成、JUnit597／767件です。追加時に実行した範囲は6例のsmoke／nightlyと確認49件です。
 
 
 ## MXFP4の4×4 GEMMと量子化
@@ -224,7 +224,7 @@ python3 examples/local-ai-regression/run.py --stage simulation
 python3 examples/local-ai-regression/run.py --stage simulation --profile nightly
 ```
 
-活性化関数の例では、ベクトルに正確な関数値と許容幅を入れ、テストベンチが誤差の上限で判定します。ビット列の一致を求めるほかの例と同じランナー・証跡の形式で扱えます。AI用回路を加えた時点の共通シミュレーションは42例・93構成、JUnit657／843件でした。Top-K（フォーマル）とMXFP4（Verilator）は別のランナーで、この件数には含めません。GitLabのCI設定への追加・CI起動は行っていません。
+活性化関数の例では、ベクトルに正確な関数値と許容幅を入れ、テストベンチが誤差の上限で判定します。ビット列の一致を求めるほかの例と同じランナー・証跡の形式で扱えます。AI用回路を加えた時点の共通シミュレーションは42例・93構成、JUnit657／843件でした。Top-K（フォーマル）とMXFP4（Verilator）は別のランナーで、この件数には含めません。
 
 ## 検証手法を補う4例
 

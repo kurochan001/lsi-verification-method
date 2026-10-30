@@ -1,0 +1,125 @@
+# 割り込み・CDCのリグレッションを動かす
+
+有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。ランナーのセルフテストと、説明用IRQ回路のリグレッションを実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
+
+この例と同じ形のランナーを持つ初期の11例には、[FIFOのランダム検証例](../local-fifo/README.md)と[商用ツール不要のフォーマル検証例](../local-fifo-formal/README.md)、[APBレジスタ検証例](../local-apb/README.md)、[APBと割り込みの結合検証例](../local-apb-irq/README.md)、[ready/valid通信のランダム検証例](../local-stream/README.md)、[SVAの実行例](../local-sva/README.md)、[リグレッションの削減の比較例](../local-reduction/README.md)、[アービタの検証例](../local-arbiter/README.md)、[UARTのランダム検証例](../local-uart/README.md)、[APB・UART・割り込みの結合検証例](../local-apb-uart/README.md)もあります。全体の構成は[初期の11例の構成](../../README.md#初期の11例の構成と過去のci実行記録)を参照してください。以下の件数は、特記がなければIRQ・CDCリグレッションの内訳です。
+
+## 1. 実行するもの
+
+- [`run.py`](run.py)：計画生成、コンパイル、ケース実行、判定、マニフェスト・JUnit・結果の作成。
+- [`irq_pending.sv`](rtl/irq_pending.sv)：説明用の回路と、検証用に選べる3個の変異。CDC受信回路側の1個と合わせて4個。
+- [`irq_tb.sv`](tb/irq_tb.sv)：仕様に基づく状態・IRQの比較。失敗ラベルと完了記録を出力する。
+- [`cdc_delay_model.sv`](tb/cdc_delay_model.sv)：転送ごとに1／2／3受信サイクルの遅延を選ぶ検証用モデル。
+- [`cdc_receiver.sv`](rtl/cdc_receiver.sv)：2経路の一致を待ち、toggleごとに1回だけ受理する説明用の回路。
+- [`requirements.json`](requirements.json)：版付きの8要求と、必須の50カバレッジ目標。
+- [`test_runner.py`](tests/test_runner.py)：実シミュレーションと異常時のCLI・JUnit判定の確認。
+
+仮の仕様は、イベントでPENDをセット、W1Cでクリア、同時ならセット優先、操作なしは保持、IRQはPENDとIRQ_ENの論理積です。この例はactive lowの**同期リセット**を使います。セット優先はこの例の仕様で、W1C全般の規則ではありません。
+
+通常回路に対して次を実行します。
+
+- 基本動作16ケース：初期PEND 2通り×IRQ_EN 2通り×操作4通り。
+- 時間関係の12ケース：初期PEND 2通り×IRQ_EN 2通り×イベントとclearの時間差−1／0／＋1。
+- 動作中リセットの3ケース：PEND保持中、イベント・clearとの競合、mask中。解除後の保持と最初のイベントも比較する。
+- CDCモデルの1ケース：2経路それぞれの−1／0／＋1受信サイクルの9組×立上がり・立下がり、計18目標。
+- nightlyのみ、3個のseedによる64操作ずつのランダム列を追加。
+
+別に、クリア優先、maskによる保存停止、PEND=1でのリセット無視、CDC受信回路の早すぎる受理の4種類の変異を、対応するチェッカーで検出します。さらに、状態へXを注入し、IRQまで伝搬した未知値をチェッカーが検出する自己確認を1件行います。**予定した変異・X注入の検出は、この確認項目の成功**です。通常回路の失敗とは区別して記録し、コンパイル不能や任意のクラッシュを検出成功にしません。
+
+| プロファイル | 通常回路のケース | 変異検出 | Xの自己確認 | 要求・カバレッジ判定 | JUnitの合計 |
+| --- | --- | --- | --- | --- | --- |
+| smoke | 32 | 4 | 1 | 1 | 38 |
+| nightly | 35（うち3ケースは各64操作） | 4 | 1 | 1 | 41 |
+
+ここでの件数はケース単位です。手続き的なチェッカーが判定した観測から`COVER`記録を出し、Pythonが要求の必須目標と照合します。covergroup DBやSVAのカバレッジを計測した件数ではありません。製品IP、UVM、フォーマル検証、実バス・ソフトウェアの検証は含みません。
+
+CDCは、送信値を転送完了まで保持する検証用モデルです。送信側と受信側は異なる周期で動かし、各転送の遅延組をseedで並べ替えます。受信回路が両経路の一致を待ち、各toggleを早期受理・欠落・重複なく受理することを判定した後、実際の受信サイクルから18目標を収集します。途中の経路間の不一致は許します。物理的なメタスタビリティ、MTBF、短パルス・req/ack・非同期FIFOの検証を済ませたモデルではありません。
+
+Xの確認は、PENDへ注入したXがIRQへ伝わり、`IRQ_OUTPUT_UNKNOWN`で検出される限定した例です。設計全体のX伝搬解析や、シミュレータ固有のXpropを置き換えるものではありません。
+
+## 2. まずローカルで実行する
+
+LinuxまたはmacOSなどのPOSIX環境で、Python 3.10以上、`iverilog`と`vvp`がPATHに必要です。Debian系Linuxなら、管理権限のある環境で`apt-get update`と`apt-get install python3 iverilog`などにより用意します。Pythonの追加パッケージは不要です。
+
+リポジトリのルートで実行します。
+
+```sh
+python3 -m unittest discover -s examples/local-irq-cdc/tests -v
+python3 examples/local-irq-cdc/run.py
+python3 examples/local-irq-cdc/run.py --profile nightly --seed 17
+```
+
+正常なら、ランナーのセルフテストの統合テストとリグレッションが合格します。リグレッションには次のような出力があります。
+
+```text
+PASS     atomic-p0-en0-op0: 3 checked cycles
+DETECTED detect-clear-priority: expected mutation detected by IRQ_SET_WINS
+DETECTED detect-masked-storage: expected mutation detected by IRQ_SET_ONLY
+Coverage: 50/50 required goals
+Regression: PASS
+```
+
+各実行の出力先は`artifacts/local-日時/`です。`--out`で指定もできますが、古い結果との混同を防ぐため、既存のディレクトリには書き込みません。`artifacts/`はGitの対象外です。
+
+通常回路へクリア優先の不具合を入れるデモは、次です。
+
+```sh
+python3 examples/local-irq-cdc/run.py --demo-bug 1
+```
+
+このコマンドは**終了コード1**になり、通常回路の8ケースが失敗します。要求・カバレッジの判定も失敗するため、JUnitは合計9個のfailureになります。4個の予定した変異検出とXの自己確認は別に成功します。
+
+## 3. 定期実行（nightly）
+
+```sh
+python3 examples/local-irq-cdc/run.py --profile nightly --seed 17
+```
+
+nightlyは、開始seed・開始seed+1・開始seed+2の各64操作を追加し、変異・X・要求判定と合わせて41項目になります。同じ開始seedなら固定列の再確認です。探索seedを変える場合も、その値とマニフェストを保存します。
+
+このリポジトリにCIの設定はありません。CIサービスで定期実行する場合は、変更ごとにsmoke、定期実行でnightlyを選び、開始seedを記録します。ジョブの成否はランナーの終了コードで決めます。JUnitを結果表示に渡すだけでは、ジョブは失敗になりません。この例のランナーは、失敗・errorを終了コード1へ反映します。運用の考え方は[継続リグレッションの手順](../../docs/method/continuous-regression.md)にまとめています。
+
+## 4. 保存するものと判定
+
+| ファイル | 内容 |
+| --- | --- |
+| `manifest.json` | 予定ケース、プロファイル・seed・操作列、ソースのSHA-256、Python版 |
+| `tools.json`、`*-version.log` | 実際に使ったIcarusとvvpの版表示 |
+| `builds.json`、`build-*.log` | 変異ごとのコンパイルコマンド・結果 |
+| `summary.json` | 予定・結果の照合、通常回路と変異確認を分けた件数・合否 |
+| `requirements.json`、`coverage.json` | 使用した要求の版・目標、観測した目標とケースIDの対応、要求別の合格・未達 |
+| `junit.xml` | CIのテスト結果表示などで読めるケース別結果 |
+| ケースごとのディレクトリ | 入力操作列、実行コマンド・状態、ログ、VCD波形 |
+
+予定の全ケースを実行し、正常終了の記録と比較サイクル数、意図した失敗ラベルを確認します。タイムアウト、コンパイル不能、完了記録なし、別の理由による変異の失敗は、成功にしません。通常のランナーでは、どれも集約判定を失敗へ反映します。
+
+ケースの成功だけで目標への到達を推測せず、宣言した目標と実際の`COVER`記録を照合します。途中の観測はログへ残しても、失敗した通常ケースや、正しさを壊した変異ケースから、正常機能の到達を補いません。Xの自己確認では、その検出に対応する目標だけを採用します。
+
+`requirements-and-coverage`は、予定したケースとは別のJUnit項目です。全ケースが成功しても要求の必須目標が欠ければ、この項目が失敗し、リグレッションも終了コード1になります。汎用の要求台帳を更新する機能ではなく、この例の要求スナップショットを判定する実装です。
+
+タイムアウトでは起動時に分離したプロセスグループを停止します。ランナーへのSIGTERM／SIGINTでも実行中のグループを停止して異常終了します。途中のマニフェスト・個別ログは残しますが、中断したリグレッションの最終JUnit・summaryの完成は保証しません。外部計算機ファームの取消や、別sessionへ離脱したプロセスの停止は別の実装が必要です。
+
+この最小例は1回の実行の中でケースを順番に実行します。ケースの分散実行、外部計算機ファームの取消、商用ライセンスの全体制御、カバレッジDBのmerge、要求台帳の自動更新は未実装です。実案件へ拡張する場合は[継続リグレッションの運用](../../docs/method/continuous-regression.md)に従います。
+
+ツールの版は、環境やパッケージの更新で変わります。この例では実行時のツール版・ソースを記録します。厳密な再現が必要なら、検証済みの環境（コンテナイメージなど）を作り、digestとツール版を固定します。
+
+## 5. 確認した範囲
+
+2026-10-25にmacOS、Python 3.14.7、Icarus Verilog 14.0 devel（`s20260301-411-gca6b8d376`）で、12個の統合テストを実行しました。smokeの通常32ケース、4種類の変異・X自己確認、8要求・50目標の合格に加え、nightly、デモの8失敗とカバレッジ判定、コンパイラ不足・タイムアウト・完了記録欠落・別チェッカーによる失敗、子プロセス停止、未達カバレッジと変異からの混入防止を確認しました。
+
+### 過去のGitLab CIでの実行記録
+
+2026-10-25〜26には、この例を含む初期の11例を[GitLabのデモプロジェクト](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)のCIでも実行しました。GitLab-hostedのLinux Runner、`debian:bookworm-slim`、Python 3.11.2、Icarus 11.0の環境です。最初の実行では、CDCモデルの`input integer`がIcarus 11.0でコンパイルエラーになり、入力を明示的な32ビット符号付きwireへ修正しました。
+
+- [通常リグレッション #2986024650](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986024650)：JUnit 38件・失敗0、必須目標50/50。
+- [不具合デモ #2986027250](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986027250)：JUnit 38件中、機能8件と要求・カバレッジ判定1件が失敗し、MRのマージが止まることを確認。
+- [nightly #2986030512](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030512)：seed 17で、JUnit 41件・失敗0。
+- [11例の全50ジョブ #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)：JUnit 311件・失敗／エラー0。
+
+GitLabの無料枠の制約から、2026-10-31にGitLabでの実行をやめ、デモプロジェクトをアーカイブしました。このリポジトリのCI設定も削除しています。上の記録は、その時点の構成での実行結果です。
+
+## タイムアウト後の停止処理
+
+共通のプロセス実行処理は、タイムアウト時にプロセスグループの停止を試みます。停止APIがエラーになった場合も、直接の子プロセスへの停止を試み、後処理の待ち時間を制限して、エラーを実行結果とログへ残します。子孫全体の停止を確認できなかった場合は、その事実をエラーとして残し、変異の検出成功には数えません。後処理の例外で通常の集計・JUnit作成が中断される問題を修正しました。外部からの強制終了でファイル保存が完了することまでは保証しません。
+
+この処理の追加確認2件を含み、IRQランナーのセルフテストは14件です。初期の11例のセルフテストは合計132件です。
