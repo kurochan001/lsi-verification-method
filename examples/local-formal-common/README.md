@@ -1,6 +1,6 @@
 # システム教材のフォーマルリグレッションを実行する
 
-[AXI4のフォーマル例](../local-axi4-formal/README.md)、[FIFOの等価性例](../local-equivalence/README.md)、[完了期限の例](../local-progress/README.md)、[Top-K選択の例](../local-topk/README.md)、[接続性の例](../local-connectivity/README.md)、[除算器の例](../local-divider/README.md)が使うSBYランナーです。各例の`run.py`（除算器は`formal.py`）から起動し、このファイルを直接実行するものではありません。
+[AXI4のフォーマル例](../local-axi4-formal/README.md)、[FIFOの等価性例](../local-equivalence/README.md)、[完了期限の例](../local-progress/README.md)、[Top-K選択の例](../local-topk/README.md)、[接続性の例](../local-connectivity/README.md)、[除算器の例](../local-divider/README.md)、[命令デコーダの例](../local-riscv-decoder/README.md)が使うSBYランナーです。各例の`run.py`（除算器は`formal.py`）から起動し、このファイルを直接実行するものではありません。
 
 ## モデル・タスク・証跡の対応
 
@@ -56,6 +56,7 @@ python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bm
 - BMCはPASSとエンジンの完了を要求し、保証を指定の深さまでに限定します。
 - coverは固定した全目標の到達とVCD・witnessを要求します。
 - 変異や予定した環境反例は、予定したassertのFAIL、非ゼロ終了、反例を要求します。別のassertだけのFAILやクラッシュは検出成功ではありません。
+- k-inductionの帰納ステップの反例（`trace_induct`）は、到達できない状態から始まることがあり、実際の反例ではありません。保存はしますが、witnessを要求せず、反例にも数えません。
 - コンパイルされたパラメーターとassert／assume／coverの名前・個数を固定計画と照合します。
 - 常時リセットの診断では、証明PASSと全正常cover未達を別に確認します。診断の到達を通常実行のカバレッジへ足しません。
 
@@ -67,4 +68,4 @@ python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bm
 python3 -m unittest discover -s examples/local-formal-common/tests -v
 ```
 
-判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合、`prepare`の手順がSBYの設定へ入ることを確認する11テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。
+判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合、`prepare`の手順がSBYの設定へ入ること、帰納ステップの反例の扱いを確認する12テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。

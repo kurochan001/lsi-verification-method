@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TRAP-EXCEPTION",
+      "goals": [
+        "trap/illegal",
+        "trap/ecall",
+        "trap/misaligned-load",
+        "trap/misaligned-store"
+      ]
+    },
+    {
+      "id": "TRAP-INTERRUPT",
+      "goals": [
+        "trap/interrupt",
+        "trap/enabled-by-csr",
+        "trap/mret"
+      ]
+    },
+    {
+      "id": "TRAP-CSR",
+      "goals": [
+        "csr/use-at-once",
+        "load/use",
+        "halt/ebreak"
+      ]
+    }
+  ]
+}

@@ -88,6 +88,13 @@ class EvidenceTest(unittest.TestCase):
             self.assertEqual(p.returncode,1,p.stdout+p.stderr)
             script=(out/'soc-connectivity-proof/task.sby').read_text().split('[script]\n')[1].split('prep -top')[0]
             self.assertEqual(script,CONN.prepare({},CONN.plan(8,0)[0]))
+    def test_induction_traces_are_not_required_to_carry_a_witness(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            engine=Path(tmp)/'engine_0';engine.mkdir()
+            for name,text in [('trace.vcd','$enddefinitions'),('trace.yw','w'),('trace_induct.vcd','$enddefinitions')]:(engine/name).write_text(text)
+            self.assertEqual(R.witnessed_traces(engine,Path(tmp)),['engine_0/trace.vcd'])
+            (engine/'trace.yw').unlink()
+            with self.assertRaises(ValueError):R.witnessed_traces(engine,Path(tmp))
     def test_missing_tools_cannot_be_success(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out';absent=str(Path(tmp)/'absent')

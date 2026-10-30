@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "LSU-EXTEND",
+      "goals": [
+        "lsu/negative-subword-load"
+      ]
+    },
+    {
+      "id": "LSU-LANES",
+      "goals": [
+        "lsu/odd-byte",
+        "lsu/upper-half",
+        "lsu/subword-store-then-word-load"
+      ]
+    },
+    {
+      "id": "LSU-PIPELINE",
+      "goals": [
+        "lsu/subword-load-use",
+        "load/use",
+        "load/store-data",
+        "mem/wait-load",
+        "mem/wait-store"
+      ]
+    },
+    {
+      "id": "LSU-ISA",
+      "goals": [
+        "isa/every-instruction",
+        "halt/ebreak"
+      ]
+    }
+  ]
+}

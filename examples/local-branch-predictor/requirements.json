@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PRED-DIRECTION",
+      "goals": [
+        "branch/taken",
+        "branch/not-taken",
+        "branch/backward",
+        "branch/loop-exit"
+      ]
+    },
+    {
+      "id": "PRED-RECOVERY",
+      "goals": [
+        "branch/shadowed-prediction",
+        "branch/forwarded-operand",
+        "jalr/forwarded-base"
+      ]
+    },
+    {
+      "id": "PRED-PIPELINE",
+      "goals": [
+        "load/use",
+        "mem/wait-load",
+        "halt/ebreak"
+      ]
+    }
+  ]
+}

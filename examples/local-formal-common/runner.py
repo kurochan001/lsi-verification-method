@@ -38,6 +38,16 @@ def observed(log):
             names(r'Unreached cover statement at [\w.]+: ([\w.]+)'),
             names(r'Assert failed in [\w.]+: ([\w.]+)'))
 
+def witnessed_traces(engine,out):
+    """Counterexample and cover traces, each with its witness. An induction-step trace starts
+    from an arbitrary state, so it is kept on disk but is neither required nor counted."""
+    traces=[]
+    for trace in sorted(engine.glob('*.vcd')):
+        if trace.name.startswith('trace_induct'):continue
+        if '$enddefinitions' not in trace.read_text(errors='replace') or not trace.with_suffix('.yw').exists() or not trace.with_suffix('.yw').stat().st_size:raise ValueError('incomplete counterexample/witness')
+        traces.append(str(trace.relative_to(out)))
+    return traces
+
 def judge(case,execution,status,log,traces,properties):
     if execution['error']:return 'error',execution['error']
     if status not in ('PASS','FAIL') or execution['returncode']!=(0 if status=='PASS' else 2):return 'error','incomplete task or inconsistent status/exit'
@@ -88,9 +98,7 @@ def run(plugin,args):
             log=(work/'logfile.txt').read_text(errors='replace') if (work/'logfile.txt').exists() else ''
             traces=[];inv=None
             try:
-                for trace in sorted((work/'engine_0').glob('*.vcd')):
-                    if '$enddefinitions' not in trace.read_text(errors='replace') or not trace.with_suffix('.yw').exists() or not trace.with_suffix('.yw').stat().st_size:raise ValueError('incomplete counterexample/witness')
-                    traces.append(str(trace.relative_to(out)))
+                traces=witnessed_traces(work/'engine_0',out)
                 if status in ('PASS','FAIL') and not execution['error']:inv=inventory(work/'model/inventory.json',plugin,parameters,case)
                 outcome,message=judge(case,execution,status,log,traces,properties)
             except (OSError,ValueError,KeyError,TypeError) as exc:outcome,message='error','invalid evidence: '+str(exc)

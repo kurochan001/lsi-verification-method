@@ -13,7 +13,7 @@ NAME = 'local-riscv-iss'
 TOP = 'core_tb'
 CONFIGS = {'rv32i': {}}
 ITERATIONS = {'smoke': 300, 'nightly': 2000}  # instructions in each random program
-SOURCES = [HERE / 'rtl/rv32i_core.sv', HERE / 'tb/core_tb.sv']
+SOURCES = [HERE / 'rtl/rv32i_core.sv', HERE.parent / 'local-riscv-decoder/rtl/rv32i_decoder.sv', HERE / 'tb/core_tb.sv']
 EXTRA_INPUTS = [HERE / 'iss.py']
 TAGS = ISS.TAGS + ['mem/wait-forwarding']
 LABELS = {1: 'ISS_DATA', 2: 'ISS_DATA', 3: 'ISS_FLOW', 4: 'ISS_DATA'}
@@ -45,10 +45,11 @@ def stale_values(trace):
     return before
 
 
-def vectors(program, data, wait):
-    """Rows for the bench. wait(index, trace, i) gives the wait cycles of each data access."""
+def vectors(program, data, wait, required=ISS.WORD_ONLY, traps=False):
+    """Rows for the bench. wait(index, trace, i) gives the wait cycles of each data access;
+    required lists the instructions that the every-instruction goal needs."""
     words = ISS.assemble(program)
-    trace = ISS.tag(ISS.execute(words, data))
+    trace = ISS.tag(ISS.execute(words, data, traps=traps))
     if len(words) > IMEM_WORDS or len(trace) > RETIRE_LIMIT:
         raise ValueError(f'program of {len(words)} words retiring {len(trace)} instructions exceeds the bench')
     before = stale_values(trace)
@@ -60,10 +61,12 @@ def vectors(program, data, wait):
             if waits[i] and forwards_past_wait(trace, i, before[i - 1]):
                 trace[i + 1].tags |= 1 << TAGS.index('mem/wait-forwarding')
     limit = 4 * len(trace) + sum(waits) + 100
-    rows = [[2, limit] + [0] * 9]
+    mask = sum(1 << ISS.NAMES.index(name) for name in required)
+    rows = [[2, limit, mask & ISS.MASK, mask >> 32] + [0] * 7]
     rows += [[0, i, w] + [0] * 8 for i, w in enumerate(words)]
     rows += [[1, i, d] + [0] * 8 for i, d in enumerate(data) if d]
-    rows += [[3, r.pc, r.insn, r.rd, r.wdata, r.kind, r.addr, r.data, r.tags, ISS.NAMES.index(ISS.name_of(r.insn)),
+    number = {name: i for i, name in enumerate(ISS.NAMES)}  # an unknown word gets 63, which no goal needs
+    rows += [[3, r.pc, r.insn, r.rd, r.wdata, r.kind, r.addr, r.data, r.tags, number.get(ISS.name_of(r.insn), 63),
               waits[i]] for i, r in enumerate(trace)]
     return rows
 

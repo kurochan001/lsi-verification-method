@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/riscv/riscv-opcodes",
+  "commit": "f24ac23ec9fa947011781a09cd6fd25a7c36dc45",
+  "license": "BSD-3-Clause",
+  "note": "Copied unchanged. RV32I is every non-pseudo line of rv_i plus the RV32 shift encodings of rv32_i.",
+  "files": {
+    "upstream/rv_i": {
+      "source": "https://github.com/riscv/riscv-opcodes/blob/f24ac23ec9fa947011781a09cd6fd25a7c36dc45/extensions/rv_i",
+      "sha256": "146e297ddbe346f325d993aaf56d7006f1bfde39df584b888b221543def17b97"
+    },
+    "upstream/rv32_i": {
+      "source": "https://github.com/riscv/riscv-opcodes/blob/f24ac23ec9fa947011781a09cd6fd25a7c36dc45/extensions/rv32_i",
+      "sha256": "8ef811f8e1d4435e4c61c1d9e0384032c431106f0ef5068f48d3a506701ce463"
+    },
+    "upstream/LICENSE": {
+      "source": "https://github.com/riscv/riscv-opcodes/blob/f24ac23ec9fa947011781a09cd6fd25a7c36dc45/LICENSE",
+      "sha256": "1b24700313c5720c31e52f914d80c3e652f4b0abd4410d37755165d73d79acc4"
+    }
+  }
+}

@@ -2,29 +2,34 @@
 // Loads the program and data, then compares every retired instruction, in order, with the
 // record the ISS produced. Vector rows: 0 instruction word, 1 data word, 2 cycle limit,
 // 3 expected retirement (pc, instruction, rd, value, memory kind, address, data, coverage
-// tags, operation index, wait cycles for its memory access).
+// tags, operation index, wait cycles for its memory access), 4 optional expected counters
+// (branches and jumps, flushes, whether flushes are checked).
 module core_tb;
-    parameter MUTATION = 0;
+    parameter MUTATION = 0, PREDICT = 0, TRAPS = 0;
+    localparam IRQ_WORD = 255;  // a store to this data word sets the interrupt line to its bit 0
     localparam N = 16384, IMEM = 16384, DMEM = 256;  // run.py keeps programs within these sizes
-    reg clk = 0, rst_n = 0, dmem_ready = 1;
+    reg clk = 0, rst_n = 0, dmem_ready = 1, irq = 0;
     wire [31:0] imem_addr, dmem_addr, dmem_wdata, ret_pc, ret_insn, ret_wdata, ret_mem_addr, ret_mem_data;
     wire dmem_valid, dmem_we, ret_valid, halted;
     wire [4:0] ret_rd;
     wire [1:0] ret_mem;
+    wire [31:0] perf_ctrl, perf_flush;
+    wire [3:0] dmem_be;
     reg [31:0] imem[0:IMEM-1], dmem[0:DMEM-1];
     wire [31:0] imem_data = imem[imem_addr[15:2]];
     wire [31:0] dmem_rdata = dmem_ready ? dmem[dmem_addr[9:2]] : 32'hdeadbeef;
-    rv32i_core #(.MUTATION(MUTATION)) dut(.*);
+    rv32i_core #(.MUTATION(MUTATION), .PREDICT(PREDICT), .TRAPS(TRAPS)) dut(.*);
     always #5 clk = ~clk;
     integer fd, n, i, rows = 0, expected = 0, retired = 0, loads = 0, stores = 0, cycles = 0, limit = 0;
-    integer accesses = 0, waits = 0, waiting = 0;
+    integer accesses = 0, waits = 0, waiting = 0, perf_rows = 0, lanes;
+    reg [31:0] exp_ctrl = 0, exp_flush = 0, check_flush = 0;
     reg [31:0] v[0:10];
     reg [31:0] e_pc[0:N-1], e_insn[0:N-1], e_wdata[0:N-1], e_addr[0:N-1], e_data[0:N-1], e_tags[0:N-1];
     reg [4:0] e_rd[0:N-1];
     reg [1:0] e_kind[0:N-1];
     reg [5:0] e_op[0:N-1];
     reg [3:0] wait_of[0:N-1];
-    reg [31:0] ops = 0;
+    reg [63:0] ops = 0, required = 0;  // operations seen, and those the every-instruction goal needs
     reg running = 0;
     string vectors, wave;
     function string tag_name(input integer k);  // same order as TAGS in run.py
@@ -35,7 +40,15 @@ module core_tb;
             6: tag_name = "branch/taken";         7: tag_name = "branch/not-taken";
             8: tag_name = "branch/forwarded-operand"; 9: tag_name = "branch/backward";
             10: tag_name = "x0/write-then-read";  11: tag_name = "halt/ebreak";
-            default: tag_name = "mem/wait-forwarding";
+            12: tag_name = "mem/wait-forwarding"; 13: tag_name = "branch/loop-exit";
+            14: tag_name = "branch/shadowed-prediction"; 15: tag_name = "lsu/negative-subword-load";
+            16: tag_name = "lsu/subword-store-then-word-load"; 17: tag_name = "lsu/subword-load-use";
+            18: tag_name = "lsu/odd-byte";         19: tag_name = "lsu/upper-half";
+            20: tag_name = "trap/illegal";         21: tag_name = "trap/ecall";
+            22: tag_name = "trap/misaligned-load"; 23: tag_name = "trap/misaligned-store";
+            24: tag_name = "trap/interrupt";       25: tag_name = "trap/enabled-by-csr";
+            26: tag_name = "trap/mret";
+            default: tag_name = "csr/use-at-once";
         endcase
     endfunction
     task fail(input string label);
@@ -60,7 +73,7 @@ module core_tb;
             case (v[0])
                 0: imem[v[1]] = v[2];
                 1: dmem[v[1]] = v[2];
-                2: limit = v[1];
+                2: begin limit = v[1]; required = {v[3], v[2]}; end
                 3: begin
                     e_pc[expected] = v[1]; e_insn[expected] = v[2]; e_rd[expected] = v[3]; e_wdata[expected] = v[4];
                     e_kind[expected] = v[5]; e_addr[expected] = v[6]; e_data[expected] = v[7];
@@ -68,6 +81,7 @@ module core_tb;
                     if (v[5] != 0) begin wait_of[accesses] = v[10]; accesses = accesses + 1; end
                     expected = expected + 1;
                 end
+                4: begin exp_ctrl = v[1]; exp_flush = v[2]; check_flush = v[3]; perf_rows = perf_rows + 1; end
                 default: $fatal(1, "bad row type");
             endcase
         end
@@ -89,10 +103,14 @@ module core_tb;
             dmem_ready = waits == 0;
             if (!dmem_ready && dmem_we) $display("COVER mem/wait-store");
             if (!dmem_ready && !dmem_we) $display("COVER mem/wait-load");
-        end else dmem_ready = 1;
+        end else begin  // no request, or one withdrawn by a trap: the next request starts afresh
+            dmem_ready = 1; waiting = 0;
+        end
     end
     always @(posedge clk) if (running && dmem_valid === 1'b1 && dmem_ready) begin
-        if (dmem_we) dmem[dmem_addr[9:2]] <= dmem_wdata;
+        if (dmem_we) for (lanes = 0; lanes < 4; lanes = lanes + 1)
+            if (dmem_be[lanes]) dmem[dmem_addr[9:2]][8 * lanes +: 8] <= dmem_wdata[8 * lanes +: 8];
+        if (dmem_we && dmem_addr[9:2] == IRQ_WORD && dmem_be[0]) irq <= dmem_wdata[0];
         waiting = 0; accesses = accesses + 1;
     end
     // Retirement: compare in order, then credit the tags of the matched record.
@@ -105,14 +123,16 @@ module core_tb;
             if (ret_rd !== e_rd[retired] || ret_wdata !== e_wdata[retired] || ret_mem !== e_kind[retired] ||
                 (e_kind[retired] != 0 && (ret_mem_addr !== e_addr[retired] || ret_mem_data !== e_data[retired])))
                 fail("ISS_DATA");
-            for (i = 0; i < 13; i = i + 1) if (e_tags[retired][i]) $display("COVER %s", tag_name(i));
+            for (i = 0; i < 28; i = i + 1) if (e_tags[retired][i]) $display("COVER %s", tag_name(i));
             ops[e_op[retired]] = 1;
-            if (&ops) $display("COVER isa/every-instruction");
+            if (required != 0 && (ops & required) == required) $display("COVER isa/every-instruction");
             loads = loads + (ret_mem == 1); stores = stores + (ret_mem == 2);
             retired = retired + 1;
         end
         if (halted) begin
             if (retired != expected) fail("ISS_END");
+            $display("PERF cycles=%0d ctrl=%0d flush=%0d", cycles, perf_ctrl, perf_flush);
+            if (perf_rows && (perf_ctrl !== exp_ctrl || (check_flush && perf_flush !== exp_flush))) fail("ISS_PERF");
             running = 0;
         end else if (cycles > limit) fail("ISS_END");
     end

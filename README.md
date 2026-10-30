@@ -207,11 +207,15 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 
 ### プロセッサ
 
-RISC-Vの命令の定義を期待値に使う2例です。
+RISC-Vの命令の定義を期待値に使う6例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [RISC-VコアとISSの逐次比較](examples/local-riscv-iss/README.md) | 5段パイプラインの退出命令をISSと1命令ずつ照合、転送・ロード直後の使用・分岐の取消し・メモリ待ちとの重なり、固定とランダムの命令列 | Icarus |
+| [分岐予測器](examples/local-branch-predictor/README.md) | 予測しない・静的・動的の3構成で退出の列がISSと一致すること、性能カウンターの照合、予測外れからの回復、結果を変えない性能の誤り | Icarus |
+| [バイト・ハーフワードのロード・ストア](examples/local-load-store/README.md) | 全サイズ・全レーンのアクセス、符号拡張とゼロ拡張、サブワードのストアの書込み位置、ロードした値の転送をISSと照合 | Icarus |
+| [例外と割り込み](examples/local-riscv-traps/README.md) | 不正な命令・ECALL・境界に合わないロード／ストアの精密な例外、外部割り込みを受け付ける位置、MRET、CSRの読み書きをISSと照合、予測器との組合せ | Icarus |
+| [RISC-Vの命令デコーダ](examples/local-riscv-decoder/README.md) | 公式の命令表（riscv-opcodes）から生成した期待値と、全2^32命令語での一致の証明、予約された命令語・FENCEの予約フィールド・遠い分岐の即値 | フォーマル＋Icarus |
 | [多サイクル除算器](examples/local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
 
 ### フォーマル検証・等価性・反例再現
@@ -276,12 +280,12 @@ python3 examples/local-axi/run.py
 
 | 共通手順 | 確認できること |
 | --- | --- |
-| [Icarus共通シミュレーション](examples/local-common/README.md) | 45例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
+| [Icarus共通シミュレーション](examples/local-common/README.md) | 48例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
 | [フォーマル環境](examples/local-formal-common/README.md) | Yosys・SBY・Z3の固定版環境、各タスクの実行と判定 |
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は45例・98構成、各検証例が出力するJUnit件数の合計はsmoke 692件／nightly 888件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は48例・104構成、各検証例が出力するJUnit件数の合計はsmoke 734件／nightly 942件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 

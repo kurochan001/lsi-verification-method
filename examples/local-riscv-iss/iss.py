@@ -2,8 +2,8 @@
 
 The ISS executes one instruction at a time as the RISC-V Unprivileged ISA defines it and
 knows nothing about the pipeline. It runs from address 0 until EBREAK and records, for
-each retired instruction, what the core's retirement port must show. Only word loads and
-stores are supported, and instruction and data memories are separate.
+each retired instruction, what the core's retirement port must show. Loads and stores of
+bytes, halfwords and words must be aligned, and instruction and data memories are separate.
 """
 from dataclasses import dataclass
 
@@ -19,8 +19,21 @@ OPS = {  # name: (format, opcode, funct3, funct7)
     'ori': ('I', 0x13, 6, 0), 'andi': ('I', 0x13, 7, 0), 'slli': ('I', 0x13, 1, 0), 'srli': ('I', 0x13, 5, 0),
     'srai': ('I', 0x13, 5, 0x20), 'add': ('R', 0x33, 0, 0), 'sub': ('R', 0x33, 0, 0x20), 'sll': ('R', 0x33, 1, 0),
     'slt': ('R', 0x33, 2, 0), 'sltu': ('R', 0x33, 3, 0), 'xor': ('R', 0x33, 4, 0), 'srl': ('R', 0x33, 5, 0),
-    'sra': ('R', 0x33, 5, 0x20), 'or': ('R', 0x33, 6, 0), 'and': ('R', 0x33, 7, 0), 'ebreak': ('E', 0x73, 0, 0)}
+    'sra': ('R', 0x33, 5, 0x20), 'or': ('R', 0x33, 6, 0), 'and': ('R', 0x33, 7, 0), 'ebreak': ('E', 0x73, 0, 0),
+    # sub-word accesses, after the original 32 so that their numbers stay the same
+    'lb': ('I', 0x03, 0, 0), 'lh': ('I', 0x03, 1, 0), 'lbu': ('I', 0x03, 4, 0), 'lhu': ('I', 0x03, 5, 0),
+    'sb': ('S', 0x23, 0, 0), 'sh': ('S', 0x23, 1, 0),
+    # machine-mode traps and CSRs (Zicsr), used when traps are enabled
+    'ecall': ('E', 0x73, 0, 0), 'mret': ('E', 0x73, 0, 0x18),
+    'csrrw': ('C', 0x73, 1, 0), 'csrrs': ('C', 0x73, 2, 0), 'csrrc': ('C', 0x73, 3, 0),
+    'csrrwi': ('C', 0x73, 5, 0), 'csrrsi': ('C', 0x73, 6, 0), 'csrrci': ('C', 0x73, 7, 0)}
 NAMES = list(OPS)
+WORD_ONLY = NAMES[:32]  # the instructions of the ISS example, which uses word accesses only
+LOAD_STORE = NAMES[:38]  # adds the byte and halfword accesses
+ECALL, MRET = 0x00000073, 0x30200073
+IRQ_WORD = DATA_WORDS - 1  # with traps, bit 0 of this data word drives the external interrupt line
+CSRS = {'mstatus': 0x300, 'mie': 0x304, 'mtvec': 0x305, 'mscratch': 0x340, 'mepc': 0x341, 'mcause': 0x342,
+        'mtval': 0x343, 'mip': 0x344}
 # Coverage tags carried to the bench with each retired instruction.
 TAGS = ['raw/distance-1', 'raw/distance-2', 'raw/distance-3', 'load/use', 'load/store-data', 'jalr/forwarded-base',
         'branch/taken', 'branch/not-taken', 'branch/forwarded-operand', 'branch/backward', 'x0/write-then-read',
@@ -28,15 +41,16 @@ TAGS = ['raw/distance-1', 'raw/distance-2', 'raw/distance-3', 'load/use', 'load/
 
 
 def name_of(insn):
-    """Mnemonic of an encoded instruction, for the every-instruction goal."""
-    if insn == EBREAK:
-        return 'ebreak'
+    """Mnemonic of an encoded instruction, for the every-instruction goal; None if unknown."""
+    special = {EBREAK: 'ebreak', ECALL: 'ecall', MRET: 'mret'}
+    if insn in special:
+        return special[insn]
     op, f3, f7 = insn & 0x7f, insn >> 12 & 7, insn >> 25
     for name, (fmt, opcode, funct3, funct7) in OPS.items():
         if opcode == op and fmt != 'E' and (fmt in 'UJ' or (funct3 == f3 and (
                 funct7 == f7 or not (fmt == 'R' or (op == 0x13 and f3 == 5))))):
             return name
-    raise ValueError(f'unknown instruction {insn:08x}')
+    return None
 
 
 def sext(value, bits):
@@ -50,6 +64,10 @@ def signed(x):
 
 def encode(item, pc, labels):
     name, *args = item
+    if name == 'word':  # any instruction word, such as an illegal one
+        return args[0] & MASK
+    if name in ('ecall', 'mret'):
+        return ECALL if name == 'ecall' else MRET
     fmt, opcode, f3, f7 = OPS[name]
 
     def value(x):  # an immediate, a label, ('off', target, base) or ('abs', target) for JALR
@@ -60,7 +78,7 @@ def encode(item, pc, labels):
         rd, rs1, rs2 = args
         return f7 << 25 | rs2 << 20 | rs1 << 15 | f3 << 12 | rd << 7 | opcode
     if fmt == 'I':
-        rd, rs1, imm = (args[0], args[2], value(args[1])) if name in ('lw', 'jalr') else (args[0], args[1], args[2])
+        rd, rs1, imm = (args[0], args[2], value(args[1])) if opcode in (0x03, 0x67) else (args[0], args[1], args[2])
         if name in ('slli', 'srli', 'srai'):
             imm = f7 << 5 | imm
         return (imm & 0xfff) << 20 | rs1 << 15 | f3 << 12 | rd << 7 | opcode
@@ -75,6 +93,9 @@ def encode(item, pc, labels):
     if fmt == 'U':
         rd, imm = args
         return (imm & 0xfffff) << 12 | rd << 7 | opcode
+    if fmt == 'C':  # (rd, CSR name, rs1 or 5-bit immediate)
+        rd, csr, source = args
+        return CSRS[csr] << 20 | source << 15 | f3 << 12 | rd << 7 | opcode
     if fmt == 'J':
         rd, target = args
         off = value(target)
@@ -122,10 +143,71 @@ def alu(f3, alt, a, b):
             signed(a) >> shamt & MASK if alt else a >> shamt, a | b, a & b][f3]
 
 
-def execute(words, data, limit=100000):
+_SPEC = None
+
+
+def legal_rv32i(insn):
+    """Whether a word is in the RV32I table of riscv-opcodes (the decoder example's specification)."""
+    global _SPEC
+    if _SPEC is None:
+        import importlib.util
+        from pathlib import Path
+        path = Path(__file__).resolve().parent.parent / 'local-riscv-decoder/generate.py'
+        spec = importlib.util.spec_from_file_location('rv32i_opcodes', path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        _SPEC = (module, module.table())
+    return _SPEC[0].decode(_SPEC[1], insn) is not None
+
+
+class Machine:
+    """Machine-mode CSRs with the fields the core implements; other bits read as fixed values."""
+
+    def __init__(self):
+        self.mie = self.mpie = self.meie = 0
+        self.tvec = self.epc = self.scratch = self.cause = self.tval = 0
+
+    def read(self, address, line):
+        return {0x300: 3 << 11 | self.mpie << 7 | self.mie << 3, 0x304: self.meie << 11, 0x305: self.tvec,
+                0x340: self.scratch, 0x341: self.epc, 0x342: self.cause, 0x343: self.tval, 0x344: line << 11}[address]
+
+    def write(self, address, value):
+        if address == 0x300:
+            self.mie, self.mpie = value >> 3 & 1, value >> 7 & 1
+        elif address == 0x304:
+            self.meie = value >> 11 & 1
+        elif address == 0x305:
+            self.tvec = value & ~3 & MASK
+        elif address == 0x340:
+            self.scratch = value
+        elif address == 0x341:
+            self.epc = value & ~3 & MASK
+        elif address == 0x342:
+            self.cause = value
+        elif address == 0x343:
+            self.tval = value
+
+    def enter(self, pc, cause, tval):
+        self.epc, self.cause, self.tval, self.mpie, self.mie = pc, cause, tval, self.mie, 0
+        return self.tvec
+
+
+def execute(words, data, limit=100000, traps=False):
+    """Run from address 0 to EBREAK. With traps, illegal instructions, ECALL and misaligned
+    accesses trap to mtvec, CSR instructions and MRET work, and an interrupt pending on the line
+    with mstatus.MIE and mie.MEIE set is taken before the next instruction."""
     regs, pc, mem, trace = [0] * 32, 0, list(data), []
+    m = Machine()
+
+    def trap(record, cause, tval):
+        record.kind, record.addr, record.data = 3, cause, tval
+        trace.append(record)
+        return m.enter(record.pc, cause, tval)
     for _ in range(limit):
         insn = words[pc >> 2]
+        if traps and mem[IRQ_WORD] & 1 and m.mie and m.meie:
+            pc = trap(Retired(pc, insn, 0, 0, 0), 0x80000000 | 11, 0)
+            continue
         op, rd, f3, rs1, rs2, f7 = insn & 0x7f, insn >> 7 & 31, insn >> 12 & 7, insn >> 15 & 31, insn >> 20 & 31, insn >> 25
         a, b = regs[rs1], regs[rs2]
         imm_i = sext(insn >> 20, 12)
@@ -136,6 +218,36 @@ def execute(words, data, limit=100000):
         if insn == EBREAK:
             trace.append(record)
             return trace
+        if traps:
+            csr = op == 0x73 and f3 & 3 and (insn >> 20) in CSRS.values()
+            if not (csr or insn == MRET or legal_rv32i(insn)):
+                pc = trap(record, 2, insn)
+                continue
+            if insn == ECALL:
+                pc = trap(record, 11, 0)
+                continue
+            if insn == MRET:
+                m.mie, m.mpie = m.mpie, 1
+                trace.append(record)
+                pc = m.epc
+                continue
+            if csr:
+                address, source = insn >> 20, (rs1 if f3 >= 5 else a)
+                old = m.read(address, mem[IRQ_WORD] & 1)
+                if f3 & 3 == 1 or rs1:
+                    m.write(address, [None, source, old | source, old & ~source & MASK][f3 & 3])
+                if rd:
+                    regs[rd], record.rd, record.wdata = old, rd, old
+                record.result = old
+                trace.append(record)
+                pc = nxt
+                continue
+            if op in (0x03, 0x23):
+                address = (a + (imm_i if op == 0x03 else imm_s)) & MASK
+                size = 1 << (f3 & 3)
+                if address % size:
+                    pc = trap(record, 4 if op == 0x03 else 6, address)
+                    continue
         if op == 0x37:
             value = insn & 0xfffff000
         elif op == 0x17:
@@ -150,12 +262,18 @@ def execute(words, data, limit=100000):
                 nxt = (pc + imm_b) & MASK
         elif op == 0x03:
             record.addr = (a + imm_i) & MASK
-            record.kind, value = 1, mem[check(record.addr)]
-            record.data = value
+            size, shift = 1 << (f3 & 3), 8 * (record.addr & 3)
+            value = mem[check(record.addr, size)] >> shift & (1 << 8 * size) - 1
+            if f3 < 4 and size < 4:
+                value = sext(value, 8 * size) & MASK
+            record.kind, record.data = 1, value
         elif op == 0x23:
             record.addr = (a + imm_s) & MASK
-            record.kind, record.data = 2, b
-            mem[check(record.addr)] = b
+            size, shift = 1 << f3, 8 * (record.addr & 3)
+            field = (1 << 8 * size) - 1
+            index = check(record.addr, size)
+            mem[index] = mem[index] & ~(field << shift) & MASK | (b & field) << shift
+            record.kind, record.data = 2, b & field
         elif op == 0x13:
             value = alu(f3, f3 == 5 and f7 == 0x20, a, imm_i & MASK)
         elif op == 0x33:
@@ -171,9 +289,9 @@ def execute(words, data, limit=100000):
     raise ValueError('program did not reach EBREAK')
 
 
-def check(addr):
-    if addr & 3 or not 0 <= addr >> 2 < DATA_WORDS:
-        raise ValueError(f'data address {addr:#x} is unaligned or outside the data memory')
+def check(addr, size=4):
+    if addr % size or not 0 <= addr >> 2 < DATA_WORDS:
+        raise ValueError(f'data address {addr:#x} is unaligned for {size} bytes or outside the data memory')
     return addr >> 2
 
 
@@ -267,8 +385,11 @@ def directed_data():
     return data
 
 
-def random_program(rng, count):
-    """Forward branches and jumps only, so every program ends; x10 keeps the data base."""
+def random_program(rng, count, loops=False, subword=False):
+    """Forward branches and jumps only, so every program ends; x10 keeps the data base. With
+    loops, some counted loops (x11 counts down, a backward BNE) are added; nothing else writes
+    x11 and nothing jumps into a loop, so they end too. With subword, loads and stores also use
+    bytes and halfwords, always aligned."""
     pool, recent, program, due = [1, 2, 3, 4, 5, 6, 7, 8, 9], [], [('addi', 10, 0, BASE)], {}
 
     def dest():
@@ -293,6 +414,13 @@ def random_program(rng, count):
     while len(program) - sum(isinstance(x, str) for x in program) < count:
         for position in sorted(p for p in due if p <= len(program)):  # labels whose skip has passed
             program.extend(due.pop(position))
+        if loops and rng.random() < 0.06:
+            top = f'P{len(program)}'
+            program += [('addi', 11, 0, rng.randrange(2, 6)), top + ':']
+            for _ in range(rng.randrange(1, 4)):
+                program.append((rng.choice(['add', 'sub', 'xor', 'or', 'and']), dest(), src(), src()))
+            program += [('addi', 11, 11, -1), ('bne', 11, 0, top)]
+            continue
         roll = rng.random()
         if roll < 0.3:
             program.append((rng.choice(['add', 'sub', 'sll', 'slt', 'sltu', 'xor', 'srl', 'sra', 'or', 'and']), dest(), src(), src()))
@@ -300,9 +428,11 @@ def random_program(rng, count):
             name = rng.choice(['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi', 'slli', 'srli', 'srai'])
             program.append((name, dest(), src(), rng.choice((0, 1, 31, rng.randrange(32))) if name[1:3] in ('ll', 'rl', 'ra') else imm()))
         elif roll < 0.62:
-            program.append(('lw', dest(), 4 * rng.randrange(16), 10))
+            name, size = rng.choice((('lw', 4), ('lh', 2), ('lhu', 2), ('lb', 1), ('lbu', 1))) if subword else ('lw', 4)
+            program.append((name, dest(), size * rng.randrange(64 // size), 10))
         elif roll < 0.72:
-            program.append(('sw', src(), 4 * rng.randrange(16), 10))
+            name, size = rng.choice((('sw', 4), ('sh', 2), ('sb', 1))) if subword else ('sw', 4)
+            program.append((name, src(), size * rng.randrange(64 // size), 10))
         elif roll < 0.86:
             program.append((rng.choice(['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu']), src(), src(), label(rng.randrange(1, 4))))
         elif roll < 0.89:

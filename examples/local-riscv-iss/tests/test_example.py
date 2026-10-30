@@ -105,7 +105,7 @@ class ExampleTests(SystemContract, unittest.TestCase):
     def test_fixed_program_has_every_instruction_and_the_wait_forwarding_pattern(self):
         rows = P.boundary_vectors()
         retired = [r for r in rows if r[0] == 3]
-        self.assertEqual({r[9] for r in retired}, set(range(len(ISS.NAMES))))
+        self.assertEqual({r[9] for r in retired}, set(range(len(ISS.WORD_ONLY))))
         bit = 1 << P.TAGS.index('mem/wait-forwarding')
         self.assertGreaterEqual(sum(bool(r[8] & bit) for r in retired), 2)
 
