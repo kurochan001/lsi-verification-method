@@ -336,9 +336,9 @@ PROVENANCE.md                   各ファイルの由来・改訂と実行確認
 
 参照先のIEEE規格、外部の文書・ソフトウェアには、それぞれの権利者の利用条件が適用されます。本リポジトリのライセンスは、それらの転載・再配布の許諾を与えるものではありません。
 
-## 初期の11例の構成と過去のCI実行記録
+## 初期の11例の構成
 
-最初に作った11例は、例ごとの独自のランナーを持ち、当初は[公開GitLabデモ](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)のCIでも実行していました。GitLabの無料枠の制約から、2026-10-31にGitLabでの実行をやめました。ディレクトリ名を`gitlab-*`から`local-*`へ改め、CIの設定も削除しています。今はほかの例と同じく、このリポジトリを取得した手元の環境で実行します。デモのプロジェクトはアーカイブし、当時のCIの実行記録を閲覧できるように残しています。
+最初に作った11例は、共通ランナーができる前の例で、例ごとに独自のランナーを持ちます。ほかの例と同じく、このリポジトリを取得した手元の環境で実行します。
 
 11例の構成と件数を下表に示します。追加した9構成の目標・変異・完了記録の照合結果は[結合例の実行記録](examples/local-apb-uart/README.md#7-適用範囲と実行確認)に記載しています。
 
@@ -358,5 +358,3 @@ PROVENANCE.md                   各ファイルの由来・改訂と実行確認
 | 合計 | 39構成 | 311 | 384 |
 
 ランナーのセルフテストはIRQ 14件、FIFO 10件、フォーマル8件、APB 12件、APB＋割り込み12件、ready/valid 13件、SVA 12件、削減比較11件、アービタ13件、UART 13件、APB・UART・割り込み14件の計132テストで、上表のJUnit件数とは別です。nightlyでは、シミュレーションと削減比較の10例がランダム操作を増やし、フォーマル検証は通常実行と同じタスクを実行します。
-
-GitLab CIでは、2026-10-26に実装の[MR !11](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/11)と確認記録の[MR !12](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/12)をmainへ取り込み、[MR !12のCI #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)で11例の全50ジョブの成功（JUnit 311件、失敗・エラー0件）を確認しました。これはsmokeの実行で、セルフテスト129件の版（2026-10-27の全体レビューの修正前）に対する記録です。nightlyの384件は、GitLabでは実行していません。各例の当時の記録は、それぞれのREADMEにあります。

@@ -110,8 +110,6 @@ python3 -m unittest discover -s examples/local-fifo-formal/tests -v
 
 2026-10-26に、ローカルの一時仮想環境で深さ1・3の全8タスクをそれぞれ実行し、通常タスクと診断タスクが予定どおりに判定されることを確認しました。`--demo-bug 1`では、制御の証明がPASSしてもデータのBMCがFAILし、リグレッションの終了コードが1になることを確認しました。証跡の判定テスト8件も合格しています。
 
-同日の[GitLab MR !3](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/3)の[パイプライン #2988351229](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988351229)では、Python 3.11.17のイメージ内でツールを自動インストールし、深さ1・3の全16タスクが予定どおりの結果になりました。マニフェストから、依存パッケージが`tools-requirements.txt`の版と一致することも確認しました。
+同日に、Python 3.11.17の環境でもツールを自動インストールし、深さ1・3の全16タスクが予定どおりの結果になりました。マニフェストから、依存パッケージが`tools-requirements.txt`の版と一致することも確認しました。
 
-既存のIRQ・FIFOリグレッションとセルフテストを含む全12ジョブが成功し、JUnitは計90件（従来74件＋フォーマル16件）、失敗・エラー0件です。各フォーマルジョブの`summary.json`で、制御の証明、深さ10のデータBMC、6目標の到達、3種類の変異の反例、過剰な仮定の診断を照合しました。この結果は2節・3節の対象と証明範囲に限ります。
-
-MR !3はmainへマージ済みです。マージコミット[`2364977d`](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/commit/2364977dbf2b2c335c271b47c9e2633e32271948)の[main CI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)でも、全12ジョブ・JUnit 90件・失敗／エラー0件を確認しました。現行mainからツールの自動準備を含めて実行できます。
+この環境でも、各構成の`summary.json`で、制御の証明、深さ10のデータBMC、6目標の到達、3種類の変異の反例、過剰な仮定の診断を照合しました。この結果は2節・3節の対象と証明範囲に限ります。

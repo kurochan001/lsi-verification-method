@@ -4,9 +4,9 @@
 
 以下は本リポジトリの運用案です。製品向けのリグレッションランナー、CIサービス、Cadenceの検証管理ツールを導入・接続したものではありません。既存のケーススタディの実行実績とは分けて扱います。
 
-[実行可能な最小例](../../examples/local-irq-cdc/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。動作確認と、過去にGitLab CIで実行した記録は、実行例の末尾にあります。
+[実行可能な最小例](../../examples/local-irq-cdc/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。動作確認の記録は、実行例の末尾にあります。
 
-実行例は次の範囲まで実装しています。構成・JUnit件数と過去のCI実行の記録は、[初期の11例の構成と過去のCI実行記録](../../README.md#初期の11例の構成と過去のci実行記録)にまとめています。
+実行例は次の範囲まで実装しています。構成とJUnit件数は、[初期の11例の構成](../../README.md#初期の11例の構成)にまとめています。
 
 - [IRQ・CDC](../../examples/local-irq-cdc/README.md)、[FIFOランダム](../../examples/local-fifo/README.md)、[FIFOフォーマル](../../examples/local-fifo-formal/README.md)：基本的な実行・判定・証跡保存と、方式ごとの合格条件。
 - [APBレジスタ](../../examples/local-apb/README.md)、[APBと割り込み](../../examples/local-apb-irq/README.md)、[APB・UART・割り込み](../../examples/local-apb-uart/README.md)：バス操作から状態・通信・通知までの結合と競合。

@@ -98,9 +98,9 @@ wait=0/1/3の3構成を、`--wait`で1構成ずつ実行します。失敗デモ
 
 2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版でランナー12テストとnightly全3構成を確認しました。各構成で44/44または45/45目標を達成し、3種類の変異を検出しました。nightlyはseed 17〜19を各2,000転送実行しています。
 
-公開デモの[MR !5](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/5)で、[CI #2988726525](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988726525)の全20ジョブ成功、JUnit 126件・失敗／エラー0件を確認しました。結合検証の3ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも44/44または45/45目標、3種類の変異の検出、予定5ケースの完了、対象コミット`0da7a642`を確認しています。追加分のJUnitは18件、ランナーのセルフテストは別枠の12テストです。
+2026-10-26には、Icarus Verilog 11.0の環境でも3構成のsmokeが成功し、保存した`summary.json`と`manifest.json`で、44/44または45/45目標、3種類の変異の検出、予定5ケースの完了を確認しました。
 
-確認したGitLab実行はsmokeで、結合検証のnightly全3構成はローカルで確認しました。全例を含むscheduleの153件をGitLabで実行した結果ではありません。その後、MR !5はmainへマージされ、[mainのCI #2988757915](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988757915)も全20ジョブ・JUnit 126件で成功しています（2026-10-26確認）。
+結合検証のnightly全3構成はローカルで確認しました。
 
 製品への展開では、割り込みの極性・レベル／パルス方式、CPU側の確認応答、優先順位・共有割り込み、CDC、実際のレジスタ仕様とソフトウェアの順序制約を照合してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続リグレッション](../../docs/method/continuous-regression.md)も参照してください。
 

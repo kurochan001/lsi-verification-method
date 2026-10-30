@@ -2,7 +2,7 @@
 
 有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。ランナーのセルフテストと、説明用IRQ回路のリグレッションを実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
-この例と同じ形のランナーを持つ初期の11例には、[FIFOのランダム検証例](../local-fifo/README.md)と[商用ツール不要のフォーマル検証例](../local-fifo-formal/README.md)、[APBレジスタ検証例](../local-apb/README.md)、[APBと割り込みの結合検証例](../local-apb-irq/README.md)、[ready/valid通信のランダム検証例](../local-stream/README.md)、[SVAの実行例](../local-sva/README.md)、[リグレッションの削減の比較例](../local-reduction/README.md)、[アービタの検証例](../local-arbiter/README.md)、[UARTのランダム検証例](../local-uart/README.md)、[APB・UART・割り込みの結合検証例](../local-apb-uart/README.md)もあります。全体の構成は[初期の11例の構成](../../README.md#初期の11例の構成と過去のci実行記録)を参照してください。以下の件数は、特記がなければIRQ・CDCリグレッションの内訳です。
+この例と同じ形のランナーを持つ初期の11例には、[FIFOのランダム検証例](../local-fifo/README.md)と[商用ツール不要のフォーマル検証例](../local-fifo-formal/README.md)、[APBレジスタ検証例](../local-apb/README.md)、[APBと割り込みの結合検証例](../local-apb-irq/README.md)、[ready/valid通信のランダム検証例](../local-stream/README.md)、[SVAの実行例](../local-sva/README.md)、[リグレッションの削減の比較例](../local-reduction/README.md)、[アービタの検証例](../local-arbiter/README.md)、[UARTのランダム検証例](../local-uart/README.md)、[APB・UART・割り込みの結合検証例](../local-apb-uart/README.md)もあります。全体の構成は[初期の11例の構成](../../README.md#初期の11例の構成)を参照してください。以下の件数は、特記がなければIRQ・CDCリグレッションの内訳です。
 
 ## 1. 実行するもの
 
@@ -107,16 +107,7 @@ nightlyは、開始seed・開始seed+1・開始seed+2の各64操作を追加し�
 
 2026-10-25にmacOS、Python 3.14.7、Icarus Verilog 14.0 devel（`s20260301-411-gca6b8d376`）で、12個の統合テストを実行しました。smokeの通常32ケース、4種類の変異・X自己確認、8要求・50目標の合格に加え、nightly、デモの8失敗とカバレッジ判定、コンパイラ不足・タイムアウト・完了記録欠落・別チェッカーによる失敗、子プロセス停止、未達カバレッジと変異からの混入防止を確認しました。
 
-### 過去のGitLab CIでの実行記録
-
-2026-10-25〜26には、この例を含む初期の11例を[GitLabのデモプロジェクト](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo)のCIでも実行しました。GitLab-hostedのLinux Runner、`debian:bookworm-slim`、Python 3.11.2、Icarus 11.0の環境です。最初の実行では、CDCモデルの`input integer`がIcarus 11.0でコンパイルエラーになり、入力を明示的な32ビット符号付きwireへ修正しました。
-
-- [通常リグレッション #2986024650](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986024650)：JUnit 38件・失敗0、必須目標50/50。
-- [不具合デモ #2986027250](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986027250)：JUnit 38件中、機能8件と要求・カバレッジ判定1件が失敗し、MRのマージが止まることを確認。
-- [nightly #2986030512](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2986030512)：seed 17で、JUnit 41件・失敗0。
-- [11例の全50ジョブ #2990210417](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2990210417)：JUnit 311件・失敗／エラー0。
-
-GitLabの無料枠の制約から、2026-10-31にGitLabでの実行をやめ、デモプロジェクトをアーカイブしました。このリポジトリのCI設定も削除しています。上の記録は、その時点の構成での実行結果です。
+2026-10-25には、Debian bookworm・Python 3.11.2・Icarus Verilog 11.0の環境でも実行しました。最初はCDCモデルの`input integer`がこの版でコンパイルエラーになったため、入力を明示的な32ビット符号付きwireへ修正しています。修正後は、smokeのJUnit 38件・失敗0、nightly（seed 17）の41件・失敗0、不具合デモの機能8件と要求・カバレッジ判定1件の失敗が、手元の結果と一致しました。
 
 ## タイムアウト後の停止処理
 

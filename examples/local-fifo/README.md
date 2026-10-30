@@ -33,7 +33,7 @@ flowchart TD
 
 同時要求の扱いはこの例の仕様です。すべてのFIFOに共通の規則ではないため、実際のIPへ適用するときは受付条件と出力タイミングを合わせます。非同期FIFO・CDC、実バス、UVM、SVA、フォーマル検証はこの例の対象に含みません。
 
-同じRTLを使う[フォーマル検証例](../local-fifo-formal/README.md)は別のジョブとして用意しています。シミュレーションの結果と、制御の証明・データの有界検査の範囲を分けて記録します。
+同じRTLを使う[フォーマル検証例](../local-fifo-formal/README.md)は別の例として用意しています。シミュレーションの結果と、制御の証明・データの有界検査の範囲を分けて記録します。
 
 ## 2. スコアボードとカバレッジ
 
@@ -120,9 +120,9 @@ python3 examples/local-fifo/run.py --demo-bug 1
 
 2026-10-26にmacOS・Python 3.14.7・Icarus Verilog 14.0の開発版で、全6構成のsmokeとnightlyを実行しました。各構成で必須18／22目標と3種類の変異の検出を確認し、ランナーの10テストも合格しました。製品FIFOへの適用、性能・タイミング・物理検証、すべてのパラメータへの一般化を示す結果ではありません。
 
-同日に、[GitLabの確認用MR !2](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/2)の[パイプライン #2988278136](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988278136)でも確認しました。Debian・Python 3.11.2・Icarus Verilog 11.0で、FIFOの全6構成のsmoke、FIFOランナー10テスト、既存IRQランナー12テストとIRQリグレッションの全9ジョブが成功しました。JUnitはFIFO36件＋IRQ38件の計74件、失敗・エラー0件です。各FIFOジョブの`summary.json`から、深さ1の18／18目標、深さ3・8の22／22目標、3種類の変異の検出を照合しました。nightlyの全2000サイクル×3 seedの確認は上記のローカル実行です。
+同日に、Debian・Python 3.11.2・Icarus Verilog 11.0の環境でも、FIFOの全6構成のsmokeとランナー10テストが成功しました。各構成の`summary.json`から、深さ1の18／18目標、深さ3・8の22／22目標、3種類の変異の検出を照合しました。nightlyの全2000サイクル×3 seedの確認は上記のローカル実行です。
 
-MR !2はmainへマージ済みで、[マージ後のCI #2988306496](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988306496)も成功しました。さらにフォーマル検証を統合した[mainのCI #2988462019](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988462019)でも、FIFO全6ジョブを含む12ジョブが成功しています。その時点のJUnitはFIFO36件＋IRQ38件＋フォーマル16件の計90件です。上記74件はフォーマル統合前の記録です。11例全体の構成は[初期の11例の構成と過去のCI実行記録](../../README.md#初期の11例の構成と過去のci実行記録)を参照してください。
+11例全体の構成は[初期の11例の構成](../../README.md#初期の11例の構成)を参照してください。
 
 ## ready/valid通信への展開
 

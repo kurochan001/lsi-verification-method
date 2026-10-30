@@ -102,16 +102,10 @@ python3 examples/local-sva/run.py --checker-off
 
 2026-10-26にPython 3.14.7・Verilator 5.052で、ランナー11テストとsmoke／nightlyを確認しました。要求6件・12目標を達成し、6種類の意図した違反をすべて検出しました。前件のない診断ではholdの2カバーだけが非0でした。`--checker-off`と3種類の`--demo-bug`はすべて終了コード1を確認しています。
 
-公開デモの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)で、[CI #2989571313](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989571313)の全27ジョブ成功、JUnit 160件・失敗／エラー0件を確認しました。SVAジョブはVerilator 5.006で実行され、保存済み証跡でも要求6件・12/12カバー、感度確認6件、診断1件、予定9ケースの完了、対象コミット`c75d5fd5`を確認しました。SVA追加分のJUnitは10件、ランナーのセルフテストは別枠の11テストです。
+同日に、Verilator 5.006の環境でもsmokeを実行し、保存した証跡で要求6件・12/12カバー、感度確認6件、診断1件、予定9ケースの完了を確認しました。
 
-5.006のネイティブDBは`page=v_user/irq_checker`でユーザーカウンターを示し、5.052では`t=user`の項目も付きます。実際の両形式で、ラベル・ソース・階層・ログ件数の照合を確認しています。GitLabで確認したのはsmokeです。nightlyはローカルでseed 17〜19を各2,000サイクル実行しました。全例を含むscheduleの197件はGitLabで今回実行していません。
+5.006のネイティブDBは`page=v_user/irq_checker`でユーザーカウンターを示し、5.052では`t=user`の項目も付きます。実際の両形式で、ラベル・ソース・階層・ログ件数の照合を確認しています。nightlyはローカルでseed 17〜19を各2,000サイクル実行しました。
+
+2026-10-27の全体レビューでは、要求カタログの`assertion`を未実装の名前に変えてもリグレッションが成功する問題を再現し、固定対応表との照合を追加しました。ランナー12テストで誤記・重複・カバーの取り違え・欠落の拒否を確認し、正常なカタログで実際のSVAリグレッションも成功しました。
 
 一般的な記述・運用上の注意は[手順書のSVAによる検証](../../docs/method/sva-verification.md)を参照してください。
-
-## 8. 公開デモの取り込み記録
-
-当初、SVAの[MR !7](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/7)は、未マージのready/validの[MR !6](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/6)を土台にして、そのブランチを宛先として作成しました。その後、!7が!6のブランチへマージされ、!6もmainへマージされました。
-
-2026-10-26に、SVAを含むmainの[CI #2989619450](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2989619450)も全27ジョブ・JUnit 160件で成功したことを確認しています。これらのマージはユーザーが行いました。
-
-2026-10-27の全体レビューでは、要求カタログの`assertion`を未実装の名前に変えてもリグレッションが成功する問題を再現し、固定対応表との照合を追加しました。ランナー12テストで誤記・重複・カバーの取り違え・欠落の拒否を確認し、正常なカタログで実際のSVAリグレッションも成功しました。この修正の確認はローカルで行っており、上記GitLab CIの記録は修正前の版に対するものです。

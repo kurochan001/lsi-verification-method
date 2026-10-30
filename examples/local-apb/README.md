@@ -107,9 +107,7 @@ python3 examples/local-apb/run.py --wait 1 --demo-bug 2
 
 2026-10-26にPython 3.14.7・Icarus Verilog 14.0開発版でランナー12テストと、wait=0/1/3のnightly全構成を確認しました。各構成で20/20または21/21目標を達成し、3種類の変異を検出しました。nightlyは既定seed 17〜19を各2,000転送実行しています。
 
-公開デモの[MR !4](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/merge_requests/4)で、[CI #2988642917](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988642917)の全16ジョブ成功、JUnit 108件・失敗／エラー0件を確認しました。APBの3ジョブはIcarus Verilog 11.0で実行され、保存済み`summary.json`と`manifest.json`でも各構成の目標達成、3種類の変異の検出、予定5ケースの完了と対象コミット`d623c595`を確認しています。APB追加分のJUnitは18件、ランナーのセルフテストは別枠の12テストです。
-
-確認したGitLab実行はsmokeです。nightlyのAPB 3構成はローカルで確認しており、全例を含むscheduleの129件をGitLabで実行した結果ではありません。その後、MR !4はmainへマージされ、[mainのCI #2988663611](https://gitlab.com/kurochan001/lsi-verification-method-ci-demo/-/pipelines/2988663611)も全16ジョブ・JUnit 108件で成功しています（2026-10-26確認）。
+2026-10-26には、Icarus Verilog 11.0の環境でも3構成のsmokeが成功し、保存した`summary.json`と`manifest.json`で、各構成の目標達成、3種類の変異の検出、予定5ケースの完了を確認しました。
 
 設計例を製品へ適用する場合は、実際のレジスタ仕様、リセット方式、アクセス属性、バイトイネーブル、割り込みとの接続、ソフトウェアの操作順を追加してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続リグレッション](../../docs/method/continuous-regression.md)も参照してください。
 
