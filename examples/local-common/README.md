@@ -129,7 +129,7 @@ python3 -m unittest discover -s examples/local-gap-regression/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。現在のローカル例全体のセルフテストは381件です。このうち共通シミュレーション38例が237件、本共通ランナーが14件で、合計251件です。残る130件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。GitLab向けの132件を合わせると、全セルフテストは513件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。現在のローカル例全体のセルフテストは399件です。このうち共通シミュレーション38例が237件、本共通ランナーが14件で、合計251件です。残る148件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの18件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。GitLab向けの132件を合わせると、全セルフテストは531件です。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
@@ -182,7 +182,7 @@ python3 examples/local-extension-regression/run.py --stage core
 python3 examples/local-extension-regression/run.py --stage core --profile nightly
 ```
 
-この7例を追加した時点の共通シミュレーションは32例・73構成、JUnit513／659件、シミュレーション・共通のセルフテストは206件でした。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。その後、下記6例が加わった現在は38例・85構成、JUnit597／767件、シミュレーション・共通のセルフテスト251件です。ローカル全体の381件の内訳は、上記の「ランナー自体の確認」を参照してください。
+この7例を追加した時点の共通シミュレーションは32例・73構成、JUnit513／659件、シミュレーション・共通のセルフテストは206件でした。生成RAL2件・親4件も加えた新規確認はレビュー追加5件を含めて41件です。その後、下記6例が加わった現在は38例・85構成、JUnit597／767件、シミュレーション・共通のセルフテスト251件です。ローカル全体の399件の内訳は、上記の「ランナー自体の確認」を参照してください。
 
 
 ## セキュリティ・性能・CDC・JTAG・アドレスマップ・ロックステップ
@@ -195,3 +195,14 @@ python3 examples/local-gap-regression/run.py --stage core --profile nightly
 ```
 
 現在の共通シミュレーションは38例・85構成、JUnit597／767件です。今回実行した範囲は6例のsmoke／nightlyと確認49件です。GitLabのCI設定への追加・CI起動は行っていません。
+
+
+## MXFP4の4×4 GEMMと量子化
+
+[FP16／MXFP8／MXFP4例](../local-mxfp4/README.md)は、記事と元リポジトリの仕様・RTLを固定版で取り込み、FP16／MXFP8を拡張してVerilatorで実行します。上流の検証環境に加え、独立した有理数モデルで各モードの積和・丸め・量子化中点を照合します。nightlyでは全65,536通りのE4M3要素ペアと全FP16コードの変換も実行します。本共通Icarusランナーの38例・85構成やJUnit597／767件には含めません。独自ランナーの26件は親子の集約判定ではなく、各検査群の合否です。
+
+```sh
+python3 examples/local-mxfp4/run.py
+python3 examples/local-mxfp4/run.py --profile nightly
+python3 -m unittest discover -s examples/local-mxfp4/tests -v
+```

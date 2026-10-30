@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "revision": 2,
+  "requirements": [
+    {
+      "id": "MX4-DECODE-SOP",
+      "checks": [
+        "bdp",
+        "rational-ftz"
+      ]
+    },
+    {
+      "id": "MX4-ACC-RNE-RANGE",
+      "checks": [
+        "add",
+        "bdp",
+        "rational-ftz"
+      ]
+    },
+    {
+      "id": "MX4-ENCODER",
+      "checks": [
+        "encoder",
+        "rational-ftz"
+      ]
+    },
+    {
+      "id": "MX4-GEMM-4x4",
+      "checks": [
+        "gemm",
+        "gemm-k1",
+        "gemm-rect-k3"
+      ]
+    },
+    {
+      "id": "MX4-SERIES-CLASS",
+      "checks": [
+        "class"
+      ]
+    },
+    {
+      "id": "MX4-FIFO-FLOW",
+      "checks": [
+        "flow"
+      ]
+    },
+    {
+      "id": "MX4-NEARFAR",
+      "checks": [
+        "nearfar",
+        "bdp-nearfar",
+        "rational-nearfar"
+      ]
+    },
+    {
+      "id": "MX4-GRADUAL",
+      "checks": [
+        "gradual",
+        "rational-gradual"
+      ]
+    },
+    {
+      "id": "MX4-SCALE34",
+      "checks": [
+        "scale34",
+        "rational-scale34"
+      ]
+    },
+    {
+      "id": "MP-FP4-COMPAT",
+      "checks": [
+        "mp-bdp",
+        "mp-encoder",
+        "mp-gemm",
+        "mp-gemm-k1",
+        "mp-gemm-rect-k3"
+      ]
+    },
+    {
+      "id": "MP-FP8-DOT",
+      "checks": [
+        "mp-bdp"
+      ]
+    },
+    {
+      "id": "MP-FP16-DOT",
+      "checks": [
+        "mp-bdp"
+      ]
+    },
+    {
+      "id": "MP-ENCODING",
+      "checks": [
+        "mp-encoder"
+      ]
+    },
+    {
+      "id": "MP-GEMM",
+      "checks": [
+        "mp-gemm",
+        "mp-gemm-k1",
+        "mp-gemm-rect-k3"
+      ]
+    },
+    {
+      "id": "MP-CONTROL",
+      "checks": [
+        "mp-bdp",
+        "mp-encoder",
+        "mp-gemm"
+      ]
+    }
+  ]
+}

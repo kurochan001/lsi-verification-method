@@ -174,6 +174,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [固定小数点DSP](examples/local-dsp/README.md) | 2タップFIRの符号、丸め、上下限、飽和、履歴 | Icarus |
+| [FP16／MXFP8／MXFP4のGEMM・量子化](examples/local-mxfp4/README.md) | 設計仕様とRTLの取り込み・精度拡張、厳密有理数モデルによるビット照合、RNE・FTZ・NaN、GEMMの完了時点、FIFO・near/far・gradual underflow | Verilator＋Z3 |
 | [ECCの故障注入](examples/local-ecc/README.md) | SECDEDの誤りなし・1ビット誤り・2ビット誤りの全数検査、訂正・検出、保証範囲外の診断 | Icarus |
 | [ECC付きメモリ](examples/local-ecc-memory/README.md) | 読出し修復、スクラビング、通常書込みとの競合 | Icarus |
 | [パケットCRC](examples/local-packet-crc/README.md) | 独立した多項式除算と既知ベクトルによる生成・受信値検査 | Icarus |

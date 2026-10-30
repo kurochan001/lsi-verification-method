@@ -1,0 +1,8 @@
+build/
+obj_dir/
+*.vvp
+*.vcd
+*.fst
+
+# Windows の Zone.Identifier (ADS)
+*:Zone.Identifier
