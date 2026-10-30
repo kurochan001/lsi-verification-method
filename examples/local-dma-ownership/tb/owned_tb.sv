@@ -2,7 +2,7 @@
 module owned_tb;
  parameter MUTATION=0,DEPTH=2,STALL_PERIOD=0;reg clk=0;always #5 clk=~clk;
  reg rst_n=0,host_valid=0;reg[2:0]host_op=0,host_slot=0;reg[12:0]host_src=0,host_dst=0;reg[5:0]host_words=0;wire host_ready,host_error,busy,irq;wire[7:0]retired;wire[2:0]head;wire[2*DEPTH-1:0]owners;wire[DEPTH-1:0]errors;
- wire arvalid,arready,rvalid,rready,rlast,awvalid,awready,wvalid,wready,wlast,bvalid,bready;wire[12:0]araddr,awaddr;wire[7:0]arlen,awlen;wire[1:0]arid,awid,rid,rresp,bid,bresp;wire[31:0]rdata,wdata;wire[3:0]wstrb;wire ram_arready,ram_awready,ram_wready;reg gate=1;
+ wire arvalid,arready,rvalid,rready,rlast,awvalid,awready,wvalid,wready,wlast,bvalid,bready;wire[12:0]araddr,awaddr;wire[7:0]arlen,awlen;wire[1:0]arid,awid,rid,rresp,bid,bresp;wire[31:0]rdata,wdata;wire[3:0]wstrb;wire ram_arready,ram_awready,ram_wready;reg gate=1,expected_irq=0,acked=0;reg[7:0]last_retired=0;
  owned_ring #(.DEPTH(DEPTH),.MUTATION(MUTATION))dut(.*);
  axi4_ram ram(.clk(clk),.rst_n(rst_n),.awvalid(awvalid&&gate),.awready(ram_awready),.awaddr(awaddr),.awlen(awlen),.awsize(3'd2),.awburst(2'd1),.awid(awid),.wvalid(wvalid&&gate),.wready(ram_wready),.wdata(wdata),.wstrb(wstrb),.wlast(wlast),.bvalid(bvalid),.bready(bready),.bid(bid),.bresp(bresp),.arvalid(arvalid&&gate),.arready(ram_arready),.araddr(araddr),.arlen(arlen),.arsize(3'd2),.arburst(2'd1),.arid(arid),.rvalid(rvalid),.rready(rready),.rdata(rdata),.rid(rid),.rresp(rresp),.rlast(rlast));
  assign arready=ram_arready&&gate;assign awready=ram_awready&&gate;assign wready=ram_wready&&gate;
@@ -11,6 +11,9 @@ module owned_tb;
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"row=%0d cycle=%0d retired=%0d",checks,cycles,retired);end endtask
  task tick;begin
  #1;if(rst_n && head!==3'(retired%DEPTH))fail("OWN_ORDER");
+ // IRQ rises on each return, ACK clears it (a same-edge return wins) and reset clears it.
+ if(!rst_n)begin expected_irq=0;last_retired=0;acked=0;end
+ else begin if(acked)expected_irq=0;if(retired!=last_retired)expected_irq=1;last_retired=retired;acked=host_valid && host_op==4;if(irq!==expected_irq)fail("OWN_IRQ");end
  if(awvalid && awready)begin
  write_slot=retired%DEPTH;write_turn=retired/DEPTH;write_beat=0;
  if(awaddr!=1024+32*write_slot || awid!=2 || awlen!=(write_slot+write_turn)%4)fail("OWN_BUS");end

@@ -41,6 +41,7 @@ def vectors(seed,iterations,parameters,boundary=False):
     p.drain()
     for i in range(16):p.cycle(valid=1,channel=i%2,data=i,returns=sum(1<<c for c in range(2) if p.outstanding[c]>0))
     p.drain();p.cycle(valid=1,data=99);p.cycle();p.cycle(rst=0);p.cycle(valid=1,channel=1,data=55);p.drain()
+    p.cycle(valid=1,data=7);p.cycle(returns=1);p.drain() # excess return on the same edge as a send
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):

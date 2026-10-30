@@ -32,7 +32,7 @@ module apb_uart #(
       default: bad_request = 1;
     endcase
   end
-  assign pready = psel && penable && remaining == 0;
+  assign pready = rst_n && psel && penable && remaining == 0;
   assign pslverr = access_done && bad_request;
   wire write_tx = access_done && !bad_request && pwrite && paddr == 8'h08;
   wire clear_pending = access_done && !bad_request && pwrite && paddr == 8'h10;

@@ -99,6 +99,8 @@ module uart_tb;
       for (integer b = 0; b < 8; b = b + 1) begin rxd = value[b]; #(BIT_NS); end
       if (PARITY != 0) begin rxd = parity_for(value) ^ flip_parity; #(BIT_NS); end
       rxd = !bad_stop; #(BIT_NS);
+      // A low line after a bad stop bit must not be received as a new start bit.
+      if (bad_stop) #(2 * BIT_NS);
       rxd = 1; rx_active = 0;
       if (bad_stop) #(2 * BIT_NS);
       #2;
@@ -150,10 +152,10 @@ module uart_tb;
       if (fields != 6) fail("UART_VECTOR_FORMAT");
       overlap_seen = 0;
       case (mode)
-        0, 1, 2: begin
+        0, 1, 2, 5: begin
           fork
             check_tx(vtx, busy != 0, PARITY == 0 ? 10 : 11);
-            drive_rx(vrx, mode == 1, mode == 2, phase);
+            drive_rx(vrx, mode == 1 || mode == 5, mode == 2 || mode == 5, phase);
           join
           if (expect_rx) fail("UART_RX_MISSING");
           data_cover(vtx, "tx"); data_cover(vrx, "rx");
@@ -161,6 +163,7 @@ module uart_tb;
           if (mode == 0) $display("COVER rx/normal");
           if (mode == 1 && PARITY != 0) $display("COVER rx/parity-error");
           if (mode == 2) $display("COVER rx/framing-error");
+          if (mode == 5 && PARITY != 0) $display("COVER rx/parity-framing-error");
           if (busy != 0) $display("COVER tx/busy-ignore");
           if (overlap_seen) $display("COVER duplex/simultaneous");
           if (phase == 0) $display("COVER phase/early");

@@ -26,10 +26,12 @@ class Plan:
 def vectors(seed,iterations,boundary=False):
     p=Plan();p.op(0)
     p.op(1,0,0x0123456789abcdef);p.op(2,0,stall=4)
+    p.op(1,48,0x1111,error=48) # A preceding SLVERR makes the zero-strobe OKAY observable.
     for mask in (0,1,8,15,16,128,240,0x55,0xaa,255):
         p.op(1,8,0x78563412efcdab90,mask,awdelay=3 if mask&1 else 0,wdelay=2 if not mask&1 else 0,stall=3);p.op(2,8)
     p.op(1,16,0xaabbccddeeff1122,error=20);p.op(2,16,error=20,stall=2)
     p.op(1,24,0x1122334455667788,error=24);p.op(2,24,error=24)
+    p.op(1,40,0x2222);p.op(2,40) # Preceding OKAY B/R make the misaligned SLVERR observable.
     p.op(1,3,0xffffffffffffffff);p.op(2,3)
     p.op(3,32,0x1122334455667788);p.op(2,32);p.op(4,32);p.op(2,32)
     if not boundary:

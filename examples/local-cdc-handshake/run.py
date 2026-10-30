@@ -158,15 +158,16 @@ class Plan:
         for _ in range(300):
             if self.last_dst_accept:
                 break
+            # The source already offers different next data; the held request must not change.
             if self.last_dst_valid:
                 if stall:
-                    self.step(svalid=0, dready=0)
+                    self.step(svalid=1, sdata=value ^ 0xa5, dready=0)
                     if self.last_drise and self.last_dst_valid:
                         stall -= 1
                     continue
-                self.step(svalid=0, dready=1)
+                self.step(svalid=1, sdata=value ^ 0xa5, dready=1)
             else:
-                self.step(svalid=0, dready=0)
+                self.step(svalid=1, sdata=value ^ 0xa5, dready=0)
 
         else:
             raise ValueError('destination handshake did not complete')

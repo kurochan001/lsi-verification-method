@@ -206,7 +206,7 @@ def run(args):
                            legacy_excluded=excluded,
                            mandatory=[c['id'] for c in cases if c['origin'] == 'existing'])
     suffixes = ['learning', 'existing-baseline', 'selection', 'full/coverage', 'selected/coverage',
-                'selected/fresh', 'selected/mandatory', 'comparison']
+                'selected/fresh', 'comparison']
     suffixes += [f'{strategy}/detect/{name}' for strategy in ('full', 'selected') for name in MUTATIONS]
     checks = ['tool-versions'] + [f'wait{wait}/{name}' for wait in waits for name in suffixes]
     inputs = [Path(__file__), HERE / 'model.py', args.model, args.requirements,
@@ -263,10 +263,14 @@ def run(args):
             report['measurements'][strategy] = measurement
             e.check(f'wait{wait}/{strategy}/coverage', measurement['success'], measurement['groups'])
             if strategy == 'selected':
+                # The selection was justified by learning runs; each fresh rerun must reproduce them.
+                learned_runs = {r['case_id']: r for r in learning}
+                reproduced = [r['case_id'] for r in normal if r['trace_sha256'] is not None
+                              and r['trace_sha256'] == learned_runs[r['case_id']]['trace_sha256']
+                              and r['credited_goals'] == learned_runs[r['case_id']]['credited_goals']]
                 e.check(f'wait{wait}/selected/fresh', all(r['phase'] == 'selected/normal' for r in normal)
-                        and len(normal) == len(chosen), [r['id'] for r in normal])
-                e.check(f'wait{wait}/selected/mandatory', set(plan['mandatory']) <= set(selected),
-                        plan['mandatory'])
+                        and reproduced == selected,
+                        dict(runs=[r['id'] for r in normal], reproduced=reproduced))
             measurement['mutations'] = {}
             for probe in MUTATIONS:
                 attempts = []

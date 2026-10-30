@@ -106,7 +106,7 @@ def random_vectors(seed,iterations,wait):
         else:
             size=rng.choice((0,1,2,2,2,3));address=rng.randrange(16)
             if size<=2:address=address//(1<<size)*(1<<size)
-            if rng.randrange(8)==0:address=rng.choice((1,17,32,1020))
+            if rng.randrange(8)==0:address=rng.choice((1,17,20,28,32,1020))
             requests.append(request(address,bool(rng.randrange(2)),rng.getrandbits(32),size=size))
         if rng.randrange(10)==0:requests.append(request(0,trans=0))
     p.pipeline(requests)

@@ -35,13 +35,13 @@ def vectors(seed,iterations,wait,boundary=False):
     for prot in range(8):
         p.transfer(0,1,0x12340000+prot,prot);p.transfer(0,prot=prot)
         p.transfer(16,1,0xdeadbeef,prot);p.transfer(16,prot=prot)
-    p.transfer(24,1,0x78);p.transfer(20,1,1);p.transfer(16,1,99);p.transfer(20,1,0);p.transfer(16)
+    p.transfer(24,1,0x78);p.transfer(0x30,1,0x55);p.transfer(0x80);p.transfer(0x94,1,1);p.transfer(20,1,1);p.transfer(16,1,99);p.transfer(20,1,0);p.transfer(16)
     p.cycle(rst=0);p.transfer(16,1,0x1357);p.transfer(16)
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):
             if rng.randrange(9)==0:p.cycle(rst=0)
-            p.transfer(rng.choice((0,16,20,24)),rng.randrange(2),rng.getrandbits(32),rng.randrange(8))
+            p.transfer(rng.choice((0,16,20,24,0x30,0x80,0x94)),rng.randrange(2),rng.getrandbits(32),rng.randrange(8))
     p.cycle();return p.rows
 def make_cases(args,parameters):
     wait=parameters['WAIT_CYCLES'];base=vectors(args.seed,0,wait,True)

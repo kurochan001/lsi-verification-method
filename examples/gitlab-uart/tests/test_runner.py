@@ -52,7 +52,7 @@ class UartRegressionTests(unittest.TestCase):
                     self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
                     self.assertEqual(summary["functional_pass"], 2)
                     self.assertEqual(summary["mutations_detected"], 4 if parity else 3)
-                    self.assertEqual(summary["coverage_hit"], 22 if parity else 21)
+                    self.assertEqual(summary["coverage_hit"], 23 if parity else 21)
                     self.assertTrue(summary["success"])
                     self.assertEqual(junit.attrib["failures"], "0")
                     self.assertEqual(junit.attrib["errors"], "0")

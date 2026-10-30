@@ -60,7 +60,7 @@ module descriptor_tb;
  fetches=0;write_beat=0;monitor=1;start_head=v[0];start_count=v[1];start=1;tick();start=0;
  begin: completion
  for(integer guard=0;guard<3000;guard=guard+1)begin
- if(done)disable completion;
+ if(done)disable completion;if(irq)fail("SG_IRQ");
  if(v[5] && !abort_fired && arvalid && abort_hold)begin abort_req=1;tick();abort_req=0;abort_fired=1;end else tick();
  end fail("SG_TIMEOUT");end
  if({error,aborted,completed}!=={v[8][0],v[9][0],v[7][2:0]})fail("SG_STATUS");

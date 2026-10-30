@@ -17,7 +17,7 @@ module apb_regs #(
   wire bad_address = paddr != 8'h00 && paddr != 8'h04 && paddr != 8'h08;
   wire bad_request = bad_address || (pwrite && paddr == 8'h04);
   wire clear_pending = access_done && pwrite && !bad_request && paddr == 8'h08;
-  assign pready = psel && penable && remaining == 0;
+  assign pready = rst_n && psel && penable && remaining == 0;
   assign pslverr = access_done && bad_request;
   always @* begin
     prdata = 0;

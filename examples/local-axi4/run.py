@@ -48,7 +48,7 @@ def boundary_vectors():
     p.batch(a=0xff0,b=0x1000,n=4,m=4) # Last legal beat before, and first after, the 4KB boundary.
     p.batch(a=0xffc,b=0x1ffc,n=2,m=2) # Defensive response to illegal boundary/range requests.
     p.batch(a=3,size=2);p.batch(size=1);p.batch(burst=0)
-    p.batch(stall=64,gap=5);p.batch(stall=0)
+    p.batch(stall=64,gap=5,mode=2);p.batch(a=0xff0,b=0x1000,mode=2,stall=0) # Read back rejected-write targets.
     return p.rows
 
 

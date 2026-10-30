@@ -50,7 +50,8 @@ class Plan:
     def nap(self,keep,pending=False):
         if pending:self.cycle(valid=1,data=7)
         for _ in range(30):
-            if self.cycle(sleep=1,retain=keep,valid=1,data=99)[10]:break
+            # retain is offered only on the accepting edge, then inverted until OFF.
+            if self.cycle(sleep=1,retain=keep if self.model.mode==0 else 1-keep,valid=1,data=99)[10]:break
         else:raise ValueError('sleep did not drain')
         self.idle(3,sleep=1,retain=1-keep)
         self.cycle(wake=1)

@@ -11,7 +11,7 @@ INPUTS=[HERE/'test_apb.py',HERE/'worker.py',HERE/'tools-requirements.txt',HERE.p
 def operations(seed,iterations,boundary=False):
     # Each transaction has setup/access events. New events win over W1C on completion.
     fixed=[[0,1,0x12345678,0,0],[0,0,0,0,0],[4,0,0,0,0],[8,1,15,3,3],[8,0,0,0,0],
-           [4,1,0xffffffff,0,0],[12,1,1,0,0],[12,0,0,0,0],[0,1,0,0,0],[0,0,0,0,0]]
+           [4,1,0xffffffff,0,0],[12,1,1,0,0],[3,0,0,0,0],[0,1,0,0,0],[0,0,0,0,0]]
     if boundary:return fixed
     rng=random.Random(seed)
     return fixed+[[rng.choice((0,4,8,12,3)),rng.randrange(2),rng.getrandbits(32),rng.randrange(16),rng.randrange(16)] for _ in range(iterations)]

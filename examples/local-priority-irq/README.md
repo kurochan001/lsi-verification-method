@@ -39,7 +39,7 @@ IRQは有効なpendingの最高優先度がthresholdより**大きい**ときだ
 
 ## 検査・実行
 
-Pythonは集合と優先度から期待値を作り、APB応答・IRQ・pending・処理中状態を毎サイクル照合します。levelはAPB待ち1、edgeは待ち2で、各12目標です。smokeは32操作、nightlyは250操作×3 seedに固定シナリオを加えます。
+Pythonは集合と優先度から期待値を作り、APB応答・IRQ・pending・処理中状態を毎サイクル照合します。levelはAPB待ち1、edgeは待ち2で、各12目標です。smokeは32操作、nightlyは250操作×3 seedに固定シナリオを加えます。固定シナリオとランダム操作には、ROのPENDING・IN_SERVICEへの書込みも含め、エラー応答と状態の不変を確認します。
 
 4種類の変異は同じ優先度での逆順選択、thresholdの等号誤り、処理中状態の設定漏れ、マスク中pendingの消失です。
 

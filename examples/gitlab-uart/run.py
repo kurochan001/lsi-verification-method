@@ -30,6 +30,7 @@ def boundary_vectors(parity):
             for i, value in enumerate(patterns)]
     if parity:
         rows.append([1, 0x96, 0x69, 0, 0, 1])
+        rows.append([5, 0x5a, 0xa5, 0, 0, 0])  # parity and framing errors together
     rows += [[2, 0x3c, 0xc3, 0, 1, 0], [3, 0, 0, 0, 0, 0],
              [4, 0x5a, 0, 0, 0, 0], [0, 0x96, 0x69, 1, 0, 1]]
     return rows
@@ -48,7 +49,7 @@ def random_vectors(parity, seed, frames):
 
 
 def expected_metrics(vectors):
-    transfers = sum(row[0] in (0, 1, 2) for row in vectors)
+    transfers = sum(row[0] in (0, 1, 2, 5) for row in vectors)
     return dict(tx_completed=transfers, rx_completed=transfers,
                 resets=sum(row[0] == 4 for row in vectors),
                 false_starts=sum(row[0] == 3 for row in vectors))

@@ -13,21 +13,22 @@ module axi4_tb;
  axi4_ram #(.MUTATION(MUTATION)) dut(.*);
  integer v[0:21],fd,n,checks=0,cycles=0,q,k,beat;
  integer writes=0,reads=0,write_beats=0,read_beats=0,errors=0;
- integer wc=0,rc=0;reg count_enable=0;
+ integer wc=0,rc=0,wl=0;reg count_enable=0;
  reg bs=0,rs=0;reg [3:0] oldb;reg [36:0] oldr;
  reg sav_aw,sav_w,sav_b,sav_ar,sav_r,sav_last;
  reg [1:0] sav_bid,sav_bp,sav_rid,sav_rp;reg [31:0] sav_data;
  reg [2047:0] vectors,wave;
  task automatic fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"AXI4 mismatch at batch %0d cycle %0d",checks,cycles);end endtask
  always @(posedge clk or negedge rst_n) begin
-   if(!rst_n) begin wc=0;rc=0;bs=0;rs=0;end
+   if(!rst_n) begin wc=0;rc=0;wl=0;bs=0;rs=0;end
    else begin
      if((^{awready,wready,bvalid,arready,rvalid})===1'bx)fail("AXI4_PROTOCOL");
      if(bs && (!bvalid || {bid,bresp}!==oldb))fail("AXI4_PROTOCOL");
      if(rs && (!rvalid || {rid,rresp,rlast,rdata}!==oldr))fail("AXI4_PROTOCOL");
-     if(bvalid && wc==0)fail("AXI4_PROTOCOL");
+     if(bvalid && (wc==0 || wl==0))fail("AXI4_PROTOCOL");
      if(rvalid && rc==0)fail("AXI4_PROTOCOL");
      wc=wc+(awvalid&&awready)-(bvalid&&bready);
+     wl=wl+(wvalid&&wready&&wlast)-(bvalid&&bready);
      rc=rc+(arvalid&&arready)-(rvalid&&rready&&rlast);
      if(wc<0 || wc>2 || rc<0 || rc>2)fail("AXI4_PROTOCOL");
      if(wc==2)$display("COVER outstanding/write-two");

@@ -33,12 +33,13 @@ async def verify(dut):
         for name,value in dict(psel=1,penable=0,pwrite=write,paddr=address,pwdata=data).items():getattr(dut,name).value=value
         await Timer(1,unit='ns')
         if int(dut.pready.value):fail('COCOTB_PROTOCOL')
-        await edge(setup_events);dut.penable.value=1
+        await edge(setup_events);dut.penable.value=1;observed=None
         for wait in range(case['wait']+1):
             dut.events.value=complete_events if wait==case['wait'] else 0
             await Timer(1,unit='ns')
             if int(dut.pready.value)!=int(wait==case['wait']):fail('COCOTB_PROTOCOL')
             if int(dut.pslverr.value)!=(error if wait==case['wait'] else 0):fail('COCOTB_PROTOCOL')
+            if int(dut.pready.value):observed=wait
             expected={0:config,4:0x41504233 ^ int(bool(case['checker'])),8:pending}.get(address,0)
             if not write and int(dut.prdata.value)!=expected:fail('COCOTB_READ')
             await edge(complete_events if wait==case['wait'] else 0,(address,data,error) if wait==case['wait'] and write else None)
@@ -47,9 +48,9 @@ async def verify(dut):
         if address==8 and write and complete_events&data:print('COVER pending/event-wins',flush=True)
         if case['wait']:print('COVER access/wait',flush=True)
         else:print('COVER access/zero-wait',flush=True)
+        # The common goal is credited only when PREADY was observed after the configured wait count.
+        if observed==case['wait']:print('COVER access/wait-policy',flush=True)
         dut.psel.value=0;dut.penable.value=0;await edge()
     counts=dict(transactions=len(case['operations']),reads=sum(not r[1] for r in case['operations']),writes=sum(r[1] for r in case['operations']),errors=sum(r[0] not in (0,4,8) or (r[1] and r[0]==4) for r in case['operations']))
     for key,value in counts.items():print(f'COUNT {key}={value}',flush=True)
-    # One configuration-specific bin is normalized to a common contract goal.
-    print('COVER access/wait-policy',flush=True)
     print(f"RESULT PASS checks={len(case['operations'])}",flush=True)

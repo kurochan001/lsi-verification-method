@@ -85,9 +85,10 @@ module width_tb;
  end end
  aw_sent=0;w_sent=0;ar_sent=0;aw_cycle=-1;w_cycle=-1;finished=0;b_seen=0;r_seen=0;cycles=0;
  while(!finished && cycles<300)begin
- s_awvalid=(kind==1 || kind==3) && !aw_sent && cycles>=aw_delay;s_awaddr=addr;
- s_wvalid=(kind==1 || kind==3) && !w_sent && cycles>=w_delay;s_wdata=tx_data;s_wstrb=tx_strb;
- s_arvalid=(kind==2 || kind==4) && !ar_sent;s_araddr=addr;
+ // After each handshake the payload changes, so the adapter must use its own copy.
+ s_awvalid=(kind==1 || kind==3) && !aw_sent && cycles>=aw_delay;s_awaddr=aw_sent ? ~addr:addr;
+ s_wvalid=(kind==1 || kind==3) && !w_sent && cycles>=w_delay;s_wdata=w_sent ? ~tx_data:tx_data;s_wstrb=w_sent ? ~tx_strb:tx_strb;
+ s_arvalid=(kind==2 || kind==4) && !ar_sent;s_araddr=ar_sent ? ~addr:addr;
  s_bready=b_seen>=stall;s_rready=r_seen>=stall;
  #1;ah=s_awvalid&&s_awready;wh=s_wvalid&&s_wready;rh=s_arvalid&&s_arready;bh=s_bvalid&&s_bready;dh=s_rvalid&&s_rready;
  if((s_bvalid && kind!=1 && kind!=3) || (s_rvalid && kind!=2 && kind!=4))fail("WIDTH_CHANNEL");

@@ -33,10 +33,9 @@ class Plan:
     def cycle(self,rst=1,valid=0,sample=0,c0=0,c1=0,ready=1):
         row=self.model.step([rst,valid,sample&255,c0&255,c1&255,ready]);self.rows.append(row);return row
     def operation(self,sample,c0,c1,stall=0):
-        self.cycle(valid=1,sample=sample,c0=c0,c1=c1)
-        for _ in range(self.model.latency+1):self.cycle(ready=0)
-        for _ in range(stall):self.cycle(ready=0)
-        self.cycle();self.cycle()
+        self.cycle(valid=1,sample=sample,c0=c0,c1=c1);blocked=dict(valid=1,sample=0x5a,c0=0x33,c1=0x77) # offered but not accepted
+        for _ in range(self.model.latency+1+stall):self.cycle(ready=0,**blocked)
+        self.cycle(**blocked);self.cycle()
 def boundary_vectors(frac,latency):
     p=Plan(frac,latency);p.cycle(rst=0)
     for x,a,b in [(0,0,0),(127,1<<frac,0),(-128,1<<frac,0),(1,1<<(frac-1),0),(-1,1<<(frac-1),0),(3,3,0),(-3,3,0),(127,127,127),(-128,127,127),(-128,127,0),(17,-7,13),(0,0,16)]:p.operation(x,a,b,3)

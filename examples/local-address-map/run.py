@@ -145,6 +145,8 @@ class Plan:
         self.write(0x100, 0xffffffff, 0x3)
         self.read_step(0x100)
         self.read_step(0x300)
+        for addr in (0x110, 0x210, 0x900, 0xa00):
+            self.read_step(addr)
         self.write(0x300, 0x99999999)
         self.read_step(0x000)
         # Both IRQ sources must win over a simultaneous W1C.
@@ -171,7 +173,8 @@ class Plan:
     def random(self, rng, count):
         self.step(rst=0)
         addresses = [0x000, 0x004, 0x008, 0x100, 0x104, 0x108, 0x10c,
-                     0x200, 0x204, 0x208, 0x20c, 0x300, 0x400, 0x404]
+                     0x200, 0x204, 0x208, 0x20c, 0x300, 0x400, 0x404,
+                     0x110, 0x1fc, 0x210, 0x2fc, 0x500, 0x800, 0x900, 0xa00, 0xffc]
         for _ in range(count):
             if rng.randrange(150) == 0:
                 self.step(rst=0)

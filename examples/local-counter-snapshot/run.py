@@ -46,6 +46,12 @@ def vectors(seed,iterations,parameters,boundary=False):
     p.access(24,1,0);p.load_count(100);p.access(16,1,150);p.access(20,1,0);p.access(24,1,3)
     while p.count<150-(p.wait+2):p.cycle()
     p.access(28,1,1);p.access(28);p.access(28,1,1)
+    # While counting, LOAD_HI lands on a match edge and COMPARE_HI lands where only the new value would match.
+    p.access(24,1,0);p.load_count(990);p.access(16,1,1000);p.access(20,1,0);p.access(8,1,0x12345678);p.access(24,1,1)
+    while p.count+p.wait+2<1000:p.cycle()
+    p.access(12,1,0);target=p.count+20;p.access(16,1,target)
+    while p.count+p.wait+2<target:p.cycle()
+    p.access(20,1,0);p.access(28);p.access(24,1,0)
     p.access(0);p.cycle(rst=0);p.access(0);p.access(4);p.access(3)
     if not boundary:
         rng=random.Random(seed)

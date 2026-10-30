@@ -51,6 +51,10 @@ class Timeline:
         for b, level in enumerate(bits):
             for i in range(start + b * DIVISOR, start + (b + 1) * DIVISOR):
                 self.rows[i][6] = level
+        if kind == 2:
+            # Keep the line low past the bad stop bit; it must not start a new frame.
+            for i in range(start + len(bits) * DIVISOR, start + (len(bits) + 2) * DIVISOR):
+                self.rows[i][6] = 0
         # 2-FF input synchronization, start qualification, then data/parity/stop.
         # UART rx_valid is registered; the wrapper captures it one edge later.
         event = start + 3 + DIVISOR // 2 + (9 + int(self.parity != 0)) * DIVISOR
@@ -137,8 +141,13 @@ def boundary_vectors(wait, parity):
     # Two IRQ sources: partial clear must leave the other source active.
     _, end = t.rx_at(t.cursor, 0xc3, 2)
     t.cursor = end
+    t.bus(4)  # STATUS reports the framing error of the last receive.
     t.bus(16, 1, 2)
     t.bus(16, 1, 8)
+    if parity:
+        _, end = t.rx_at(t.cursor, 0x5a, 1)
+        t.cursor = end
+        t.bus(4)  # A later parity-error frame replaces both STATUS error flags.
     # New receive during SETUP, wait, or an erroneous completion.
     for phase in ('setup', 'wait', 'error'):
         if phase == 'wait' and not wait:

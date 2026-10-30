@@ -73,7 +73,7 @@ module apb_irq_tb;
           endcase
           if (prdata !== expected_data) fail("APB_READ_DATA");
         end
-      end
+      end else if (pready !== 1'b0 || pslverr !== 1'b0) fail("APB_RESET_RESPONSE");
       before_config = model_config; before_pending = model_pending;
       observed_config = config_value; observed_pending = pending;
       observed_ready = pready; observed_error = pslverr;

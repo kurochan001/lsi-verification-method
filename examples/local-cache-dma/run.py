@@ -57,6 +57,7 @@ def vectors(seed,iterations,parameters,boundary=False):
     p.command(6,0,0xaabbccdd);p.command(1,0,stall=3);p.command(4,0);p.command(1,0)
     p.command(2,0,0x55667788,strb=5);p.command(1,0);p.command(6,0,0x11223344,strb=10);p.command(6,0,0xffffffff,strb=0);
     p.command(2,0,0x1357);p.command(2,parameters['LINES'],0x2468);p.command(5,0)
+    p.command(1,3);p.command(6,3,0x0badf00d);p.command(3,3);p.command(1,3+parameters['LINES'])
     p.command(1,0);p.command(0);p.cycle(valid=1,op=2,addr=1,data=99);p.cycle(rst=0);p.command(1,1)
     if not boundary:
         rng=random.Random(seed)

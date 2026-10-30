@@ -99,7 +99,8 @@ class ApbIrqRegressionTests(unittest.TestCase):
                               capture_output=True, text=True, timeout=10)
 
     def test_monitor_rejects_bad_response_timing_and_read_data(self):
-        for force, label in (("initial force dut.pready = 1'b1;", "APB_READY"),
+        for force, label in (("initial force dut.pready = rst_n;", "APB_READY"),
+                             ("initial force dut.pready = 1'b1;", "APB_RESET_RESPONSE"),
                              ("initial force dut.prdata = 32'b0;", "APB_READ_DATA")):
             with self.subTest(label=label):
                 result = self.simulate_fixture(MODULE.boundary_vectors(1), force)

@@ -60,7 +60,7 @@ module apb_tb;
           endcase
           if (prdata !== expected_data) fail("APB_READ_DATA");
         end
-      end
+      end else if (pready !== 1'b0 || pslverr !== 1'b0) fail("APB_RESET_RESPONSE");
       @(posedge clk);
       if (!rst_n) begin
         model_config = 0; model_pending = 0; elapsed = 0;

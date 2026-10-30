@@ -113,7 +113,8 @@ module memory_order_tb;
    awd=v[base+6];wd=v[base+7];stall=v[base+8];error=v[base+9];
    aw_done=0;ar_done=0;finished=op==0;wb=0;rb=0;blocked=0;tick=0;
    while(!finished && tick<600)begin
-    awaddr[15*m+:15]=address;araddr[15*m+:15]=address;awlen[8*m+:8]=beats-1;arlen[8*m+:8]=beats-1;awid[2*m+:2]=ident;arid[2*m+:2]=ident;
+    // After AW/AR acceptance the address, length and ID change; the interconnect must use its own copy.
+    awaddr[15*m+:15]=aw_done ? ~address:address;araddr[15*m+:15]=ar_done ? ~address:address;awlen[8*m+:8]=aw_done ? ~(beats-1):beats-1;arlen[8*m+:8]=ar_done ? ~(beats-1):beats-1;awid[2*m+:2]=aw_done ? ~ident:ident;arid[2*m+:2]=ar_done ? ~ident:ident;
     awvalid[m]=op==1 && !aw_done && tick>=awd;arvalid[m]=op==2 && !ar_done && tick>=awd;
     wvalid[m]=op==1 && wb<beats && tick>=wd;wdata[32*m+:32]=seed+32'h01030507*wb;wstrb[4*m+:4]=mask(mode,wb);wlast[m]=wb==beats-1;
     bready[m]=op==1 && blocked>=stall;rready[m]=op==2 && blocked>=stall;

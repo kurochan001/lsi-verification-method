@@ -44,9 +44,10 @@
     {
       "id": "UART-PARITY",
       "requires_parity": true,
-      "description": "パリティ不一致を検出",
+      "description": "パリティ不一致を検出（ストップビット誤りとの同時発生を含む）",
       "goals": [
-        "rx/parity-error"
+        "rx/parity-error",
+        "rx/parity-framing-error"
       ]
     },
     {

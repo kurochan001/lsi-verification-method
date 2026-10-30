@@ -156,8 +156,10 @@ class Plan:
         self.step(cs=1, we=1, addr=LOCK, wdata=1, secure=1)
         self.step(cs=1, we=1, addr=KEY0, wdata=0x33333333, secure=1)
         self.step(cs=1, re=1, addr=KEY0, secure=1)
-        # A fresh reset reaches the attempt limit and the lockout IRQ.
+        # A fresh reset zeroizes the key slots, then reaches the attempt limit and the lockout IRQ.
         self.step(rst=0)
+        self.step(cs=1, re=1, addr=KEY0, secure=1)
+        self.step(cs=1, re=1, addr=KEY1, secure=1)
         for _ in range(self.limit):
             self.step(cs=1, we=1, addr=DEBUG, debug_key=self.key ^ 1, secure=1)
         self.step(cs=1, re=1, addr=STATUS, secure=1)

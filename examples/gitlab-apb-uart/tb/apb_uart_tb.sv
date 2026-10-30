@@ -86,7 +86,7 @@ module apb_uart_tb;
           endcase
           if(prdata!==expected_data) fail("APBUART_READ_DATA");
         end
-      end
+      end else if(pready!==1'b0 || pslverr!==1'b0) fail("APBUART_RESET_RESPONSE");
       before_mask=model_mask;before_pending=model_pending;old_available=model_available;
       old_remaining=tx_remaining;
       before_irq=0;before_active=0;

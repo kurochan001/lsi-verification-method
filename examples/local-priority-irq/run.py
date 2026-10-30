@@ -50,11 +50,11 @@ def vectors(seed,iterations,parameters,boundary=False):
     p.transfer(16,1,0);p.transfer(16,1,1);p.pulse(1);p.transfer(16);p.transfer(16,1,1,sources=1);p.cycle(sources=1);p.transfer(8,sources=1)
     p.cycle(rst=0)
     for i in range(4):p.transfer(32+4*i,1,i%3+1)
-    p.transfer(0,1,15);p.pulse(15);p.transfer(16);p.transfer(24,1,1)
+    p.transfer(0,1,15);p.pulse(15);p.transfer(16);p.transfer(24,1,1);p.transfer(8,1,15);p.transfer(12,1,15) # RO writes: error, no side effect
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):
-            p.pulse(rng.randrange(16));p.transfer(rng.choice((0,4,16,32,36,40,44)),rng.randrange(2),rng.randrange(16))
+            p.pulse(rng.randrange(16));p.transfer(rng.choice((0,4,8,12,16,32,36,40,44)),rng.randrange(2),rng.randrange(16))
     p.cycle(rst=0);p.cycle();return p.rows
 
 def make_cases(args,parameters):

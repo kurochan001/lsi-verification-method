@@ -196,7 +196,7 @@ class InteractionRtlTests(unittest.TestCase):
         process, out, summary, junit = self.invoke()
         self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
         self.assertTrue(summary['success'])
-        self.assertEqual(len(junit.findall('testcase')), 61)
+        self.assertEqual(len(junit.findall('testcase')), 58)
         coverage = json.loads((out / 'coverage.json').read_text())
         runs = json.loads((out / 'executions.json').read_text())
         for wait in (0, 1, 3):

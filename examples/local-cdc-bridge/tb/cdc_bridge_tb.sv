@@ -31,6 +31,13 @@ module cdc_bridge_tb;
   if(pwrite && !expected_error && paddr==0)config_model=pwdata;
   $display("COVER apb/transfer");if(expected_error)$display("COVER apb/error");
  end
+ // ACCESS must follow SETUP and complete after exactly WAIT_CYCLES wait states.
+ reg apb_setup=0;integer apb_waits=0;
+ always @(posedge pclk)if(!target_up)begin apb_setup=0;apb_waits=0;end else begin
+  if(psel && penable && !apb_setup && apb_waits==0)fail("CDC_APB");
+  if(psel && penable && pready && apb_waits!=WAIT_CYCLES)fail("CDC_APB");
+  apb_waits=psel && penable && !pready ? apb_waits+1:0;apb_setup=psel && !penable;
+ end
  task wait_up;
   integer guard;begin guard=0;while(!source_up || !target_up)begin @(negedge sclk);guard=guard+1;if(guard>100)fail("CDC_RESET");end end
  endtask
@@ -42,6 +49,8 @@ module cdc_bridge_tb;
    #(4*(SRC_HALF+DST_HALF));
    qw=0;qr=0;ew=0;er=0;received=0;config_model=0;checksum=0;held=0;
    srst_n=1;prst_n=1;wait_up();
+   // Either-side reset must also clear the APB registers, which the request sequence would overwrite.
+   if(dut.config_value!==0 || dut.pending!==0)fail("CDC_RESET");
    repeat(3)@(negedge sclk);if(rsp_valid)fail("CDC_RESET");
   end
  endtask

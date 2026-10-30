@@ -17,7 +17,7 @@ wire [31:0] secret_value;
 wire locked;
  integer fd,n,checks=0;reg [63:0] v[0:12];string vectors,wave;
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"step=%0d",checks);end endtask
- protected_regs #(.MUTATION(MUTATION),.WAIT_CYCLES(WAIT_CYCLES)) dut(.*);reg was_reset=0;
+ protected_regs #(.MUTATION(MUTATION),.WAIT_CYCLES(WAIT_CYCLES)) dut(.*);reg was_reset=0,lock_seen=0;
  initial begin
  if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"arguments required");
  $dumpfile(wave);$dumpvars(0,access_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"missing input");repeat(2)@(negedge clk);
@@ -38,7 +38,7 @@ if(public_value!==v[10][31:0])fail("ACCESS_STATE");
 if(secret_value!==v[11][31:0])fail("ACCESS_STATE");
 if(locked!==v[12][0:0])fail("ACCESS_STATE");
 
- if(!rst_n)was_reset=1;
+ if(!rst_n)begin was_reset=lock_seen;lock_seen=0;end else if(locked)lock_seen=1;
  if(rst_n && psel && !penable)$display("COVER apb/setup");
  if(pready)begin
  $display("COVER apb/completed");

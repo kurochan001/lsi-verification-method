@@ -16,7 +16,7 @@ module dsp_tb;
    if(!v[0] && rst_n && (dut.busy || out_valid))$display("COVER reset/pending");
    rst_n=v[0];in_valid=v[1];sample=v[2];c0=v[3];c1=v[4];out_ready=v[5];
    if(invalid_x && !in_valid)begin sample='x;c0='x;c1='x;end
-   if(active_x && in_valid && c0!=0 && !injected)begin sample='x;injected=1;end
+   if(active_x && in_valid && v[6]!=0 && c0!=0 && !injected)begin sample='x;injected=1;end
    #1;
    if(CHECK_EXPECTATIONS)begin
     if(in_ready!==v[6][0] || out_valid!==v[7][0])fail("DSP_CONTROL");

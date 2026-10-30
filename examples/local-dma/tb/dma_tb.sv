@@ -79,12 +79,12 @@ module dma_tb;
    end
    for(integer address=0;address<8192;address=address+1)memory.memory[address]=initial_byte(v[3],address);
    local_reads=0;local_writes=0;read_addresses=0;write_addresses=0;current_wbeat=0;monitor=1;
-   hold_ar=v[5]==1;hold_w=v[5]==2;program_dma(v[0],v[1],v[2],v[7]);
+   hold_ar=v[5]==1;hold_w=v[5]==2;apb(12,1,3,1,value);program_dma(v[0],v[1],v[2],v[7]); // start+abort is rejected even when idle.
    if(v[5])begin
     begin: abort_wait for(integer guard=0;guard<500;guard=guard+1)begin
      if((v[5]==1 && arvalid) || (v[5]==2 && wvalid))disable abort_wait;tick();
     end fail("DMA_TIMEOUT");end
-    apb(0,1,0,1,value);apb(12,1,1,1,value); // Busy programming/start must be rejected.
+    apb(0,1,32'h1234,1,value);apb(12,1,1,1,value); // Busy programming/start must be rejected.
     apb(12,1,2,0,value);hold_ar=0;hold_w=0;$display("COVER abort/phase%0d",v[5]);
    end
    begin: completion_wait for(integer guard=0;guard<2000;guard=guard+1)begin
@@ -95,6 +95,8 @@ module dma_tb;
    if(irq!==!v[7][0])fail("DMA_IRQ");
    if(v[7])begin apb(20,1,1,0,value);#1;if(!irq)fail("DMA_IRQ");$display("COVER irq/mask-unmask");end
    apb(12,1,4,0,value);#1;if(irq)fail("DMA_IRQ");$display("COVER irq/clear");
+   apb(16,0,0,0,value);if(value[4:0]!=={1'b0,v[9][0],v[8][0],2'b10})fail("DMA_STATUS"); // IRQ clear keeps status.
+   apb(0,0,0,0,value);if(value!==v[0])fail("DMA_APB"); // Rejected busy write has no side effect.
    if(local_reads!=v[11] || local_writes!=v[10] || read_addresses!=v[11] || write_addresses!=v[10])fail("DMA_COUNT");
    for(integer address=0;address<8192;address=address+1)begin
     expected_byte=initial_byte(v[3],address);

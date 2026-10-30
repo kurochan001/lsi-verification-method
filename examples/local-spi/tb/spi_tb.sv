@@ -5,7 +5,7 @@ module spi_tb;
   reg [7:0] tx_data=0,vtx,vrx;
   wire sclk,cs_n,mosi,busy,done;
   wire [7:0] rx_data;
-  bit allow_done=0,previous_done=0,recovering=0;
+  bit allow_done=0,previous_done=0,recovering=0,idle_seen=0,idle_mosi=0;
   integer fd,fields,mode,injection,gap,checks=0,transfers=0,aborts=0;
   string vectors,wave;
   spi_master #(.CPOL(CPOL),.CPHA(CPHA),.HALF_DIV(HALF_DIV),.MUTATION(MUTATION)) dut(
@@ -18,11 +18,13 @@ module spi_tb;
     #1;
     if(!rst_n) begin
       if(sclk!==CPOL[0] || cs_n!==1 || busy!==0 || done!==0 || rx_data!==0 || mosi!==0) fail("SPI_RESET");
-      previous_done=0;
+      previous_done=0;idle_seen=0;
     end else begin
       if((^{sclk,cs_n,mosi,busy,done,rx_data})===1'bx) fail("SPI_UNKNOWN");
       if(done && (!allow_done || previous_done)) fail("SPI_UNEXPECTED_DONE");
       if(!busy && (cs_n!==1 || sclk!==CPOL[0])) fail("SPI_IDLE");
+      if(!busy && idle_seen && mosi!==idle_mosi) fail("SPI_IDLE"); // MOSI keeps its last value while idle
+      idle_seen=!busy;idle_mosi=mosi;
       previous_done=done;
     end
   end
