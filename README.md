@@ -108,6 +108,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 - [DMA・メモリ・順序制御](#dmaメモリ順序制御)
 - [CDC・クロック・リセット・低電力](#cdcクロックリセット低電力)
 - [演算・故障注入・保護・性能・DFT](#演算故障注入保護性能dft)
+- [AI用回路](#ai用回路)
 - [フォーマル検証・等価性・反例再現](#フォーマル検証等価性反例再現)
 - [SVA・UVM・仕様生成・ソフトウェア連携・検証効率](#svauvm仕様生成ソフトウェア連携検証効率)
 
@@ -179,7 +180,6 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [固定小数点DSP](examples/local-dsp/README.md) | 2タップFIRの符号、丸め、上下限、飽和、履歴 | Icarus |
-| [FP16／MXFP8／MXFP4のGEMM・量子化](examples/local-mxfp4/README.md) | 設計仕様とRTLの取り込み・精度拡張、厳密有理数モデルによるビット照合、RNE・FTZ・NaN、GEMMの完了時点、FIFO・near/far・gradual underflow | Verilator＋Z3 |
 | [ECCの故障注入](examples/local-ecc/README.md) | SECDEDの誤りなし・1ビット誤り・2ビット誤りの全数検査、訂正・検出、保証範囲外の診断 | Icarus |
 | [ECC付きメモリ](examples/local-ecc-memory/README.md) | 読出し修復、スクラビング、通常書込みとの競合 | Icarus |
 | [パケットCRC](examples/local-packet-crc/README.md) | 独立した多項式除算と既知ベクトルによる生成・受信値検査 | Icarus |
@@ -190,6 +190,19 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [ロックステップ監視](examples/local-lockstep-monitor/README.md) | 2つの小規模演算コアの比較、故障注入、安全状態、復帰時の再同期、不正命令 | Icarus |
 | [性能モニター](examples/local-performance-monitor/README.md) | アウトスタンディング数、最大レイテンシ、測定区間の完了数・経過サイクル、不正応答 | Icarus |
 | [タイムアウト復旧](examples/local-recovery/README.md) | 古い応答の破棄、期限と応答の競合、タグ枯渇、下位回路も含むリセット | Icarus |
+
+### AI用回路
+
+推論アクセラレータを構成する回路です。各例は、推論回路で誤りやすい点（時間合わせ、丸め規則、近似誤差、画像の端、選択の正しさ）を1つずつ中心に取り上げます。[まとめて実行する手順](examples/local-ai-regression/README.md)もあります。
+
+| 検証例 | 主な検証内容 | 主なツール |
+| --- | --- | --- |
+| [INT8シストリックアレイ](examples/local-systolic-array/README.md) | 入力のずらしとそろえ直し、全体停止、重み更新と処理中データの競合、16ビットを超える累算 | Icarus |
+| [INT32→INT8の再量子化](examples/local-requantize/README.md) | 出典から書き下した2段階の丸め、全32シフトでのタイ、上下限、設定の取り込み時点、空き段の利用 | Icarus |
+| [区分線形の活性化関数](examples/local-activation/README.md) | 誤差の上限による判定、全4096入力、緩い上限で見逃す変異の診断 | Icarus |
+| [畳み込みのラインバッファ](examples/local-conv-window/README.md) | 3×3窓の端・角、ストライド、フレーム終わりの排出、連続フレーム、等価変異 | Icarus |
+| [Top-K選択](examples/local-topk/README.md) | ソーティングネットワークの安定な上位K個を、すべての入力についてフォーマルに証明 | フォーマル＋Icarus |
+| [FP16／MXFP8／MXFP4のGEMM・量子化](examples/local-mxfp4/README.md) | 設計仕様とRTLの取り込み・精度拡張、厳密有理数モデルによるビット照合、RNE・FTZ・NaN、GEMMの完了時点、FIFO・near/far・gradual underflow | Verilator＋Z3 |
 
 ### フォーマル検証・等価性・反例再現
 
@@ -233,6 +246,7 @@ GitLabへの掲載状況にかかわらず、このリポジトリにある検�
 | [UVMランダム化・仕様生成・反例再現の7例](examples/local-soc-regression/README.md) | UVMランダム、SystemRDL、反例再現、優先順位付きIRQ、リングDMA、クレジット通信、キャッシュ |
 | [RAL接続・順序制御・DMAなどの7例](examples/local-extension-regression/README.md) | 生成RAL、AXI応答順序、DMA所有権、Stream DMA、CRC、カウンター、MBIST |
 | [セキュリティ・性能・CDCなどの6例](examples/local-gap-regression/README.md) | セキュリティ、性能モニター、CDCハンドシェイク、JTAG、アドレスマップ、ロックステップ |
+| [AI用回路の6例](examples/local-ai-regression/README.md) | シストリックアレイ、再量子化、活性化関数、ラインバッファ、Top-K、FP16／MXFP8／MXFP4 |
 
 ## 準備と実行
 
@@ -250,12 +264,12 @@ python3 examples/local-axi/run.py
 
 | 共通手順 | 確認できること |
 | --- | --- |
-| [Icarus共通シミュレーション](examples/local-common/README.md) | 38例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
+| [Icarus共通シミュレーション](examples/local-common/README.md) | 42例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
 | [フォーマル環境](examples/local-formal-common/README.md) | Yosys・SBY・Z3の固定版環境、各タスクの実行と判定 |
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は38例・85構成、各検証例が出力するJUnit件数の合計はsmoke 597件／nightly 767件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は42例・93構成、各検証例が出力するJUnit件数の合計はsmoke 657件／nightly 843件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CONV-EDGE",
+      "goals": [
+        "corner/top-left",
+        "corner/top-right",
+        "corner/bottom-left",
+        "corner/bottom-right",
+        "edge/top",
+        "edge/bottom",
+        "edge/left",
+        "edge/right",
+        "interior"
+      ]
+    },
+    {
+      "id": "CONV-FRAME",
+      "goals": [
+        "frame/last",
+        "frame/second-since-reset",
+        "frame/overlap"
+      ]
+    },
+    {
+      "id": "CONV-FLOW",
+      "goals": [
+        "stall/during-input",
+        "stall/during-flush",
+        "input/blocked-by-flush",
+        "input/gap"
+      ]
+    },
+    {
+      "id": "CONV-RESET",
+      "goals": [
+        "reset/mid-frame"
+      ]
+    }
+  ]
+}

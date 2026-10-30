@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "RQ-ROUND",
+      "goals": [
+        "srdhm/tie-positive",
+        "srdhm/tie-negative",
+        "rdbpot/tie-positive",
+        "rdbpot/tie-negative",
+        "shift/all-32"
+      ]
+    },
+    {
+      "id": "RQ-RANGE",
+      "goals": [
+        "clamp/low",
+        "clamp/high",
+        "clamp/at-limit",
+        "zp/extreme",
+        "mult/max",
+        "mult/min"
+      ]
+    },
+    {
+      "id": "RQ-PARAM",
+      "goals": [
+        "param/write-same-edge",
+        "param/change-in-flight",
+        "channel/all"
+      ]
+    },
+    {
+      "id": "RQ-FLOW",
+      "goals": [
+        "flow/back-to-back",
+        "flow/accept-during-stall",
+        "flow/input-blocked"
+      ]
+    },
+    {
+      "id": "RQ-RESET",
+      "goals": [
+        "reset/in-flight",
+        "reset/params-cleared"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ACT-RANGE",
+      "goals": [
+        "input/min",
+        "input/max",
+        "input/zero",
+        "saturation/negative",
+        "saturation/positive"
+      ]
+    },
+    {
+      "id": "ACT-SEGMENT",
+      "goals": [
+        "segment/all-positive",
+        "segment/all-negative",
+        "knot/exact"
+      ]
+    },
+    {
+      "id": "ACT-ERROR",
+      "goals": [
+        "error/above-0.75",
+        "error/positive",
+        "error/negative"
+      ]
+    },
+    {
+      "id": "ACT-FLOW",
+      "goals": [
+        "flow/back-to-back",
+        "flow/stall",
+        "reset/in-flight"
+      ]
+    }
+  ]
+}

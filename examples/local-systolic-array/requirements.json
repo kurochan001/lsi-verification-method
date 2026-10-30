@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SA-MAC",
+      "goals": [
+        "product/max-positive",
+        "product/max-negative",
+        "sum/beyond-16bit",
+        "result/negative",
+        "result/positive",
+        "result/zero"
+      ]
+    },
+    {
+      "id": "SA-FLOW",
+      "goals": [
+        "flow/back-to-back",
+        "flow/bubble",
+        "flow/pipeline-full",
+        "stall/output-held",
+        "stall/full",
+        "stall/input-blocked"
+      ]
+    },
+    {
+      "id": "SA-WEIGHT",
+      "goals": [
+        "weight/all-rows",
+        "weight/blocked-in-flight",
+        "weight/priority",
+        "weight/reload"
+      ]
+    },
+    {
+      "id": "SA-RESET",
+      "goals": [
+        "reset/in-flight",
+        "reset/weights-cleared"
+      ]
+    }
+  ]
+}
