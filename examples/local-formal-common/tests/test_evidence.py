@@ -80,6 +80,14 @@ class EvidenceTest(unittest.TestCase):
             path.write_text(json.dumps(model))
             with self.assertRaises(ValueError):R.inventory(path,CONN,{},case)
         self.assertIn('read -formal -sv conn_check.sv',CONN.prepare({},case))
+    def test_runner_writes_the_plugin_preparation_into_the_task(self):
+        CONN=load(EXAMPLES/'local-connectivity/run.py')
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'out';absent=str(Path(tmp)/'absent')
+            p=subprocess.run([sys.executable,CONN.__file__,'--task','connectivity-proof','--sby',absent,'--yosys',absent,'--out',str(out)],capture_output=True,text=True,timeout=30)
+            self.assertEqual(p.returncode,1,p.stdout+p.stderr)
+            script=(out/'soc-connectivity-proof/task.sby').read_text().split('[script]\n')[1].split('prep -top')[0]
+            self.assertEqual(script,CONN.prepare({},CONN.plan(8,0)[0]))
     def test_missing_tools_cannot_be_success(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out';absent=str(Path(tmp)/'absent')

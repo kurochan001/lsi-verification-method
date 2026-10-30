@@ -84,6 +84,24 @@ class ExampleTests(SystemContract, unittest.TestCase):
         self.assertEqual(trace[-1].pc, 24)
         self.assertNotIn(20, [r.pc for r in trace])
 
+    def test_taken_branch_to_the_next_instruction_counts_as_taken(self):
+        trace = ISS.tag(ISS.execute(ISS.assemble([('beq', 0, 0, 'n'), 'n:', ('bne', 0, 0, 'm'), 'm:', ('ebreak',)]),
+                                    [0] * ISS.DATA_WORDS))
+        bit = {name: 1 << i for i, name in enumerate(ISS.TAGS)}
+        self.assertTrue(trace[0].tags & bit['branch/taken'])
+        self.assertTrue(trace[1].tags & bit['branch/not-taken'])
+
+    def test_wait_forwarding_is_credited_only_where_a_missed_forward_would_show(self):
+        bit = 1 << P.TAGS.index('mem/wait-forwarding')
+        def credited(producer):
+            program = [('addi', 10, 0, ISS.BASE), ('addi', 5, 0, 3), ('addi', 0, 0, 0), ('addi', 0, 0, 0)] + producer + [
+                ('lw', 6, 0, 10), ('add', 7, 5, 5), ('ebreak',)]
+            rows = P.vectors(program, [0] * ISS.DATA_WORDS, lambda access, trace, i: 2)
+            return any(r[8] & bit for r in rows if r[0] == 3)
+        self.assertTrue(credited([('addi', 5, 0, 7)]))
+        self.assertFalse(credited([('addi', 5, 0, 3)]))           # same value as before: nothing to see
+        self.assertFalse(credited([('jal', 5, 'j'), 'j:']))       # a jump flushes, so no forwarding happens
+
     def test_fixed_program_has_every_instruction_and_the_wait_forwarding_pattern(self):
         rows = P.boundary_vectors()
         retired = [r for r in rows if r[0] == 3]

@@ -72,7 +72,7 @@ write_verilog -noattr -noexpr netlist.v
 
 変異4は、どちらのブロックを先に実行するかが規格で決まっていない書き方です。この例のIcarus Verilog 14.0では、ファイル内で先に書いたブロックが先に実行され、RTLは正しい値を読みます。セルフテストでは、2つのブロックの順序を入れ替えるとRTLでも失敗することを確かめています。RTLの合格が、たまたまの実行順に依存していたことになります。
 
-Verilatorの`--lint-only -Wall`は、変異3と4の書き方を警告します。この例は変異を同じファイルに置き、パラメーターで切り替えています。そのため、YosysとVerilatorの警告は変異0でも出ます。
+Verilatorの`--lint-only -Wall`は、変異3と4の書き方を警告します（`PROCASSINIT`・`BLKSEQ`）。この例は変異を同じファイルに置き、パラメーターで切り替えています。そのため、YosysとVerilatorの警告は変異0でも出ます。優先度付きの`casez`には、項目の重なり（`CASEOVERLAP`）と、書いていない値（`CASEINCOMPLETE`）の警告も出ます。重なりは優先順位そのもので、書いていない値の結果は`casez`の前の既定値で決まるので、どちらも意図した書き方です。
 
 ## Xの現れ方
 
@@ -105,7 +105,7 @@ Pythonの期待値モデルは、仕様をサイクル単位で書いたもの�
 
 ## 実行
 
-Yosysは[共通フォーマル手順](../local-formal-common/README.md)の固定版を使います。`simcells.v`はYoWASP版Yosysのパッケージから自動で探します。別のYosysを使う場合は`--yosys`と`--cell-library`を指定します。
+Yosysは[共通フォーマル手順](../local-formal-common/README.md)の固定版を使います。`simcells.v`は、`--yosys`で指定したYosysに付属するもの（YoWASP版ならそのパッケージ、ほかは`yosys-config --datdir`）を自動で探します。見つからない場合は`--cell-library`で指定します。
 
 ```sh
 . /tmp/lsi-bus-formal-venv/bin/activate
@@ -114,7 +114,7 @@ python3 examples/local-gate-sim/run.py --profile nightly --out artifacts/gate-si
 python3 -m unittest discover -s examples/local-gate-sim/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使い、構成は`rtl`と`gate`です。共通手順の`build_sources`で、構成と変異ごとにネットリストを作ってコンパイルします。各`gate-m<番号>`には、合成ログ`synthesis.log`と`netlist.v`を残します。smokeは400サイクル×1 seed、nightlyは4000サイクル×3 seedです。JUnitは各構成7／9件、全体14／18件で、セルフテストは6件です。
+[共通手順](../local-common/README.md)を使い、構成は`rtl`と`gate`です。`run.py`の`build_sources`フックで、構成と変異ごとにネットリストを作り、共通手順がコンパイルします。各`gate-m<番号>`には、合成ログ`synthesis.log`、Yosysの版、`netlist.v`を残します。`builds.json`には、Yosysの版、使った`simcells.v`の場所、コンパイルしたネットリスト・セルモデル・テストベンチのSHA-256を記録します。`simcells.v`は、`--yosys`で指定したYosysに付属するものを使います。smokeは400サイクル×1 seed、nightlyは4000サイクル×3 seedです。JUnitは各構成7／9件、全体14／18件で、セルフテストは6件です。
 
 ## 確認範囲
 

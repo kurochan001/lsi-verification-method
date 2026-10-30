@@ -29,16 +29,23 @@ def add_arguments(parser):
 
 
 def cell_library(args):
+    """simcells.v of the Yosys that synthesizes, unless --cell-library names one."""
     if args.cell_library:
         return args.cell_library.resolve()
-    found = importlib.util.find_spec('yowasp_yosys')
-    if found and found.origin:
-        return Path(found.origin).parent / 'share/simcells.v'
+    executable = shutil.which(args.yosys)
+    if Path(args.yosys).name.startswith('yowasp-'):
+        found = importlib.util.find_spec('yowasp_yosys')
+        candidates = [Path(found.origin).parent / 'share/simcells.v'] if found and found.origin else []
+        if executable:  # the package beside a yowasp-yosys found on PATH, e.g. in another venv
+            candidates += sorted(Path(executable).resolve().parent.parent.glob('lib/python*/site-packages/yowasp_yosys/share/simcells.v'))
+        return next((c for c in candidates if c.is_file()), Path('simcells.v'))
+    config = Path(executable).with_name('yosys-config') if executable else None
     try:
-        datdir = subprocess.run(['yosys-config', '--datdir'], capture_output=True, text=True, timeout=30).stdout.strip()
-    except OSError:
+        command = [str(config) if config and config.exists() else 'yosys-config', '--datdir']
+        datdir = subprocess.run(command, capture_output=True, text=True, timeout=30).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
         datdir = ''
-    return Path(datdir) / 'simcells.v'
+    return Path(datdir or '.') / 'simcells.v'
 
 
 def build_sources(args, configuration, parameters, mutation, directory):
@@ -48,8 +55,13 @@ def build_sources(args, configuration, parameters, mutation, directory):
     directory.mkdir()
     shutil.copy2(RTL, directory / RTL.name)
     library = cell_library(args)
+    version = PROCESS.execute([args.yosys, '-V'], directory / 'yosys-version.log', args.timeout * 6, directory)
     execution = PROCESS.execute([args.yosys, '-q', '-l', 'synthesis.log', '-p', SYNTHESIS.format(m=mutation)],
                                 directory / 'yosys-console.log', args.timeout * 6, directory)
+    execution.update(log=f'{directory.name}/yosys-console.log', cell_library=str(library),
+                     version=(directory / 'yosys-version.log').read_text(errors='replace').strip())
+    if version['error'] or version['returncode'] != 0:
+        execution['error'] = execution['error'] or 'yosys -V failed; see yosys-version.log'
     if not execution['error'] and not library.is_file():
         execution['error'] = f'cell library not found: {library}; pass --cell-library'
     return [directory / 'netlist.v', library, SOURCES[1]], execution

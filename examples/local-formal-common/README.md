@@ -1,6 +1,6 @@
 # システム教材のフォーマルリグレッションを実行する
 
-[AXI4のフォーマル例](../local-axi4-formal/README.md)、[FIFOの等価性例](../local-equivalence/README.md)、[完了期限の例](../local-progress/README.md)、[Top-K選択の例](../local-topk/README.md)、[接続性の例](../local-connectivity/README.md)、[除算器の例](../local-divider/README.md)が使うSBYランナーです。各例の`run.py`から起動し、このファイルを直接実行するものではありません。
+[AXI4のフォーマル例](../local-axi4-formal/README.md)、[FIFOの等価性例](../local-equivalence/README.md)、[完了期限の例](../local-progress/README.md)、[Top-K選択の例](../local-topk/README.md)、[接続性の例](../local-connectivity/README.md)、[除算器の例](../local-divider/README.md)が使うSBYランナーです。各例の`run.py`（除算器は`formal.py`）から起動し、このファイルを直接実行するものではありません。
 
 ## モデル・タスク・証跡の対応
 
@@ -42,9 +42,9 @@ python3 examples/local-equivalence/run.py
 python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bmc --bound 12
 ```
 
-`--configuration`は既定all、`--task`は既定allで、一部のタスクだけも実行できます。一部だけの成功はリグレッション全体の完了ではなく、マニフェストの選択ケースを確認してください。`--bound`はBMC／coverの深さで8〜64、AXI4・等価性の既定は12、完了期限は24です。AXI4のproveは別に帰納法探索深さ8を使います。
+`--configuration`は既定all、`--task`は既定allで、一部のタスクだけも実行できます。一部だけの成功はリグレッション全体の完了ではなく、マニフェストの選択ケースを確認してください。`--bound`はBMC／coverの深さで8〜64です。既定は、AXI4・等価性が12、完了期限が24、Top-K・接続性が8、除算器が16です。AXI4のproveは別に帰納法探索深さ8を使います。
 
-`--timeout`は版取得・各SBYタスクへの上限で、AXI4は既定300秒、等価性・完了期限は120秒。SBY内部にも少し短い上限を設定します。`--sby`、`--yosys`、`--smtbmc`、`--witness`で実行ファイル、`--out`で新規保存先を指定します。
+`--timeout`は版取得・各SBYタスクへの上限です。既定は、AXI4が300秒、等価性・完了期限・接続性が120秒、Top-K・除算器が600秒です。SBY内部にも少し短い上限を設定します。`--sby`、`--yosys`、`--smtbmc`、`--witness`で実行ファイル、`--out`で新規保存先を指定します。
 
 `--demo-bug 1..4`は通常の証明／データ検査にも指定変異を入れ、リグレッションの失敗を確認するオプションです。専用の変異検出ケースは別に残ります。AXI4のデータだけの不具合は制御証明がPASSしても、データBMCがFAILすることがあります。
 
@@ -67,4 +67,4 @@ python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bm
 python3 -m unittest discover -s examples/local-formal-common/tests -v
 ```
 
-判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合を確認する10テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。
+判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合、`prepare`の手順がSBYの設定へ入ることを確認する11テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。

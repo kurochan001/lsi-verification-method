@@ -5,14 +5,14 @@
 // tags, operation index, wait cycles for its memory access).
 module core_tb;
     parameter MUTATION = 0;
-    localparam N = 8192;
+    localparam N = 16384, IMEM = 16384, DMEM = 256;  // run.py keeps programs within these sizes
     reg clk = 0, rst_n = 0, dmem_ready = 1;
     wire [31:0] imem_addr, dmem_addr, dmem_wdata, ret_pc, ret_insn, ret_wdata, ret_mem_addr, ret_mem_data;
     wire dmem_valid, dmem_we, ret_valid, halted;
     wire [4:0] ret_rd;
     wire [1:0] ret_mem;
-    reg [31:0] imem[0:4095], dmem[0:255];
-    wire [31:0] imem_data = imem[imem_addr[13:2]];
+    reg [31:0] imem[0:IMEM-1], dmem[0:DMEM-1];
+    wire [31:0] imem_data = imem[imem_addr[15:2]];
     wire [31:0] dmem_rdata = dmem_ready ? dmem[dmem_addr[9:2]] : 32'hdeadbeef;
     rv32i_core #(.MUTATION(MUTATION)) dut(.*);
     always #5 clk = ~clk;
@@ -47,14 +47,16 @@ module core_tb;
     initial begin
         if (!$value$plusargs("VECTORS=%s", vectors) || !$value$plusargs("WAVE=%s", wave)) $fatal(1, "arguments required");
         $dumpfile(wave); $dumpvars(0, core_tb);
-        for (i = 0; i < 4096; i = i + 1) imem[i] = 32'h00000013;  // NOP beyond the program
-        for (i = 0; i < 256; i = i + 1) dmem[i] = 0;
+        for (i = 0; i < IMEM; i = i + 1) imem[i] = 32'h00000013;  // NOP beyond the program
+        for (i = 0; i < DMEM; i = i + 1) dmem[i] = 0;
         fd = $fopen(vectors, "r"); if (!fd) $fatal(1, "vectors missing");
         while (!$feof(fd)) begin
             n = $fscanf(fd, "%h %h %h %h %h %h %h %h %h %h %h\n",
                 v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10]);
             if (n != 11) $fatal(1, "bad row");
             rows = rows + 1;
+            if ((v[0] == 0 && v[1] >= IMEM) || (v[0] == 1 && v[1] >= DMEM) || (v[0] == 3 && expected >= N))
+                $fatal(1, "row %0d does not fit the bench memories", rows);
             case (v[0])
                 0: imem[v[1]] = v[2];
                 1: dmem[v[1]] = v[2];

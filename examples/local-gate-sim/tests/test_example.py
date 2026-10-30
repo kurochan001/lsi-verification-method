@@ -68,7 +68,12 @@ class ExampleTests(SystemContract, unittest.TestCase):
             log = (out / 'gate-m2/synthesis.log').read_text()
             self.assertIn('parallel_case', log)
             self.assertIn('translate_off', log)
+            builds = read_json(out / 'builds.json')
             for mutation in range(5):
+                record = builds[f'gate-m{mutation}']
+                self.assertIn('Yosys', record['preparation']['version'])
+                self.assertTrue(any(k.endswith('simcells.v') for k in record['source_sha256']))
+                self.assertTrue(any(k.endswith('netlist.v') for k in record['source_sha256']))
                 netlist = (out / f'gate-m{mutation}/netlist.v').read_text()
                 self.assertEqual(set(re.findall(r'\\\$_(DFF\w*?)_ ', netlist)), {'DFF_P'})
                 self.assertNotIn('initial', netlist)

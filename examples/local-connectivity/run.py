@@ -11,7 +11,8 @@ TOP = 'conn_check'
 PARAMETER_MODULE = 'soc_probe'  # soc_top after flattening; it carries MUTATION
 CONFIGS = {'soc': {}}
 BOUND = 8
-PROOF_DEPTH = 2  # one step of history for the registered CPU interrupt; depth 1 leaves its induction open
+PROOF_DEPTH = 3  # induction closes at 2; the base case needs 3 steps to show a fault in the registered
+                 # CPU_IRQ row, whose clocked assertion takes effect one step after sampling
 SOURCES = [HERE / 'rtl/soc_top.sv', HERE / 'ip_blackbox.sv', HERE / 'conn_check.sv', G.TABLE, HERE / 'generate.py']
 SCOPE = ('Unbounded proof that every row of connectivity.csv holds for any behaviour of the eight '
          'black-box blocks. Block internals, clock quality and reset timing are out of scope.')
@@ -40,6 +41,9 @@ def plan(bound, demo_bug):
 
 
 if __name__ == '__main__':
+    if G.stale():  # never prove a checker that no longer matches the table or the RTL
+        print('RUNNER_ERROR', G.stale(), file=sys.stderr)
+        sys.exit(1)
     spec = importlib.util.spec_from_file_location('formal_runner', HERE.parent / 'local-formal-common/runner.py')
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)

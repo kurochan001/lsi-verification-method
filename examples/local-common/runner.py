@@ -73,17 +73,20 @@ def run(plugin, args):
     for configuration, parameters in configurations.items():
         for mutation in sorted({c['mutation'] for c in cases if c['configuration'] == configuration}):
             key = f'{configuration}-m{mutation}'
-            sources = plugin.SOURCES
+            sources, prepared = plugin.SOURCES, None
             if hasattr(plugin, 'build_sources'):  # e.g. a netlist synthesized for this configuration
                 sources, prepared = plugin.build_sources(args, configuration, parameters, mutation, out / key)
                 if prepared['error'] or prepared['returncode'] != 0:
-                    builds[key] = prepared
+                    builds[key] = dict(prepared, log=prepared.get('log', key + '-build.log'))
                     continue
             command = [args.iverilog, '-g2012', '-s', plugin.TOP, '-o', str(out / (key + '.vvp')),
                        f'-P{plugin.TOP}.MUTATION={mutation}']
             command += [f'-P{plugin.TOP}.{name}={value}' for name, value in parameters.items()]
             command += [str(p) for p in sources]
             builds[key] = PROCESS.execute(command, out / (key + '-build.log'), args.timeout, out)
+            if prepared is not None:  # record what was compiled, including generated and external files
+                builds[key].update(preparation=prepared, source_sha256={
+                    str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in sources})
     PROCESS.write_json(out / 'builds.json', builds)
     results, hits = [], {name: {} for name in configurations}
     for case in cases:
@@ -98,7 +101,7 @@ def run(plugin, args):
         build = builds[key]
         if build['error'] or build['returncode'] != 0:
             execution = dict(command=command, returncode=None, seconds=0,
-                             error='build failed; see ' + key + '-build.log')
+                             error='build failed; see ' + build.get('log', key + '-build.log'))
             log.write_text(execution['error'] + '\n')
         else:
             execution = PROCESS.execute(command, log, args.timeout, directory)

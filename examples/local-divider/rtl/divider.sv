@@ -72,11 +72,15 @@ module divider #(parameter W = 32, MUTATION = 0) (
     reg f_past = 0, f_signed = 0;
     reg [W-1:0] f_a = 0, f_b = 0;
     reg [CW+1:0] f_age = 0;
+    reg f_pending = 0;  // accepted, not yet shown as a result, and not discarded
     always @(posedge clk) begin
         f_past <= 1;
         if (in_valid && in_ready) begin
             f_a <= in_dividend; f_b <= in_divisor; f_signed <= in_signed; f_age <= 1;
         end else if (f_age != {CW+2{1'b1}}) f_age <= f_age + 1'b1;
+        if (!rst_n || flush) f_pending <= 0;
+        else if (in_valid && in_ready) f_pending <= 1;
+        else if (out_valid) f_pending <= 0;
     end
     wire signed [W-1:0] f_sa = f_a, f_sb = f_b;
     wire signed [W-1:0] f_sq = f_sa / f_sb, f_sr = f_sa % f_sb;
@@ -99,13 +103,16 @@ module divider #(parameter W = 32, MUTATION = 0) (
             if ($past(rst_n && out_valid && !out_ready && !flush))
                 ap_hold: assert(out_valid && $stable(out_quotient) && $stable(out_remainder));
             if (out_valid && !$past(out_valid)) ap_latency: assert(f_age == (f_short ? 1 : W + 1));
+            // Every accepted division that is not flushed or reset produces its result.
+            if (f_pending && f_age == (f_short ? 1 : W + 1)) ap_completion: assert(out_valid);
             if (out_valid) begin
                 ap_quotient: assert(out_quotient == spec_q);
                 ap_remainder: assert(out_remainder == spec_r);
             end
             // Auxiliary invariants on the partial result. With them, k-induction closes at
-            // depth 2; without them, only at a depth longer than one division (W + 2).
+            // depth 2; without them, only at depth W + 3, back from a result to its acceptance.
             ai_exclusive: assert(!(busy && out_valid));
+            ai_pending: assert(busy == (f_pending && !out_valid));
             if (busy) begin
                 ai_operands: assert(divisor == f_bmag && divisor != 0 && !f_short);
                 ai_signs: assert(neg_q == (f_aneg ^ f_bneg) && neg_r == f_aneg);

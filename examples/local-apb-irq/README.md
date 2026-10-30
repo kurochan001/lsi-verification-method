@@ -100,8 +100,6 @@ wait=0/1/3の3構成を、`--wait`で1構成ずつ実行します。失敗デモ
 
 2026-10-26には、Icarus Verilog 11.0の環境でも3構成のsmokeが成功し、保存した`summary.json`と`manifest.json`で、44/44または45/45目標、3種類の変異の検出、予定5ケースの完了を確認しました。
 
-結合検証のnightly全3構成はローカルで確認しました。
-
 製品への展開では、割り込みの極性・レベル／パルス方式、CPU側の確認応答、優先順位・共有割り込み、CDC、実際のレジスタ仕様とソフトウェアの順序制約を照合してください。[機能間のクロス検証](../../docs/method/feature-interaction-verification.md)と[継続リグレッション](../../docs/method/continuous-regression.md)も参照してください。
 
 ## クロスモデルの計測と追加ケースの選択

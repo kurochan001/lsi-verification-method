@@ -15,7 +15,7 @@
     },
     {
       "id": "GS-FLOW",
-      "summary": "A held request gets back-to-back bursts with one idle cycle between; no request keeps the arbiter idle.",
+      "summary": "A held request gets back-to-back bursts, two cycles apart (one idle cycle, then the arbitration cycle); no request keeps the arbiter idle.",
       "goals": [
         "flow/back-to-back",
         "flow/idle"

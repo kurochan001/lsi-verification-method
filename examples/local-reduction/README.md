@@ -102,6 +102,4 @@ JUnitは**18件の集約判定**です。学習1件、選択1件、正常リグ�
 
 2026-10-26には、Icarus Verilog 11.0の環境でもsmokeが成功しました。保存した`summary.json`・`manifest.json`・`selection.json`で、seed 17、候補24ケース、229回のシミュレーション、233／42／47検査サイクル、各方式19目標、M1〜M3の維持とM4の検出差を確認しました。
 
-nightlyはローカルで実行しました。
-
 製品への適用では、ここで省略した時間関係・長時間負荷・構成・独立した検査方式も評価してください。[検証の削減の手順](../../docs/method/verification-reduction.md)と[継続リグレッション](../../docs/method/continuous-regression.md)が参照先です。

@@ -2,7 +2,7 @@
 
 有償EDAライセンスを使わず、PythonとIcarus Verilogで動く最小例です。ランナーのセルフテストと、説明用IRQ回路のリグレッションを実行します。[継続的リグレッションの手順](../../docs/method/continuous-regression.md)を具体的なファイルにしたものです。
 
-この例と同じ形のランナーを持つ初期の11例には、[FIFOのランダム検証例](../local-fifo/README.md)と[商用ツール不要のフォーマル検証例](../local-fifo-formal/README.md)、[APBレジスタ検証例](../local-apb/README.md)、[APBと割り込みの結合検証例](../local-apb-irq/README.md)、[ready/valid通信のランダム検証例](../local-stream/README.md)、[SVAの実行例](../local-sva/README.md)、[リグレッションの削減の比較例](../local-reduction/README.md)、[アービタの検証例](../local-arbiter/README.md)、[UARTのランダム検証例](../local-uart/README.md)、[APB・UART・割り込みの結合検証例](../local-apb-uart/README.md)もあります。全体の構成は[初期の11例の構成](../../README.md#初期の11例の構成)を参照してください。以下の件数は、特記がなければIRQ・CDCリグレッションの内訳です。
+この例を含む初期の11例には、ほかに[FIFOのランダム検証例](../local-fifo/README.md)と[商用ツール不要のフォーマル検証例](../local-fifo-formal/README.md)、[APBレジスタ検証例](../local-apb/README.md)、[APBと割り込みの結合検証例](../local-apb-irq/README.md)、[ready/valid通信のランダム検証例](../local-stream/README.md)、[SVAの実行例](../local-sva/README.md)、[リグレッションの削減の比較例](../local-reduction/README.md)、[アービタの検証例](../local-arbiter/README.md)、[UARTのランダム検証例](../local-uart/README.md)、[APB・UART・割り込みの結合検証例](../local-apb-uart/README.md)もあります。全体の構成は[初期の11例の構成](../../README.md#初期の11例の構成)を参照してください。以下の件数は、特記がなければIRQ・CDCリグレッションの内訳です。
 
 ## 1. 実行するもの
 

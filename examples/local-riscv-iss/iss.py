@@ -112,6 +112,7 @@ class Retired:
     addr: int = 0
     data: int = 0    # loaded or stored word
     result: int = 0  # value computed even when rd is x0
+    taken: bool = False  # a branch whose condition held
     tags: int = 0
 
 
@@ -144,8 +145,8 @@ def execute(words, data, limit=100000):
         elif op == 0x67:
             value, nxt = nxt, (a + imm_i) & MASK & ~1
         elif op == 0x63:
-            taken = [a == b, a != b, None, None, signed(a) < signed(b), signed(a) >= signed(b), a < b, a >= b][f3]
-            if taken:
+            record.taken = bool([a == b, a != b, None, None, signed(a) < signed(b), signed(a) >= signed(b), a < b, a >= b][f3])
+            if record.taken:
                 nxt = (pc + imm_b) & MASK
         elif op == 0x03:
             record.addr = (a + imm_i) & MASK
@@ -201,11 +202,10 @@ def tag(trace):
         if op == 0x67 and r.insn >> 15 & 31 in {t.rd for t in trace[max(0, i - 2):i]} - {0}:
             r.tags |= bit['jalr/forwarded-base']
         if op == 0x63:
-            taken = trace[i + 1].pc != r.pc + 4
-            r.tags |= bit['branch/taken' if taken else 'branch/not-taken']
+            r.tags |= bit['branch/taken' if r.taken else 'branch/not-taken']
             if prev and prev.rd and prev.rd in srcs:
                 r.tags |= bit['branch/forwarded-operand']
-            if taken and trace[i + 1].pc < r.pc:
+            if r.taken and trace[i + 1].pc < r.pc:
                 r.tags |= bit['branch/backward']
         if (prev and prev.insn >> 7 & 31 == 0 and prev.result and prev.insn & 0x7f in (0x13, 0x33, 0x37, 0x17)
                 and 0 in srcs):

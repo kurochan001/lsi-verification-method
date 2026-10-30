@@ -45,10 +45,15 @@ class RunnerTest(unittest.TestCase):
         # build_sources and add_arguments: an absent synthesis tool fails only the netlist builds
         process=run_example('local-gate-sim',self.out,'--iterations','2','--yosys',str(self.directory/'absent'))
         self.assertEqual(process.returncode,1,process.stdout+process.stderr)
-        statuses={p.parent.name:read_json(p)['status'] for p in self.out.glob('*/result.json')}
-        self.assertTrue(all(v=='error' for k,v in statuses.items() if k.startswith('gate-')))
-        self.assertTrue(all(v=='pass' for k,v in statuses.items() if k.startswith('rtl-')))
-        self.assertIsNotNone(read_json(self.out/'builds.json')['gate-m0']['error'])
+        results={p.parent.name:read_json(p) for p in self.out.glob('*/result.json')}
+        self.assertEqual(len(results),read_json(self.out/'summary.json')['planned'])
+        self.assertEqual(len(results),12)
+        self.assertTrue(all(r['status']=='error' for k,r in results.items() if k.startswith('gate-')))
+        self.assertTrue(all(r['status']=='pass' for k,r in results.items() if k.startswith('rtl-')))
+        build=read_json(self.out/'builds.json')['gate-m0']
+        self.assertIsNotNone(build['error'])
+        self.assertIn(build['log'],results['gate-boundaries']['message'])
+        self.assertTrue((self.out/build['log']).exists())
 
     def test_compiler_nonzero(self):
         self.assert_rejected(self.run_cli('--iverilog',self.wrapper('print("compiler failed");sys.exit(3)')))

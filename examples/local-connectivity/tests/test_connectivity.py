@@ -2,6 +2,7 @@ import copy
 from pathlib import Path
 import shutil
 import sys
+import tempfile
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'local-common'))
 from local_test_support import load_example
@@ -35,6 +36,18 @@ class PlanTest(unittest.TestCase):
         conditions = {r['when'] for r in P.TABLE if r['when']}
         self.assertEqual(len(props['cover']), len(conditions) + 1)
         self.assertEqual(props['assume'], set())
+
+    def test_committed_checker_matches_the_files_it_was_generated_from(self):
+        self.assertIsNone(G.stale())
+        with tempfile.TemporaryDirectory() as tmp:
+            changed = Path(tmp) / 'connectivity.csv'
+            changed.write_text(G.TABLE.read_text().replace('IRQ1_TIMER,u_irq.src_i[1],u_timer.irq_o',
+                                                           'IRQ1_TIMER,u_irq.src_i[1],u_uart.irq_o'))
+            original, G.TABLE = G.TABLE, changed
+            try:
+                self.assertIn('run generate.py', G.stale())
+            finally:
+                G.TABLE = original
 
     def test_prepare_exposes_every_probe_and_sets_the_mutation(self):
         script = P.prepare(P.CONFIGS['soc'], P.plan(P.BOUND, 0)[3])
@@ -70,6 +83,12 @@ class TableTest(unittest.TestCase):
 
     def test_unused_block_output_is_rejected(self):
         self.rejects(edited(P.TABLE, 'DMA_REQ0', **{'from': "1'b0"}), 'u_uart.dma_req_o')
+
+    def test_unused_bit_of_a_bus_is_rejected(self):
+        self.rejects(edited(P.TABLE, 'PAD3_GPIO', **{'from': "{u_gpio.gpio_oe_o[3],1'b0}"}), 'u_gpio.gpio_o[3]')
+
+    def test_destination_used_as_a_source_is_rejected(self):
+        self.rejects(edited(P.TABLE, 'GPIO_IN', **{'from': 'u_gpio.gpio_i'}), 'is not a block output or SoC input')
 
     def test_unknown_port_is_rejected(self):
         self.rejects(edited(P.TABLE, 'IRQ1_TIMER', **{'from': 'u_timer.irq'}), 'u_timer.irq')

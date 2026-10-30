@@ -1,4 +1,4 @@
-# ローカル専用の検証例を実行する
+# Icarus共通ランナーで検証例を実行する
 
 [ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先度付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)、[INT8シストリックアレイ](../local-systolic-array/README.md)、[再量子化](../local-requantize/README.md)、[活性化関数](../local-activation/README.md)、[畳み込みのラインバッファ](../local-conv-window/README.md)、[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)の共通ランナーです。
 
@@ -125,9 +125,25 @@ python3 -m unittest discover -s examples/local-ai-regression/tests -v
 python3 -m unittest discover -s examples/local-gate-sim/tests -v
 python3 -m unittest discover -s examples/local-divider/tests -v
 python3 -m unittest discover -s examples/local-riscv-iss/tests -v
+python3 -m unittest discover -s examples/local-access-control/tests -v
+python3 -m unittest discover -s examples/local-axi-reorder/tests -v
+python3 -m unittest discover -s examples/local-cache-dma/tests -v
+python3 -m unittest discover -s examples/local-clock-reset/tests -v
+python3 -m unittest discover -s examples/local-counter-snapshot/tests -v
+python3 -m unittest discover -s examples/local-credit-link/tests -v
+python3 -m unittest discover -s examples/local-descriptor-dma/tests -v
+python3 -m unittest discover -s examples/local-dma-ownership/tests -v
+python3 -m unittest discover -s examples/local-ecc-memory/tests -v
+python3 -m unittest discover -s examples/local-mbist/tests -v
+python3 -m unittest discover -s examples/local-packet-crc/tests -v
+python3 -m unittest discover -s examples/local-priority-irq/tests -v
+python3 -m unittest discover -s examples/local-stream-dma/tests -v
+python3 -m unittest discover -s examples/local-width-converter/tests -v
 ```
 
 従来18例の内訳は、共通14、ECC 6、SPI 4、タイマー・ウォッチドッグ6、非同期FIFO 6、I²C 5、APB結合7、AHB 9、AXI 9、バスブリッジ9、AXI4 6、DMA 6、複数マスター6、非同期APBブリッジ5、復旧6、低電力5、Stream 6、DSP 6、同一領域の競合6の計127テストです。実RTLの検証に加え、ビルド失敗、タイムアウト、無関係な異常終了、完了記録不足、件数の誤り・重複、通常検証のカバー欠落、要求未達、カタログ重複、出力先保護を確認します。これらは初期の11例のランナーのセルフテスト132件や、そのJUnit件数とは別です。
+
+現在のローカル例全体のセルフテストは478件です。このうち共通シミュレーション45例が291件、本共通ランナーが15件で、合計306件です。残る172件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの19件、Top-Kの4件、AI用回路の集約手順の5件、接続性の12件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。初期の11例の132件を合わせると、全セルフテストは610件です。
 
 ## AHB／AXIのフォーマル検証
 
@@ -137,7 +153,7 @@ python3 -m unittest discover -s examples/local-riscv-iss/tests -v
 python3 -m unittest discover -s examples/local-bus-formal/tests -v
 ```
 
-フォーマルの判定テスト12件はツールなしでも実行できます。現在のローカル例全体のセルフテストは472件です。このうち共通シミュレーション45例が289件、本共通ランナーが15件で、合計304件です。残る168件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの19件、Top-Kの4件、AI用回路の集約手順の5件、接続性の9件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。初期の11例の132件を合わせると、全セルフテストは604件です。実際の証明はリンク先の実行コマンドで確認してください。
+フォーマルの判定テスト12件はツールなしでも実行できます。実際の証明はリンク先の実行コマンドで確認してください。
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
@@ -234,11 +250,11 @@ python3 examples/local-ai-regression/run.py --stage simulation --profile nightly
 | --- | --- | --- | --- | --- |
 | 合成後ネットリスト | `rtl`・`gate` | 14／18 | 9 | 6 |
 | 多サイクル除算器 | `w32`・`w8` | 14／18 | 16 | 8 |
-| RISC-VコアとISS | `rv32i` | 7／9 | 16 | 8 |
+| RISC-VコアとISS | `rv32i` | 7／9 | 16 | 10 |
 
 合成後ネットリストの例のため、プラグインに2つの任意のフックを加えました。どちらも、定義しない例の動作は変わりません。
 
-- `build_sources(args, configuration, parameters, mutation, directory)`：構成と変異ごとに、コンパイルするソースの一覧と、その準備の実行結果を返します。合成後ネットリストの例は、ここでYosysを実行してネットリストを作ります。準備が失敗すると、そのビルドを使うケースはエラーになります。
+- `build_sources(args, configuration, parameters, mutation, directory)`：構成と変異ごとに、コンパイルするソースの一覧と、その準備の実行結果を返します。合成後ネットリストの例は、ここでYosysを実行してネットリストを作ります。準備が失敗すると、そのビルドを使うケースはエラーになり、準備のログを案内します。成功した場合は、準備の結果と、実際にコンパイルした全ソースのSHA-256を`builds.json`に記録します。マニフェストは実行前に作るため、生成するファイルのハッシュはこちらに残します。
 - `add_arguments(parser)`：例ごとのオプション（`--yosys`、`--cell-library`など）を追加します。
 
 除算器の例は、シミュレーションの`run.py`とは別に、フォーマルの`formal.py`（4・8ビット、12件のJUnit）を持ちます。3例を加えた共通シミュレーションは45例・98構成、JUnit 692／888件です。
