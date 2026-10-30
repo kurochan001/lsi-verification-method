@@ -52,6 +52,16 @@ class MultiprecisionNumbers(unittest.TestCase):
         self.assertEqual(M.cast16(R.fp32(Fraction(65520))),0x7C00)
         self.assertEqual(M.cast16(R.fp32(Fraction(65519))),0x7BFF)
 
+    def test_fp16_midpoints_use_code_parity_and_both_neighbors(self):
+        samples=list(V.fp16_midpoint_samples())
+        for bits,expected in samples:
+            self.assertEqual(M.cast16(bits),expected,hex(bits))
+        # Largest subnormal / smallest normal: just below, at, and above the tie.
+        midpoint=R.fp32((M.decode(0x03FF,M.FP16)+M.decode(0x0400,M.FP16))/2)
+        self.assertIn((midpoint-1,0x03FF),samples)
+        self.assertIn((midpoint,0x0400),samples)
+        self.assertIn((midpoint+1,0x0400),samples)
+
     def test_fp16_tree_is_balanced_not_a_left_fold(self):
         a=[0x6C00,0x3C00,0xEC00,0xBC00]+[0]*4
         b=[0x6C00,0x3C00,0x6C00,0x3C00]+[0]*4

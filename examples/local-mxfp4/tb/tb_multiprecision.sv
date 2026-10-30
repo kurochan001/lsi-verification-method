@@ -10,7 +10,7 @@ module tb_multiprecision;
   logic sum8_valid_dbg;
   initial begin clk=0;forever #5 clk=~clk;end
   mp_bdp dut(.*);
-  mxfp4_bdp legacy(.clk(clk),.rst_n(rst_n),.in_valid(in_valid && in_ready && mode==FP4),
+  mxfp4_bdp legacy(.clk(clk),.rst_n(rst_n),.in_valid(in_valid && in_ready && golden_mode==FP4),
     .in_ready(),.a_block(a_block),.b_block(b_block),.first(first),.last(last),.out_valid(legacy_valid),
     .out_ready(out_ready),.result(legacy_result),.sop4_dbg(),.sop_valid_dbg(),.exp_internal_dbg(),.exp_valid_dbg(),.gradual_uf_dbg());
   integer fd,n,m,fv,lv,error_expected,gap,stall,check_sum,cycle=0,beats=0,results=0,sums=0,x0=0,held=0;

@@ -82,8 +82,10 @@ A/Bの書込みはIDLE中に行います。`wr_sel=0`がA、`1`がBで、アド�
 | Q1・Q2 | 全256 E4M3コード、42ビット積和の直接比較、nightlyで256×256の全要素ペア |
 | Q3〜Q5 | GRSとタイ、極端なスケール、2段階丸め、NaN／非正規化数、乱数 |
 | H1〜H4 | FP16の厳密積、平衡ツリーと逐次和の差、特殊値、境界、乱数 |
-| エンコーダ | E4M3の全隣接有限値の中点と前後・正負、FP16の丸め境界、nightlyで全65,536 FP16コードのFP32経由の変換 |
-| GEMM | 4×4・KBLK=4、4×4・KBLK=1、2×3・KBLK=3、全出力・完了サイクル・再起動 |
+| エンコーダ | E4M3の全隣接有限値の中点と前後・正負、FP16の丸め境界、nightlyで全65,536 FP16コードのFP32経由の変換と隣接有限値31,743組の中点・前後・正負 |
+| GEMM | 4×4・KBLK=4、4×4・KBLK=1、2×3・KBLK=3、全出力・完了サイクル・再起動・範囲外書込み・起動拒否後の出力保持 |
+
+FP16の中点検査の期待値は、隣接コードと保持する仮数の偶奇から決め、変換モデルを流用しません。smokeは各指数の桁上がりと非正規化数／正規数の境界、nightlyは全31,743組を対象とし、オーバーフロー境界も別に確認します。GEMMのランナーは結果数だけでなく、完了前の保持・最終値・起動拒否・リセット取消しを含む予定比較件数の一致を要求します。
 
 全FP16コードの変換では、NaNは規定の正規化NaNへ変換します。これは全FP32入力の網羅でも、全FP16要素ペアの網羅でもありません。要求の対応は[requirements.json](requirements.json)へ記録し、ネイティブcovergroupやRTLコードカバレッジの達成率とは区別します。元のUVM環境への3モード追加は行っていません。
 
@@ -96,7 +98,7 @@ python3 examples/local-mxfp4/run.py --profile nightly
 python3 examples/local-mxfp4/run.py --stage multiprecision
 python3 examples/local-mxfp4/run.py --stage core
 
-# 有理数モデル・判定処理：18件
+# 有理数モデル・判定処理：19件
 python3 -m unittest discover -s examples/local-mxfp4/tests -v
 ```
 

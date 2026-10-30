@@ -58,6 +58,7 @@ module tb_mp_encoder;
       mode=2'(m);index=0;in_valid=1;out_ready=0;legacy_pending=(m==2);
       #1;if(!in_ready) $fatal(1,"MP_ENC_READY");
       tick();in_valid=0;
+      if(!out_valid) $fatal(1,"MP_ENC_LATENCY");
       if(err_mode) $fatal(1,"MP_ENC_ERROR");
       vectors_count++;
       for(integer i=0;i<count;i++) begin

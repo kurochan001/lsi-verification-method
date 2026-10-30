@@ -66,6 +66,13 @@ def bdp_vectors(seed, iterations, exhaustive=False):
     series(M.FP8,[([0x38]*16,[0x38]*16),([0x38]*16,[0x38]*16)],scales=[(255,127),(127,127)],gap=4)
     # A four-block stream exercises the FP8 partial sum and metadata with no bubbles.
     series(M.FP8,[([0x38+i]*16,[0x38]*16) for i in range(8)],stall=3)
+    # Two distinct FP32 rounding points: block1=2^-24, block2=1+2^-24.
+    # Rounding each block and then accumulating gives 1; one final round gives 1+2^-23.
+    series(M.FP8,[([1]+[0]*15,[1]+[0]*15),([0]*16,[0]*16),
+                  ([0x50,1]+[0]*14,[0x50,1]+[0]*14),([0]*16,[0]*16)],
+           scales=[(124,124)]*4,gap=2,stall=3)
+    series(M.FP8,[([0x38]*16,[0x38]*16)]*4,gap=1,wrong_mode=True)
+    series(M.FP4,[(block(2),block(2))]*3,gap=1,wrong_mode=True)
     for odd in [0,1]:
         for small in [3,4,5]:
             series(M.FP8,[([0x7E,0x38,0x38]+[0]*13,[0x7E,small,8 if odd else 0]+[0]*13),([0]*16,[0]*16)])
@@ -122,7 +129,10 @@ def gemm_vectors(seed, iterations, rows=4, cols=4, kblocks=4):
             for lane,stream in enumerate(mat):
                 for index,data in enumerate(stream):
                     commands.append([op,mode,lane*len(stream)+index,data,0,0])
-        commands.append([3 if reset else 2,mode,0,0,matrix_result(aa,bb,mode),error])
+        result=matrix_result(aa,bb,mode)
+        commands.append([3 if reset else 2,mode,0,0,result,error])
+        # A rejected start must preserve the previous result, including nonzero C.
+        commands.append([4,3,0,0,result,1])
     def random_matrix(mode,lanes):
         streams=[]
         width={M.FP4:4,M.FP8:8,M.FP16:16}[mode]
@@ -161,10 +171,24 @@ def gemm_vectors(seed, iterations, rows=4, cols=4, kblocks=4):
     return commands
 
 
+def fp16_midpoint_samples(exhaustive=False):
+    """FP32 neighbors and FP16 expectations derived from adjacent codes, not cast16."""
+    if exhaustive:
+        lower_codes=range(0x7BFF)  # All 31,743 adjacent nonnegative finite pairs.
+    else:
+        lower_codes=sorted({0,1,0x03FE,0x03FF,0x0400,0x0401,0x7BFE} |
+                           {e*1024-1 for e in range(2,31)})
+    for lower in lower_codes:
+        midpoint=R.fp32((M.decode(lower,M.FP16)+M.decode(lower+1,M.FP16))/2)
+        for delta,expected in [(-1,lower),(0,lower+(lower%2)),(1,lower+1)]:
+            yield midpoint+delta,expected
+            yield (midpoint+delta)|0x80000000,expected|0x8000
+
+
 def encoder_vectors(seed, iterations, exhaustive=False):
     rows=[]
-    def add(mode, values, stall=0):
-        outputs=M.encode(values,mode)
+    def add(mode, values, stall=0,outputs=None):
+        if outputs is None:outputs=M.encode(values,mode)
         rows.append([mode,R.pack(values,32),len(outputs),R.pack(outputs,136),stall])
     for mode in range(3):
         add(mode,[0x80000000,1,0x807FFFFF]+[0]*29,3)
@@ -188,8 +212,15 @@ def encoder_vectors(seed, iterations, exhaustive=False):
         add(M.FP8,values+[0]*(32-len(values)),2)
     for value in [Fraction(1,4),Fraction(3,4),Fraction(5,4),Fraction(7,4),Fraction(5,2),Fraction(7,2),Fraction(5)]:
         add(M.FP4,[0x40800000,R.fp32(value),R.fp32(-value)]+[0]*29,1)
-    # Every binary16 subnormal/normal rounding boundary near zero and overflow.
-    for value in [R.power2(-25),3*R.power2(-25),1023*R.power2(-24),R.power2(-14),Fraction(65520)]:
+    # Round trips do not exercise rounding. Check midpoint neighborhoods separately.
+    samples=list(fp16_midpoint_samples(exhaustive))
+    for offset in range(0,len(samples),32):
+        chunk=samples[offset:offset+32]
+        values=[bits for bits,_ in chunk]+[0]*(32-len(chunk))
+        codes=[code for _,code in chunk]+[0]*(32-len(chunk))
+        add(M.FP16,values,2,[R.pack(codes[i:i+8],16) for i in range(0,32,8)])
+    # The finite/Inf boundary has no finite upper endpoint for a midpoint pair.
+    for value in [Fraction(65520)]:
         bits=R.fp32(value)
         add(M.FP16,[bits-1,bits,bits+1,(bits-1)|0x80000000,bits|0x80000000,(bits+1)|0x80000000]+[0]*26,3)
     rng=random.Random(seed)

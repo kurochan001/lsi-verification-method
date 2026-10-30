@@ -11,14 +11,14 @@ module tb_mp_gemm #(
   logic [ADDR_W-1:0] wr_addr;
   logic [135:0] wr_data;
   logic [31:0] c_o [ROWS][COLS],legacy_c [ROWS][COLS];
-  logic legacy_busy,legacy_done;
+  logic legacy_busy,legacy_done,probe_write;
   initial begin clk=0;forever #5 clk=~clk;end
   mp_gemm #(.ROWS(ROWS),.COLS(COLS),.KBLK(KBLK)) dut(.*);
   mxfp4_gemm_top #(.ROWS(ROWS),.COLS(COLS),.KBLK(KBLK)) legacy(
-    .clk(clk),.rst_n(rst_n),.start(start && mode==FP4),.wr_en(wr_en && mode==FP4 && !busy),
+    .clk(clk),.rst_n(rst_n),.start(start && mode==FP4),.wr_en(wr_en && mode==FP4 && !busy && !probe_write),
     .wr_sel(wr_sel),.wr_addr(LEGACY_AW'(wr_addr)),.wr_data(wr_data),.busy(legacy_busy),.done(legacy_done),.c_o(legacy_c));
-  integer fd,n,op,m,address,expected_error,checks=0,runs=0,x0=0,aborted=0;
-  logic [511:0] expected;
+  integer fd,n,op,m,address,expected_error,checks=0,runs=0,x0=0,aborted=0,ignored_writes=0;
+  logic [32*ROWS*COLS-1:0] expected;
   string vectors,wave;
   task automatic check32(input logic [31:0] got,want);
     checks++;if(got!==want) $fatal(1,"MP_GEMM_DATA run=%0d got=%h expected=%h",runs,got,want);
@@ -27,6 +27,16 @@ module tb_mp_gemm #(
     logic [31:0] previous [ROWS][COLS];
     integer cycles,expected_cycles;
     previous=c_o;
+    // Poison every representable invalid address. In rectangular buffers, some
+    // would wrap onto valid data if narrowed before the full-width bounds check.
+    probe_write=1;
+    for(integer side=0;side<2;side++) begin
+      for(integer bad=(side==0 ? ROWS : COLS)*4*KBLK;bad<2**ADDR_W;bad++) begin
+        wr_sel=1'(side);wr_addr=ADDR_W'(bad);wr_data='1;wr_en=1;
+        @(negedge clk);ignored_writes++;
+      end
+    end
+    wr_en=0;probe_write=0;
     expected_cycles=1+KBLK*(m==0 ? 4 : m==1 ? 2 : 1)+(m==2 ? 6 : 8);
     @(negedge clk);mode=2'(m);start=1;
     @(negedge clk);start=0;mode=3;cycles=1;
@@ -52,7 +62,7 @@ module tb_mp_gemm #(
     @(negedge clk);start=0;wr_en=0;
   endtask
   initial begin
-    rst_n=0;start=0;wr_en=0;wr_sel=0;wr_addr=0;wr_data=0;mode=FP4;
+    rst_n=0;start=0;wr_en=0;wr_sel=0;wr_addr=0;wr_data=0;mode=FP4;probe_write=0;
     if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave)) $fatal(1,"arguments required");
     $dumpfile(wave);$dumpvars(1,tb_mp_gemm);
     fd=$fopen(vectors,"r");if(fd==0) $fatal(1,"vectors missing");
@@ -67,7 +77,7 @@ module tb_mp_gemm #(
       end else if(op==4) begin
         start=1;@(negedge clk);start=0;
         if(!done || busy || !error) $fatal(1,"MP_GEMM_RESERVED");
-        for(integer r=0;r<ROWS;r++) for(integer c=0;c<COLS;c++) check32(c_o[r][c],0);
+        for(integer r=0;r<ROWS;r++) for(integer c=0;c<COLS;c++) check32(c_o[r][c],expected[32*(r*COLS+c) +: 32]);
         @(negedge clk);
       end else begin
         if(op==3) begin
@@ -84,6 +94,7 @@ module tb_mp_gemm #(
         run_gemm();
       end
     end
+    $display("MP_GEMM_IGNORED_WRITES count=%0d",ignored_writes);
     $display("MP_GEMM PASS runs=%0d checks=%0d x0=%0d aborted=%0d",runs,checks,x0,aborted);
     $finish;
   end

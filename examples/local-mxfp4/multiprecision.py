@@ -46,7 +46,13 @@ def execute(runner,evidence,args,passed,executions):
             pattern=r'^MP_ENCODER PASS vectors=(\d+) beats=(\d+) x0=(\d+) held=(\d+)$'
         else:
             rows=gemm_vectors(args.seed,min(args.iterations,32 if args.profile=='nightly' else 4),config['ROWS'],config['COLS'],config['KBLK'])
-            expected=dict(runs=sum(row[0] in (2,3) for row in rows),x0=sum(row[0] in (2,3) and row[1]==2 for row in rows),aborted=sum(row[0]==3 for row in rows))
+            # Every pre-done C hold check, final value, compatibility value,
+            # reset-abort value and rejected-start value must be observed.
+            comparisons=sum(1+config['KBLK']*{0:4,1:2,2:1}[row[1]]+(6 if row[1]==2 else 8)+(row[1]==2)
+                            for row in rows if row[0] in (2,3))
+            comparisons+=10*sum(row[0]==3 for row in rows)+sum(row[0]==4 for row in rows)
+            expected=dict(runs=sum(row[0] in (2,3) for row in rows),checks=config['ROWS']*config['COLS']*comparisons,
+                          x0=sum(row[0] in (2,3) and row[1]==2 for row in rows),aborted=sum(row[0]==3 for row in rows))
             pattern=r'^MP_GEMM PASS runs=(\d+) checks=(\d+) x0=(\d+) aborted=(\d+)$'
         path=out/(name+'.txt');write_vectors(path,rows)
         command=[str(binary),'+VECTORS='+str(path),'+WAVE='+str(out/(name+'.vcd'))]
