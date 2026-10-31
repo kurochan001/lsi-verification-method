@@ -2,6 +2,8 @@
 
 既存の[APBレジスタ](../local-apb/README.md)を、実際のSystemVerilog UVMクラスライブラリで検証します。PythonでUVMを模倣する例ではありません。Verilator 5.052とAccellera UVM 2020-3.2で実行します。対応状況は[Verilatorの公式変更履歴](https://verilator.org/guide/latest/changes.html)と[Accelleraの配布情報](https://www.accellera.org/downloads/standards/uvm)を参照してください。
 
+既存環境から移す手順は、[UVM移行ガイド](../../docs/method/uvm-migration-guide.md)を参照してください。本例と非UVM側では必須目標・待ち構成が異なるため、旧要求との対応と不足を確認する起点として使います。passive併走・旧入力再生・旧新差分の自動検査は、本例に実装済みの機能ではありません。
+
 ## RALと独立したスコアボードの二重照合
 
 RALのfrontdoorを実APBへ変換し、monitorの観測を仕様から作った期待値と比較します。
