@@ -24,6 +24,7 @@ def run(args):
         if name in TOOLS:command+=['--uvm-home',str(args.uvm_home)]
         if name=='local-uvm-random':command+=['--solver',args.solver]
         if name=='local-formal-replay':command+=['--formal-python',args.formal_python]
+        if name in CORE and args.simulation_timeout is not None:command+=['--timeout',str(args.simulation_timeout)]
         execution=E.P.execute(command,e.out/(name+'.log'),args.child_timeout,e.out);ok=False;detail=execution['error'] or execution['returncode']
         try:
             summary=json.loads((e.out/name/'summary.json').read_text());ok=not execution['error'] and execution['returncode']==0 and child_success(summary)
@@ -32,9 +33,11 @@ def run(args):
     return e.finish()
 def main():
     p=E.parser(__doc__,'local-soc-regression');p.add_argument('--stage',choices=('all','core','tools','formal'),default='all');p.add_argument('--uvm-home',type=Path);p.add_argument('--rdl-python',default=sys.executable);p.add_argument('--formal-python',default=sys.executable);p.add_argument('--solver',default='z3');p.add_argument('--child-timeout',type=float,default=1800)
+    p.add_argument('--simulation-timeout',type=float,help='per-command timeout forwarded to core children; omitted keeps child defaults')
     args=p.parse_args();E.validate(p,args)
     import math
     if not math.isfinite(args.child_timeout) or args.child_timeout<=0 or args.seed>2**31-4:p.error('invalid timeout/seed')
+    if args.simulation_timeout is not None and (not math.isfinite(args.simulation_timeout) or args.simulation_timeout<=0):p.error('finite positive simulation timeout required')
     if args.stage in ('all','tools') and args.uvm_home is None:p.error('--uvm-home required for tools stage')
     try:return run(args)
     except (OSError,ValueError,KeyError,TypeError) as exc:print('RUNNER_ERROR',exc,file=sys.stderr);return 1

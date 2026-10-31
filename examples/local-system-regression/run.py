@@ -32,12 +32,15 @@ def run(args):
     examples=(SIMULATIONS if args.stage in ('all','simulation') else [])+(FORMALS if args.stage in ('all','formal') else [])
     P.write_json(out/'manifest.json',dict(created_at=datetime.now(timezone.utc).isoformat(),examples=examples,
         profile=args.profile,seed=args.seed,python=args.python,timeout=args.timeout,formal_timeout=args.formal_timeout,
+        simulation_timeout=args.simulation_timeout,
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),SUPPORT_PATH)},
         child_evidence='Each child has its own source manifest, JUnit and detailed results. Parent cases are child regression gates.'))
     results=[]
     for name in examples:
         command=[args.python,str(HERE.parent/name/'run.py'),'--out',str(out/name)]
-        if name in SIMULATIONS:command+=['--profile',args.profile,'--seed',str(args.seed)]
+        if name in SIMULATIONS:
+            command+=['--profile',args.profile,'--seed',str(args.seed)]
+            if args.simulation_timeout is not None:command+=['--timeout',str(args.simulation_timeout)]
         else:command+=['--timeout',str(args.formal_timeout)]
         execution=P.execute(command,out/(name+'.log'),args.timeout,out)
         summary_path=out/name/'summary.json';ok=False;message='child execution or summary failed'
@@ -59,10 +62,12 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--stage',choices=('all','simulation','formal'),default='all')
     p.add_argument('--profile',choices=('smoke','nightly'),default='smoke');p.add_argument('--seed',type=int,default=17)
     p.add_argument('--python',default=sys.executable);p.add_argument('--timeout',type=float,default=1800);p.add_argument('--formal-timeout',type=float,default=300)
+    p.add_argument('--simulation-timeout',type=float,help='per-command timeout forwarded to simulation children; omitted keeps child defaults')
     p.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('system-regression-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
     P.resolve_tools(args)
     if os.name!='posix' or args.seed<0 or any(not math.isfinite(n) or n<=0 for n in (args.timeout,args.formal_timeout)):p.error('requires POSIX, nonnegative seed and finite positive timeouts')
+    if args.simulation_timeout is not None and (not math.isfinite(args.simulation_timeout) or args.simulation_timeout<=0):p.error('finite positive simulation timeout required')
     if args.out.exists():p.error('output exists; choose a new directory')
     previous=signal.signal(signal.SIGTERM,P.interrupted)
     try:return run(args)

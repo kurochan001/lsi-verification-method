@@ -49,6 +49,8 @@ python3 examples/local-soc-regression/run.py \
 
 同じ指定に`--profile nightly`と新しい`--out`を付ければnightlyです。`--stage core`は4回路、`--stage tools`はUVM／レジスタ生成、`--stage formal`は反例再現だけを実行します。選択しなかった範囲は合格へ含めません。`--child-timeout`は子1リグレッションの上限で、既定1800秒です。
 
+coreの4例は、`--simulation-timeout`で各ビルド・シミュレーションの上限を指定できます。省略時は子の既定値（各10秒）を使います。負荷の高い環境でnightlyがタイムアウトする場合は、例えば`--simulation-timeout 60`を指定します。`--child-timeout`は子全体の上限なので、両方を区別して調整してください。入力件数や合格条件は変わらず、タイムアウトは失敗として残ります。この指定はtools・formalの子には渡しません。
+
 ## 判定と件数
 
 親は7個の子リグレッションについて、終了コード、予定と完了数、全チェックの合格を要求します。一覧形式の結果には空でない一意のチェックIDを要求し、重複や欠落は拒否します。親JUnitは7件、直下の子JUnitはsmoke **114件**／nightly **138件**です。
