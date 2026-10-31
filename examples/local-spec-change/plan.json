@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "id": "apb-irq-priority-r1-r2",
+  "sources": [
+    "examples/local-spec-change/spec.md",
+    "examples/local-spec-change/run.py",
+    "tools/verification_plan.py",
+    "examples/local-apb-irq/run.py",
+    "examples/local-apb-irq/rtl/apb_irq.sv",
+    "examples/local-apb/rtl/apb_regs.sv",
+    "examples/local-apb-irq/tb/apb_irq_tb.sv",
+    "examples/local-exploration-common/evidence.py",
+    "examples/local-common/runner.py",
+    "examples/local-irq-cdc/run.py",
+    "examples/local-spec-change/capstone_checker.sv",
+    "examples/local-uvm-random/sim_main.cpp"
+  ],
+  "requirements": [
+    {
+      "id": "PRIORITY-R1",
+      "source": "examples/local-spec-change/spec.md",
+      "anchor": "S-R1"
+    },
+    {
+      "id": "PRIORITY-R2",
+      "source": "examples/local-spec-change/spec.md",
+      "anchor": "S-R2"
+    }
+  ],
+  "tests": [
+    {
+      "id": "r1-wait0",
+      "configuration": "wait0"
+    },
+    {
+      "id": "r1-wait1",
+      "configuration": "wait1"
+    },
+    {
+      "id": "r1-wait3",
+      "configuration": "wait3"
+    },
+    {
+      "id": "r2-wait0",
+      "configuration": "wait0"
+    },
+    {
+      "id": "r2-wait1",
+      "configuration": "wait1"
+    },
+    {
+      "id": "r2-wait3",
+      "configuration": "wait3"
+    }
+  ],
+  "items": [
+    {
+      "id": "TI-R1",
+      "requirements": [
+        "PRIORITY-R1"
+      ],
+      "tests": [
+        "r1-wait0",
+        "r1-wait1",
+        "r1-wait3"
+      ],
+      "configurations": [
+        "wait0",
+        "wait1",
+        "wait3"
+      ],
+      "checkers": [
+        "cycle-reference"
+      ],
+      "goals": [
+        "cross/bit0/mask0/clear1/event1",
+        "cross/bit0/mask1/clear1/event1",
+        "cross/bit1/mask0/clear1/event1",
+        "cross/bit1/mask1/clear1/event1",
+        "cross/bit2/mask0/clear1/event1",
+        "cross/bit2/mask1/clear1/event1",
+        "cross/bit3/mask0/clear1/event1",
+        "cross/bit3/mask1/clear1/event1"
+      ],
+      "min_hits": 1
+    },
+    {
+      "id": "TI-R2",
+      "requirements": [
+        "PRIORITY-R2"
+      ],
+      "tests": [
+        "r2-wait0",
+        "r2-wait1",
+        "r2-wait3"
+      ],
+      "configurations": [
+        "wait0",
+        "wait1",
+        "wait3"
+      ],
+      "checkers": [
+        "cycle-reference"
+      ],
+      "goals": [
+        "cross/bit0/mask0/clear1/event1",
+        "cross/bit0/mask1/clear1/event1",
+        "cross/bit1/mask0/clear1/event1",
+        "cross/bit1/mask1/clear1/event1",
+        "cross/bit2/mask0/clear1/event1",
+        "cross/bit2/mask1/clear1/event1",
+        "cross/bit3/mask0/clear1/event1",
+        "cross/bit3/mask1/clear1/event1"
+      ],
+      "min_hits": 1
+    }
+  ]
+}

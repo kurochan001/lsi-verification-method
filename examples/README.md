@@ -149,6 +149,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | [フォーマル反例の再現](local-formal-replay/README.md) | Yosys Witnessを外部入力へ変換し、内部状態をforceせずシミュレーション再現 | フォーマル＋Icarus |
 | [定時間比較・情報の流れ](local-constant-time/README.md) | 独立した秘密値を持つ2実行の公開信号・タイミングの一致、固定レイテンシ、比較結果の明示的な公開 | フォーマル＋Icarus |
 | [SoCの接続性](local-connectivity/README.md) | 接続表から生成した検査回路で、ブロックをブラックボックスにした上位配線を証明、表の漏れ・幅の検査、割り込み番号・端子の切替え・デバッグ信号の遮断 | フォーマル |
+| [仮定・保証と分割証明](local-compositional-formal/README.md) | 送信側・受信側・配線の契約、結合実装の検算、証明依存・欠落・版・循環の照合 | フォーマル |
 
 ## SVA・UVM・仕様生成・ソフトウェア連携・検証効率
 
@@ -158,7 +159,10 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | [SystemVerilog UVM・RAL](local-uvm/README.md) | APB agent・monitor・独立したスコアボード、RALとレジスタ操作 | UVM |
 | [passive・active UVMへの移行](local-uvm-migration/README.md) | 設定・factory・SVA報告、sequence・driverでの同一入力再生、14項目・20／21目標の維持、追加RAL検査 | Icarus＋UVM |
 | [複数UVM agentの協調](local-uvm-coordination/README.md) | APB設定・GAIN・ready、観測の到着順、同時受理・保持・取消、23 binと4 SVA目標 | UVM |
+| [UVM子環境と上位RALの再利用](local-uvm-hierarchy/README.md) | 共通driver、受動的な子環境、二つのsubmapと配置変更、上位virtual sequence、独立した読戻し | UVM |
 | [検証項目表と結果の自動照合](local-plan-traceability/README.md) | 仕様・6要求・6項目・native SVAの対応、構成と版、未実行・不足・古い証跡の拒否 | Verilator |
+| [仕様変更の再検証](local-spec-change/README.md) | APB＋割り込みのr1／r2を同じ入力で比較、古い期待値・SVA・証跡の拒否、native SVAと行カバレッジ | Icarus＋Verilator |
+| [初回失敗と再実行のレポート](local-regression-report/README.md) | 実際のFIFO時間切れ、同じ計画の再実行、全履歴・最後の試行・未達の照合 | Icarus |
 | [コードカバレッジの未達分析](local-code-coverage/README.md) | 行・分岐・式・toggle・FSM、追加試験、DB統合・注釈、カバレッジ達成時の機能不正 | Verilator |
 | [ネイティブ機能カバレッジ](local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
 | [UVMの制約付きランダム検証](local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
@@ -183,9 +187,9 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-2026-11-01の全体レビューで、nightly対応86例の記載構成と7集約ランナーを再実行しました。DMA所有権の4ケースは初回に既定10秒の上限へ達したため、集約から上限を指定できるよう修正し、当該集約7例を同じ構成・seed・入力列で再実行して成功しました。採用した共通シミュレーション58例・124構成のnightlyはJUnit 1122件です。UVM移行のpassive 91件・active 97件、複数agentの協調25件、項目照合14件も成功しています。全10フォーマル例・21構成の159タスク、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しています。
+2026-11-01の追加確認では、nightly対応89例の記載構成、7集約ランナー、全11フォーマル例を実行しました。最終補強した履歴レポート例を再実行し、新しいツールで全88ジョブの採用結果を照合しています。共通シミュレーション58例・124構成のnightlyはJUnit 1122件、上位UVMは20件、仕様変更は46件、履歴レポートは6件です。分割証明を含む22構成の170フォーマルタスク、証明依存の親9判定、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しています。
 
-各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と集約判定を分けた件数、再実行した範囲、時間上限、ツール版、ソースの照合は[最新の確認記録](../PROVENANCE.md#regression-integrity-review-20261101)を参照してください。
+各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と集約判定を分けた件数、再実行した範囲、時間上限、ツール版、ソースの照合は[最新の確認記録](../PROVENANCE.md#workflow-capstone-and-composition-20261101)を参照してください。
 
 ## 初期の11例の構成
 

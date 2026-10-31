@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "target": "integration",
+  "nodes": [
+    {"id": "producer", "task": "producer-guarantee", "requires": []},
+    {"id": "consumer", "task": "consumer-guarantee", "requires": []},
+    {"id": "connection", "task": "connection-contract", "requires": ["producer"]},
+    {"id": "integration", "task": "integration-result", "requires": ["consumer", "connection"]}
+  ]
+}

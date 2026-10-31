@@ -478,6 +478,55 @@
       ]
     },
     {
+      "id": "local-compositional-formal",
+      "script": "examples/local-compositional-formal/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout",
+        "formal-python",
+        "child-timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ],
+      "packages": {
+        "formal-python": [
+          "yowasp_yosys",
+          "z3"
+        ]
+      },
+      "children": {
+        "local-compositional-tasks": "tasks"
+      }
+    },
+    {
+      "id": "local-compositional-tasks",
+      "script": "examples/local-compositional-formal/formal_tasks.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ],
+      "packages": {
+        "formal-python": [
+          "yowasp_yosys",
+          "z3"
+        ]
+      }
+    },
+    {
       "id": "local-connectivity",
       "script": "examples/local-connectivity/run.py",
       "kind": "formal",
@@ -602,6 +651,22 @@
       "tools": [
         "iverilog",
         "vvp"
+      ]
+    },
+    {
+      "id": "local-divider-formal",
+      "script": "examples/local-divider/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
       ]
     },
     {
@@ -1142,6 +1207,20 @@
       }
     },
     {
+      "id": "local-regression-report",
+      "script": "examples/local-regression-report/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "child-timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
       "id": "local-requantize",
       "script": "examples/local-requantize/run.py",
       "kind": "simulation",
@@ -1284,6 +1363,23 @@
         "local-register-spec": "local-register-spec",
         "local-uvm-random": "local-uvm-random"
       }
+    },
+    {
+      "id": "local-spec-change",
+      "script": "examples/local-spec-change/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "verilator",
+        "make",
+        "c++"
+      ]
     },
     {
       "id": "local-spi",
@@ -1521,6 +1617,22 @@
       ]
     },
     {
+      "id": "local-uvm-hierarchy",
+      "script": "examples/local-uvm-hierarchy/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "verilator",
+        "make",
+        "c++"
+      ]
+    },
+    {
       "id": "local-uvm-migration",
       "script": "examples/local-uvm-migration/run.py",
       "kind": "simulation",
@@ -1594,22 +1706,6 @@
         "local-uvm": "local-uvm",
         "local-width-converter": "local-width-converter"
       }
-    },
-    {
-      "id": "local-divider-formal",
-      "script": "examples/local-divider/formal.py",
-      "kind": "formal",
-      "profile": false,
-      "options": [
-        "timeout"
-      ],
-      "tools": [
-        "yowasp-sby",
-        "yowasp-yosys",
-        "yowasp-yosys-smtbmc",
-        "yowasp-yosys-witness",
-        "z3"
-      ]
     }
   ]
 }

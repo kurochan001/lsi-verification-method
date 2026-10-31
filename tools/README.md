@@ -6,6 +6,7 @@
 | --- | --- |
 | [`verification_plan.py`](verification_plan.py) | [検証項目表と実行証跡の照合](../docs/method/verification-plan-automation.md)。出典・要求・項目・構成・実績・版を確認する。 |
 | [`run_regression.py`](run_regression.py) | [全検証例の統合実行](REGRESSION.md)。構成行列、依存確認、並列数、時間上限、JUnitとソースの照合を管理する。 |
+| [`regression_report.py`](regression_report.py) | [履歴と採用結果の照合](REPORTING.md)。初回失敗を保持し、現在の計画に対する最後の試行を判定する。 |
 | [`regressions.json`](regressions.json) | 全体実行の入口・構成・依存・親子関係の登録表。未登録の例を自動的に省略しない。 |
 
 セルフテストは`python3 -m unittest discover -s tools/tests -v`で実行できます。Python依存の準備は[統合実行の手順](REGRESSION.md#2-実行環境を明示的に準備する)を参照してください。

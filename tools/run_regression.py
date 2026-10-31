@@ -95,6 +95,14 @@ def make_plan(entries,args,root=ROOT):
     return jobs
 
 
+def plan_document(args,jobs):
+    """Use the same reproducible input snapshot for --list and actual execution."""
+    return dict(schema_version=1,profile=args.profile,suite=args.suite,seed=args.seed,jobs=jobs,
+        options={k:([str(p) for p in v] if k=='tool_bin' else str(v) if isinstance(v,Path) else v) for k,v in vars(args).items()},
+        source_sha256={str(p.relative_to(ROOT) if p.is_relative_to(ROOT) else p):hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in [Path(__file__),args.registry,ROOT/'examples/local-irq-cdc/run.py']})
+
+
 def environment(args):
     env=dict(os.environ);bins=[str(p.resolve()) for p in args.tool_bin]
     bins += [str(Path(p).absolute().parent) for p in (args.formal_python,args.python,args.rdl_python,args.cocotb_python)]
@@ -236,10 +244,7 @@ def save(out,jobs,results,complete,preflight_ok,integrity_error=None):
 def run(args,entries,jobs):
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False);(out/'runs').mkdir()
     env=environment(args)
-    P.write_json(out/'manifest.json',dict(schema_version=1,profile=args.profile,suite=args.suite,seed=args.seed,jobs=jobs,
-        options={k:([str(p) for p in v] if k=='tool_bin' else str(v) if isinstance(v,Path) else v) for k,v in vars(args).items()},
-        source_sha256={str(p.relative_to(ROOT) if p.is_relative_to(ROOT) else p):hashlib.sha256(p.read_bytes()).hexdigest()
-                       for p in [Path(__file__),args.registry,ROOT/'examples/local-irq-cdc/run.py']}))
+    P.write_json(out/'manifest.json',plan_document(args,jobs))
     check=preflight(jobs,entries,args,env);P.write_json(out/'preflight.json',check)
     if not check['success']:
         results=[dict(id=j['id'],success=False,message='preflight failed; job not started') for j in jobs]
@@ -328,7 +333,7 @@ def main():
     try:
         entries=load_registry(args.registry);jobs=make_plan(entries,args)
         if args.list:
-            print(json.dumps(dict(profile=args.profile,suite=args.suite,planned=len(jobs),jobs=jobs),indent=2));return 0
+            print(json.dumps(dict(plan_document(args,jobs),planned=len(jobs)),indent=2));return 0
         if args.out.exists():p.error('output exists; choose a new --out')
         return run(args,entries,jobs)
     except (OSError,ValueError,KeyError,TypeError) as exc:print('RUNNER_ERROR',exc,file=sys.stderr);return 1

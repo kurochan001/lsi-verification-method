@@ -16,8 +16,10 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 目的 | 入口 |
 | --- | --- |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
+| 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
+| 失敗・再実行・採用結果をまとめる | [履歴レポート](tools/REPORTING.md)／[実際の時間切れから再実行する例](examples/local-regression-report/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
@@ -140,17 +142,20 @@ flowchart TD
 
 | 学びたいこと | 入口となる資料・例 | 見るポイント |
 | --- | --- | --- |
+| 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
 | 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
 | 複数agentを協調させる | [APB設定＋GAINデータパス](examples/local-uvm-coordination/README.md) | virtual sequence、同時設定と入力の期待値、観測順序、待ち・取消、native bin |
+| UVMの子環境を上位で再利用する | [二つのIPと階層RAL](examples/local-uvm-hierarchy/README.md) | 共通driver・子のpassive観測、submap、配置変更、上位virtual sequence |
 | RTLの入出力を自動で比較する | [同期FIFO](examples/local-fifo/README.md) | 独立した参照キュー、空／満杯、データ順序、変異検出 |
 | 周辺回路を結合して確認する | [APB・UART・割り込み](examples/local-apb-uart/README.md) | バス操作から送受信・IRQまでのつながり、待ち・リセット |
 | 波形の目視確認を自動判定にする | [割り込みのSVA](examples/local-sva/README.md) | assertとcover、サンプリング、検出力、終了判定 |
 | 仕様から選んだ条件を計測する | [ネイティブ機能カバレッジ](examples/local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのbin・cross、ヒット数と未達 |
 | RTLの未実行箇所を調べる | [コードカバレッジ](examples/local-code-coverage/README.md) | 基礎試験と追加試験、DB統合、注釈付きソース |
 | 入力空間の広い回路を証明する | [RISC-V命令デコーダ](examples/local-riscv-decoder/README.md) | 全命令語の合法性判定、合法命令の出力、誤実装の反例 |
+| 分割証明の仮定と保証を管理する | [送信側・受信側・接続契約](examples/local-compositional-formal/README.md) | 仮定を満たす側の証明、配線、依存する証明の欠落・古い版・循環 |
 | AIを使った検証を学ぶ | [AIの使い方](docs/method/spec-to-verification-method.md#12-並列化とaiの使い方)／[適用事例](docs/case-study-ieee1800/README.md) | 要求抽出・テスト案作成、作成とレビューの分担、実行証跡による確認 |
 
 AIは、要求の整理、テスト・アサーション案の作成、未達や失敗の分析を支援するために使います。提案は仕様と照合し、独立レビューと実際の実行結果で、妥当性と不具合の検出力を確認します。
@@ -173,7 +178,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 
-2026-11-01の全体レビューで、nightly対応全86例の記載構成、集約7本、全10フォーマル例の既定全タスクを再確認しました。統合判定と時間上限の転送を修正し、時間切れが出た集約7例は試験量を保って再実行しています。UVM移行のpassive・activeも確認済みです。[レビューと最終確認](PROVENANCE.md#regression-integrity-review-20261101)に、初回の失敗、再実行範囲、採用した結果を記録しています。
+2026-11-01に、総合演習・履歴レポート・上位UVM・分割証明を追加し、nightly対応全89例、集約7本、全11フォーマル例の既定全タスクを再確認しました。最終補強したレポート例は別出力先で再実行し、新しいレポートツールで全88ジョブの採用結果と版を照合しています。[追加内容と最終確認](PROVENANCE.md#workflow-capstone-and-composition-20261101)に、初回と再実行の範囲、判定、証跡を記録しています。
 
 ## 準備と実行
 

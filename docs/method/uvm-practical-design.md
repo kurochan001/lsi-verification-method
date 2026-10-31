@@ -116,7 +116,7 @@ backdoorを使う場合は、既知の非ゼロ値を用意し、実際の読出
 
 modelの階層・mapを組み立ててから最上位で`lock_model()`する方針を基本にできます。ただし「子がすでにlock済みなら必ず再利用できない」と一律に判断せず、採用ライブラリの`add_submap`と構成条件を確認します。[公式のmap実装](https://github.com/accellera-official/uvm-core/blob/main/src/reg/uvm_reg_map.svh)
 
-内部信号の観測用interfaceやbindを使う場合も、タップがDUTを駆動しないこと、リセット・クロック・信号方向、各インスタンスのvifを確認します。単体で合格した目標を、そのまま上位の合格へ移しません。この複数ブロック構成は設計例で、現行の単一APB移行例が実装する範囲には含みません。
+内部信号の観測用interfaceやbindを使う場合も、タップがDUTを駆動しないこと、リセット・クロック・信号方向、各インスタンスのvifを確認します。単体で合格した目標を、そのまま上位の合格へ移しません。[上位再利用の実行例](../../examples/local-uvm-hierarchy/README.md)では、2つのIPと子環境・階層RALを、ベースアドレスを入れ替えた2配置で動かします。本文の任意のtapや複数クロックを含む構成案は、個別に適用を判断します。
 
 ### 4.3 生成したRALも仕様と照合する
 
@@ -171,6 +171,7 @@ factoryで制約を足した型へ差し替える場合も、実際の生成型�
 | 単一APBのRAL frontdoor、auto prediction、ハードウェア更新後の明示的predictと実読出し | [基本UVM例](../../examples/local-uvm/README.md)で実行。 |
 | SV制約とnative covergroup | [UVMランダム例](../../examples/local-uvm-random/README.md)で実行。 |
 | GAINの同時更新、設定・データ・readyのvirtual sequence、二つのmonitorの順序、native bin | [複数agentの協調例](../../examples/local-uvm-coordination/README.md)で実行。 |
-| 複数IPの上位RAL・tap、複数クロックをまたぐ協調 | 本書の設計例。これらを一体化した上位UVM環境は未実装。 |
+| 二つの子環境、上位RAL・submap、配置変更、上位virtual sequence | [上位再利用例](../../examples/local-uvm-hierarchy/README.md)で実行。 |
+| 任意の内部tap、複数クロックをまたぐ上位協調 | 本書の設計例。実行済みの単一クロック例から別に評価する。 |
 
 製品へ適用する際は、[移行計画](../templates/uvm-migration-plan.md)、[クロスモデルの記録](../templates/interaction-coverage-plan.md)、[サインオフ記録](../templates/signoff-record.md)へ、必須範囲、実行証跡、未確認、残リスクを対応付けます。

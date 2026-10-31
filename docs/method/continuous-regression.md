@@ -6,6 +6,8 @@
 
 教材の全例を再現する実装は[統合ランナー](../../tools/REGRESSION.md)を参照してください。smoke・nightly・formal、構成行列、依存確認、並列数・時間上限、結果とソースの最終照合を扱います。製品の計算機ファーム・ライセンス管理とは範囲を分けています。項目表と結果の対応には[自動照合ツール](verification-plan-automation.md)を使えます。
 
+実行済みの試行の統合には[履歴レポート](../../tools/REPORTING.md)を使えます。現在の固定計画へ各ジョブの最後の試行を照合し、初回失敗と再実行を保持します。実際の時間切れからの再実行は[最小例](../../examples/local-regression-report/README.md)、完了または保留の判断は[総合演習](verification-capstone.md)で確認できます。
+
 [実行可能な最小例](../../examples/local-irq-cdc/README.md)を別に用意しています。Icarus Verilogで通常回路・変異を検査し、JUnit・マニフェスト・ログ・波形を保存します。動作確認の記録は、実行例の末尾にあります。
 
 以下は、初期に追加した11例の内訳です。構成とJUnit件数は[初期の11例の構成](../../examples/README.md#初期の11例の構成)、その後の追加を含む現在の範囲は[全検証例の一覧](../../examples/README.md)を参照してください。
