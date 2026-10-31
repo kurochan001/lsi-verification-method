@@ -69,6 +69,7 @@ def main(plugin):
     p.add_argument('--iverilog',default='iverilog');p.add_argument('--vvp',default='vvp');p.add_argument('--verilator',default='verilator');p.add_argument('--cc',default='cc')
     p.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime(plugin.NAME+'-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
+    P.resolve_tools(args)
     if args.iterations is None:args.iterations=plugin.ITERATIONS[args.profile]
     if os.name!='posix' or args.seed<0 or not 1<=args.iterations<=10000 or any(not math.isfinite(n) or n<=0 for n in (args.timeout,args.build_timeout)):p.error('invalid environment, seed, count or timeout')
     if args.out.exists():p.error('output exists; choose a new directory')

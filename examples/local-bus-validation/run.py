@@ -226,6 +226,7 @@ def main():
     p.add_argument('--timeout',type=float,default=30);p.add_argument('--build-timeout',type=float,default=180)
     p.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('bus-validation-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
+    SUPPORT.resolve_tools(args)
     if args.transfers is None:args.transfers=4096 if args.profile=='nightly' else 512
     if args.out.exists():p.error('output exists; choose a new directory')
     if os.name!='posix' or args.seed<0 or not 2<=args.transfers<=50000 or any(not math.isfinite(n) or n<=0 for n in (args.timeout,args.build_timeout)):p.error('invalid seed/count/timeout')

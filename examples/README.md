@@ -128,7 +128,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | [RISC-VのPMP判定](local-riscv-pmp/README.md) | TOR／NA4／NAPOT、最優先の領域がアクセス全体を覆うこと、Mモード・ロック・TOR下限の保護（4エントリーの縮小モデル） | Icarus |
 | [Sv32ページテーブルウォーク](local-sv32/README.md) | 34ビットのPTE読出し・物理アドレス、4KiB／4MiBページ、SUM／MXR・A／D・PTEエラーとページフォルトの区別 | Icarus |
 | [TLB＋Sv32ウォーカー](local-tlb/README.md) | ASID・4KiB／4MiBタグ・権限、グローバル変換、処理の排出後のSFENCE.VMAと古い変換の無効化 | Icarus |
-| [RISC-Vの命令デコーダ](local-riscv-decoder/README.md) | 公式の命令表（riscv-opcodes）から生成した期待値と、全2^32命令語での一致の証明、予約された命令語・FENCEの予約フィールド・遠い分岐の即値 | フォーマル＋Icarus |
+| [RISC-Vの命令デコーダ](local-riscv-decoder/README.md) | 公式の命令表（riscv-opcodes）を基に、全2^32命令語の合法性判定と、合法命令の種別・即値・レジスタ使用信号を証明 | フォーマル＋Icarus |
 | [多サイクル除算器](local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
 
 ## 静的タイミング解析

@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import random
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -28,6 +29,22 @@ RECEIVER = HERE / "rtl/cdc_receiver.sv"
 class RunInterrupted(BaseException):
     def __init__(self, signum):
         self.signum = signum
+
+
+def resolve_tools(args):
+    """Resolve CLI executables before a runner changes its child working directory.
+
+    Keep symlinks intact: resolving a venv's Python to its real path loses the venv.
+    Missing commands stay unchanged so the normal error handling records the failure.
+    """
+    for name in ("iverilog", "vvp", "verilator", "yosys", "sby", "smtbmc", "witness",
+                 "solver", "cc", "coverage_tool", "sta", "python", "formal_python",
+                 "cocotb_python", "rdl_python"):
+        value = getattr(args, name, None)
+        if value is not None:
+            found = shutil.which(os.fspath(value))
+            if found is not None:
+                setattr(args, name, os.path.abspath(found))
 
 
 def interrupted(signum, _frame):
@@ -318,6 +335,7 @@ def main():
     parser.add_argument("--timeout", type=float, default=10.0, help="per simulation/tool probe seconds")
     parser.add_argument("--out", type=Path, default=Path("artifacts") / datetime.now(timezone.utc).strftime("local-%Y%m%dT%H%M%S%fZ"))
     args = parser.parse_args()
+    resolve_tools(args)
     if os.name != "posix":
         parser.error("this example requires a POSIX host (Linux or macOS)")
     if args.seed < 0 or not math.isfinite(args.timeout) or args.timeout <= 0:

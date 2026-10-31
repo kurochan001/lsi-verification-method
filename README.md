@@ -136,7 +136,7 @@ flowchart TD
 | 波形の目視確認を自動判定にする | [割り込みのSVA](examples/local-sva/README.md) | assertとcover、サンプリング、検出力、終了判定 |
 | 仕様から選んだ条件を計測する | [ネイティブ機能カバレッジ](examples/local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのbin・cross、ヒット数と未達 |
 | RTLの未実行箇所を調べる | [コードカバレッジ](examples/local-code-coverage/README.md) | 基礎試験と追加試験、DB統合、注釈付きソース |
-| 入力空間の広い回路を証明する | [RISC-V命令デコーダ](examples/local-riscv-decoder/README.md) | 命令表からの期待値、全32ビット命令語での一致、誤実装の反例 |
+| 入力空間の広い回路を証明する | [RISC-V命令デコーダ](examples/local-riscv-decoder/README.md) | 全命令語の合法性判定、合法命令の出力、誤実装の反例 |
 
 ### 分野から選ぶ
 

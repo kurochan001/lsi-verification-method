@@ -126,6 +126,7 @@ def main():
     parser.add_argument('--timeout',type=float,default=30)
     parser.add_argument('--out',type=Path,default=ROOT/'artifacts'/datetime.now(timezone.utc).strftime('sta-%Y%m%dT%H%M%S%fZ'))
     args=parser.parse_args()
+    P.resolve_tools(args)
     if args.out.exists() or not math.isfinite(args.timeout) or args.timeout<=0:parser.error('requires a new output directory and finite positive timeout')
     try:return run(args)
     except (OSError,ValueError,KeyError) as exc:print('RUNNER_ERROR',exc,file=sys.stderr);return 1

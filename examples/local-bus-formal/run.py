@@ -195,6 +195,7 @@ def main():
     parser.add_argument('--timeout',type=float,default=120.0)
     parser.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('local-bus-formal-%Y%m%dT%H%M%S%fZ'))
     args=parser.parse_args()
+    SUPPORT.resolve_tools(args)
     if os.name!='posix' or not 12<=args.bound<=100 or not math.isfinite(args.timeout) or args.timeout<=0:parser.error('requires POSIX, bound 12..100, finite positive timeout')
     if args.out.exists():parser.error('output directory already exists; choose a new --out')
     if args.configuration!='all' and args.bus!='both' and CONFIGS[args.configuration]['bus']!=args.bus:parser.error('configuration does not match selected bus')

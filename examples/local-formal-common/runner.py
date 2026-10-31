@@ -126,6 +126,7 @@ def main(plugin):
     for name,default in [('sby','yowasp-sby'),('yosys','yowasp-yosys'),('smtbmc','yowasp-yosys-smtbmc'),('witness','yowasp-yosys-witness')]:p.add_argument('--'+name,default=default)
     p.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime(plugin.TOP+'-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
+    P.resolve_tools(args)
     if os.name!='posix' or not 8<=args.bound<=64 or not math.isfinite(args.timeout) or args.timeout<=0:p.error('requires POSIX, bound 8..64 and finite positive timeout')
     if args.out.exists():p.error('output exists; choose a new directory')
     previous=signal.signal(signal.SIGTERM,P.interrupted)

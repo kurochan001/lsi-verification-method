@@ -152,6 +152,7 @@ def main():
     parser.add_argument('--build-timeout',type=float,default=300)
     parser.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('local-mxfp4-%Y%m%dT%H%M%S%fZ'))
     args=parser.parse_args()
+    E.P.resolve_tools(args)
     if args.iterations is None: args.iterations=64 if args.profile=='smoke' else 1024
     if args.out.exists():parser.error('output already exists')
     if args.seed<0 or not 1<=args.iterations<=10000 or not 1<=args.jobs<=32 or any(not math.isfinite(v) or v<=0 for v in [args.timeout,args.build_timeout]):parser.error('invalid seed, iterations, jobs or timeout')

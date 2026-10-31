@@ -64,6 +64,7 @@ def main():
     p.add_argument('--python',default=sys.executable);p.add_argument('--timeout',type=float,default=1800);p.add_argument('--formal-timeout',type=float,default=300)
     p.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('advanced-regression-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
+    P.resolve_tools(args)
     if os.name!='posix' or args.seed<0 or any(not math.isfinite(n) or n<=0 for n in (args.timeout,args.formal_timeout)):p.error('requires POSIX, nonnegative seed and finite positive timeouts')
     if args.out.exists():p.error('output exists; choose a new directory')
     previous=signal.signal(signal.SIGTERM,P.interrupted)

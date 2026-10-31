@@ -22,6 +22,7 @@ def parser(description,name):
     return p
 
 def validate(p,a):
+    P.resolve_tools(a)
     if a.seed<0 or not math.isfinite(a.timeout) or a.timeout<=0:p.error('nonnegative seed and finite positive timeout required')
     if a.out.exists():p.error('output exists; choose a new --out')
 

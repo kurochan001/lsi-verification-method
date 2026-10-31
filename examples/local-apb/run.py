@@ -220,6 +220,7 @@ def main():
     parser.add_argument("--timeout", type=float, default=10.0)
     parser.add_argument("--out", type=Path, default=Path("artifacts") / datetime.now(timezone.utc).strftime("apb-local-%Y%m%dT%H%M%S%fZ"))
     args = parser.parse_args()
+    SUPPORT.resolve_tools(args)
     if args.transactions is None:
         args.transactions = 2000 if args.profile == "nightly" else 200
     if os.name != "posix" or args.seed < 0 or not 1 <= args.transactions <= 10000 or not math.isfinite(args.timeout) or args.timeout <= 0:

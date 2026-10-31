@@ -182,6 +182,7 @@ def main():
     parser.add_argument("--timeout", type=float, default=90.0)
     parser.add_argument("--out", type=Path, default=Path("artifacts") / datetime.now(timezone.utc).strftime("formal-local-%Y%m%dT%H%M%S%fZ"))
     args = parser.parse_args()
+    SUPPORT.resolve_tools(args)
     if os.name != "posix" or not math.isfinite(args.timeout) or args.timeout <= 0:
         parser.error("requires POSIX and a finite positive timeout")
     if args.out.exists():

@@ -223,6 +223,7 @@ def main():
     parser.add_argument("--timeout", type=float, default=10.0)
     parser.add_argument("--out", type=Path, default=Path("artifacts") / datetime.now(timezone.utc).strftime("uart-local-%Y%m%dT%H%M%S%fZ"))
     args = parser.parse_args()
+    SUPPORT.resolve_tools(args)
     if args.frames is None:
         args.frames = 128 if args.profile == "nightly" else 32
     if os.name != "posix" or args.seed < 0 or not 1 <= args.frames <= 1000 or not math.isfinite(args.timeout) or args.timeout <= 0:

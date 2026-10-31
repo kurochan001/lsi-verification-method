@@ -1,13 +1,16 @@
 import json
+import os
 from pathlib import Path
 import re
 import shutil
 import sys
 import tempfile
 import unittest
+import venv
+from types import SimpleNamespace
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from local_test_support import EXAMPLES,read_json,run_example
+from local_test_support import EXAMPLES,load_example,read_json,run_example
 
 
 @unittest.skipUnless(shutil.which('iverilog') and shutil.which('vvp'),'Icarus required')
@@ -40,6 +43,32 @@ class RunnerTest(unittest.TestCase):
     def test_missing_compiler(self):
         self.assert_rejected(self.run_cli('--iverilog',str(self.directory/'absent')))
         self.assertTrue(all(read_json(p)['status']=='error' for p in self.out.glob('*/result.json')))
+
+    def test_relative_tool_paths_with_spaces_work_from_execution_directories(self):
+        tools = self.directory / 'tool paths'
+        tools.mkdir()
+        for name in ('iverilog', 'vvp'):
+            (tools / name).symlink_to(shutil.which(name))
+        process = self.run_cli('--iverilog', os.path.relpath(tools / 'iverilog'),
+                               '--vvp', os.path.relpath(tools / 'vvp'))
+        self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
+        self.assertTrue(read_json(self.out / 'summary.json')['success'])
+        for name in ('iverilog', 'vvp'):
+            self.assertEqual(read_json(self.out / 'tools.json')[name]['command'][0],
+                             str(tools / name))
+
+    def test_relative_python_preserves_virtual_environment(self):
+        home = self.directory / 'python env'
+        venv.EnvBuilder(with_pip=False, symlinks=True).create(home)
+        args = SimpleNamespace(python=os.path.relpath(home / 'bin/python'))
+        support = load_example('local-irq-cdc')
+        support.resolve_tools(args)
+        log = self.directory / 'python.log'
+        result = support.execute([args.python, '-c', 'import sys; print(sys.prefix)'],
+                                 log, 10, self.directory)
+        self.assertIsNone(result['error'], result)
+        self.assertEqual(result['returncode'], 0, log.read_text())
+        self.assertEqual(Path(log.read_text().strip()), home)
 
     def test_failed_source_preparation_is_a_build_error(self):
         # build_sources and add_arguments: an absent synthesis tool fails only the netlist builds

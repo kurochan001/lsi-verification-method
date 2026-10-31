@@ -175,6 +175,7 @@ def main(plugin):
     if hasattr(plugin, 'add_arguments'):
         plugin.add_arguments(parser)
     args = parser.parse_args()
+    PROCESS.resolve_tools(args)
     if args.iterations is None:
         args.iterations = plugin.ITERATIONS[args.profile]
     if os.name != 'posix' or args.seed < 0 or not 1 <= args.iterations <= 10000 or not math.isfinite(args.timeout) or args.timeout <= 0:
