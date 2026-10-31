@@ -707,7 +707,8 @@
         "child-timeout",
         "rdl-python",
         "timeout",
-        "uvm-home"
+        "uvm-home",
+        "simulation-timeout"
       ],
       "tools": [],
       "children": {

@@ -27,9 +27,10 @@ REDUCTION_GATES={'learning','selection','comparison'}|{f'{kind}/normal' for kind
 
 def load_registry(path,root=ROOT):
     data=json.loads(path.read_text());entries=data.get('examples')
-    if data.get('schema_version')!=1 or not isinstance(entries,list) or not entries:raise ValueError('invalid registry')
+    if type(data.get('schema_version')) is not int or data['schema_version']!=1 or not isinstance(entries,list) or not entries:raise ValueError('invalid registry')
     result={}
     for entry in entries:
+        if not isinstance(entry,dict):raise ValueError('invalid registry entry')
         name=entry.get('id')
         if not isinstance(name,str) or not re.fullmatch(r'local-[a-z0-9-]+',name) or name in result:raise ValueError('invalid/duplicate example id')
         script=(root/entry['script']).resolve()
@@ -38,7 +39,7 @@ def load_registry(path,root=ROOT):
         if not isinstance(entry.get('tools'),list) or not isinstance(entry.get('options'),list):raise ValueError('missing capabilities: '+name)
         matrix=entry.get('matrix',{})
         if not isinstance(matrix,dict) or any(not re.fullmatch(r'[a-z][a-z0-9-]*',k) or not isinstance(v,list) or not v or
-                any(type(x) not in (int,str) or not re.fullmatch(r'[A-Za-z0-9_-]+',str(x)) for x in v) or len(v)!=len(set(v)) for k,v in matrix.items()):raise ValueError('invalid matrix: '+name)
+                any(type(x) not in (int,str) or not re.fullmatch(r'[A-Za-z0-9_-]+',str(x)) for x in v) or len(v)!=len(set(map(str,v))) for k,v in matrix.items()):raise ValueError('invalid matrix: '+name)
         result[name]=entry
     actual={str(p.relative_to(root)) for p in (root/'examples').glob('*/run.py')}
     registered={e['script'] for e in entries if e['script'].endswith('/run.py')}
@@ -137,7 +138,7 @@ def validate_summary(data,kind='planned'):
     for row in rows:
         if not isinstance(row,dict) or not isinstance(row.get('id'),str) or not row['id'].strip():raise ValueError('invalid result id')
         states=[row[k] for k in ('status','outcome') if k in row]
-        if not states or any(state not in ('pass','detected') for state in states):raise ValueError('failed child result')
+        if not states or any(state not in ('pass','detected') for state in states) or row.get('success') is False or row.get('complete') is False:raise ValueError('failed/incomplete child result')
         ids.append(row['id'])
     if len(ids)!=len(set(ids)):raise ValueError('duplicate result id')
     return set(ids)
@@ -148,12 +149,24 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
     if not isinstance(manifest.get('source_sha256'),dict) or not manifest['source_sha256']:raise ValueError('missing root source manifest')
     if profile is not None and entry.get('profile') and manifest.get('profile')!=profile:raise ValueError('execution profile differs from plan')
     data=json.loads((directory/'summary.json').read_text());ids=validate_summary(data,entry.get('summary','planned'))
+    # Count-only summaries cannot identify a missing/replaced JUnit case. Use
+    # the frozen manifest, and also prevent list summaries shrinking check_ids.
+    if type(data.get('results')) is int or 'check_ids' in manifest:
+        planned=manifest.get('cases') if type(data.get('results')) is int else manifest['check_ids']
+        if not isinstance(planned,list) or not planned:raise ValueError('missing manifest check plan')
+        expected=[row.get('id') if isinstance(row,dict) else row for row in planned]
+        if any(not isinstance(name,str) or not name.strip() for name in expected) or len(set(expected))!=len(expected):raise ValueError('invalid/duplicate manifest check id')
+        if len(expected)!=data['planned'] or (ids and ids!=set(expected)):raise ValueError('summary differs from manifest check plan')
+        ids=set(expected)
     xml=ET.parse(directory/'junit.xml').getroot();cases=list(xml.iter('testcase'))
     keys=[(c.get('classname',''),c.get('name')) for c in cases]
     if (not cases or len(keys)!=len(set(keys)) or any(not name for _,name in keys) or
             list(xml.iter('error')) or list(xml.iter('failure')) or list(xml.iter('skipped'))):raise ValueError('JUnit incomplete, duplicate, skipped or failed')
     for suite in xml.iter('testsuite'):
         if int(suite.get('tests','-1'))!=len(suite.findall('testcase')):raise ValueError('JUnit test count differs')
+    for node in (n for n in xml.iter() if n.tag in ('testsuite','testsuites')):
+        if any(int(node.get(key,'0'))!=0 for key in ('failures','errors','skipped')):raise ValueError('JUnit reports failed/skipped tests')
+        if node.tag=='testsuites' and 'tests' in node.attrib and int(node.get('tests'))!=len(list(node.iter('testcase'))):raise ValueError('JUnit total test count differs')
     if ids-{c.get('name') for c in cases}:raise ValueError('summary case missing from JUnit')
     for child,relative in entry.get('children',{}).items():inspect_output(directory/relative,entries[child],entries,root,profile)
     count=0
@@ -162,9 +175,13 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
             path=root/name
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=expected:raise ValueError('stale source: '+name)
             count+=1
-    for snapshot in directory.rglob('uvm-source.json'):
+    snapshots=list(directory.rglob('uvm-source.json'))
+    if 'uvm-home' in entry.get('options',[]) and not snapshots:raise ValueError('missing UVM source snapshot')
+    for snapshot in snapshots:
         record=json.loads(snapshot.read_text())
-        for name,expected in record.get('source_sha256',record.get('sha256',{})).items():
+        hashes=record.get('source_sha256',record.get('sha256',{}))
+        if not isinstance(hashes,dict) or not hashes:raise ValueError('empty/invalid UVM source snapshot')
+        for name,expected in hashes.items():
             path=Path(record['root'])/name
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=expected:raise ValueError('stale UVM source: '+str(path))
     if count==0:raise ValueError('missing source manifest')
@@ -196,7 +213,13 @@ def stop_tree(process):
 
 
 def save(out,jobs,results,complete,preflight_ok,integrity_error=None):
-    success=complete and preflight_ok and not integrity_error and len(results)==len(jobs) and all(r['success'] for r in results)
+    errors=[integrity_error] if integrity_error else []
+    if not complete:errors.append('campaign incomplete')
+    if not preflight_ok:errors.append('preflight failed')
+    planned=[j['id'] for j in jobs];actual=[r['id'] for r in results]
+    if len(set(planned))!=len(planned) or len(set(actual))!=len(actual) or set(actual)!=set(planned):errors.append('job inventory differs from plan')
+    integrity_error='; '.join(errors) or None
+    success=not integrity_error and all(r['success'] for r in results)
     P.write_json(out/'summary.json',dict(success=success,complete=complete,planned=len(jobs),results=sorted(results,key=lambda r:r['id']),
         integrity_error=integrity_error,
         counting='Parent JUnit contains job gates plus campaign integrity; individual checks remain in runs/. Do not sum both as requirements.'))

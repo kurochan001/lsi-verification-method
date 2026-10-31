@@ -13,7 +13,7 @@ python3 tools/run_regression.py --profile nightly --list
 # FIFOの記載全6構成をsmokeで実行する
 python3 tools/run_regression.py --example local-fifo --out artifacts/fifo-campaign
 
-# 全体のシミュレーション側を選ぶ
+# シミュレーションとSTAの個別例を選ぶ
 python3 tools/run_regression.py --suite simulation --profile nightly --list
 
 # フォーマルの全例・全構成を選ぶ
@@ -66,8 +66,8 @@ python3 tools/run_regression.py --profile nightly --jobs 2 \
 
 | 指定 | 上限と適用先 |
 | --- | --- |
-| `--job-timeout` | ルート起動1本全体。既定10,800秒。 |
-| `--command-timeout` | 個別シミュレーションの`--timeout`。システム・SoC集約では`--simulation-timeout`として子へ渡す。 |
+| `--job-timeout` | 最上位の各ジョブ全体。既定10,800秒。 |
+| `--command-timeout` | 個別シミュレーションの`--timeout`。システム検証・SoC検証・[RAL接続などの7例](../examples/local-extension-regression/README.md)の各集約では`--simulation-timeout`として子へ渡す。 |
 | `--formal-timeout` | 証明専用ランナーのタスク上限、または対応する集約の同名オプション。 |
 | `--child-timeout` | 対応する集約の子1本全体。 |
 | `--build-timeout` | 同名オプションを持つ個別例のネイティブビルド。 |
@@ -94,7 +94,9 @@ flowchart TD
 - `summary.json`・`junit.xml`：ジョブごとの合否と、全体の整合性判定。
 - `runs/`：各例が出力する元のマニフェスト、入力、比較、波形、DB、反例、JUnit。
 
-終了コード0だけでは成功にしません。成功したsummary、予定と完了の一致、一覧の一意なID、失敗・スキップ・重複・欠落のないJUnit、現行ソースと外部UVMのハッシュを要求します。終了時には、先に完了したジョブも再照合します。削減比較とバス方式別検査には、その例固有の集約形式に対応する検査を使います。
+終了コード0だけでは成功にしません。成功したsummary、予定と完了の一致、一覧の一意なID、失敗・スキップ・重複・欠落のないJUnit、現行ソースと外部UVMのハッシュを要求します。数値で完了件数を記録する例では、マニフェストの`cases`全IDがJUnitに存在することも確認します。`check_ids`を持つ例では、結果のID集合がその固定計画と一致することを要求し、summaryとJUnitを同時に減らしても合格にしません。終了時には、先に完了したジョブも再照合します。削減比較とバス方式別検査には、その例固有の集約形式に対応する検査を使います。
+
+実行途中のsummaryは`complete: false`です。親JUnitの`campaign-integrity`にも未完了を示す失敗を記録し、完了済みジョブがすべて成功していても、全体の合格とは表示しません。最終判定では、予定ジョブと結果のID集合・件数・一意性も照合します。UVMが必要な例では、外部ライブラリのソースハッシュ記録も必須で、記録の欠落・空の集合・版の不一致を拒否します。
 
 親JUnitのジョブ判定と、`runs/`の個別チェックは別集計です。両者を独立した要求数として合算しません。既存の出力先は上書きせず、新しいディレクトリで実行します。
 
@@ -109,3 +111,5 @@ python3 -m unittest discover -s tools/tests -v
 このセルフテストは、ツール不足、予定・JUnitの欠落、古いソース、構成選択、中断時の子の停止などを検査します。ケーススタディ由来の参照ツールの上流テスト群は、このコマンドへ含めていません。
 
 初回の全例実行、最終補強後の再実行範囲、ハッシュ照合と環境導入の結果は[2026-10-31の記録](../PROVENANCE.md#verification-workflow-expansion-20261031)を参照してください。
+
+固定計画・JUnit・外部UVMの判定補強と、拡張7例への時間上限の転送、全例の再確認は[2026-11-01のレビュー記録](../PROVENANCE.md#regression-integrity-review-20261101)にまとめています。

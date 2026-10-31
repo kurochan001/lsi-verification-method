@@ -76,9 +76,11 @@ python3 examples/local-extension-regression/run.py \
 
 同じ引数へ`--profile nightly`と新しい`--out`を指定するとnightlyです。`--stage tools`は生成RALだけです。`--child-timeout`は子1リグレッションの上限で、既定1800秒です。選択しなかった例は合格にしません。ツールの自動インストールは行わず、既存出力先は上書きしません。
 
+`--simulation-timeout 60`を指定すると、coreの6例へコマンドごとの上限を60秒として渡します。未指定なら各子の既定値を保ち、生成RALのネイティブビルド等の時間上限は変更しません。CPU負荷で既定上限に達した場合も、最初の失敗を残し、新しい出力先へ同じ構成・試験回数・seedで再実行します。
+
 各子の入力・ソースハッシュ・ツール版、通常実行とネガティブテストの結果、ログ、VCDを保存します。親では予定数・完了・成功と、一意で空でない結果IDを照合します。
 
-セルフテストは6回路計35件（AXI応答順序6・DMA所有権6・Stream DMA7・CRC5・カウンター6・MBIST5）・生成RAL判定2件・親4件の計41件です。
+セルフテストは6回路計35件（AXI応答順序6・DMA所有権6・Stream DMA7・CRC5・カウンター6・MBIST5）・生成RAL判定2件・親6件の計43件です。親では時間上限の転送・未指定時の既定値保持・不正値の起動前拒否も確認します。
 
 ```sh
 python3 -m unittest discover -s examples/local-extension-regression/tests -v
@@ -90,3 +92,5 @@ python3 -m unittest discover -s examples/local-generated-ral/tests -v
 ## 実行確認
 
 2026-10-27に全7例のsmoke／nightlyが成功しました。親JUnitは各7件、子は99／127件です。追加時の36件とレビュー追加5件の計41件もすべて成功し、各マニフェストのソースハッシュと使用UVMライブラリsrcのハッシュを現行ファイルと照合しました。レビューでは既存の確認も含む全448件（ローカル316＋初期の11例132）が成功しました。
+
+2026-11-01の全体再実行では、DMA所有権の4ケースが既定10秒で時間切れになりました。`--simulation-timeout`を追加し、60秒上限で全7例のnightlyを再実行して、親7件・子127件が成功しました。coreの全ケース・構成・保存入力は初回と一致しています。初回の失敗と再実行の採用範囲は[レビュー記録](../../PROVENANCE.md#regression-integrity-review-20261101)を参照してください。
