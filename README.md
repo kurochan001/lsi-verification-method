@@ -129,7 +129,7 @@ flowchart TD
 
 最初はFIFOで「刺激を与える・期待値と比べる・必要な条件を確認する・不具合を検出する」を一通り試せます。その後は、目的に合う例へ進んでください。
 
-| 学びたいこと | 入口となる例 | 見るポイント |
+| 学びたいこと | 入口となる資料・例 | 見るポイント |
 | --- | --- | --- |
 | RTLの入出力を自動で比較する | [同期FIFO](examples/local-fifo/README.md) | 独立した参照キュー、空／満杯、データ順序、変異検出 |
 | 周辺回路を結合して確認する | [APB・UART・割り込み](examples/local-apb-uart/README.md) | バス操作から送受信・IRQまでのつながり、待ち・リセット |
@@ -137,6 +137,9 @@ flowchart TD
 | 仕様から選んだ条件を計測する | [ネイティブ機能カバレッジ](examples/local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのbin・cross、ヒット数と未達 |
 | RTLの未実行箇所を調べる | [コードカバレッジ](examples/local-code-coverage/README.md) | 基礎試験と追加試験、DB統合、注釈付きソース |
 | 入力空間の広い回路を証明する | [RISC-V命令デコーダ](examples/local-riscv-decoder/README.md) | 全命令語の合法性判定、合法命令の出力、誤実装の反例 |
+| AIを使った検証を学ぶ | [AIの使い方](docs/method/spec-to-verification-method.md#12-並列化とaiの使い方)／[適用事例](docs/case-study-ieee1800/README.md) | 要求抽出・テスト案作成、作成とレビューの分担、実行証跡による確認 |
+
+AIは、要求の整理、テスト・アサーション案の作成、未達や失敗の分析を支援するために使います。提案は仕様と照合し、独立レビューと実際の実行結果で、妥当性と不具合の検出力を確認します。
 
 ### 分野から選ぶ
 
