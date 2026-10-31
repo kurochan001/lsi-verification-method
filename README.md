@@ -5,7 +5,7 @@
 
 # LSI検証手法
 
-LSIの仕様に基づく検証計画の立案から、要求カバレッジによる検証完了の判断までをまとめたリポジトリです。
+LSIの仕様に基づく検証計画の立案から、機能カバレッジ・コードカバレッジ・要求ごとの合格証跡を用いた検証完了の判断までをまとめたリポジトリです。
 仕様を、条件と期待結果を確認できる単位の要求に分け、要求ごとに実装の不具合を検出できるテストとチェッカーを用意します。作成者とは別の担当者が仕様との整合性と不具合の検出力をレビューし、仕様・RTL・検証環境のバージョンに対応した証跡で検証状況を管理します。
 
 初めて読む方は[用語集](docs/glossary.md)で略語・指標の意味を確認できます。[FAQ](docs/faq.md)には、導入、カバレッジ100%の意味、ランダム検証、SVA・フォーマル、CDC、削減、CI運用や検証完了の判断に関する疑問をまとめています。
@@ -25,7 +25,7 @@ flowchart TD
   S --> G["用語や判断に迷う：用語集・FAQ"]
   S --> C["経緯・数値を確認する：ケーススタディ・由来"]
   E --> L["回路別：バス・通信・DMA・CDCなど"]
-  E --> V["方式別：SVA・フォーマル・UVMなど"]
+  E --> V["方式別：機能カバレッジ・SVA・フォーマル・UVMなど"]
   E --> A["関連する例をまとめて実行"]
 ```
 
@@ -35,6 +35,7 @@ flowchart TD
 | --- | --- | --- |
 | 全体の進め方 | [仕様から検証へ](docs/method/spec-to-verification-method.md) | 要求・判定・完了条件 |
 | 回路・検証方式から例を探す | [検証例一覧](#検証例一覧) | 全例の検証内容と主なツール |
+| 機能カバレッジを確認する | [計測の入口](#機能カバレッジを確認する)／[手法](docs/method/functional-coverage.md) | 目標の選定、coverpoint・crossの実測、未達の判定 |
 | まず回路を動かす | [準備と実行](#準備と実行) | PythonとIcarusで始める例 |
 | UVM・仕様生成・反例再現 | [7例の集約手順](examples/local-soc-regression/README.md) | 必要なツールと実行範囲 |
 | 言葉・指標を確認 | [用語集](docs/glossary.md)／[FAQ](docs/faq.md) | 到達・合否・保証範囲の違い |
@@ -61,6 +62,23 @@ flowchart TD
 | 必要な検証条件に到達したか | モニター、covergroup、SVAのcover | 出力や応答が正しかったか |
 | 結果が要求どおりか | スコアボード、SVAのassert、フォーマル検証のプロパティの証明 | 検証目標や仮定に抜けがないか |
 | 検証を完了と判断できるか | 要求との対応、必須構成、証跡、未達・例外のレビュー | 計画に含めなかった動作や物理特性までの保証 |
+
+## 機能カバレッジを確認する
+
+**機能カバレッジ（functional coverage）**は、仕様から選んだ機能・状態・境界値・遷移・組み合わせに、実際の試験で到達したかを計測します。未達を調べ、追加する刺激や見直す制約を決める材料にします。例えばパケットスイッチでは「出力ポート×末尾の有無×受信側のready」をcrossで確認します。行・分岐などの実装を計測するコードカバレッジ、期待結果を比較するスコアボード・アサーションと併せて判断します。
+
+- **計画を作る**：[機能カバレッジの手法](docs/method/functional-coverage.md)で、要求とbin・crossの対応、観測時点、必須構成、除外・未達の扱いを定めます。
+- **実際に計測する**：[DRAM・SHA-256・パケットスイッチの実行例](examples/local-functional-coverage/README.md)で、VerilatorのネイティブDBとbin別の期待ヒット数を照合します。[UVMを使う24 binの例](examples/local-uvm-random/README.md)もあります。
+- **結果を判断する**：[FAQ](docs/faq.md#10-機能カバレッジの計測)で計測方式と100%の意味を確認し、[サインオフ記録](docs/templates/signoff-record.md)へ構成別の達成・未達と機能比較の結果を残します。
+
+Python 3.10以上、Verilator 5.052、C++20コンパイラーとmakeを用意し、リポジトリのルートで実行します。
+
+```sh
+python3 examples/local-functional-coverage/run.py
+python3 examples/local-functional-coverage/run.py --profile nightly
+```
+
+この例は全6構成で、必須binの到達、bin別ヒット数、元の期待値比較の成功を要求します。刺激不足・収集無効化を拒否する診断も含みます。既存の多くのIcarus例は`COVER`ログによる機能目標の集計であり、ネイティブDBとは計測方式を区別しています。選定したbinの100%を、仕様全体の網羅や製品の検証完了とは扱いません。
 
 ## 手法・ケーススタディ・参照ツール
 
@@ -299,7 +317,8 @@ python3 examples/local-axi/run.py
 
 | 共通手順 | 確認できること |
 | --- | --- |
-| [Icarus共通シミュレーション](examples/local-common/README.md) | 48例の共通ランナー、準備、オプション、カバレッジ・JUnit・証跡 |
+| [Icarus共通シミュレーション](examples/local-common/README.md) | 58例の共通ランナー、準備、オプション、機能目標・JUnit・証跡 |
+| [機能カバレッジの計測](examples/local-functional-coverage/README.md) | Verilatorの準備条件、coverpoint・cross、DB照合、未達診断 |
 | [フォーマル環境](examples/local-formal-common/README.md) | Yosys・SBY・Z3の固定版環境、各タスクの実行と判定 |
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
