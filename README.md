@@ -140,6 +140,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [SPIのランダム検証](examples/local-spi/README.md) | CPOL／CPHAの4モード、独立した送受信タイミング、busy中のstart要求 | Icarus |
 | [I²Cのランダム検証](examples/local-i2c/README.md) | ACK／NACK、Repeated START、クロックストレッチ、途中リセット | Icarus |
 | [AXI4-Stream](examples/local-axis/README.md) | パケット境界、TKEEP・TLAST、データ順序、途中パケットの破棄 | Icarus |
+| [パケットスイッチ](examples/local-packet-switch/README.md) | 2×2の経路選択・パケット単位の仲裁、先頭提示時の占有、入力の空白と出力待ち、末尾での解放 | Icarus |
 | [CRC・ACK・再送リンク](examples/local-retry-link/README.md) | フレーム／ACKの消失・破損、再送と重複排除、配送結果が確定しない再送上限、待ち・両端リセット | Icarus |
 | [クレジット方式のフロー制御](examples/local-credit-link/README.md) | 2仮想チャネルの受付・送信・クレジット返却、保持、リセット | Icarus |
 
@@ -165,6 +166,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [リング式ディスクリプタDMA](examples/local-descriptor-dma/README.md) | 既存DMAへの接続、リング巡回、取得エラー、中断、IRQ | Icarus |
 | [DMAリングの所有権](examples/local-dma-ownership/README.md) | 公開・実行・完了返却・回収、処理中の追加、再利用 | Icarus |
 | [メモリ⇄Stream DMA](examples/local-stream-dma/README.md) | 有効バイト、パケット終端、待ち、エラー時の残存範囲 | Icarus |
+| [DRAMコマンド制御](examples/local-dram/README.md) | 行ヒット・行競合、コマンド間隔、書込み回復、リフレッシュと応答保持、実コマンドによるメモリ照合 | Icarus |
 | [小規模キャッシュとDMA](examples/local-cache-dma/README.md) | write-back、部分書込み、clean／invalidateとデータの可視性 | Icarus |
 | [ストアバッファとFENCE](examples/local-store-buffer/README.md) | ストアの受理と可視性、自分の最新ストアからの転送、リトマス試験の結果集合、FENCEで禁止する結果 | Icarus＋Python |
 | [2クライアントのキャッシュコヒーレンシ](examples/local-cache-coherence/README.md) | MSIを簡略化した回路の無効化・dirtyデータの受渡し・追出しを、キャッシュのないメモリモデルと照合 | Icarus |
@@ -187,6 +189,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [固定小数点DSP](examples/local-dsp/README.md) | 2タップFIRの符号、丸め、上下限、飽和、履歴 | Icarus |
 | [ECCの故障注入](examples/local-ecc/README.md) | SECDEDの誤りなし・1ビット誤り・2ビット誤りの全数検査、訂正・検出、保証範囲外の診断 | Icarus |
 | [ECC付きメモリ](examples/local-ecc-memory/README.md) | 読出し修復、スクラビング、通常書込みとの競合 | Icarus |
+| [SHA-256](examples/local-sha256/README.md) | 最大119バイトのパディング、1／2ブロックの連鎖、反復演算、hashlibとの照合、結果保持 | Icarus |
 | [パケットCRC](examples/local-packet-crc/README.md) | 独立した多項式除算と既知ベクトルによる生成・受信値検査 | Icarus |
 | [MBIST・March C−](examples/local-mbist/README.md) | ビットセルの故障モデル、10N操作、最初の失敗位置、再開 | Icarus |
 | [JTAG TAP・境界走査](examples/local-jtag-tap/README.md) | 16状態、IR／DR、IDCODE、BYPASS、SAMPLE/PRELOAD、EXTEST | Icarus |
@@ -300,7 +303,7 @@ python3 examples/local-axi/run.py
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は55例・118構成、各検証例が出力するJUnit件数の合計はsmoke 832件／nightly 1068件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は58例・124構成、各検証例が出力するJUnit件数の合計はsmoke 874件／nightly 1122件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 

@@ -57,6 +57,14 @@
 | SCOPE-PROTOCOL-DATA / SYSTEM-SW | [ストアバッファとFENCE](../../examples/local-store-buffer/README.md) | 自分への転送と他hartへの可視性、有限リトマスの結果集合。RVWMO全体の準拠性は対象外 |
 | SCOPE-FAULT-RECOVERY / PROTOCOL-DATA | [CRC・ACK・再送リンク](../../examples/local-retry-link/README.md) | 消失・破損・重複排除・上限到達、配送済みか確定できない失敗。PHY・任意に古いパケットの再出現は対象外 |
 
+データパスと外部メモリ・通信の相互作用を補う例も追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-PROTOCOL-DATA / PERFORMANCE | [DRAMコマンド制御](../../examples/local-dram/README.md) | 行管理・コマンド間隔・書込み回復・応答待ち中のリフレッシュ。教材用のサイクル制約で、特定DDRデバイス・PHYへの準拠は対象外 |
+| SCOPE-PROTOCOL-DATA / SECURITY | [SHA-256](../../examples/local-sha256/README.md) | 0〜119バイトのパディングとブロック連鎖、hashlibとのダイジェスト照合。HMAC・鍵管理・物理的な漏えい・暗号認証は対象外 |
+| SCOPE-PROTOCOL-DATA / PERFORMANCE | [パケットスイッチ](../../examples/local-packet-switch/README.md) | ヘッダーによる経路保持、パケット単位の仲裁と占有、入力の空白・出力待ち。ネットワーク全体のデッドロック回避は対象外 |
+
 これらの実行例を加えても、実プロセス・配線後のSTA、物理的なCDC/RDC成立性、DFTの実装制約、DRC/LVS、AMS、シリコン評価を確認済みにはしません。対象製品の要求があれば、以下の計画と製品側の証跡へ展開します。
 
 ## 2. 静的検査と構成ごとの読み込み

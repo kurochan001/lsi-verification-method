@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DRAM",
+      "goals": [
+        "command/activate",
+        "bank/zero",
+        "bank/one",
+        "command/write",
+        "command/read",
+        "command/precharge",
+        "command/refresh",
+        "refresh/held-response",
+        "request/row-hit",
+        "request/row-conflict",
+        "timing/rcd-wait",
+        "timing/precharge-wait",
+        "timing/rfc-wait",
+        "read/latency",
+        "request/backpressure",
+        "response/hold",
+        "response/accepted",
+        "reset/pending"
+      ]
+    }
+  ]
+}

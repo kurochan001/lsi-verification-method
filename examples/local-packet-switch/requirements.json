@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PACKET",
+      "goals": [
+        "output/parallel",
+        "arbitration/contention",
+        "packet/input-gap",
+        "output/tail-hold",
+        "output/head-body-hold",
+        "output/header-reservation",
+        "route/body-ignored",
+        "packet/single",
+        "packet/multiple",
+        "input/zero",
+        "input/one",
+        "output/zero",
+        "output/one",
+        "reset/packet"
+      ]
+    }
+  ]
+}

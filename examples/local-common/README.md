@@ -1,6 +1,6 @@
 # Icarus共通ランナーで検証例を実行する
 
-[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先度付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)、[INT8シストリックアレイ](../local-systolic-array/README.md)、[再量子化](../local-requantize/README.md)、[活性化関数](../local-activation/README.md)、[畳み込みのラインバッファ](../local-conv-window/README.md)、[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)、[分岐予測器](../local-branch-predictor/README.md)、[ロード・ストア](../local-load-store/README.md)、[例外・割り込み](../local-riscv-traps/README.md)、[PMP判定](../local-riscv-pmp/README.md)、[キャッシュコヒーレンシ](../local-cache-coherence/README.md)、[内部スキャンとATPG](../local-scan-atpg/README.md)、[Sv32ウォーク](../local-sv32/README.md)、[TLB](../local-tlb/README.md)、[ストアバッファ](../local-store-buffer/README.md)、[再送リンク](../local-retry-link/README.md)の共通ランナーです。
+[ECC](../local-ecc/README.md)、[SPI](../local-spi/README.md)、[タイマー・ウォッチドッグ](../local-timer-watchdog/README.md)、[非同期FIFO](../local-async-fifo/README.md)、[I²C](../local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../local-apb-timer/README.md)、[AHB-Lite](../local-ahb/README.md)、[AXI4-Lite](../local-axi/README.md)、[AHB／AXI-Lite→APB結合](../local-bus-bridge/README.md)、[AXI4](../local-axi4/README.md)、[DMA](../local-dma/README.md)、[複数マスター接続](../local-interconnect/README.md)、[非同期APBブリッジ](../local-cdc-bridge/README.md)、[タイムアウト復旧](../local-recovery/README.md)、[低電力制御](../local-power/README.md)、[AXI4-Stream](../local-axis/README.md)、[固定小数点DSP](../local-dsp/README.md)、[同一領域の競合](../local-memory-order/README.md)、[AXI幅変換](../local-width-converter/README.md)、[アクセス保護](../local-access-control/README.md)、[ECCメモリ](../local-ecc-memory/README.md)、[クロック・リセット](../local-clock-reset/README.md)、[優先度付き割り込み](../local-priority-irq/README.md)、[リング式DMA](../local-descriptor-dma/README.md)、[クレジット通信](../local-credit-link/README.md)、[キャッシュとDMA](../local-cache-dma/README.md)、[AXI応答順序](../local-axi-reorder/README.md)、[DMA所有権](../local-dma-ownership/README.md)、[Stream DMA](../local-stream-dma/README.md)、[CRC](../local-packet-crc/README.md)、[64ビットカウンター](../local-counter-snapshot/README.md)、[MBIST](../local-mbist/README.md)、[セキュリティ・ライフサイクル](../local-secure-lifecycle/README.md)、[性能モニター](../local-performance-monitor/README.md)、[CDCハンドシェイク](../local-cdc-handshake/README.md)、[JTAG TAP](../local-jtag-tap/README.md)、[アドレスマップ](../local-address-map/README.md)、[ロックステップ監視](../local-lockstep-monitor/README.md)、[INT8シストリックアレイ](../local-systolic-array/README.md)、[再量子化](../local-requantize/README.md)、[活性化関数](../local-activation/README.md)、[畳み込みのラインバッファ](../local-conv-window/README.md)、[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)、[分岐予測器](../local-branch-predictor/README.md)、[ロード・ストア](../local-load-store/README.md)、[例外・割り込み](../local-riscv-traps/README.md)、[PMP判定](../local-riscv-pmp/README.md)、[キャッシュコヒーレンシ](../local-cache-coherence/README.md)、[内部スキャンとATPG](../local-scan-atpg/README.md)、[Sv32ウォーク](../local-sv32/README.md)、[TLB](../local-tlb/README.md)、[ストアバッファ](../local-store-buffer/README.md)、[再送リンク](../local-retry-link/README.md)、[DRAMコマンド制御](../local-dram/README.md)、[SHA-256](../local-sha256/README.md)、[パケットスイッチ](../local-packet-switch/README.md)の共通ランナーです。
 
 ## 実行から構成別判定まで
 
@@ -149,11 +149,14 @@ python3 -m unittest discover -s examples/local-sv32/tests -v
 python3 -m unittest discover -s examples/local-tlb/tests -v
 python3 -m unittest discover -s examples/local-store-buffer/tests -v
 python3 -m unittest discover -s examples/local-retry-link/tests -v
+python3 -m unittest discover -s examples/local-dram/tests -v
+python3 -m unittest discover -s examples/local-sha256/tests -v
+python3 -m unittest discover -s examples/local-packet-switch/tests -v
 ```
 
 従来18例の内訳は、共通14、ECC 6、SPI 4、タイマー・ウォッチドッグ6、非同期FIFO 6、I²C 5、APB結合7、AHB 9、AXI 9、バスブリッジ9、AXI4 6、DMA 6、複数マスター6、非同期APBブリッジ5、復旧6、低電力5、Stream 6、DSP 6、同一領域の競合6の計127テストです。実RTLの検証に加え、ビルド失敗、タイムアウト、無関係な異常終了、完了記録不足、件数の誤り・重複、通常検証のカバー欠落、要求未達、カタログ重複、出力先保護を確認します。これらは初期の11例のランナーのセルフテスト132件や、そのJUnit件数とは別です。
 
-現在のローカル例全体のセルフテストは576件です。このうち共通シミュレーション55例が364件、本共通ランナーが15件で、合計379件です。残る197件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの19件、Top-Kの4件、AI用回路の集約手順の5件、接続性の12件、命令デコーダの9件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。初期の11例の132件を合わせると、全セルフテストは708件です。
+現在のローカル例全体のセルフテストは597件です。このうち共通シミュレーション58例が385件、本共通ランナーが15件で、合計400件です。残る197件は、フォーマル・ホスト連携・UVM・生成・探索・集約などの確認です。FP16／MXFP8／MXFP4の有理数モデル・ランナーの19件、Top-Kの4件、AI用回路の集約手順の5件、接続性の12件、命令デコーダの9件も含みます。SystemRDLを使う6件は、[専用のPython環境](../local-register-spec/README.md#準備と実行)で実行します。初期の11例の132件を合わせると、全セルフテストは729件です。
 
 ## AHB／AXIのフォーマル検証
 
@@ -167,7 +170,7 @@ python3 -m unittest discover -s examples/local-bus-formal/tests -v
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
-[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子リグレッションとして呼ぶこともできます。フォーマル45件・本共通ランナー48例の734／942件とは、実行内容とJUnitの階層を分けて確認してください。
+[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子リグレッションとして呼ぶこともできます。フォーマル45件・本共通ランナー58例の874／1122件とは、実行内容とJUnitの階層を分けて確認してください。
 
 ```sh
 python3 examples/local-bus-validation/run.py
@@ -275,7 +278,7 @@ python3 examples/local-ai-regression/run.py --stage simulation --profile nightly
 
 [ロード・ストア](../local-load-store/README.md)も同じコアとテストベンチを共有し、バイト・ハーフワードのアクセスを加えます。構成は`rv32i`の1つで、JUnitは7／9件、目標は11、セルフテストは8件です。この例の`--demo-bug 1..4`はコアの変異9〜12を選びます。ロード・ストアを加えた時点の共通シミュレーションは47例・102構成、JUnit 720／924件でした。
 
-[例外・割り込み](../local-riscv-traps/README.md)も同じコアとテストベンチを共有し、`TRAPS=1`で機械モードのCSR・例外・外部割り込み・MRETを加えます。構成は`traps`（予測なし）と`traps-predict`（動的予測）の2つで、JUnitは14／18件、目標は10、セルフテストは9件です。この例の`--demo-bug 1..4`はコアの変異13〜16を選びます。不正な命令の判定には、[命令デコーダ](../local-riscv-decoder/README.md)で証明した回路を使うので、コアのソースにはデコーダのRTLも含まれます。例外・割り込みを加えた共通シミュレーションは48例・104構成、JUnit 734／942件です。
+[例外・割り込み](../local-riscv-traps/README.md)も同じコアとテストベンチを共有し、`TRAPS=1`で機械モードのCSR・例外・外部割り込み・MRETを加えます。構成は`traps`（予測なし）と`traps-predict`（動的予測）の2つで、JUnitは14／18件、目標は10、セルフテストは9件です。この例の`--demo-bug 1..4`はコアの変異13〜16を選びます。不正な命令の判定には、[命令デコーダ](../local-riscv-decoder/README.md)で証明した回路を使うので、コアのソースにはデコーダのRTLも含まれます。例外・割り込みを加えた時点の共通シミュレーションは48例・104構成、JUnit 734／942件です。
 
 ## PMP・コヒーレンシ・内部スキャン
 
@@ -289,4 +292,12 @@ python3 examples/local-ai-regression/run.py --stage simulation --profile nightly
 
 ## TLB・メモリ順序・再送リンク
 
-[TLBとSv32の結合](../local-tlb/README.md)、[ストアバッファとFENCE](../local-store-buffer/README.md)、[CRC・ACK・再送リンク](../local-retry-link/README.md)も本共通ランナーを使います。各2構成、通常ケースの目標は順に21・18・20個です。3例のJUnitはsmoke 42件／nightly 54件、セルフテストは各7件の21件です。TLBへ渡すメタデータの確認を加え、Sv32単体のセルフテストは8件になりました。追加後の共通シミュレーションは55例・118構成、JUnit 832／1068件です。
+[TLBとSv32の結合](../local-tlb/README.md)、[ストアバッファとFENCE](../local-store-buffer/README.md)、[CRC・ACK・再送リンク](../local-retry-link/README.md)も本共通ランナーを使います。各2構成、通常ケースの目標は順に21・18・20個です。3例のJUnitはsmoke 42件／nightly 54件、セルフテストは各7件の21件です。TLBへ渡すメタデータの確認を加え、Sv32単体のセルフテストは8件になりました。この3例までを追加した時点の共通シミュレーションは55例・118構成、JUnit 832／1068件です。
+
+## DRAM・ハッシュ演算・パケットスイッチ
+
+[DRAMコマンド制御](../local-dram/README.md)、[SHA-256](../local-sha256/README.md)、[パケットスイッチ](../local-packet-switch/README.md)も同じランナーで実行します。各2構成、目標は順に18・15・14個です。固定シナリオだけで各構成の全目標に到達し、各例の4変異を検出します。3例のJUnitはsmoke 42件／nightly 54件、セルフテストは各7件の計21件です。
+
+DRAMはコマンドピンを観測する時刻モニターと外部メモリモデル、SHA-256は`hashlib`によるダイジェスト、スイッチは独立した占有モデルと入出力スコアボードで判定します。いずれも教材で定めた範囲を確認する例で、DDR製品・暗号モジュール・NoC全体の認証ではありません。
+
+追加後の共通シミュレーションの計画は58例・124構成、JUnitはsmoke 874件／nightly 1122件です。2026-10-31に全58例のsmokeと追加3例のnightlyを再実行しました。全例のnightly 1122件を今回すべて再実行したという意味ではありません。
