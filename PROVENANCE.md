@@ -1057,3 +1057,21 @@ READMEの「学びたいことから選ぶ」に「AIを使った検証」を追
 APBの共有RTLが同じハッシュであること、実行ソースのハッシュ15件と外部UVMソース186件が現行内容と一致することを照合しました。本文のW1C観測JSONを構文解析し、更新前3・クリア3・イベント1から更新後1となる期待値も検算しています。Accelleraの配布情報とagentの参照実装を一次資料として確認しました。
 
 文書163ファイルのローカルリンク・見出し参照・表・コードフェンス、Mermaid図162件の構文を確認し、新規ガイドと雛形の図表をHTMLへ描画して点検しました。記録・ビルド・ログ・波形・照合・描画結果はGit対象外の`artifacts/uvm-migration-20261031/`に保存しています。今回、未変更の全例・全フォーマル例は再実行していません。
+
+## QiitaのUVM連載の整理とpassive移行の実行例（2026-10-31）
+
+sukimaengineer氏の[基礎編](https://qiita.com/sukimaengineer/items/ac92b4ba4830eeb6e18b)、[実践編・前半](https://qiita.com/sukimaengineer/items/1fb074acc63fb61aea91)、[実践編・後半](https://qiita.com/sukimaengineer/items/5bc4af399d766d2a53c3)を参照し、[UVMの基礎と学習案内](docs/method/uvm-basics.md)と[設定・協調・上位再利用の設計](docs/method/uvm-practical-design.md)を新規作成しました。記事の更新日時・本文ハッシュ・参照先は[出典メタデータ](docs/references/qiita-uvm-sources.json)に保存しています。記事への参照、独自の解説・数値例と実行例として整理しています。
+
+item・phase・objection・factory・設定・TLMから、複数agentの協調、設定更新と受理時点の対応、RALモデル・map・予測の所有範囲、SVAの報告、未達の分析へ進む導線を追加しました。上位再利用・virtual sequenceの一体化は設計例として扱い、実装・実行済みの機能と区別しています。独自のGAIN例では、同じエッジの入力と設定更新のcallback順を入れ替えても期待値21・35になることを、飽和・範囲・不明なevent・複数書込みの診断とともに検算しました。
+
+新しい[passive UVM移行例](examples/local-uvm-migration/README.md)は、リポジトリのAPB RTL・入力生成とUVM scoreboard・C++ハーネスを再利用した独自実装です。同じ保存入力をIcarusの旧環境とVerilatorのUVM環境へ与え、更新前後の14項目と旧目標IDを照合します。二つのシミュレーション間の比較であり、同一シミュレーション内で旧新チェッカーを併走させる実装ではありません。基本UVM例の9目標を移行完了とせず、旧wait=0の20目標、wait=1／3の21目標を維持します。設定オブジェクト、passive生成、factory差替え、完了イベント、比較件数、native SVAの報告・到達も確認します。
+
+Python 3.14.7、Icarus Verilog、Verilator 5.052、準備済みのAccellera UVM 2020-3.2で、seed 73のsmoke（wait=1、ランダム操作200件、JUnit 25件）とnightly（wait=0／1／3、seed 73〜75を各ランダム操作2,000件、JUnit 91件）が成功しました。正常ケースはsmoke 3組・768サイクル、nightly 15組・68,003サイクルで14項目が一致しました。名目動作の4/20または5/21から境界追加後の20/20・21/21への到達を構成ごとに確認し、失敗・診断ケースの観測は加算していません。
+
+旧新それぞれで3種類のRTL変異を検出し、UVM側ではmonitor破壊、scoreboard未接続、誤ったactive設定、SVA観測値の破壊の4診断を確認しました。`--demo-bug 1`と`--sva-off`は、予定した判定項目をすべて記録したうえで回帰全体の終了コード1になりました。source・階層・action件数と照合するnative SVA coverは2目標で、旧20／21目標の手続き的な収集とは別です。関連セルフテストは旧APB 12件・基本UVM 5件・新規9件の計26件が成功しました。
+
+独自の[covergroup校正コード](examples/local-uvm-migration/coverage_probe.sv)も実行しました。既知の2サンプルに対してnative DBは11 bin・非0は5 binで、個別のカウンターも期待値と一致しました。Verilator 5.052の`get_inst_coverage()`は45.454545%、`get_coverage()`は0%でした。全bin比率は45.454545%、項目の達成率を等重みで平均すると55.555556%となるため、表示値と集計定義を区別する補足を追加しました。記事の確認結果と今回の校正結果には、それぞれのモデル・ツール版・集計の範囲を明記しました。必須binの判定をAPIの割合だけへ依存させず、既知サンプルと実カウンターで校正します。
+
+Accelleraのsequence・event・analysis port・register関連の参照実装と、Verilator 5.052のcoverage runtimeを一次資料として確認しています。実行ソースのハッシュ56件と外部UVMソース744件が現行内容と一致し、3記事の本文ハッシュも取得した版と一致しました。文書166ファイルのローカルリンク・見出し参照・表・コードフェンス、Mermaid図165件の構文を確認し、新規資料と更新した移行ガイドをHTMLへ描画して点検しました。
+
+取得記事、計画・入力・ソース情報、ビルド・ログ・VCD・native DB、旧新比較、校正と描画の結果は、Git対象外の`artifacts/qiita-integration-20261031/`に保存しています。今回の確認は新規例と関連部分で、未変更の全例・全フォーマル例を再実行したものではありません。

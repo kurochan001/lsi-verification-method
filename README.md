@@ -18,6 +18,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
+| UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行) |
@@ -110,7 +111,7 @@ flowchart TD
 | [制約付きランダム検証](docs/method/constrained-random-verification.md) | 合法な刺激、分布、seed、再現、未達への調整、失敗の縮小 |
 | [SVAのアサーションとカバー](docs/method/sva-verification.md) | assert・assume・cover、サンプリング、履歴、リセット、終了時の扱い |
 | <a id="目視確認をアサーションに置き換える"></a>[目視確認から自動判定へ](docs/method/assertion-based-regression.md) | 目視条件を明文化し、検出力を確認してリグレッションへ組み込む。[移行記録](docs/templates/assertion-migration.md)も用意 |
-| [UVMへの適用](docs/method/uvm-verification.md) | agent・monitor・スコアボード、RAL、要求との対応、合格条件 |
+| [UVMへの適用](docs/method/uvm-verification.md) | agent・monitor・スコアボード、RAL、要求との対応、合格条件。[基礎](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md)も参照 |
 | [既存環境からUVMへの移行](docs/method/uvm-migration-guide.md) | 資産の棚卸し、passive観測・判定併走、刺激の再生、旧新の目標・検出力・終了条件の比較 |
 | [フォーマル検証](docs/method/formal-verification.md) | 仮定・初期状態、抽象化・分割、有界検査と証明、反例・到達性 |
 
@@ -139,7 +140,8 @@ flowchart TD
 | --- | --- | --- |
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
-| 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[APBのUVM例](examples/local-uvm/README.md) | 旧要求との対応、観測時点・入力再生・4値の差、カバレッジと検出力の維持 |
+| UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
+| 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passiveでの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、14項目の観測比較、20／21目標・検出力の維持 |
 | RTLの入出力を自動で比較する | [同期FIFO](examples/local-fifo/README.md) | 独立した参照キュー、空／満杯、データ順序、変異検出 |
 | 周辺回路を結合して確認する | [APB・UART・割り込み](examples/local-apb-uart/README.md) | バス操作から送受信・IRQまでのつながり、待ち・リセット |
 | 波形の目視確認を自動判定にする | [割り込みのSVA](examples/local-sva/README.md) | assertとcover、サンプリング、検出力、終了判定 |
@@ -168,7 +170,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 
-2026-10-31に、nightly対応全83例の記載構成、集約7本、全10フォーマル例の既定全タスクを再実行しました。[全例の実行確認](PROVENANCE.md#全例のnightlyと全フォーマル例の再実行2026-10-31)に範囲と結果を記録しています。
+2026-10-31に、当時のnightly対応全83例の記載構成、集約7本、全10フォーマル例の既定全タスクを再実行しました。[全例の実行確認](PROVENANCE.md#全例のnightlyと全フォーマル例の再実行2026-10-31)に範囲と結果を記録しています。後から追加した例の確認範囲は、各READMEと追記記録を参照してください。
 
 ## 準備と実行
 

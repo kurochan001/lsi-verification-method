@@ -2,7 +2,7 @@
 
 既存の[APBレジスタ](../local-apb/README.md)を、実際のSystemVerilog UVMクラスライブラリで検証します。PythonでUVMを模倣する例ではありません。Verilator 5.052とAccellera UVM 2020-3.2で実行します。対応状況は[Verilatorの公式変更履歴](https://verilator.org/guide/latest/changes.html)と[Accelleraの配布情報](https://www.accellera.org/downloads/standards/uvm)を参照してください。
 
-既存環境から移す手順は、[UVM移行ガイド](../../docs/method/uvm-migration-guide.md)を参照してください。本例と非UVM側では必須目標・待ち構成が異なるため、旧要求との対応と不足を確認する起点として使います。passive併走・旧入力再生・旧新差分の自動検査は、本例に実装済みの機能ではありません。
+既存環境から移す手順は、[UVM移行ガイド](../../docs/method/uvm-migration-guide.md)を参照してください。本例と非UVM側では必須目標・待ち構成が異なるため、旧要求との対応と不足を確認する起点として使います。同じ保存入力でpassive観測・旧新差分を確認する例は、[UVM移行の実行例](../local-uvm-migration/README.md)へ分けています。[基礎と学習案内](../../docs/method/uvm-basics.md)から読むこともできます。
 
 ## RALと独立したスコアボードの二重照合
 

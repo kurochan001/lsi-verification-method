@@ -156,6 +156,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | --- | --- | --- |
 | [SVAのアサーションとカバー](local-sva/README.md) | assert／cover、前件が成立しない場合の診断、違反注入、ネイティブcoverage.datとの照合 | Verilator |
 | [SystemVerilog UVM・RAL](local-uvm/README.md) | APB agent・monitor・独立したスコアボード、RALとレジスタ操作 | UVM |
+| [passive UVMへの移行・同一入力再生](local-uvm-migration/README.md) | 設定・factory・SVA報告、旧新14項目の比較、20／21目標の維持と未達への追加 | Icarus＋UVM |
 | [コードカバレッジの未達分析](local-code-coverage/README.md) | 行・分岐・式・toggle・FSM、追加試験、DB統合・注釈、カバレッジ達成時の機能不正 | Verilator |
 | [ネイティブ機能カバレッジ](local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
 | [UVMの制約付きランダム検証](local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
@@ -178,7 +179,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
-2026-10-31に、nightly対応83例の記載構成と7集約ランナーを実行しました。共通シミュレーション58例・124構成のnightlyはJUnit 1122件、初期11例はフォーマル16件を含む384件が成功しています。全10フォーマル例・21構成の159タスク、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しました。
+2026-10-31に、当時のnightly対応83例の記載構成と7集約ランナーを実行しました。共通シミュレーション58例・124構成のnightlyはJUnit 1122件、初期11例はフォーマル16件を含む384件が成功しています。全10フォーマル例・21構成の159タスク、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しました。追加例の実行結果は、各READMEと追記記録に分けています。
 
 各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と集約判定を分けた件数、ツール版、ソースの照合は[全例の実行記録](../PROVENANCE.md#全例のnightlyと全フォーマル例の再実行2026-10-31)を参照してください。
 
