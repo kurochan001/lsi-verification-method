@@ -38,6 +38,16 @@
 
 静的検査・コードカバレッジ・X伝搬は、既存の[バス検証例](../../examples/local-bus-validation/README.md)が扱います。今回の6例は、その実行結果を置き換えるものではありません。
 
+2026-10-31には、次の不足を補う3例を追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-SECURITY / SYSTEM-SW | [RISC-VのPMP判定](../../examples/local-riscv-pmp/README.md) | 4エントリーの縮小モデルで領域・優先順位・アクセス全体の包含・権限・ロックを確認。コアのCSR・例外への組込みは対象外 |
+| SCOPE-PROTOCOL-DATA / SYSTEM-SW | [キャッシュコヒーレンシ](../../examples/local-cache-coherence/README.md) | 2クライアントの最新値・無効化・dirtyデータの受渡し・追出し。中央で1要求ずつ処理し、分散通信やCPUのメモリ整合性モデルは対象外 |
+| SCOPE-PHYSICAL（DFTのデジタル部分） | [内部スキャンとATPG](../../examples/local-scan-atpg/README.md) | シフト・キャプチャと指定14単一縮退故障の分類、13検出可能故障の観測。物理スキャン挿入や製造テストのサインオフは対象外 |
+
+これらの実行例を加えても、STA、物理的なCDC/RDC成立性、DFTの実装制約、DRC/LVS、AMS、シリコン評価を確認済みにはしません。対象製品の要求があれば、以下の計画と製品側の証跡へ展開します。
+
 ## 2. 静的検査と構成ごとの読み込み
 
 RTLだけでなく、testbench・チェッカー・生成コードも対象にします。幅の切り詰め、符号、暗黙ネット、未駆動・未接続、複数ドライバー、不要なラッチ、組み合わせループ、到達しない分岐などを、採用したルールセットで検査します。たとえばVerilatorには[lint専用の実行方式](https://verilator.org/guide/latest/verilating.html)がありますが、検出できる内容はツール・版・設定ごとに確認します。

@@ -24,15 +24,22 @@ flowchart TD
 
 ## ツールの準備
 
-POSIXとPython 3.10以上を使います。初回は一時仮想環境へ既存の固定版ツールを入れます。既に用意した環境は上書きせず、そのままactivateできます。
+POSIXとPython 3.10以上を使います。リポジトリのルートで、初回だけ専用の仮想環境へ固定版ツールを入れます。`artifacts/`はGitの管理対象外ですが、`/tmp`とは違いOSの一時ファイル削除では消えません。既に用意した環境は、そのままactivateできます。
 
 ```sh
-python3 -m venv /tmp/lsi-bus-formal-venv
-. /tmp/lsi-bus-formal-venv/bin/activate
+python3 -m venv artifacts/toolchains/formal-venv
+. artifacts/toolchains/formal-venv/bin/activate
 python3 -m pip install -r examples/local-bus-formal/tools-requirements.txt
 ```
 
-ツールはYoWASP版Yosys・SBYとZ3です。商用ライセンスやシステム全体へのインストールは使いません。実際のパッケージ・ツール版を証跡へ残します。配布物とコマンドの位置は[既存の準備手順](../local-bus-formal/README.md)も参照してください。
+ツールは[YoWASP](https://yowasp.org/)版Yosys・SBYとZ3です。すべてオープンソースで、商用ライセンスやシステム全体へのインストールは使いません。`yowasp-yosys`の配布物にSBY・smtbmc・witnessのコマンドも含まれます。Pythonも仮想環境のものを使い、実際のパッケージ・ツール版を証跡へ残します。配布物とコマンドの位置は[既存の準備手順](../local-bus-formal/README.md)も参照してください。
+
+次回以降は、リポジトリのルートで以下を実行します。別の端末でもactivateが必要です。環境を移動・削除した場合は、上の初回手順で作り直してください。
+
+```sh
+. artifacts/toolchains/formal-venv/bin/activate
+python3 examples/local-riscv-decoder/run.py
+```
 
 ## 実行オプション
 
@@ -42,9 +49,9 @@ python3 examples/local-equivalence/run.py
 python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bmc --bound 12
 ```
 
-`--configuration`は既定all、`--task`は既定allで、一部のタスクだけも実行できます。一部だけの成功はリグレッション全体の完了ではなく、マニフェストの選択ケースを確認してください。`--bound`はBMC／coverの深さで8〜64です。既定は、AXI4・等価性が12、完了期限が24、Top-K・接続性が8、除算器が16です。AXI4のproveは別に帰納法探索深さ8を使います。
+`--configuration`は既定all、`--task`は既定allで、一部のタスクだけも実行できます。一部だけの成功はリグレッション全体の完了ではなく、マニフェストの選択ケースを確認してください。`--bound`はBMC／coverの深さで8〜64です。既定は、AXI4・等価性が12、完了期限が24、Top-K・接続性・命令デコーダが8、除算器が16です。proveは別の深さを使う例もあり、AXI4は8、状態を持たない命令デコーダは1です。
 
-`--timeout`は版取得・各SBYタスクへの上限です。既定は、AXI4が300秒、等価性・完了期限・接続性が120秒、Top-K・除算器が600秒です。SBY内部にも少し短い上限を設定します。`--sby`、`--yosys`、`--smtbmc`、`--witness`で実行ファイル、`--out`で新規保存先を指定します。
+`--timeout`は版取得・各SBYタスクへの上限です。既定は、AXI4が300秒、等価性・完了期限・接続性・命令デコーダが120秒、Top-K・除算器が600秒です。SBY内部にも少し短い上限を設定します。`--sby`、`--yosys`、`--smtbmc`、`--witness`で実行ファイル、`--out`で新規保存先を指定します。
 
 `--demo-bug 1..4`は通常の証明／データ検査にも指定変異を入れ、リグレッションの失敗を確認するオプションです。専用の変異検出ケースは別に残ります。AXI4のデータだけの不具合は制御証明がPASSしても、データBMCがFAILすることがあります。
 

@@ -1,0 +1,4 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"SCAN","goals":["scan/shift-zero","scan/shift-one","scan/capture","scan/unload","functional/no-fault","reset/clears"]},
+ {"id":"FAULT","goals":["fault/sa0","fault/sa1","fault/observable","fault/redundant"]}
+]}

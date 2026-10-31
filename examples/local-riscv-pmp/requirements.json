@@ -1,0 +1,5 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"ADDRESS","goals":["mode/tor","mode/na4","mode/napot","match/priority","match/unmapped-user","match/unmapped-machine","deny/partial","deny/physical-wrap"]},
+ {"id":"PERMISSION","goals":["allow/read","allow/write","allow/execute","privilege/machine-bypass","privilege/locked-machine-deny"]},
+ {"id":"LOCK","goals":["lock/tor-predecessor","lock/entry","reset/reconfigure"]}
+]}

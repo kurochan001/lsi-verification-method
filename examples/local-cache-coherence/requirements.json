@@ -1,0 +1,4 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"MSI","goals":["read/hit","read/miss","read/dirty-forward","write/shared-upgrade","write/modified-hit","write/invalidate-peer","eviction/dirty","state/shared-pair"]},
+ {"id":"TRANSACTION","goals":["client/zero","client/one","response/backpressure","reset/pending"]}
+]}

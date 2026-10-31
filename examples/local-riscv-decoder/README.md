@@ -71,7 +71,7 @@ coverは、圧縮命令、予約フィールドを持つFENCE、RV64の形のシ
 [共通フォーマル手順](../local-formal-common/README.md)の固定版ツールを使います。
 
 ```sh
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-riscv-decoder/run.py
 python3 examples/local-riscv-decoder/generate.py --check
 python3 -m unittest discover -s examples/local-riscv-decoder/tests -v
@@ -86,6 +86,6 @@ python3 -m unittest discover -s examples/local-riscv-decoder/tests -v
 
 ## 確認範囲
 
-2026-10-31に、Python 3.14.7とYoWASP版Yosys・SBY・Z3（[共通フォーマル手順](../local-formal-common/README.md)の固定版）で、6タスクが成功しました（全体で約16秒）。証明のタスクに4種類の変異を入れると、どれもFAILになりました。セルフテスト9件も成功しています（Icarus Verilog 14.0開発版、LLVM 23.1.4の`llvm-mc`）。Verilator 5.052の`--lint-only -Wall`では、変異0〜4のどれでも警告はありません。
+2026-10-31に、Python 3.14.7の専用環境`artifacts/toolchains/formal-venv`へYoWASP版Yosys・SBY・Z3（[共通フォーマル手順](../local-formal-common/README.md)の固定版）を導入し、6タスクが成功しました（各SBYタスクの実行時間の合計は約18秒）。証明のタスクに4種類の変異を入れると、どれもFAILになりました。セルフテスト9件も成功しています（Icarus Verilog 14.0開発版、LLVM 23.1.4の`llvm-mc`）。Verilator 5.052の`--lint-only -Wall`では、変異0〜4のどれでも警告はありません。
 
 対象はRV32Iの基本命令の判定です。圧縮命令（C）、乗算・除算（M）、CSR（Zicsr）、FENCE.I（Zifencei）、特権命令、RV64は、すべて不正として扱います。命令の実行や、パイプラインでの使われ方は、[ISSとの比較の例](../local-riscv-iss/README.md)で扱います。この例のデコーダは、その例のコアのデコード部分とは別に書いたものです。コアは、[例外・割り込みの例](../local-riscv-traps/README.md)で使う`TRAPS=1`のとき、このデコーダの`legal`出力で不正な命令を判定します。

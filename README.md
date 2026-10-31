@@ -164,6 +164,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [DMAリングの所有権](examples/local-dma-ownership/README.md) | 公開・実行・完了返却・回収、処理中の追加、再利用 | Icarus |
 | [メモリ⇄Stream DMA](examples/local-stream-dma/README.md) | 有効バイト、パケット終端、待ち、エラー時の残存範囲 | Icarus |
 | [小規模キャッシュとDMA](examples/local-cache-dma/README.md) | write-back、部分書込み、clean／invalidateとデータの可視性 | Icarus |
+| [2クライアントのキャッシュコヒーレンシ](examples/local-cache-coherence/README.md) | MSIを簡略化した回路の無効化・dirtyデータの受渡し・追出しを、キャッシュのないメモリモデルと照合 | Icarus |
 | [AXI4の応答順序入れ替え](examples/local-axi-reorder/README.md) | 異なるID間の応答入れ替え、同じID内の順序、B／Rの保持 | Icarus |
 
 ### CDC・クロック・リセット・低電力
@@ -186,6 +187,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [パケットCRC](examples/local-packet-crc/README.md) | 独立した多項式除算と既知ベクトルによる生成・受信値検査 | Icarus |
 | [MBIST・March C−](examples/local-mbist/README.md) | ビットセルの故障モデル、10N操作、最初の失敗位置、再開 | Icarus |
 | [JTAG TAP・境界走査](examples/local-jtag-tap/README.md) | 16状態、IR／DR、IDCODE、BYPASS、SAMPLE/PRELOAD、EXTEST | Icarus |
+| [内部スキャンとATPG](examples/local-scan-atpg/README.md) | ロード・キャプチャ・アンロード、14単一縮退故障の分類、生成パターンによる検出可能な13故障の観測 | Icarus＋Python |
 | [アクセス保護](examples/local-access-control/README.md) | PPROT、設定ロック、禁止アクセスへのエラー応答と状態が更新されないこと | Icarus |
 | [セキュリティ・ライフサイクル](examples/local-secure-lifecycle/README.md) | セキュア属性、ロック、デバッグ鍵の試行制限、タンパー時の鍵消去 | Icarus |
 | [ロックステップ監視](examples/local-lockstep-monitor/README.md) | 2つの小規模演算コアの比較、故障注入、安全状態、復帰時の再同期、不正命令 | Icarus |
@@ -207,7 +209,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 
 ### プロセッサ
 
-RISC-Vの命令の定義を期待値に使う6例です。
+RISC-Vの命令・保護機構と、プロセッサを構成する回路の7例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
@@ -215,6 +217,7 @@ RISC-Vの命令の定義を期待値に使う6例です。
 | [分岐予測器](examples/local-branch-predictor/README.md) | 予測しない・静的・動的の3構成で退出の列がISSと一致すること、性能カウンターの照合、予測外れからの回復、結果を変えない性能の誤り | Icarus |
 | [バイト・ハーフワードのロード・ストア](examples/local-load-store/README.md) | 全サイズ・全レーンのアクセス、符号拡張とゼロ拡張、サブワードのストアの書込み位置、ロードした値の転送をISSと照合 | Icarus |
 | [例外と割り込み](examples/local-riscv-traps/README.md) | 不正な命令・ECALL・境界に合わないロード／ストアの精密な例外、外部割り込みを受け付ける位置、MRET、CSRの読み書きをISSと照合、予測器との組合せ | Icarus |
+| [RISC-VのPMP判定](examples/local-riscv-pmp/README.md) | TOR／NA4／NAPOT、最優先の領域がアクセス全体を覆うこと、Mモード・ロック・TOR下限の保護（4エントリーの縮小モデル） | Icarus |
 | [RISC-Vの命令デコーダ](examples/local-riscv-decoder/README.md) | 公式の命令表（riscv-opcodes）から生成した期待値と、全2^32命令語での一致の証明、予約された命令語・FENCEの予約フィールド・遠い分岐の即値 | フォーマル＋Icarus |
 | [多サイクル除算器](examples/local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
 
@@ -285,7 +288,7 @@ python3 examples/local-axi/run.py
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は48例・104構成、各検証例が出力するJUnit件数の合計はsmoke 734件／nightly 942件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は51例・110構成、各検証例が出力するJUnit件数の合計はsmoke 776件／nightly 996件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 
