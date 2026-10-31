@@ -37,6 +37,7 @@ flowchart TD
 | 回路・検証方式から例を探す | [検証例一覧](#検証例一覧) | 全例の検証内容と主なツール |
 | 機能カバレッジを確認する | [計測の入口](#機能カバレッジを確認する)／[手法](docs/method/functional-coverage.md) | 目標の選定、coverpoint・crossの実測、未達の判定 |
 | コードカバレッジを確認する | [計測の入口](#コードカバレッジを確認する)／[手法](docs/method/code-coverage.md) | 行・分岐・式・toggle・FSMの計測、未達分析、DB統合 |
+| 目視確認を自動判定へ移す | [アサーションによる回帰の手順](docs/method/assertion-based-regression.md)／[実行例](examples/local-sva/README.md) | 確認条件の明文化、検出力・到達・終了判定、継続実行 |
 | まず回路を動かす | [準備と実行](#準備と実行) | PythonとIcarusで始める例 |
 | UVM・仕様生成・反例再現 | [7例の集約手順](examples/local-soc-regression/README.md) | 必要なツールと実行範囲 |
 | 言葉・指標を確認 | [用語集](docs/glossary.md)／[FAQ](docs/faq.md) | 到達・合否・保証範囲の違い |
@@ -98,6 +99,19 @@ python3 examples/local-code-coverage/run.py --profile nightly
 
 この例は8／16ビットの2構成です。生成されたポイント集合も検査し、計測漏れを検出します。ツールが生成した範囲と必須から分けた箇所を明示し、元の未達記録を保存します。FSMの自動抽出範囲や、条件／式とMC/DCの違いは、リンク先の確認範囲を参照してください。
 
+## 目視確認をアサーションに置き換える
+
+波形を見て合否を判断していた条件を、要求に対応するアサーションへ移し、変更後のリグレッションでも同じ基準で自動判定します。確認条件を再利用できる検証資産にする運用で、[目視確認から自動判定への手順](docs/method/assertion-based-regression.md)と[移行記録の雛形](docs/templates/assertion-migration.md)を用意しています。
+
+例えば、セット／クリアの優先順位、状態の保持、リセット後の値、決められた時間内の応答を、クロック・条件・期待結果として明文化します。実行例では、既存の[割り込み回路の6アサーション](examples/local-sva/README.md)を使い、正常動作、誤実装の検出、前件への到達、チェッカー無効化の拒否を確認できます。
+
+```sh
+python3 examples/local-sva/run.py
+python3 examples/local-sva/run.py --profile nightly
+```
+
+合否は、違反の有無に加えて、必須の到達・完了、接続・有効化、予定ケース数、終了コードと証跡で判定します。波形は失敗原因の解析や観測条件の検討に使い、複雑なデータ比較はスコアボードと分担します。サンプリングやリセット・終了時の注意点は[SVAの手順](docs/method/sva-verification.md)、運用上の疑問は[FAQ](docs/faq.md#12-目視確認からアサーションへの移行)を参照してください。
+
 ## 手法・ケーススタディ・参照ツール
 
 ここでは検証の進め方を説明する資料、手法の適用記録、ケーススタディで使った参照ツールを紹介します。回路や検証方式を実際に動かす教材は、後の[検証例一覧](#検証例一覧)にまとめています。
@@ -108,7 +122,7 @@ python3 examples/local-code-coverage/run.py --profile nightly
 - **UVMへの適用**：[UVMで要求と検証資産を結び付ける](docs/method/uvm-verification.md)。基本構成、要求IDとの対応、レジスタモデル（RAL）、UARTの例、リグレッションの合格条件をまとめています。[APBを使うUVM・RALの実行例](examples/local-uvm/README.md)も用意しています。
 - **機能間の検証**：[機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md)。依存関係の洗い出し、同時動作・順序・中断、クロス目標の選定と合格条件をまとめています。イベントとW1Cクリアの競合を、12目標の例として示しています。[機能クロス網羅の提案](docs/feature-interaction-coverage-proposal.md)を基に、因子・水準・制約・可変次数、既存テストから未達を補う手順、計画・到達・合格の区別も取り込みました。[記録の雛形](docs/templates/interaction-coverage-plan.md)を用意しています。[APB＋割り込みの実行例](examples/local-apb-irq-coverage/README.md)で、既存テストを保持した追加候補の選択、再実行による目標・検出力・コストの比較をローカルで試せます。
 - **ランダム検証**：[制約付きランダム検証の計画・実行・完了判定](docs/method/constrained-random-verification.md)。制約、分布、seed、リグレッション計画、未達への調整、失敗の再現・縮小をまとめています。クロス検証の12目標を探索する、9実行の計画例も示しています。
-- **SVAによる検証**：[SVAのアサーションとカバーによる検証](docs/method/sva-verification.md)。assert・assume・cover、サンプリング、vacuous pass、リセット、シミュレーションとフォーマル検証の完了判定をまとめています。イベントとW1Cの競合を使ったチェッカー例も示しています。
+- **SVAによる検証**：[SVAのアサーションとカバーによる検証](docs/method/sva-verification.md)。assert・assume・cover、サンプリング、vacuous pass、リセット、シミュレーションとフォーマル検証の完了判定をまとめています。イベントとW1Cの競合を使ったチェッカー例も示しています。[目視確認をアサーション化する手順](docs/method/assertion-based-regression.md)では、確認条件の明文化から検出力の確認・リグレッションへの組込みまでを整理しています。
 - **covergroupによる機能網羅**：[covergroupで機能を体系的に網羅する](docs/method/functional-coverage.md)。機能一覧からcoverpoint・bin・crossを選ぶ方法、観測と判定、除外とインスタンス別の集計をまとめています。基本動作の16目標を収集するコレクター例も示しています。[DRAM・SHA-256・スイッチのネイティブ計測](examples/local-functional-coverage/README.md)は、Verilatorでcoverpoint・crossを実測し、bin別の期待ヒット数と照合します。
 - **コードカバレッジ**：[コードカバレッジを計測し、未達を分析する](docs/method/code-coverage.md)。行・分岐・式・toggle・FSMの指標、追加試験、除外と分母、DB統合、機能比較と併せた完了判断をまとめています。
 - **フォーマル検証**：[フォーマル検証の計画・証明・完了判定](docs/method/formal-verification.md)。仮定・初期状態、抽象化・証明の分割、有界検査と非有界の証明、活性、反例・到達性、サインオフをまとめています。小さな割り込みモデルの証明と、誤実装・過剰な仮定の確認例も示しています。
