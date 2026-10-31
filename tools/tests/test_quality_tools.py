@@ -58,6 +58,11 @@ class QualityEvidenceTests(unittest.TestCase):
         self.assertFalse(S.evaluate(dict(error=None,returncode=1),'Ran 1 test in 0s\nOK\n')['success'])
 
 class DocumentTests(unittest.TestCase):
+    def test_stray_closing_code_tag_cannot_hide_subsequent_links(self):
+        page=D.Page();page.feed('</code></pre><a href="missing.md">link</a>')
+        self.assertEqual(page.links,['missing.md'])
+        page=D.Page();page.feed('<pre><code><a href="sample.md">code example</a></code></pre><a href="real.md">link</a>')
+        self.assertEqual(page.links,['real.md'])
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(dir=ROOT/'artifacts');self.addCleanup(self.temp.cleanup)
         self.base=Path(self.temp.name);self.root=self.base/'repo';self.root.mkdir()

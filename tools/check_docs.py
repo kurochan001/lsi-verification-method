@@ -36,7 +36,7 @@ class Page(HTMLParser):
         if self.cell is not None:self.cell.append(data)
     def handle_endtag(self,tag):
         if re.fullmatch(r'h[1-6]',tag) and self.heading is not None:self.headings.append(''.join(self.heading));self.heading=None
-        if tag in ('code','pre'):self.code-=1
+        if tag in ('code','pre'):self.code=max(0,self.code-1)
         if tag in ('td','th') and self.cell is not None:self.row.append(''.join(self.cell).strip());self.cell=None
         if tag=='tr' and self.row is not None:self.table.append(self.row);self.row=None
         if tag=='table' and self.table is not None:self.tables.append(self.table);self.table=None
