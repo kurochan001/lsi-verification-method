@@ -44,6 +44,8 @@ python3 examples/local-uvm-random/run.py \
 python3 -m unittest discover -s examples/local-uvm-random/tests -v
 ```
 
+`--solver`と`--verilator`の実行ファイルは、起動時に探索して絶対パスへ解決します。相対パスを指定した場合も、シミュレーションの作業ディレクトリの変更に影響されません。
+
 `--profile nightly`、`--seed`、`--timeout`、`--build-timeout`、`--verilator`を指定できます。seedは0〜2147483644です。同じseedを独立したプロセスで再実行し、生成した操作列の一致も要求します。同じツール・ソルバー・ソースの版を再現条件に含めます。
 
 ## ネガティブテストと証跡

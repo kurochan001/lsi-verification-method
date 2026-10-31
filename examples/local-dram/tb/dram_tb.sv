@@ -16,7 +16,7 @@ module dram_tb;
   for(b=0;b<2;b=b+1)begin opened[b]=-1;activated[b]=-1000;written[b]=-1000;precharged[b]=-1000;end
   for(i=0;i<32;i=i+1)memory[i]=0;
   if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"arguments required");
-  $dumpfile(wave);$dumpvars(0,dram_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"missing input");repeat(2)@(negedge clk);
+  $dumpfile(wave);$dumpvars(0,dram_tb);fd=$fopen(vectors,"r");if(fd==0)$fatal(1,"missing input");repeat(2)@(negedge clk);
   while(!$feof(fd))begin
    n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10],v[11]);if(n!=12)$fatal(1,"bad row");
    rst_n=v[0][0];req_valid=v[1][0];req_write=v[2][0];req_bank=v[3][0];req_row=v[4][1:0];req_col=v[5][1:0];req_data=v[6][31:0];resp_ready=v[7][0];

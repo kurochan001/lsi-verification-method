@@ -11,7 +11,7 @@ module sha256_tb;
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"step=%0d",checks);end endtask
  initial begin
   if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"arguments required");
-  $dumpfile(wave);$dumpvars(0,sha256_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"missing input");repeat(2)@(negedge clk);
+  $dumpfile(wave);$dumpvars(0,sha256_tb);fd=$fopen(vectors,"r");if(fd==0)$fatal(1,"missing input");repeat(2)@(negedge clk);
   while(!$feof(fd))begin
    n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10]);if(n!=11)$fatal(1,"bad row");
    rst_n=v[0][0];cmd_valid=v[1][0];length=v[2][6:0];byte_valid=v[3][0];byte_data=v[4][7:0];digest_ready=v[5][0];#1;
@@ -31,7 +31,7 @@ module sha256_tb;
     if(byte_ready && byte_valid)begin accepted_bytes=accepted_bytes+1;$display("COVER input/accepted");end
     if(dut.state==4 && dut.second)$display("COVER compression/second-block");
     if(digest_valid)begin
-     if(!error && accepted_bytes!=saved_length)fail("SHA_LENGTH");
+     if(!error && accepted_bytes!=int'(saved_length))fail("SHA_LENGTH");
      if(!error && saved_length<=55)$display("COVER result/one-block");
      if(!error && saved_length>55)$display("COVER result/two-block");
      if(!digest_ready)$display("COVER result/hold");

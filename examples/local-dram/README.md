@@ -66,3 +66,11 @@ python3 -m unittest discover -s examples/local-dram/tests -v
 ## 確認範囲
 
 タイミング値はサイクル単位の教材用設定で、特定のSDRAM／DDRデバイスへの準拠を表しません。初期化シーケンス、モードレジスタ、バースト、tRTP・tCCD・tRRD・tFAW等の追加制約、読書きの方向転換、DQS・PHY・トレーニング、保持不良、温度、セルフリフレッシュ、実機の信号品質は対象外です。実デバイスへ接続するには、その仕様に沿う追加の回路と検証が必要です。
+
+## ネイティブ機能カバレッジ
+
+[Verilatorによる計測例](../local-functional-coverage/README.md)で、実際のcoverpoint・crossとDBを確認できます。各構成18 binの全ヒットと、独立したイベント集計との件数一致を要求します。既存の`COVER`目標とは別の計測計画です。
+
+```sh
+python3 examples/local-functional-coverage/run.py --example dram
+```

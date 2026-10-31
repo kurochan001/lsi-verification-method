@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import shlex
+import shutil
 import sys
 HERE=Path(__file__).resolve().parent
 spec=importlib.util.spec_from_file_location('crv_evidence',HERE.parent/'local-exploration-common/evidence.py');E=importlib.util.module_from_spec(spec);spec.loader.exec_module(E)
@@ -29,6 +30,11 @@ def native(path):
             bins[name]=int(m[2])
     if bins.keys()!=EXPECTED_BINS or any(v<=0 for v in bins.values()):raise ValueError('native bin inventory/hits differ from fixed plan')
     return bins
+
+def resolve_tool(command):
+    # Resolve before simulation changes cwd; relative solver paths must keep their meaning.
+    found=shutil.which(command)
+    return str(Path(found).resolve()) if found else command
 
 def random_trace(log,n):
     records=re.findall(r'^RANDOM addr=(\d+) write=([01]) data=([0-9a-f]{8}) events=(\d+)$',log,re.M)
@@ -81,6 +87,7 @@ def run(args):
 def main():
     p=E.parser(__doc__,'local-uvm-random');p.add_argument('--uvm-home',type=Path,required=True);p.add_argument('--solver',default='z3');p.add_argument('--verilator',default='verilator');p.add_argument('--build-timeout',type=float,default=300)
     args=p.parse_args();E.validate(p,args)
+    args.solver=resolve_tool(args.solver);args.verilator=resolve_tool(args.verilator)
     import math
     if args.seed>2**31-4 or not math.isfinite(args.build_timeout) or args.build_timeout<=0:p.error('seed/build timeout out of range')
     try:return run(args)

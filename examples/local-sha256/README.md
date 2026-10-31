@@ -49,3 +49,11 @@ python3 -m unittest discover -s examples/local-sha256/tests -v
 ## 確認範囲
 
 バイト境界のメッセージを最大2ブロックに限定します。任意長のストリーミング、ビット単位の入力、HMAC、鍵管理、セキュアブートへの統合、暗号モジュールの認証は扱いません。データパスの機能検証であり、電力・電磁放射等のサイドチャネル耐性を示すものではありません。[定時間比較のフォーマル例](../local-constant-time/README.md)とは検証する性質が異なります。
+
+## ネイティブ機能カバレッジ
+
+[Verilatorによる計測例](../local-functional-coverage/README.md)で、実際のcoverpoint・crossとDBを確認できます。各構成17 binの全ヒットと、独立したイベント集計との件数一致を要求します。既存の`COVER`目標とは別の計測計画です。
+
+```sh
+python3 examples/local-functional-coverage/run.py --example sha256
+```

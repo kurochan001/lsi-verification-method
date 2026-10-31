@@ -13,7 +13,7 @@ module packet_switch_tb;
  initial begin
   wr[0]=0;wr[1]=0;rd[0]=0;rd[1]=0;source_route[0]=0;source_route[1]=0;
   if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"arguments required");
-  $dumpfile(wave);$dumpvars(0,packet_switch_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"missing input");repeat(2)@(negedge clk);
+  $dumpfile(wave);$dumpvars(0,packet_switch_tb);fd=$fopen(vectors,"r");if(fd==0)$fatal(1,"missing input");repeat(2)@(negedge clk);
   while(!$feof(fd))begin
    n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9]);if(n!=10)$fatal(1,"bad row");
    rst_n=v[0][0];s_valid=v[1][1:0];s_last=v[2][1:0];s_dest=v[3][1:0];s_data=v[4][2*WIDTH-1:0];m_ready=v[5][1:0];#1;

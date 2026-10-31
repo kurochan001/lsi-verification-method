@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys,tempfile,unittest
+import os,sys,tempfile,unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'local-common'))
 from local_test_support import load_example
 P=load_example('local-uvm-random')
@@ -9,6 +9,11 @@ class NativeTests(unittest.TestCase):
     def parse(self,rows):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp)/'coverage.dat';p.write_text('\n'.join(rows)+'\n');return P.native(p)
+    def test_relative_executable_is_resolved_before_simulation_changes_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tool=Path(tmp)/'fake solver';tool.write_text('#!/bin/sh\nexit 0\n');tool.chmod(0o755)
+            self.assertEqual(P.resolve_tool(os.path.relpath(tool)),str(tool.resolve()))
+            self.assertEqual(P.resolve_tool('missing-native-coverage-solver'),'missing-native-coverage-solver')
     def test_all_native_bins_required(self):
         self.assertEqual(len(self.parse(self.rows())),24)
         with self.assertRaises(ValueError):self.parse(self.rows()[:-1])

@@ -51,3 +51,11 @@ python3 -m unittest discover -s examples/local-packet-switch/tests -v
 ## 確認範囲
 
 2×2スイッチ単体で、仮想チャネル、入力FIFO、クレジット、メッシュ接続、マルチキャスト、CRC、再送はありません。有限長パケットが末尾まで供給され、受信側が転送を再開する条件で次の仲裁へ進みます。入力の無期限停止に耐える公平性や、ネットワーク全体のデッドロック回避を証明した例ではありません。再送は[別のリンク例](../local-retry-link/README.md)を参照してください。
+
+## ネイティブ機能カバレッジ
+
+[Verilatorによる計測例](../local-functional-coverage/README.md)で、実際のcoverpoint・crossとDBを確認できます。各構成14 binの全ヒットと、独立したイベント集計との件数一致を要求します。既存の`COVER`目標とは別の計測計画です。
+
+```sh
+python3 examples/local-functional-coverage/run.py --example packet-switch
+```
