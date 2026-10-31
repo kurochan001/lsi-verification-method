@@ -36,6 +36,7 @@ flowchart TD
 | 全体の進め方 | [仕様から検証へ](docs/method/spec-to-verification-method.md) | 要求・判定・完了条件 |
 | 回路・検証方式から例を探す | [検証例一覧](#検証例一覧) | 全例の検証内容と主なツール |
 | 機能カバレッジを確認する | [計測の入口](#機能カバレッジを確認する)／[手法](docs/method/functional-coverage.md) | 目標の選定、coverpoint・crossの実測、未達の判定 |
+| コードカバレッジを確認する | [計測の入口](#コードカバレッジを確認する)／[手法](docs/method/code-coverage.md) | 行・分岐・式・toggle・FSMの計測、未達分析、DB統合 |
 | まず回路を動かす | [準備と実行](#準備と実行) | PythonとIcarusで始める例 |
 | UVM・仕様生成・反例再現 | [7例の集約手順](examples/local-soc-regression/README.md) | 必要なツールと実行範囲 |
 | 言葉・指標を確認 | [用語集](docs/glossary.md)／[FAQ](docs/faq.md) | 到達・合否・保証範囲の違い |
@@ -80,6 +81,23 @@ python3 examples/local-functional-coverage/run.py --profile nightly
 
 この例は全6構成で、必須binの到達、bin別ヒット数、元の期待値比較の成功を要求します。刺激不足・収集無効化を拒否する診断も含みます。既存の多くのIcarus例は`COVER`ログによる機能目標の集計であり、ネイティブDBとは計測方式を区別しています。選定したbinの100%を、仕様全体の網羅や製品の検証完了とは扱いません。
 
+## コードカバレッジを確認する
+
+**コードカバレッジ（code coverage）**は、RTLの行・分岐・式・信号ビットの変化・状態遷移など、実装を試験でどこまで実行したかを計測します。機能カバレッジと照合し、刺激や機能モデルから抜けていた経路を調べます。到達した処理の結果は、期待値比較・アサーションでも確認します。
+
+- **計画と未達分析**：[コードカバレッジの手法](docs/method/code-coverage.md)で、指標の違い、計測対象・期間、未達の分類、除外と分母、DB統合の条件を確認できます。
+- **実際に計測する**：[コマンド実行回路の例](examples/local-code-coverage/README.md)で、基礎試験の未達を追加試験で補い、DBを統合してソースへ注釈を付けます。計測なしの拒否と、カバレッジが埋まっても演算結果が誤っていれば失敗することも確認します。
+- **結果を記録する**：[FAQ](docs/faq.md#11-コードカバレッジの計測)と[サインオフ記録](docs/templates/signoff-record.md)から、指標別・構成別の未達、除外根拠、比較結果を確認します。
+
+Python 3.10以上、Verilator 5.052（`verilator_coverage`を含む）、C++20コンパイラーとmakeを用意し、ルートで実行します。
+
+```sh
+python3 examples/local-code-coverage/run.py
+python3 examples/local-code-coverage/run.py --profile nightly
+```
+
+この例は8／16ビットの2構成です。生成されたポイント集合も検査し、計測漏れを検出します。ツールが生成した範囲と必須から分けた箇所を明示し、元の未達記録を保存します。FSMの自動抽出範囲や、条件／式とMC/DCの違いは、リンク先の確認範囲を参照してください。
+
 ## 手法・ケーススタディ・参照ツール
 
 ここでは検証の進め方を説明する資料、手法の適用記録、ケーススタディで使った参照ツールを紹介します。回路や検証方式を実際に動かす教材は、後の[検証例一覧](#検証例一覧)にまとめています。
@@ -92,6 +110,7 @@ python3 examples/local-functional-coverage/run.py --profile nightly
 - **ランダム検証**：[制約付きランダム検証の計画・実行・完了判定](docs/method/constrained-random-verification.md)。制約、分布、seed、リグレッション計画、未達への調整、失敗の再現・縮小をまとめています。クロス検証の12目標を探索する、9実行の計画例も示しています。
 - **SVAによる検証**：[SVAのアサーションとカバーによる検証](docs/method/sva-verification.md)。assert・assume・cover、サンプリング、vacuous pass、リセット、シミュレーションとフォーマル検証の完了判定をまとめています。イベントとW1Cの競合を使ったチェッカー例も示しています。
 - **covergroupによる機能網羅**：[covergroupで機能を体系的に網羅する](docs/method/functional-coverage.md)。機能一覧からcoverpoint・bin・crossを選ぶ方法、観測と判定、除外とインスタンス別の集計をまとめています。基本動作の16目標を収集するコレクター例も示しています。[DRAM・SHA-256・スイッチのネイティブ計測](examples/local-functional-coverage/README.md)は、Verilatorでcoverpoint・crossを実測し、bin別の期待ヒット数と照合します。
+- **コードカバレッジ**：[コードカバレッジを計測し、未達を分析する](docs/method/code-coverage.md)。行・分岐・式・toggle・FSMの指標、追加試験、除外と分母、DB統合、機能比較と併せた完了判断をまとめています。
 - **フォーマル検証**：[フォーマル検証の計画・証明・完了判定](docs/method/formal-verification.md)。仮定・初期状態、抽象化・証明の分割、有界検査と非有界の証明、活性、反例・到達性、サインオフをまとめています。小さな割り込みモデルの証明と、誤実装・過剰な仮定の確認例も示しています。
 - **検証環境の検出力**：[ミューテーション検証で検証環境の検出力を確かめる](docs/method/mutation-verification.md)。回路へ意図的な誤りを入れ、刺激・チェッカー・SVAが検出するかを評価します。変異の選び方、未検出の分析、等価な変異、検出率と未完了の集計をまとめています。
 - **検証規模の削減**：[検証の組み合わせ・構成・実行数を削減する](docs/method/verification-reduction.md)。同値分割・境界値、直交表・t-way、対称性・代表構成、テスト・seedの縮約、変更影響によるリグレッション選択、形式的な抽象化を整理しています。削減の根拠、残す目標、検出力と実行コストの確認も記録します。
@@ -272,6 +291,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | --- | --- | --- |
 | [SVAのアサーションとカバー](examples/local-sva/README.md) | assert／cover、前件が成立しない場合の診断、違反注入、ネイティブcoverage.datとの照合 | Verilator |
 | [SystemVerilog UVM・RAL](examples/local-uvm/README.md) | APB agent・monitor・独立したスコアボード、RALとレジスタ操作 | UVM |
+| [コードカバレッジの未達分析](examples/local-code-coverage/README.md) | 行・分岐・式・toggle・FSM、追加試験、DB統合・注釈、カバレッジ達成時の機能不正 | Verilator |
 | [ネイティブ機能カバレッジ](examples/local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
 | [UVMの制約付きランダム検証](examples/local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
 | [SystemRDLによる仕様生成](examples/local-register-spec/README.md) | RTL・Cヘッダー・RALの生成、生成物の構造・属性・動作を、独立に定めた期待値と照合 | SystemRDL＋Icarus＋UVM＋C |
@@ -319,6 +339,7 @@ python3 examples/local-axi/run.py
 | --- | --- |
 | [Icarus共通シミュレーション](examples/local-common/README.md) | 58例の共通ランナー、準備、オプション、機能目標・JUnit・証跡 |
 | [機能カバレッジの計測](examples/local-functional-coverage/README.md) | Verilatorの準備条件、coverpoint・cross、DB照合、未達診断 |
+| [コードカバレッジの計測](examples/local-code-coverage/README.md) | Verilatorの計測、基礎試験と追加試験、DB統合、注釈付きソース |
 | [フォーマル環境](examples/local-formal-common/README.md) | Yosys・SBY・Z3の固定版環境、各タスクの実行と判定 |
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |

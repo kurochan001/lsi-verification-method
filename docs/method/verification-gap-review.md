@@ -292,6 +292,8 @@ RTLと電源意図記述（UPFなど）の版・対象ドメイン・階層を�
 
 mergeするDBの入力・構成・計測定義・除外を照合し、元の実行IDを保存します。指標・階層・構成ごとに未達を報告し、全体の平均や単一の100%で隠しません。プロジェクトで定めた目標と除外の妥当性を併せて判断します。[OpenTitanの計測・レビューの運用](https://opentitan.org/book/doc/contributing/dv/methodology/index.html)と[Verilatorのカバレッジ説明](https://verilator.org/guide/latest/simulating.html#coverage-analysis)も参照先です。
 
+指標の選定・未達分類・DB統合・記録は[コードカバレッジの手法](code-coverage.md)にまとめています。[新規の実行例](../../examples/local-code-coverage/README.md)は、行・分岐・式・toggle・抽出されたFSMを計測し、追加試験とDB統合、原本の未達を含むソース注釈、カバレッジが達成されても機能比較は失敗する対照確認を行います。
+
 コードカバレッジ項目への到達と未達分析は、既存の[バス検証例](../../examples/local-bus-validation/README.md)がline／toggleと4値検査を分けて扱います。今回の6例は、目標到達の`COVER`ログを使っており、RTLの行・分岐・FSMカバレッジを追加したものではありません。
 
 ## 11. 等価性とシステム・ソフトウェア統合

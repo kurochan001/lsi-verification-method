@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "tool": "Verilator 5.052",
+  "rtl_sha256": "e7f31b15e26e2f5ac564b7b2a4ca14e177d3f4bb963b66f9950968c9fcd35db3",
+  "configurations": {
+    "width8": {
+      "counts": {
+        "expr": 16,
+        "toggle": 108,
+        "line": 7,
+        "branch": 18,
+        "fsm_arc": 6,
+        "fsm_state": 4
+      },
+      "inventory_sha256": "90869b87408c6ec66ce4e125de85c407271548879fe46ea4a6122bfb27ba7522",
+      "not_required": {
+        "{\"Ff\":\"default\",\"Fg\":\"default\",\"Ft\":\"IDLE\",\"Fv\":\"command_unit.state\",\"h\":\"TOP.TOP\",\"l\":\"18\",\"n\":\"4\",\"o\":\"command_unit.state::default->IDLE\",\"page\":\"v_fsm_arc/$root\",\"t\":\"fsm_arc\"}": "Synthetic default arc for the fully enumerated 2-bit state; retained in raw reporting.",
+        "{\"S\":\"26\",\"h\":\"TOP.command_unit\",\"l\":\"26\",\"n\":\"5\",\"o\":\"case\",\"page\":\"v_line/command_unit\",\"t\":\"line\"}": "The 2-bit state has all four encodings listed in the case; the default is defensive for values outside this two-state model."
+      }
+    },
+    "width16": {
+      "counts": {
+        "expr": 16,
+        "toggle": 188,
+        "line": 7,
+        "branch": 18,
+        "fsm_arc": 6,
+        "fsm_state": 4
+      },
+      "inventory_sha256": "6c8498158e6dc927436adae4f7825cb5810831621688b6bae61f6e940584adb3",
+      "not_required": {
+        "{\"Ff\":\"default\",\"Fg\":\"default\",\"Ft\":\"IDLE\",\"Fv\":\"command_unit.state\",\"h\":\"TOP.TOP\",\"l\":\"18\",\"n\":\"4\",\"o\":\"command_unit.state::default->IDLE\",\"page\":\"v_fsm_arc/$root\",\"t\":\"fsm_arc\"}": "Synthetic default arc for the fully enumerated 2-bit state; retained in raw reporting.",
+        "{\"S\":\"26\",\"h\":\"TOP.command_unit\",\"l\":\"26\",\"n\":\"5\",\"o\":\"case\",\"page\":\"v_line/command_unit\",\"t\":\"line\"}": "The 2-bit state has all four encodings listed in the case; the default is defensive for values outside this two-state model."
+      }
+    }
+  }
+}
