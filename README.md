@@ -110,6 +110,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 - [演算・故障注入・保護・性能・DFT](#演算故障注入保護性能dft)
 - [AI用回路](#ai用回路)
 - [プロセッサ](#プロセッサ)
+- [静的タイミング解析](#静的タイミング解析)
 - [フォーマル検証・等価性・反例再現](#フォーマル検証等価性反例再現)
 - [SVA・UVM・仕様生成・ソフトウェア連携・検証効率](#svauvm仕様生成ソフトウェア連携検証効率)
 
@@ -209,7 +210,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 
 ### プロセッサ
 
-RISC-Vの命令・保護機構と、プロセッサを構成する回路の7例です。
+RISC-Vの命令・保護機構と、プロセッサを構成する回路の8例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
@@ -218,8 +219,15 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の7例�
 | [バイト・ハーフワードのロード・ストア](examples/local-load-store/README.md) | 全サイズ・全レーンのアクセス、符号拡張とゼロ拡張、サブワードのストアの書込み位置、ロードした値の転送をISSと照合 | Icarus |
 | [例外と割り込み](examples/local-riscv-traps/README.md) | 不正な命令・ECALL・境界に合わないロード／ストアの精密な例外、外部割り込みを受け付ける位置、MRET、CSRの読み書きをISSと照合、予測器との組合せ | Icarus |
 | [RISC-VのPMP判定](examples/local-riscv-pmp/README.md) | TOR／NA4／NAPOT、最優先の領域がアクセス全体を覆うこと、Mモード・ロック・TOR下限の保護（4エントリーの縮小モデル） | Icarus |
+| [Sv32ページテーブルウォーク](examples/local-sv32/README.md) | 34ビットのPTE読出し・物理アドレス、4KiB／4MiBページ、SUM／MXR・A／D・PTEエラーとページフォルトの区別 | Icarus |
 | [RISC-Vの命令デコーダ](examples/local-riscv-decoder/README.md) | 公式の命令表（riscv-opcodes）から生成した期待値と、全2^32命令語での一致の証明、予約された命令語・FENCEの予約フィールド・遠い分岐の即値 | フォーマル＋Icarus |
 | [多サイクル除算器](examples/local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
+
+### 静的タイミング解析
+
+| 検証例 | 主な検証内容 | 主なツール |
+| --- | --- | --- |
+| [OpenSTAによるSTA](examples/local-sta/README.md) | 架空LibertyとSDCによるsetup／hold解析、手計算との照合、制約漏れ・過剰なfalse pathによる経路消失の検出 | OpenSTA |
 
 ### フォーマル検証・等価性・反例再現
 
@@ -231,6 +239,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の7例�
 | [FIFOの等価性検証](examples/local-equivalence/README.md) | 最適化前後のmiterによる比較、意図的な誤実装に対する反例、仮定の確認 | フォーマル |
 | [進行条件と完了期限](examples/local-progress/README.md) | 環境の進行条件を明示した期限の検証、条件を外した場合の反例 | フォーマル |
 | [フォーマル反例の再現](examples/local-formal-replay/README.md) | Yosys Witnessを外部入力へ変換し、内部状態をforceせずシミュレーション再現 | フォーマル＋Icarus |
+| [定時間比較・情報の流れ](examples/local-constant-time/README.md) | 独立した秘密値を持つ2実行の公開信号・タイミングの一致、固定レイテンシ、比較結果の明示的な公開 | フォーマル＋Icarus |
 | [SoCの接続性](examples/local-connectivity/README.md) | 接続表から生成した検査回路で、ブロックをブラックボックスにした上位配線を証明、表の漏れ・幅の検査、割り込み番号・端子の切替え・デバッグ信号の遮断 | フォーマル |
 
 ### SVA・UVM・仕様生成・ソフトウェア連携・検証効率
@@ -288,7 +297,7 @@ python3 examples/local-axi/run.py
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は51例・110構成、各検証例が出力するJUnit件数の合計はsmoke 776件／nightly 996件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は52例・112構成、各検証例が出力するJUnit件数の合計はsmoke 790件／nightly 1014件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 

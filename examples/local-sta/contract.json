@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "corners": {
+    "fast": {"period": 1.5, "input_min": 0.3, "setup": [0.75, 1.05, 0.85], "hold": [0.09, 0.09, 0.19]},
+    "slow": {"period": 3.0, "input_min": 0.4, "setup": [2.15, 1.75, 2.25], "hold": [0.09, 0.69, 0.29]}
+  },
+  "paths": ["input", "internal", "output"],
+  "scope": "Synthetic cell-only delays, ideal clock, no interconnect parasitics; not a process signoff library."
+}

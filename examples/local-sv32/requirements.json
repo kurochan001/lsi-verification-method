@@ -1,0 +1,5 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"TRANSLATION","goals":["mode/bare","page/4k","page/4m","permission/mxr","permission/sum"]},
+ {"id":"FAULT","goals":["deny/user","deny/supervisor-execute-user","deny/invalid-pte","deny/accessed","deny/dirty","deny/superpage-alignment","deny/nonleaf-reserved","deny/exhausted-level","fault/pte-access"]},
+ {"id":"CONTROL","goals":["memory/wait","response/hold","reset/pending"]}
+]}
