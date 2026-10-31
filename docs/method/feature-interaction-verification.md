@@ -84,6 +84,8 @@ pairwiseは2軸の組を覆う方式であり、3軸以上の相互作用や、�
 
 因子群によって次数を変える方式を可変次数（variable strength）と呼びます。「W1C×イベント×マスク」「未完了DMA×バックプレッシャ×リセット」などは、必要な水準・期待動作を仕様から確定して重点群へ登録します。既存の必須クロスや不具合再現を、pairwise生成器の出力だけに置き換えません。NISTも[2因子だけで十分と仮定しない方針](https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software/software-testing-methodology/dos-and-don-ts-of-testing)を示しています。
 
+何を必須にし、どこを代表化するか迷う場合は、[クロス条件の選定実例](cross-test-selection-walkthrough.md)を参照してください。判断の質問、2因子を満たす5行にも重要な4因子条件が抜ける例、重点追加後も残る合法な条件、未達と費用から追加を選ぶ手順を示しています。
+
 ### 4.3 既存テストの充足状況から追加を選ぶ
 
 ```mermaid

@@ -35,6 +35,8 @@ LSIでは、数値の大小だけで区分しないようにします。
 
 ## 3. 全組み合わせをt-wayで削減する
 
+次数と重点条件の選び方は、[クロス検証の選定実例](cross-test-selection-walkthrough.md)で具体化しています。通常範囲の2因子、条件付きの高次全組、時間関係、保持すべきストレス試験を分け、未選択の合法な条件も明示します。
+
 各因子・値の区分・合法性制約を定義し、必要な次数tを決めます。pairwiseはt=2で、任意の2因子の値の組を覆う方式です。重要な部分だけt=3以上や全組にする可変次数の計画も使えます。[NISTの組み合わせ試験](https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software)と[ACTSの配布情報](https://csrc.nist.gov/Projects/Automated-Combinatorial-Testing-for-Software/Downloadable-Tools)は、制約・可変次数を含む参照先です。ソフトウェアでの検出実績を、LSIの保証や削減率として流用しません。
 
 直交表を使う方法もあります。選んだ表が因子数・水準・必要な次数に対応するかを確認し、禁止条件や水準数が異なる因子を扱う場合は、制約付きのcovering arrayなども検討します。直交表を使ったという理由だけで、要求する組の網羅を省略せず検査します。
