@@ -1,0 +1,5 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"DELIVERY","goals":["input/accepted","output/delivered","output/hold","result/success","result/hold","wire/backpressure","sequence/zero","sequence/one"]},
+ {"id":"RETRY","goals":["retry/sent","fault/data-drop","fault/data-corrupt","fault/ack-drop","fault/ack-corrupt","ack/old-sequence","receive/duplicate","receive/full-reject"]},
+ {"id":"FAILURE","goals":["failure/already-delivered","failure/not-delivered","failure/blocks-new-input","reset/pending"]}
+]}

@@ -10,6 +10,15 @@ P=load_example('local-sv32')
 class Sv32Tests(SystemContract,unittest.TestCase):
     EXAMPLE='local-sv32';GOALS=17
 
+    def test_metadata_preserves_global_bit_from_nonleaf(self):
+        p=P.Plan(0);p.cycle(rst=0);va=0x81234567;root=0x3fffff
+        p.transfer(memory=P.page_table(va,root,0x100021,(0x1234<<10)|0xdf))
+        self.assertEqual(p.meta,(0xdf,0,1))
+        p.transfer(memory=P.page_table(va,root,(0x300000<<10)|0xff))
+        self.assertEqual(p.meta,(0xff,1,1))
+        p.transfer(memory={});self.assertEqual(p.meta,(0,0,0))
+        result=simulate_vectors(P,p.rows);self.assertEqual(result.returncode,0,result.stdout)
+
     def test_physical_high_bits_and_superpage_offset(self):
         va=0x81234567;root=0x3fffff;ptr=(0x2fffff<<10)|1
         memory=P.page_table(va,root,ptr,(0x3abcde<<10)|0xdf)

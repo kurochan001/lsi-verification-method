@@ -140,6 +140,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [SPIのランダム検証](examples/local-spi/README.md) | CPOL／CPHAの4モード、独立した送受信タイミング、busy中のstart要求 | Icarus |
 | [I²Cのランダム検証](examples/local-i2c/README.md) | ACK／NACK、Repeated START、クロックストレッチ、途中リセット | Icarus |
 | [AXI4-Stream](examples/local-axis/README.md) | パケット境界、TKEEP・TLAST、データ順序、途中パケットの破棄 | Icarus |
+| [CRC・ACK・再送リンク](examples/local-retry-link/README.md) | フレーム／ACKの消失・破損、再送と重複排除、配送結果が確定しない再送上限、待ち・両端リセット | Icarus |
 | [クレジット方式のフロー制御](examples/local-credit-link/README.md) | 2仮想チャネルの受付・送信・クレジット返却、保持、リセット | Icarus |
 
 ### 割り込み・タイマー・周辺機能の結合
@@ -165,6 +166,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 | [DMAリングの所有権](examples/local-dma-ownership/README.md) | 公開・実行・完了返却・回収、処理中の追加、再利用 | Icarus |
 | [メモリ⇄Stream DMA](examples/local-stream-dma/README.md) | 有効バイト、パケット終端、待ち、エラー時の残存範囲 | Icarus |
 | [小規模キャッシュとDMA](examples/local-cache-dma/README.md) | write-back、部分書込み、clean／invalidateとデータの可視性 | Icarus |
+| [ストアバッファとFENCE](examples/local-store-buffer/README.md) | ストアの受理と可視性、自分の最新ストアからの転送、リトマス試験の結果集合、FENCEで禁止する結果 | Icarus＋Python |
 | [2クライアントのキャッシュコヒーレンシ](examples/local-cache-coherence/README.md) | MSIを簡略化した回路の無効化・dirtyデータの受渡し・追出しを、キャッシュのないメモリモデルと照合 | Icarus |
 | [AXI4の応答順序入れ替え](examples/local-axi-reorder/README.md) | 異なるID間の応答入れ替え、同じID内の順序、B／Rの保持 | Icarus |
 
@@ -210,7 +212,7 @@ SystemVerilogは、LSIの設計や検証に使う言語です。その言語規�
 
 ### プロセッサ
 
-RISC-Vの命令・保護機構と、プロセッサを構成する回路の8例です。
+RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
@@ -220,6 +222,7 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の8例�
 | [例外と割り込み](examples/local-riscv-traps/README.md) | 不正な命令・ECALL・境界に合わないロード／ストアの精密な例外、外部割り込みを受け付ける位置、MRET、CSRの読み書きをISSと照合、予測器との組合せ | Icarus |
 | [RISC-VのPMP判定](examples/local-riscv-pmp/README.md) | TOR／NA4／NAPOT、最優先の領域がアクセス全体を覆うこと、Mモード・ロック・TOR下限の保護（4エントリーの縮小モデル） | Icarus |
 | [Sv32ページテーブルウォーク](examples/local-sv32/README.md) | 34ビットのPTE読出し・物理アドレス、4KiB／4MiBページ、SUM／MXR・A／D・PTEエラーとページフォルトの区別 | Icarus |
+| [TLB＋Sv32ウォーカー](examples/local-tlb/README.md) | ASID・4KiB／4MiBタグ・権限、グローバル変換、処理の排出後のSFENCE.VMAと古い変換の無効化 | Icarus |
 | [RISC-Vの命令デコーダ](examples/local-riscv-decoder/README.md) | 公式の命令表（riscv-opcodes）から生成した期待値と、全2^32命令語での一致の証明、予約された命令語・FENCEの予約フィールド・遠い分岐の即値 | フォーマル＋Icarus |
 | [多サイクル除算器](examples/local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
 
@@ -297,7 +300,7 @@ python3 examples/local-axi/run.py
 | [探索・縮小・UVMの共通処理](examples/local-exploration-common/README.md) | 固定計画と実行記録の照合、要求・カバレッジ・証跡の判定 |
 | [C・cocotb・差分検証の共通処理](examples/local-host-common/README.md) | 生の実行結果と集約判定、ツール指定、JUnit・証跡 |
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は52例・112構成、各検証例が出力するJUnit件数の合計はsmoke 790件／nightly 1014件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は55例・118構成、各検証例が出力するJUnit件数の合計はsmoke 832件／nightly 1068件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 ## 構成
 

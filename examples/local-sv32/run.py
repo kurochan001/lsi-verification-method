@@ -34,27 +34,32 @@ def translate(va,root,kind,user,sum_enable,mxr,memory,bare=False):
     raise AssertionError('walk must finish in two levels')
 
 
+def metadata(reads,fault):
+    if fault or not reads:return (0,0,0)
+    return (reads[-1][1]&255,int(len(reads)==1),int(any(pte&32 for _,pte,_ in reads)))
+
+
 class Plan:
     def __init__(self,wait):
-        self.wait=wait;self.rows=[];self.reads=[];self.reply=None;self.result=(0,0);self.valid=0
+        self.wait=wait;self.rows=[];self.reads=[];self.reply=None;self.result=(0,0);self.valid=0;self.meta=(0,0,0);self.reply_meta=(0,0,0)
 
     def cycle(self,rst=1,request=None,ready=1,mem_ready=1):
-        if not rst:self.reads=[];self.reply=None;self.valid=0;self.result=(0,0)
+        if not rst:self.reads=[];self.reply=None;self.valid=0;self.result=(0,0);self.meta=(0,0,0)
         fields=request or dict(va=0,root=0,kind=0,user=0,sum_enable=0,mxr=0,memory={},bare=0)
         can_accept=int(bool(rst and not self.reads and not self.valid))
         mem_addr,pte,error=self.reads[0] if self.reads else (0,0,0)
         self.rows.append([rst,int(request is not None),fields['bare'],fields['user'],fields['sum_enable'],fields['mxr'],
                           fields['va'],fields['root'],fields['kind'],ready,mem_ready,pte,error,
-                          can_accept,int(bool(self.reads)),mem_addr,self.valid,*self.result])
+                          can_accept,int(bool(self.reads)),mem_addr,self.valid,*self.result,*self.meta])
         if rst:
             if self.valid and ready:self.valid=0
             if self.reads and mem_ready:
                 self.reads.pop(0)
-                if not self.reads:self.result=self.reply;self.valid=1
+                if not self.reads:self.result=self.reply;self.meta=self.reply_meta;self.valid=1
             if request and can_accept:
                 reads,pa,fault=translate(**fields)
-                self.reads=list(reads);self.reply=(pa,fault);self.result=(0,0)
-                if not reads:self.result=self.reply;self.valid=1
+                self.reads=list(reads);self.reply=(pa,fault);self.result=(0,0);self.meta=(0,0,0);self.reply_meta=metadata(reads,fault)
+                if not reads:self.result=self.reply;self.meta=self.reply_meta;self.valid=1
         return can_accept
 
     def transfer(self,*,va=0x81234567,root=0x3fffff,kind=0,user=1,sum_enable=0,mxr=0,

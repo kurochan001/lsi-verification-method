@@ -1,0 +1,5 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"VISIBILITY","goals":["store/posted","store/visible","load/local-buffer","load/remote-buffer","load/same-cycle-drain","buffer/full-stall","buffer/drain-and-enqueue","response/hold","reset/pending-store"]},
+ {"id":"FENCE","goals":["fence/waits-for-store","fence/completed"]},
+ {"id":"LITMUS","goals":["litmus/sb00","litmus/sb01","litmus/sb10","litmus/sb11","litmus/fenced01","litmus/fenced10","litmus/fenced11"]}
+]}

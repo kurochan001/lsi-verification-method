@@ -1,0 +1,5 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"LOOKUP","goals":["mode/bare","hit/4k","hit/4m","hit/offset","hit/global-other-asid","lookup/miss","lookup/other-asid","permission/hit-deny","replace/full"]},
+ {"id":"FENCE","goals":["fence/all","fence/asid","fence/address","fence/both","fence/preserve-global","fence/pending-drain","fence/after-drain","fence/priority"]},
+ {"id":"CONTROL","goals":["walk/wait","walk/fault","response/hold","reset/pending"]}
+]}
