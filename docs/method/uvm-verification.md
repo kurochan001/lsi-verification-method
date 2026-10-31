@@ -224,3 +224,9 @@ sequenceDiagram
 [SystemRDL例](../../examples/local-register-spec/README.md)は、同じ仕様からRTL・Cヘッダー・RALを生成します。別に手書きした契約で共通の仕様誤りを検出し、RTL実行・Cコンパイル・UVM参照実装のRALの構造と属性を照合します。生成RALは生成RTLへフロントドアアクセスで接続していません。
 
 [生成RTL＋RALのフロントドアアクセスによる結合例](../../examples/local-generated-ral/README.md)では、生成したモデルを既存のアダプター・エージェント経由で実RTLへ接続します。メタデータの独立契約、毎クロックの独立したスコアボード、バス経由のミラー照合を併用し、誤ったミラー値を与えてUVM_CHECKが失敗することも確認します。
+
+## 15. 移行と複数agentの協調を実行する
+
+[移行例のactiveモード](../../examples/local-uvm-migration/README.md#active-replay-and-ral)は、保存入力をsequence・driverで再生し、旧新の観測・旧目標と変異検出を比較した後に、追加RAL frontdoor検査を行います。旧環境の全要求をRALへ置換した結果とは分けています。
+
+[APB設定・GAIN・readyの協調例](../../examples/local-uvm-coordination/README.md)は、virtual sequence、3つのagent、2つのmonitorのエッジ単位の対応、設定の採用時点、待ち・取消、native covergroupとSVAを実行します。複数IPのRALサブマップや複数クロックの上位環境は、引き続き設計資料の範囲です。

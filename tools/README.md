@@ -1,6 +1,20 @@
 # ツール
 
-ここにあるのは、ケーススタディ（[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)）で使ったツールの写しです。
+## このリポジトリ単独で使うツール
+
+| ツール | 用途と手順 |
+| --- | --- |
+| [`verification_plan.py`](verification_plan.py) | [検証項目表と実行証跡の照合](../docs/method/verification-plan-automation.md)。出典・要求・項目・構成・実績・版を確認する。 |
+| [`run_regression.py`](run_regression.py) | [全検証例の統合実行](REGRESSION.md)。構成行列、依存確認、並列数、時間上限、JUnitとソースの照合を管理する。 |
+| [`regressions.json`](regressions.json) | 全体実行の入口・構成・依存・親子関係の登録表。未登録の例を自動的に省略しない。 |
+
+セルフテストは`python3 -m unittest discover -s tools/tests -v`で実行できます。Python依存の準備は[統合実行の手順](REGRESSION.md#2-実行環境を明示的に準備する)を参照してください。
+
+<a id="case-study-reference-tools"></a>
+
+## ケーススタディ由来の参照ツール
+
+以下の3ディレクトリは、ケーススタディ（[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)）で使ったツールの写しです。
 照合キットには、2026-10-26に承認時スナップショットと入力変更時の停止を追加しています。上流からの複製元とローカル改訂は[由来](../PROVENANCE.md)に記録しています。
 どれもkirimasim-testsのディレクトリ構成（`coverage/`の台帳、`tests/`のテスト、`tools/suite_results.py`）を前提にしています。
 このリポジトリ単独では動きません。動かすときは、kirimasim-testsの同じ場所に置いて使います。

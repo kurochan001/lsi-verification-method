@@ -1,0 +1,1614 @@
+{
+  "schema_version": 1,
+  "examples": [
+    {
+      "id": "local-access-control",
+      "script": "examples/local-access-control/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-activation",
+      "script": "examples/local-activation/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-address-map",
+      "script": "examples/local-address-map/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-advanced-regression",
+      "script": "examples/local-advanced-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "cocotb-python",
+        "formal-python",
+        "formal-timeout",
+        "python",
+        "timeout"
+      ],
+      "tools": [],
+      "packages": {
+        "cocotb-python": [
+          "cocotb"
+        ]
+      },
+      "children": {
+        "local-axis": "local-axis",
+        "local-c-driver": "local-c-driver",
+        "local-cocotb": "local-cocotb",
+        "local-differential": "local-differential",
+        "local-dsp": "local-dsp",
+        "local-memory-order": "local-memory-order",
+        "local-progress": "local-progress"
+      }
+    },
+    {
+      "id": "local-ahb",
+      "script": "examples/local-ahb/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-ai-regression",
+      "script": "examples/local-ai-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "formal-python",
+        "formal-timeout",
+        "python",
+        "timeout"
+      ],
+      "tools": [],
+      "children": {
+        "local-activation": "local-activation",
+        "local-conv-window": "local-conv-window",
+        "local-mxfp4": "local-mxfp4",
+        "local-requantize": "local-requantize",
+        "local-systolic-array": "local-systolic-array",
+        "local-topk": "local-topk"
+      }
+    },
+    {
+      "id": "local-apb",
+      "script": "examples/local-apb/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "wait": [
+          0,
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "id": "local-apb-irq",
+      "script": "examples/local-apb-irq/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "wait": [
+          0,
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "id": "local-apb-irq-coverage",
+      "script": "examples/local-apb-irq-coverage/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-apb-timer",
+      "script": "examples/local-apb-timer/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-apb-uart",
+      "script": "examples/local-apb-uart/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "wait": [
+          0,
+          1,
+          3
+        ],
+        "parity": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "id": "local-arbiter",
+      "script": "examples/local-arbiter/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "ports": [
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "id": "local-async-fifo",
+      "script": "examples/local-async-fifo/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-axi",
+      "script": "examples/local-axi/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-axi-reorder",
+      "script": "examples/local-axi-reorder/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-axi4",
+      "script": "examples/local-axi4/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-axi4-formal",
+      "script": "examples/local-axi4-formal/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-axis",
+      "script": "examples/local-axis/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-branch-predictor",
+      "script": "examples/local-branch-predictor/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-bus-bridge",
+      "script": "examples/local-bus-bridge/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-bus-formal",
+      "script": "examples/local-bus-formal/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-bus-validation",
+      "script": "examples/local-bus-validation/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "iverilog",
+        "make",
+        "verilator",
+        "vvp"
+      ],
+      "summary": "bus-validation",
+      "children": {
+        "local-bus-bridge": "bridges",
+        "local-axi4": "axi4"
+      }
+    },
+    {
+      "id": "local-c-driver",
+      "script": "examples/local-c-driver/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "cc",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-cache-coherence",
+      "script": "examples/local-cache-coherence/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-cache-dma",
+      "script": "examples/local-cache-dma/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge",
+      "script": "examples/local-cdc-bridge/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-cdc-handshake",
+      "script": "examples/local-cdc-handshake/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-clock-reset",
+      "script": "examples/local-clock-reset/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-cocotb",
+      "script": "examples/local-cocotb/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "iverilog",
+        "make",
+        "verilator",
+        "vvp"
+      ],
+      "packages": {
+        "cocotb-python": [
+          "cocotb"
+        ]
+      }
+    },
+    {
+      "id": "local-code-coverage",
+      "script": "examples/local-code-coverage/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-connectivity",
+      "script": "examples/local-connectivity/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-constant-time",
+      "script": "examples/local-constant-time/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-conv-window",
+      "script": "examples/local-conv-window/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-counter-snapshot",
+      "script": "examples/local-counter-snapshot/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-coverage-feedback",
+      "script": "examples/local-coverage-feedback/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-credit-link",
+      "script": "examples/local-credit-link/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-descriptor-dma",
+      "script": "examples/local-descriptor-dma/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-differential",
+      "script": "examples/local-differential/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "iverilog",
+        "make",
+        "verilator",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-divider",
+      "script": "examples/local-divider/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-dma",
+      "script": "examples/local-dma/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-dma-ownership",
+      "script": "examples/local-dma-ownership/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-dram",
+      "script": "examples/local-dram/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-dsp",
+      "script": "examples/local-dsp/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-ecc",
+      "script": "examples/local-ecc/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-ecc-memory",
+      "script": "examples/local-ecc-memory/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-equivalence",
+      "script": "examples/local-equivalence/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-extension-regression",
+      "script": "examples/local-extension-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "rdl-python",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [],
+      "children": {
+        "local-axi-reorder": "local-axi-reorder",
+        "local-counter-snapshot": "local-counter-snapshot",
+        "local-dma-ownership": "local-dma-ownership",
+        "local-generated-ral": "local-generated-ral",
+        "local-mbist": "local-mbist",
+        "local-packet-crc": "local-packet-crc",
+        "local-stream-dma": "local-stream-dma"
+      }
+    },
+    {
+      "id": "local-failure-reduction",
+      "script": "examples/local-failure-reduction/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-fifo",
+      "script": "examples/local-fifo/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "depth": [
+          1,
+          3,
+          8
+        ],
+        "width": [
+          8,
+          16
+        ]
+      }
+    },
+    {
+      "id": "local-fifo-formal",
+      "script": "examples/local-fifo-formal/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ],
+      "matrix": {
+        "depth": [
+          1,
+          3
+        ]
+      }
+    },
+    {
+      "id": "local-formal-replay",
+      "script": "examples/local-formal-replay/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "formal-python",
+        "formal-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-functional-coverage",
+      "script": "examples/local-functional-coverage/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-gap-regression",
+      "script": "examples/local-gap-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "timeout"
+      ],
+      "tools": [],
+      "children": {
+        "local-address-map": "local-address-map",
+        "local-cdc-handshake": "local-cdc-handshake",
+        "local-jtag-tap": "local-jtag-tap",
+        "local-lockstep-monitor": "local-lockstep-monitor",
+        "local-performance-monitor": "local-performance-monitor",
+        "local-secure-lifecycle": "local-secure-lifecycle"
+      }
+    },
+    {
+      "id": "local-gate-sim",
+      "script": "examples/local-gate-sim/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "yowasp-yosys"
+      ]
+    },
+    {
+      "id": "local-generated-ral",
+      "script": "examples/local-generated-ral/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "rdl-python",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ],
+      "packages": {
+        "rdl-python": [
+          "systemrdl"
+        ]
+      }
+    },
+    {
+      "id": "local-i2c",
+      "script": "examples/local-i2c/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-interconnect",
+      "script": "examples/local-interconnect/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-irq-cdc",
+      "script": "examples/local-irq-cdc/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-jtag-tap",
+      "script": "examples/local-jtag-tap/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-load-store",
+      "script": "examples/local-load-store/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-lockstep-monitor",
+      "script": "examples/local-lockstep-monitor/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-mbist",
+      "script": "examples/local-mbist/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-memory-order",
+      "script": "examples/local-memory-order/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-mxfp4",
+      "script": "examples/local-mxfp4/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ],
+      "packages": {
+        "python": [
+          "z3"
+        ]
+      }
+    },
+    {
+      "id": "local-packet-crc",
+      "script": "examples/local-packet-crc/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-packet-switch",
+      "script": "examples/local-packet-switch/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-performance-monitor",
+      "script": "examples/local-performance-monitor/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-plan-traceability",
+      "script": "examples/local-plan-traceability/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-power",
+      "script": "examples/local-power/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-priority-irq",
+      "script": "examples/local-priority-irq/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-progress",
+      "script": "examples/local-progress/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-recovery",
+      "script": "examples/local-recovery/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-reduction",
+      "script": "examples/local-reduction/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "summary": "reduction"
+    },
+    {
+      "id": "local-register-spec",
+      "script": "examples/local-register-spec/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "cc",
+        "iverilog",
+        "make",
+        "verilator",
+        "vvp"
+      ],
+      "packages": {
+        "rdl-python": [
+          "systemrdl"
+        ]
+      }
+    },
+    {
+      "id": "local-requantize",
+      "script": "examples/local-requantize/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-retry-link",
+      "script": "examples/local-retry-link/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-riscv-decoder",
+      "script": "examples/local-riscv-decoder/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-riscv-iss",
+      "script": "examples/local-riscv-iss/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-riscv-pmp",
+      "script": "examples/local-riscv-pmp/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-riscv-traps",
+      "script": "examples/local-riscv-traps/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-scan-atpg",
+      "script": "examples/local-scan-atpg/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-secure-lifecycle",
+      "script": "examples/local-secure-lifecycle/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-sha256",
+      "script": "examples/local-sha256/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-soc-regression",
+      "script": "examples/local-soc-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "formal-python",
+        "rdl-python",
+        "simulation-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [],
+      "children": {
+        "local-cache-dma": "local-cache-dma",
+        "local-credit-link": "local-credit-link",
+        "local-descriptor-dma": "local-descriptor-dma",
+        "local-formal-replay": "local-formal-replay",
+        "local-priority-irq": "local-priority-irq",
+        "local-register-spec": "local-register-spec",
+        "local-uvm-random": "local-uvm-random"
+      }
+    },
+    {
+      "id": "local-spi",
+      "script": "examples/local-spi/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-sta",
+      "script": "examples/local-sta/run.py",
+      "kind": "sta",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "sta"
+      ]
+    },
+    {
+      "id": "local-store-buffer",
+      "script": "examples/local-store-buffer/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-stream",
+      "script": "examples/local-stream/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "depth": [
+          1,
+          3
+        ],
+        "width": [
+          8,
+          16
+        ]
+      }
+    },
+    {
+      "id": "local-stream-dma",
+      "script": "examples/local-stream-dma/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-sv32",
+      "script": "examples/local-sv32/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-sva",
+      "script": "examples/local-sva/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-system-regression",
+      "script": "examples/local-system-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "formal-timeout",
+        "python",
+        "simulation-timeout",
+        "timeout"
+      ],
+      "tools": [],
+      "children": {
+        "local-axi4-formal": "local-axi4-formal",
+        "local-cdc-bridge": "local-cdc-bridge",
+        "local-dma": "local-dma",
+        "local-equivalence": "local-equivalence",
+        "local-interconnect": "local-interconnect",
+        "local-power": "local-power",
+        "local-recovery": "local-recovery"
+      }
+    },
+    {
+      "id": "local-systolic-array",
+      "script": "examples/local-systolic-array/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-timer-watchdog",
+      "script": "examples/local-timer-watchdog/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-tlb",
+      "script": "examples/local-tlb/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-topk",
+      "script": "examples/local-topk/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-uart",
+      "script": "examples/local-uart/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ],
+      "matrix": {
+        "divisor": [
+          8,
+          16
+        ],
+        "parity": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "id": "local-uvm",
+      "script": "examples/local-uvm/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-uvm-coordination",
+      "script": "examples/local-uvm-coordination/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-uvm-migration",
+      "script": "examples/local-uvm-migration/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "iverilog",
+        "make",
+        "verilator",
+        "vvp"
+      ],
+      "matrix": {
+        "mode": [
+          "passive",
+          "active"
+        ]
+      }
+    },
+    {
+      "id": "local-uvm-random",
+      "script": "examples/local-uvm-random/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-width-converter",
+      "script": "examples/local-width-converter/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-workflow-regression",
+      "script": "examples/local-workflow-regression/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [],
+      "children": {
+        "local-access-control": "local-access-control",
+        "local-clock-reset": "local-clock-reset",
+        "local-coverage-feedback": "local-coverage-feedback",
+        "local-ecc-memory": "local-ecc-memory",
+        "local-failure-reduction": "local-failure-reduction",
+        "local-uvm": "local-uvm",
+        "local-width-converter": "local-width-converter"
+      }
+    },
+    {
+      "id": "local-divider-formal",
+      "script": "examples/local-divider/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    }
+  ]
+}

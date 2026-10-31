@@ -17,6 +17,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | --- | --- |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
+| 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
@@ -89,6 +90,7 @@ flowchart TD
 | --- | --- |
 | [仕様から検証へ](docs/method/spec-to-verification-method.md) | 要求の抽出、検証方式の選定、独立レビュー、完了条件 |
 | [仕様書から検証項目を作る実例](docs/method/spec-to-test-items-walkthrough.md) | 割り込みの短い仕様から、仕様課題・条件表・検証項目・期待値・観測点へ展開する完成例 |
+| [項目表と実行証跡を自動照合する](docs/method/verification-plan-automation.md) | 出典・要求・項目・テスト・構成・checker・目標と結果を結び付け、未対応や古い証跡を拒否する |
 | [検証領域の抜けを点検する](docs/method/verification-gap-review.md) | lint、リセット・X、CDC/RDC、性能、低電力、保護、統合、物理・製造 |
 | [機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md) | 同時動作・順序・中断と復帰、因子・制約・重点目標。[提案](docs/feature-interaction-coverage-proposal.md)／[記録](docs/templates/interaction-coverage-plan.md)も収録 |
 | [クロス検証の条件を選ぶ実例](docs/method/cross-test-selection-walkthrough.md) | 必須条件の選び方、通常2因子と重点的な高次クロス、未選択条件、実績と費用に基づく追加選択 |
@@ -141,7 +143,8 @@ flowchart TD
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
-| 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passiveでの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、14項目の観測比較、20／21目標・検出力の維持 |
+| 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
+| 複数agentを協調させる | [APB設定＋GAINデータパス](examples/local-uvm-coordination/README.md) | virtual sequence、同時設定と入力の期待値、観測順序、待ち・取消、native bin |
 | RTLの入出力を自動で比較する | [同期FIFO](examples/local-fifo/README.md) | 独立した参照キュー、空／満杯、データ順序、変異検出 |
 | 周辺回路を結合して確認する | [APB・UART・割り込み](examples/local-apb-uart/README.md) | バス操作から送受信・IRQまでのつながり、待ち・リセット |
 | 波形の目視確認を自動判定にする | [割り込みのSVA](examples/local-sva/README.md) | assertとcover、サンプリング、検出力、終了判定 |
@@ -170,7 +173,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 
-2026-10-31の全体レビューで、passive UVM移行例を含むnightly対応全84例の記載構成、集約7本、全10フォーマル例の既定全タスクを再実行しました。[全体レビューと実行確認](PROVENANCE.md#全体レビューと集約実行の時間上限2026-10-31)に、修正内容・実行条件・結果を記録しています。
+2026-10-31に、新しい統合ランナーでnightly対応全86例の記載構成、集約7本、全10フォーマル例の既定全タスクを実行しました。UVM移行はpassive・activeの両モードを確認し、項目照合の判定補強後も当該例を再実行しています。[追加内容と最終確認](PROVENANCE.md#verification-workflow-expansion-20261031)に、実行条件・範囲・結果を記録しています。
 
 ## 準備と実行
 
@@ -257,6 +260,8 @@ FIFO例は既定で`artifacts/fifo-local-日時/`へ結果を保存します。�
 
 関連する例を親ランナーから起動できます。個別の検証例と重複するため、検証例の数やJUnit件数を集計する際は、同じ結果を二重に数えないようにします。必要なツール、実行範囲（`--stage`）と各種時間上限の指定は、リンク先を参照してください。
 
+全例の共通入口は[`tools/run_regression.py`](tools/REGRESSION.md)です。smoke・nightly・formalの選択、依存確認、構成行列、並列数・時間上限、結果とソースの最終照合を行います。まず`python3 tools/run_regression.py --list`で計画を確認できます。
+
 | 集約手順 | 含まれる検証例 |
 | --- | --- |
 | [システム検証の7例](examples/local-system-regression/README.md) | DMA、複数マスター、非同期APB、復旧、低電力、AXI4フォーマル、FIFO等価性 |
@@ -278,7 +283,7 @@ docs/templates/                 計画・移行・結果・サインオフの記
 docs/case-study-ieee1800/        IEEE 1800-2023への適用記録と索引
 examples/README.md              回路別・方式別の全検証例一覧
 examples/                       RTL・検証環境・共通処理・集約ランナー
-tools/                          ケーススタディで用いた参照ツール
+tools/                          項目表の照合・全体実行と、ケーススタディの参照ツール
 PROVENANCE.md                   複製元・改訂範囲・実行確認の記録
 ```
 
@@ -289,7 +294,7 @@ PROVENANCE.md                   複製元・改訂範囲・実行確認の記録
 
 SystemVerilogの言語規格を仕様書として、要求の抽出、既存テストとの照合、独立検証、証跡管理に本手法を適用した記録を収録しています。[ケーススタディの索引](docs/case-study-ieee1800/README.md)から、取り込み・同期の基準、確認時点の数値、資料の読む順序、技術ノートへ進めます。
 
-[参照ツール](tools/README.md)はkirimasim-testsの構成を前提としており、このリポジトリ単独では動きません。一般化した手順書と実行例には独自の追記があり、由来と確認範囲は[PROVENANCE.md](PROVENANCE.md)へ記録しています。
+[ケーススタディ由来の参照ツール](tools/README.md#case-study-reference-tools)はkirimasim-testsの構成を前提としており、このリポジトリ単独では動きません。新しい[項目表の照合・全体実行ツール](tools/README.md)は独立して使えます。由来と確認範囲は[PROVENANCE.md](PROVENANCE.md)へ記録しています。
 
 <a id="初期の11例の構成"></a>
 
@@ -298,7 +303,7 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 ### 今後の計画
 
 1. **手法の改訂**：検証手順書に、ケーススタディで得た知見を反映し続けます。
-2. **ツールの汎用化**：要求台帳の形式を、規格の節構成に依存しない形にします。具体的には、要求ID、出典、種別、観測点、構成、証跡を持つ形式です。照合キットを、kirimasim-testsの構成から切り離します。テストやチェッカー、カバレッジ項目に要求IDを付ける方式に合わせたアダプタを用意します。
+2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
 4. **テンプレート**：検証領域の適用範囲とサインオフ記録の雛形を起点に、要求台帳、照合案、検証者のチェックリスト、課題票を整備します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
 

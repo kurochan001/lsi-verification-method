@@ -4,6 +4,8 @@
 
 [同じ保存入力を使うpassive移行例](../../examples/local-uvm-migration/README.md)では、二つのシミュレーションの観測・目標・検出力を照合しています。手元の環境へ適用するときも、同一シミュレーションでの併走と別実行の比較を区別して記録します。
 
+同例の[activeモード](../../examples/local-uvm-migration/README.md#active-replay-and-ral)では、sequence・driverへの駆動置換と追加RAL検査を実行できます。複数agentの協調は[GAINの例](../../examples/local-uvm-coordination/README.md)を参照し、手元の旧要求・構成の移行完了と混同しないように記録します。
+
 ## 1. 目的・範囲・基準版
 
 - 移行の目的、改善する運用、今回移す範囲・保持する資産：

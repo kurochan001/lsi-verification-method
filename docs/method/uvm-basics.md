@@ -90,12 +90,13 @@ analysis portの`write()`は、同じ観測を複数の接続先へ渡すfunctio
 | 順番 | 資料・例 | 自分で確認すること |
 | --- | --- | --- |
 | 1 | [UVM・RAL](../../examples/local-uvm/README.md) | 部品、frontdoor、monitorからの比較、予定件数、誤実装検出。 |
-| 2 | [passive移行・同一入力再生](../../examples/local-uvm-migration/README.md) | 設定、駆動担当、factory差替え、旧新の14項目の観測と20／21目標の一致。 |
+| 2 | [passive・active移行・同一入力再生](../../examples/local-uvm-migration/README.md) | 設定、駆動担当、factory差替え、旧新14項目・20／21目標の一致、sequence・driver置換と追加RAL検査。 |
 | 3 | [UVMランダム](../../examples/local-uvm-random/README.md) | SVの制約、randomizeの成否、実受理によるnative bin、seed再現。 |
 | 4 | [UVMの設計と再利用](uvm-practical-design.md) | 複数agentの協調、設定の採用時点、上位の所有範囲、SVAと収束判断。 |
-| 5 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
+| 5 | [APB設定・GAIN・readyの協調](../../examples/local-uvm-coordination/README.md) | virtual sequence、同時受理と期待値、二つのmonitorの順序、待ち・取消、native bin。 |
+| 6 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
 
-virtual sequenceによる複数データ経路の協調や、複数IPのRALサブマップを使う上位UVM環境は、設計資料として説明しています。現行例で実行した機能と、これから実装する構成を区別して使ってください。
+設定・データ・readyのvirtual sequenceは協調例で実行します。複数IPのRALサブマップや複数クロックの上位UVM環境は、設計資料として説明しています。現行例で実行した機能と、これから実装する構成を区別して使ってください。
 
 ## 8. 症状から戻る確認点
 

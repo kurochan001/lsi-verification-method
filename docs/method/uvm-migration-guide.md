@@ -153,7 +153,7 @@ sequenceの終了やobjectionの解放は、応答・比較・カバー後件の
 
 UVM monitorは、立上りで完了・読出し値・イベントを保存し、後で更新後CONFIG・PENDINGを観測します。scoreboardは、読出しの期待値を更新前状態から求め、正常書込みとイベントを反映してから更新後状態を比較します。移植時にもこの順序をそろえます。
 
-基本UVM例の`apb_agent`はdriver・sequencerを常に生成するactive専用の最小例です。単独でM1へ使うには生成・接続・起動の切替えが必要です。追加した[passive移行例](../../examples/local-uvm-migration/README.md)は、設定オブジェクトと別のagentを実装し、既存scoreboardを再利用して、旧保存入力の再生・14項目のトレース比較・20／21目標の照合を行います。旧入力をUVM driver・sequenceへ置き換えるM3以降は未実装です。
+基本UVM例の`apb_agent`はdriver・sequencerを常に生成するactive専用の最小例です。単独でM1へ使うには生成・接続・起動の切替えが必要です。[移行実行例](../../examples/local-uvm-migration/README.md)は、設定オブジェクトと別のagentを実装し、既存scoreboardを再利用して、旧保存入力の再生・14項目のトレース比較・20／21目標の照合を行います。`--mode active`はUVM sequence・driverへ置き換えるM3と、再生後のRAL frontdoor検査も実装しています。RALで全旧要求を置換した移行完了とは区別します。
 
 現行UVM例はVerilatorでの2値確認です。9目標は`COVER`ログから収集し、ネイティブcovergroupを使う[UVMランダム例](../../examples/local-uvm-random/README.md)の24 binとは別です。4値の確認が必要な範囲は、対応する環境で別に維持します。異なる目標集合を自動で引き継ぐものでもありません。
 
@@ -170,9 +170,11 @@ python3 examples/local-uvm/run.py \
 
 セットアップ先は新しいディレクトリを指定します。すでに準備済みなら、そのライブラリを`--uvm-home`へ渡せます。配布物のハッシュとライセンスを含む準備手順は[UVM例のREADME](../../examples/local-uvm/README.md#ライブラリの準備)を参照してください。
 
-この実行で確認するのは基本の二つの環境がそれぞれの予定ケース・判定・目標を満たすことです。同じ保存入力による比較は次のpassive移行例で行い、同一シミュレーション内での併走とM3以降の刺激置換は、残る移行作業として記録します。
+この実行で確認するのは基本の二つの環境がそれぞれの予定ケース・判定・目標を満たすことです。同じ保存入力による比較は移行実行例のpassive・activeモードで行います。同一シミュレーション内での旧新チェッカーの併走は、別の構成として扱います。
 
 共通の保存入力を使った比較へ進む場合は、[passive移行例の実行手順](../../examples/local-uvm-migration/README.md#5-実行)を使えます。上の基本例二つを実行しただけで、その差分検査まで行ったことにはなりません。
+
+次に[active移行と追加RAL検査](../../examples/local-uvm-migration/README.md#active-replay-and-ral)でM3以降へ進めます。複数インターフェースの協調は[APB設定・GAIN・readyの例](../../examples/local-uvm-coordination/README.md)へ分担します。
 
 本書追加時のカタログ照合と各環境の実行結果は、[2026-10-31の確認記録](../../PROVENANCE.md#uvmへの段階的移行ガイド2026-10-31)にまとめています。
 

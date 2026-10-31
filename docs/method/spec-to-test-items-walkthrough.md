@@ -215,3 +215,5 @@ AIを使う場合も、出典と未確定事項を渡して提案を作らせま
 ```
 
 別のレビュー担当者が元の仕様から抜けと過剰な期待値を点検し、その後に実装・実行結果を確認します。AI同士の一致やテスト案の生成だけでは合格にしません。運用全体は[一般化した手順書](spec-to-verification-method.md)、記録は[検証項目作成の雛形](../templates/spec-to-test-items.md)と[適用範囲の記録](../templates/verification-scope.md)へつなげます。
+
+項目表と結果の対応を機械的に点検する場合は、[自動照合の手順](verification-plan-automation.md)と[割り込みの実行例](../../examples/local-plan-traceability/README.md)へ進めます。新しい実行例は基本の6要求・6項目を扱い、本書の8項目表にある全組合せ・順序の完了判定を代行するものではありません。

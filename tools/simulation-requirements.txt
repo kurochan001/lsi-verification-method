@@ -1,0 +1,5 @@
+# Python dependencies used by the repository-wide simulation campaign.
+# External simulators, compilers, OpenSTA and Accellera UVM are prepared separately.
+systemrdl-compiler==1.30.1
+cocotb==2.1.0
+z3-solver==4.15.3.0

@@ -1,8 +1,8 @@
-# 保存ベクタをpassive UVM環境へ流し、旧環境と照合する
+# 保存ベクタでpassive・active UVMへ移行し、旧環境と照合する
 
 既存の[APB例](../local-apb/README.md)と同じ保存ベクタを、旧テストベンチとnative SystemVerilog UVM環境へ与えます。UVM側は**passive agent**で観測し、設定オブジェクト、factory、analysis接続、scoreboard、SVAの報告と到達を実行します。Pythonは起動・照合・記録を担当し、UVMクラスはAccelleraの実装で動きます。
 
-[移行ガイド](../../docs/method/uvm-migration-guide.md)のM1〜M2を具体化した例です。旧手順をUVM driver・sequenceへ置き換えるM3や、複数IPを協調させるvirtual sequence・上位RALは含みません。[基礎の学習案内](../../docs/method/uvm-basics.md)と[設定・再利用の設計](../../docs/method/uvm-practical-design.md)から参照しています。
+既定のpassiveモードは[移行ガイド](../../docs/method/uvm-migration-guide.md)のM1〜M2を具体化します。`--mode active`では、旧手順をUVM sequence・driverへ置き換えるM3と、再生後の追加RAL検査を実行します。[8節](#active-replay-and-ral)に範囲を示します。複数agentのvirtual sequenceは[GAINの協調例](../local-uvm-coordination/README.md)、複数IPの上位RALは[設計資料](../../docs/method/uvm-practical-design.md)を参照してください。
 
 ## 1. 同じ入力と観測を比較する
 
@@ -113,4 +113,36 @@ Verilator 5.052での表示は、instance=45.454545、type=0、項目の等重�
 
 2026-10-31にsmoke・nightly、3種類のRTL変異、4種類の環境診断、`--demo-bug 1`・`--sva-off`、ランナーのセルフテストを確認しました。[追記記録](../../PROVENANCE.md#qiitaのuvm連載の整理とpassive移行の実行例2026-10-31)に範囲と証跡をまとめています。
 
-確認は保存したベクタの同期的な0／1観測に限ります。旧環境を廃止する判断や、M3以降のdriver置換、全UVM API、商用VIP、複数IPのRAL、任意の入力・履歴の証明は含みません。移行の残りは[計画テンプレート](../../docs/templates/uvm-migration-plan.md)へ対応付けます。
+確認は保存したベクタの同期的な0／1観測に限ります。旧環境を廃止する判断、全UVM API、商用VIP、複数IPのRAL、任意の入力・履歴の証明は含みません。移行の残りは[計画テンプレート](../../docs/templates/uvm-migration-plan.md)へ対応付けます。
+
+<a id="active-replay-and-ral"></a>
+
+## 8. sequence・driverへの置換と追加RAL検査
+
+```sh
+python3 examples/local-uvm-migration/run.py --mode active \
+  --uvm-home /tmp/lsi-uvm-library/1800.2-2020.3.2
+python3 examples/local-uvm-migration/run.py --mode active --profile nightly \
+  --uvm-home /tmp/lsi-uvm-library/1800.2-2020.3.2
+```
+
+activeモードでは、`replay_sequence`が保存行を`cycle_item`へ変換し、sequencerを通して`replay_driver`へ渡します。driverが入力・リセット・イベントを駆動し、モジュール側の旧再生器は起動しません。driverとsequencerが存在し、旧側が駆動しないことを再生前に検査します。誤ったpassive設定は`MIG_OWNERSHIP`で拒否します。
+
+```mermaid
+flowchart LR
+  accTitle: 保存入力のactive再生と追加RALの駆動経路
+  accDescr: 保存入力をsequenceからsequencerとdriverへ送り、旧再生器を止めて同じ入力を駆動する。再生後のRALはadapterを介して同じsequencerとdriverを使う別区間の検査である。
+  V["保存入力"] --> S["replay sequence"] --> Q["sequencer"] --> D["replay driver"] --> U["APB RTL"]
+  R["再生後：RAL検査と比較"] --> A["adapter"] --> Q
+  U --> M["再生区間のmonitor<br/>scoreboard"]
+```
+
+同じ保存行の立下り駆動・立上り受理・更新後の観測を保ち、passiveと同じ14項目・20／21目標・3種類のRTL変異検出を旧環境と照合します。SETUP・ACCESS中のリセットや、取り消された転送も残すため、再生単位は完了トランザクションだけではなく1サイクルの入力です。刺激をSVのランダム生成へ変更する段階とは分けています。
+
+再生完了後には、同じsequencer・driverへRAL adapterを接続し、CONFIG書込み、ミラー比較と実読戻し、ID読出しを追加します。各statusと期待値を確認し、`MIG_RAL_COMPLETE checks=3`を一度だけ要求します。3件は書込みstatus、CONFIG実読戻し、ID実読出しの確認で、ミラー比較のエラーも別にUVM reportから拒否します。
+
+旧新14項目の比較は保存入力の再生区間です。追加RAL区間は別の完了記録と実読出しで判定し、再生区間の観測数や旧20／21目標へ加算しません。旧環境の全要求をRALだけへ移し替えた結果や、PENDINGの予測方式・全RAL APIの移行完了ではありません。
+
+activeモードでは、従来の診断に加え、RAL処理を省略した場合の`MIG_RAL_COMPLETION`と、RALの読戻し期待値を誤らせた場合の`MIG_RAL_READBACK`も確認します。smokeはwait=1のJUnit 27件、nightlyはwait=0／1／3のJUnit 97件です。passiveの25件／91件とは別に集計します。
+
+active追加後の実行確認は[2026-10-31の追加記録](../../PROVENANCE.md#verification-workflow-expansion-20261031)を参照してください。

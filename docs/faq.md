@@ -200,6 +200,8 @@ AHB／AXIを広く確認する場合は、[プロトコル・クロス・X／リ
 
 機能カバレッジの実測は[DRAM・SHA-256・スイッチの例](../examples/local-functional-coverage/README.md)から始められます。必要な環境と判定の違いは[機能カバレッジのFAQ](#10-機能カバレッジの計測)を参照してください。
 
+全例をまとめて再現する場合は[統合ランナー](../tools/REGRESSION.md)を使えます。[項目表と実行結果の照合](../examples/local-plan-traceability/README.md)、[active UVMへの移行](../examples/local-uvm-migration/README.md#active-replay-and-ral)、[複数agentの協調](../examples/local-uvm-coordination/README.md)も、各ツールを準備して本リポジトリ単独で実行できます。
+
 ### Q26. リグレッションが失敗したら、何から確認しますか
 
 予定と実行結果の欠落、ビルド、実行環境、DUTの比較失敗、チェッカー・期待値、必須目標の未達を切り分けます。マニフェスト、ツール版、ビルドログ、ケース別ログ・波形、summary、カバレッジ、JUnitを実行IDでたどります。実行例では意図した変異・X検出が成功項目になるので、通常回路の失敗と区別してください。再実行で合格しても最初の失敗は残します。中断時は最終JUnitやsummaryが完成しない場合もあるため、途中の記録から調べます。[保存する証跡](../examples/local-irq-cdc/README.md#4-保存するものと判定)と[継続リグレッションの手順](method/continuous-regression.md)を参照してください。

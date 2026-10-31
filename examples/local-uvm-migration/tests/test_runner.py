@@ -128,6 +128,24 @@ class MigrationEvidenceTests(unittest.TestCase):
                                   (dict(returncode=1, error=None), log + "CHECK_FAIL OTHER\n")):
             self.assertFalse(M.evaluate(case, execution, output, "uvm")[0])
 
+    def test_active_mode_requires_unique_driver_ownership_and_completed_ral_checks(self):
+        case = dict(id="normal", checks=2, expected_failure=None)
+        execution = dict(returncode=0, error=None)
+        good = self.valid_output().replace("passive driver=0 sequencer=0 legacy=1",
+                                           "active driver=1 sequencer=1 legacy=0") + "MIG_RAL_COMPLETE checks=3\n"
+        self.assertTrue(M.evaluate(case, execution, good, "uvm", "active")[0])
+        for bad in (good.replace("legacy=0", "legacy=1"), good.replace("checks=3", "checks=0"),
+                    good.replace("MIG_RAL_COMPLETE checks=3\n", ""), good + "MIG_RAL_COMPLETE checks=3\n"):
+            with self.subTest(output=bad):
+                self.assertFalse(M.evaluate(case, execution, bad, "uvm", "active")[0])
+        self.assertFalse(M.evaluate(case, execution, self.valid_output(), "uvm", "active")[0])
+
+    def test_missing_ral_is_a_specific_failure_rather_than_a_timeout(self):
+        case = dict(id="ral-off", checks=2, expected_failure="MIG_RAL_COMPLETION")
+        log = "CHECK_FAIL MIG_RAL_COMPLETION\n"
+        self.assertTrue(M.evaluate(case, dict(returncode=1, error=None), log, "uvm", "active")[0])
+        self.assertFalse(M.evaluate(case, dict(returncode=1, error="timeout"), log, "uvm", "active")[0])
+
 
 if __name__ == "__main__":
     unittest.main()

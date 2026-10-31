@@ -4,6 +4,7 @@ module top;
   import uvm_pkg::*;
   import uvm_apb_pkg::*;
   import migration_pkg::*;
+  import active_migration_pkg::*;
   bit clk=0;
   apb_if bus(clk);
   replay_control_if control();
@@ -58,12 +59,13 @@ module top;
     catcher=new;uvm_report_cb::add(null,catcher);
     uvm_config_db#(virtual apb_if)::set(null,"uvm_test_top","vif",bus);
     uvm_config_db#(virtual replay_control_if)::set(null,"uvm_test_top","control",control);
-    run_test("migration_test");
+    run_test($test$plusargs("ACTIVE_REPLAY") ? "active_migration_test":"migration_test");
   end
   initial begin: legacy_reader
     int fd,fields,r,s,e,w,a,event_bits,seen;
     bit [31:0] data;
     uvm_event done_event=uvm_event_pool::get_global("legacy_replay_complete");
+    if($test$plusargs("ACTIVE_REPLAY")) disable legacy_reader;
     wait(control.start_replay);
     fd=$fopen(vectors,"r");if(!fd) $fatal(1,"cannot read replay vectors");
     while(!$feof(fd)) begin

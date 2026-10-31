@@ -25,7 +25,7 @@ LEGACY = load("migration_legacy", HERE.parent / "local-apb/run.py")
 BASE = HERE.parent / "local-uvm"
 SOURCES = [BASE / "tb/apb_if.sv", HERE / "tb/replay_control_if.sv",
            BASE / "tb/uvm_apb_pkg.sv", HERE / "tb/migration_pkg.sv",
-           HERE.parent / "local-apb/rtl/apb_regs.sv", HERE / "tb/top.sv"]
+           HERE / "tb/active_pkg.sv", HERE.parent / "local-apb/rtl/apb_regs.sv", HERE / "tb/top.sv"]
 HARNESS = HERE.parent / "local-uvm-random/sim_main.cpp"
 CATALOG = HERE.parent / "local-apb/requirements.json"
 OLD_TB = HERE.parent / "local-apb/tb/apb_tb.sv"
@@ -186,7 +186,7 @@ def migration_goals(output):
     return goals
 
 
-def evaluate(case, execution, output, backend):
+def evaluate(case, execution, output, backend, mode="passive"):
     status, message = E.P.classify(case, execution, output)
     if status not in ("pass", "detected"):
         return False, message
@@ -194,8 +194,12 @@ def evaluate(case, execution, output, backend):
         n = case["checks"]
         if output.count(f"MIG_COMPLETE samples={n} comparisons={n}\n") != 1:
             return False, "comparison/observation count differs"
-        if output.count("MIG_OWNERSHIP passive driver=0 sequencer=0 legacy=1\n") != 1:
-            return False, "passive ownership was not confirmed"
+        ownership = ("active driver=1 sequencer=1 legacy=0" if mode == "active" else
+                     "passive driver=0 sequencer=0 legacy=1")
+        if output.count("MIG_OWNERSHIP " + ownership + "\n") != 1:
+            return False, "driver ownership was not confirmed"
+        if mode == "active" and output.count("MIG_RAL_COMPLETE checks=3\n") != 1:
+            return False, "additional RAL comparisons did not complete"
         if output.count("Accellera:1800.2:UVM:2020.3.2") != 1:
             return False, "unexpected UVM version"
         for severity in ("ERROR", "FATAL"):
@@ -214,6 +218,7 @@ def run(args):
     seeds = list(range(args.seed, args.seed + (3 if args.profile == "nightly" else 1)))
     transactions = args.transactions if args.transactions is not None else (2000 if args.profile == "nightly" else 200)
     plans = {}
+    ownership_case = "passive-agent" if args.mode == "active" else "active-agent"
     check_ids = ["uvm-build"]
     for wait in waits:
         normal = [("nominal", nominal_vectors(wait)), ("boundaries", LEGACY.boundary_vectors(wait))]
@@ -222,12 +227,15 @@ def run(args):
         check_ids += [f"wait{wait}/legacy-build{m}" for m in range(4)]
         check_ids += [f"wait{wait}/{name}/{kind}" for name, _ in normal for kind in ("legacy", "uvm", "trace")]
         check_ids += [f"wait{wait}/mutation{m}/{kind}" for m in (1, 2, 3) for kind in ("legacy", "uvm")]
-        check_ids += [f"wait{wait}/{name}" for name in ("monitor-fault", "checker-off", "active-agent", "sva-fault", "coverage")]
+        check_ids += [f"wait{wait}/{name}" for name in ("monitor-fault", "checker-off", ownership_case, "sva-fault", "coverage")]
+        if args.mode == "active": check_ids += [f"wait{wait}/ral-off", f"wait{wait}/ral-bad-expectation"]
     sources = [Path(__file__), OLD_TB, Path(LEGACY.__file__), CATALOG, HARNESS, *SOURCES]
     e = E.Evidence("local-uvm-migration", args, sources,
                    dict(waits=list(waits), seeds=seeds, transactions=transactions,
                         vectors={str(w):[{"id": name, "rows": rows} for name, rows in cases] for w, cases in plans.items()},
-                        trace_fields=TRACE_FIELDS, stage="M1-M2", rtl_mutations=[1, 2, 3]), check_ids)
+                        trace_fields=TRACE_FIELDS, mode=args.mode,
+                        stage="M3 plus additional RAL checks" if args.mode == "active" else "M1-M2",
+                        rtl_mutations=[1, 2, 3]), check_ids)
     home = args.uvm_home.resolve()
     library = home / "src/uvm_pkg.sv"
     E.P.write_json(e.out / "uvm-source.json", dict(root=str(home), source_sha256={
@@ -258,11 +266,13 @@ def run(args):
         else:
             command = [str(build_dir / "Vtop"), f"+WAIT_CYCLES={wait}", f"+MUTATION={mutation}",
                        f"+CHECKS={len(rows)}", f"+SVA_OFF={int(args.sva_off)}"]
+            flags = dict(ACTIVE=int(args.mode == "active"), **flags) if "ACTIVE" not in flags else flags
+            if args.mode == "active": command += ["+ACTIVE_REPLAY"]
             command += [f"+{k}={int(v)}" for k, v in flags.items()]
         command += [f"+VECTORS={vector_file}", f"+WAVE={directory}/wave.vcd"]
         result = E.P.execute(command, directory / "simulation.log", args.timeout, directory)
         output = (directory / "simulation.log").read_text(errors="replace")
-        ok, detail = evaluate(case, result, output, backend)
+        ok, detail = evaluate(case, result, output, backend, args.mode)
         record = dict(backend=backend, wait=wait, case=name, expected_failure=expected,
                       success=ok, detail=detail, execution=result)
         trace, hits = None, set()
@@ -321,8 +331,11 @@ def run(args):
                 e.check(f"wait{wait}/mutation{mutation}/{backend}", ok, record)
         diagnostics = [("monitor-fault", "UVM_CONFIG", dict(MONITOR_FAULT=1)),
                        ("checker-off", "MIG_COMPARISONS", dict(CHECKER_OFF=1)),
-                       ("active-agent", "MIG_OWNERSHIP", dict(ACTIVE=1)),
+                       (ownership_case, "MIG_OWNERSHIP", dict(ACTIVE=int(args.mode != "active"))),
                        ("sva-fault", "MIG_SYNC_RESET", dict(SVA_FAULT=1))]
+        if args.mode == "active":
+            diagnostics += [("ral-off", "MIG_RAL_COMPLETION", dict(RAL_OFF=1)),
+                            ("ral-bad-expectation", "MIG_RAL_READBACK", dict(RAL_BAD_EXPECTED=1))]
         for name, label, flags in diagnostics:
             ok, record, _, _ = execute(wait, name, nominal_vectors(wait), "uvm", expected=label, **flags)
             e.check(f"wait{wait}/{name}", ok, record)
@@ -339,6 +352,7 @@ def run(args):
 def main():
     parser = E.parser(__doc__, "local-uvm-migration")
     parser.add_argument("--uvm-home", type=Path, required=True)
+    parser.add_argument("--mode", choices=("passive", "active"), default="passive")
     parser.add_argument("--verilator", default="verilator")
     parser.add_argument("--wait", choices=("all", "0", "1", "3"))
     parser.add_argument("--transactions", type=int)

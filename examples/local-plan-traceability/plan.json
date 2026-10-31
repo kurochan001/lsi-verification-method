@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "id": "irq-core-r1",
+  "sources": [
+    "examples/local-plan-traceability/spec.md",
+    "examples/local-plan-traceability/run.py",
+    "tools/verification_plan.py",
+    "examples/local-sva/run.py",
+    "examples/local-sva/requirements.json",
+    "examples/local-sva/irq_checker.sv",
+    "examples/local-sva/sva_tb.sv",
+    "examples/local-sva/sim_main.cpp",
+    "examples/local-irq-cdc/rtl/irq_pending.sv",
+    "examples/local-irq-cdc/run.py"
+  ],
+  "requirements": [
+    {
+      "id": "SVA-SET-WINS",
+      "source": "examples/local-plan-traceability/spec.md",
+      "anchor": "S01"
+    },
+    {
+      "id": "SVA-SET-ONLY",
+      "source": "examples/local-plan-traceability/spec.md",
+      "anchor": "S02"
+    },
+    {
+      "id": "SVA-CLEAR-ONLY",
+      "source": "examples/local-plan-traceability/spec.md",
+      "anchor": "S03"
+    },
+    {
+      "id": "SVA-HOLD",
+      "source": "examples/local-plan-traceability/spec.md",
+      "anchor": "S04"
+    },
+    {
+      "id": "SVA-RESET",
+      "source": "examples/local-plan-traceability/spec.md",
+      "anchor": "S05"
+    },
+    {
+      "id": "SVA-IRQ",
+      "source": "examples/local-plan-traceability/spec.md",
+      "anchor": "S06"
+    }
+  ],
+  "tests": [
+    {
+      "id": "sva-functional",
+      "configuration": "irq1"
+    }
+  ],
+  "items": [
+    {
+      "id": "TI01",
+      "requirements": [
+        "SVA-SET-WINS"
+      ],
+      "tests": [
+        "sva-functional"
+      ],
+      "configurations": [
+        "irq1"
+      ],
+      "checkers": [
+        "ap_set_wins"
+      ],
+      "goals": [
+        "cp_set_wins_seen",
+        "cp_set_wins_done"
+      ],
+      "min_hits": 1
+    },
+    {
+      "id": "TI02",
+      "requirements": [
+        "SVA-SET-ONLY"
+      ],
+      "tests": [
+        "sva-functional"
+      ],
+      "configurations": [
+        "irq1"
+      ],
+      "checkers": [
+        "ap_set_only"
+      ],
+      "goals": [
+        "cp_set_only_seen",
+        "cp_set_only_done"
+      ],
+      "min_hits": 1
+    },
+    {
+      "id": "TI03",
+      "requirements": [
+        "SVA-CLEAR-ONLY"
+      ],
+      "tests": [
+        "sva-functional"
+      ],
+      "configurations": [
+        "irq1"
+      ],
+      "checkers": [
+        "ap_clear_only"
+      ],
+      "goals": [
+        "cp_clear_only_seen",
+        "cp_clear_only_done"
+      ],
+      "min_hits": 1
+    },
+    {
+      "id": "TI04",
+      "requirements": [
+        "SVA-HOLD"
+      ],
+      "tests": [
+        "sva-functional"
+      ],
+      "configurations": [
+        "irq1"
+      ],
+      "checkers": [
+        "ap_hold"
+      ],
+      "goals": [
+        "cp_hold_seen",
+        "cp_hold_done"
+      ],
+      "min_hits": 1
+    },
+    {
+      "id": "TI05",
+      "requirements": [
+        "SVA-RESET"
+      ],
+      "tests": [
+        "sva-functional"
+      ],
+      "configurations": [
+        "irq1"
+      ],
+      "checkers": [
+        "ap_reset"
+      ],
+      "goals": [
+        "cp_reset_pending_seen",
+        "cp_reset_done"
+      ],
+      "min_hits": 1
+    },
+    {
+      "id": "TI06",
+      "requirements": [
+        "SVA-IRQ"
+      ],
+      "tests": [
+        "sva-functional"
+      ],
+      "configurations": [
+        "irq1"
+      ],
+      "checkers": [
+        "ap_irq"
+      ],
+      "goals": [
+        "cp_masked_pending",
+        "cp_unmasked_pending"
+      ],
+      "min_hits": 1
+    }
+  ]
+}

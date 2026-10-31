@@ -32,7 +32,7 @@ virtual sequencerを置かない構成では、coordinatorへ必要なsequencer�
 
 並行開始しただけでは、狙う同時受理やバックプレッシャが起きた証拠にはなりません。受理エッジ・FIFO状態・実際のreadyを観測し、[クロス条件の選定](cross-test-selection-walkthrough.md)へ対応付けます。
 
-この節は複数インターフェースを持つUVM環境の構成案です。現行のpassive移行例は、旧ベクタの再生と観測を扱い、virtual sequenceでデータ経路を協調させる例ではありません。
+[複数agentの実行例](../../examples/local-uvm-coordination/README.md)では、virtual sequenceがAPB設定・データ入力・受信側readyを並行して開始します。旧APB入力のpassive／active再生とは別の題材として、設定とデータパスの同時性を検査します。
 
 ## 3. 設定変更とデータ受理が同じエッジに重なる場合
 
@@ -60,7 +60,7 @@ flowchart LR
 
 collectorでエッジごとの観測をそろえる、入力に適用設定の版を付ける、設定履歴を受理時点へ対応付ける、といった方法を選びます。`$time`だけではclocking blockのskewや観測の遅延を混同するため、クロック領域・リセット区間・受理エッジの識別子を定義します。`#0`を加えただけで、すべての観測がそろったと判断しません。
 
-collectorがエッジを閉じる条件も設計します。例えば、各monitorが取引の有無に関係なく「このエッジの観測完了」を通知する方式にすると、実際の取引が発生するまで待ち続けることを防げます。
+collectorがエッジを閉じる条件も設計します。例えば、各monitorが転送の有無に関係なく「このエッジの観測完了」を通知する方式にすると、実際の転送が発生するまで待ち続けることを防げます。
 
 callbackの到着順へ依存しない期待値計算は、次の小さなモデルで検算できます。これは計画用モデルの確認で、RTLの証明ではありません。
 
@@ -89,6 +89,8 @@ print("both callback orders: expected values 21, 35")
 ```
 
 仕様が動作中の設定変更を許すなら、入力を止める対策だけでその相互作用を確認済みにはしません。入力を止めるケースと、同時受理の規則を判定するケースを別に残します。設定に依存するcoverageも、同じ受理時点の設定をサンプルします。
+
+このGAIN仕様は[実RTLとUVMの協調例](../../examples/local-uvm-coordination/README.md)でも確認できます。設定・データのmonitorが毎エッジを通知し、collectorが対応する記録をそろえてから期待値を確定します。二つのcallback順序、待ち、処理中リセットと取消を、独立したPythonモデルとも照合します。
 
 ## 4. RALとブロック環境を上位で再利用する
 
@@ -165,8 +167,10 @@ factoryで制約を足した型へ差し替える場合も、実際の生成型�
 | 内容 | このリポジトリでの位置 |
 | --- | --- |
 | 設定オブジェクト、passive生成、factory差替え、同一入力再生、SVA報告、固定境界による未達解消 | [passive移行例](../../examples/local-uvm-migration/README.md)で実行。 |
+| 保存入力をsequence・driverで駆動するM3、再生後の追加RAL frontdoor検査 | [active移行例](../../examples/local-uvm-migration/README.md#active-replay-and-ral)で実行。 |
 | 単一APBのRAL frontdoor、auto prediction、ハードウェア更新後の明示的predictと実読出し | [基本UVM例](../../examples/local-uvm/README.md)で実行。 |
 | SV制約とnative covergroup | [UVMランダム例](../../examples/local-uvm-random/README.md)で実行。 |
-| GAINの同時更新、複数データagentのvirtual sequence、複数IPの上位RAL・tap | 本書の設計・数値例。これらを一体化したUVM環境は未実装。 |
+| GAINの同時更新、設定・データ・readyのvirtual sequence、二つのmonitorの順序、native bin | [複数agentの協調例](../../examples/local-uvm-coordination/README.md)で実行。 |
+| 複数IPの上位RAL・tap、複数クロックをまたぐ協調 | 本書の設計例。これらを一体化した上位UVM環境は未実装。 |
 
 製品へ適用する際は、[移行計画](../templates/uvm-migration-plan.md)、[クロスモデルの記録](../templates/interaction-coverage-plan.md)、[サインオフ記録](../templates/signoff-record.md)へ、必須範囲、実行証跡、未確認、残リスクを対応付けます。

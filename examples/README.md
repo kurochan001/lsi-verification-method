@@ -156,7 +156,9 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | --- | --- | --- |
 | [SVAのアサーションとカバー](local-sva/README.md) | assert／cover、前件が成立しない場合の診断、違反注入、ネイティブcoverage.datとの照合 | Verilator |
 | [SystemVerilog UVM・RAL](local-uvm/README.md) | APB agent・monitor・独立したスコアボード、RALとレジスタ操作 | UVM |
-| [passive UVMへの移行・同一入力再生](local-uvm-migration/README.md) | 設定・factory・SVA報告、旧新14項目の比較、20／21目標の維持と未達への追加 | Icarus＋UVM |
+| [passive・active UVMへの移行](local-uvm-migration/README.md) | 設定・factory・SVA報告、sequence・driverでの同一入力再生、14項目・20／21目標の維持、追加RAL検査 | Icarus＋UVM |
+| [複数UVM agentの協調](local-uvm-coordination/README.md) | APB設定・GAIN・ready、観測の到着順、同時受理・保持・取消、23 binと4 SVA目標 | UVM |
+| [検証項目表と結果の自動照合](local-plan-traceability/README.md) | 仕様・6要求・6項目・native SVAの対応、構成と版、未実行・不足・古い証跡の拒否 | Verilator |
 | [コードカバレッジの未達分析](local-code-coverage/README.md) | 行・分岐・式・toggle・FSM、追加試験、DB統合・注釈、カバレッジ達成時の機能不正 | Verilator |
 | [ネイティブ機能カバレッジ](local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
 | [UVMの制約付きランダム検証](local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
@@ -179,9 +181,11 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
-2026-10-31の全体レビューで、passive UVM移行例を含むnightly対応84例の記載構成と7集約ランナーを実行しました。共通シミュレーション58例・124構成のnightlyはJUnit 1122件、初期11例はフォーマル16件を含む384件が成功しています。全10フォーマル例・21構成の159タスク、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しました。
+[全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と集約判定を分けた件数、時間上限の調整、ツール版、ソースの照合は[最新の全体レビュー記録](../PROVENANCE.md#全体レビューと集約実行の時間上限2026-10-31)を参照してください。
+2026-10-31に、新しい統合ランナーでnightly対応86例の記載構成と7集約ランナーを実行しました。共通シミュレーション58例・124構成のnightlyはJUnit 1122件です。UVM移行のpassiveは91件、activeは97件、複数agentの協調は25件が成功しています。項目照合の判定補強後は当該例を再実行し、14件が成功しました。全10フォーマル例・21構成の159タスク、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しています。
+
+各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と集約判定を分けた件数、再実行した範囲、時間上限、ツール版、ソースの照合は[最新の確認記録](../PROVENANCE.md#verification-workflow-expansion-20261031)を参照してください。
 
 ## 初期の11例の構成
 
