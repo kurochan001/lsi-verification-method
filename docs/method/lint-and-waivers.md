@@ -56,4 +56,4 @@ Verilator 5.052の`--lint-only --Wall -Wno-fatal`を使います。`-Wno-fatal`�
 
 候補の`REVIEW REQUIRED`が残る台帳は拒否します。警告が解消した場合も差分を報告し、古い除外を残したまま自動的に合格へ戻しません。ソースハッシュと対象構成のハッシュを記録するため、同じ行番号・同じ警告件数でも、対象を編集すれば再レビューが必要です。
 
-関連：[検証領域の点検](verification-gap-review.md#2-静的検査と構成ごとの読み込み)、[コードカバレッジ](code-coverage.md)、[失敗解析](failure-analysis.md)。ツールの規則は[Verilator公式資料](https://verilator.org/guide/latest/warnings.html)を参照してください。
+関連：[検証領域の点検](verification-gap-review.md#2-静的検査と構成ごとの読み込み)、[コードカバレッジ](code-coverage.md)、[失敗解析](failure-analysis.md)。`known-debt`・waiver・`clean`の意味は[用語集](../glossary.md#12-静的検査と警告管理)、判定や更新の疑問は[FAQ](../faq.md#13-静的検査と警告管理)にまとめています。ツールの規則は[Verilator公式資料](https://verilator.org/guide/latest/warnings.html)を参照してください。

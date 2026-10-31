@@ -28,10 +28,12 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
-| 用語や結果の読み方を確認する | [用語集](docs/glossary.md)／[FAQ](docs/faq.md) |
+| 用語や結果の読み方を確認する | [用語集](docs/glossary.md)／[FAQの質問別案内](docs/faq.md#疑問に応じた確認の順序) |
 | 適用事例と由来を調べる | [IEEE 1800-2023のケーススタディ](docs/case-study-ieee1800/README.md)／[PROVENANCE.md](PROVENANCE.md) |
 
 資料は、**手法を読む → 小さな回路で試す → 計画と結果を記録する**、という順で使えます。実際の仕様へ適用するときは、例の要求や合格条件を、対象IPの仕様・構成に合わせて見直します。
+
+用語集とFAQには、[lintと警告台帳](docs/faq.md#13-静的検査と警告管理)、[失敗の切り分け](docs/faq.md#14-失敗解析と再現)、[AI提案の採否](docs/faq.md#15-aiを使う検証)、[上位UVMと個別reset](docs/faq.md#16-uvm移行上位再利用複数クロック)、[仕様変更と実行履歴](docs/faq.md#17-仕様変更証明依存実行結果の読み方)もまとめています。用語の定義だけでなく、実行例・合格条件・記録する証跡へ進めます。
 
 ```mermaid
 flowchart LR
@@ -187,6 +189,8 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 
 2026-11-01の最新追加では、共通lint・失敗解析・AI提案レビュー・複数クロックUVMを実装し、nightly対応の個別92例と、フォーマル・STA・lintを全92ルートジョブから確認しました。セルフテスト861件も成功しています。lintの既知指摘と除外を含む[追加内容と確認範囲](PROVENANCE.md#verification-quality-20261101)に、件数・版・証跡・未確認を記録しています。
+
+用語集・FAQと実行範囲の案内は、[文書レビューの確認記録](PROVENANCE.md#documentation-refresh-20261101)に沿って更新しています。
 
 ## 準備と実行
 

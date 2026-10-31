@@ -254,7 +254,7 @@ UVM（Universal Verification Methodology）を使う場合は、要求の刺激�
 
 レジスタにはRALを使い、バス経由の検証、モデルの予測、実データとの比較を区別します。採用するUVMライブラリとVIPの版、構成・factory override、チェッカーの有効化設定も実行証跡に含めます。
 
-構成、要求IDとの対応付け、RAL、UARTの適用例、テストの終了・リグレッションの合格条件は、[UVMで要求と検証資産を結び付ける](uvm-verification.md)にまとめています。これらは今後適用する運用案です。現行の照合キットには、UVM環境の構築や結果の取り込みを自動化する機能はありません。
+構成、要求IDとの対応付け、RAL、UARTの適用例、テストの終了・リグレッションの合格条件は、[UVMで要求と検証資産を結び付ける](uvm-verification.md)にまとめています。本文のUART記録例と製品への適用は運用案です。一方、[APBとRAL](../../examples/local-uvm/README.md)、[子環境と上位RAL](../../examples/local-uvm-hierarchy/README.md)、[複数クロックと個別reset](../../examples/local-uvm-multiclock/README.md)は実行例を用意し、各READMEへ確認範囲を記録しています。現行の照合キットが、UVM環境の構築や結果の取り込みを自動化するものではありません。
 
 既存環境を移す場合は、[段階的な移行ガイド](uvm-migration-guide.md)に従い、旧要求・テスト・参照モデル・判定・カバレッジを対応付けます。旧新の独立実行がともに成功することと、同じ必須条件・検出力を維持した移行の完了を分け、差分と不足を[移行計画](../templates/uvm-migration-plan.md)へ記録します。
 
@@ -430,7 +430,7 @@ AIは、仕様から検証へ落とし込む作業を補助するために使い
 
 ### 小さな実行例で試す
 
-[AI提案のレビュー手順](ai-verification-review.md)と[依頼・採否の雛形](../templates/ai-verification-request.md)を用意しています。[保存済みの悪い提案を使う演習](../../examples/local-ai-review/README.md)では、要求抜け、誤った`$past`、前件未到達、DUTと期待値の相関した誤りを、外部APIなしで実行して確認します。[失敗解析の実習](../../examples/local-failure-triage/README.md)では、同じ比較エラーでもRTLと期待値を独立した仕様値へ照合して切り分けます。
+[AI提案のレビュー手順](ai-verification-review.md)と[依頼・採否の雛形](../templates/ai-verification-request.md)を用意しています。[保存済みの悪い提案を使う演習](../../examples/local-ai-review/README.md)では、要求抜け、誤った`$past`、前件未到達、DUTと期待値の相関した誤りを、外部APIなしで実行して確認します。[失敗解析の実習](../../examples/local-failure-triage/README.md)では、同じ比較エラーでも、RTLと参照モデルをそれぞれ仕様から別に求めた値へ照合して切り分けます。
 
 [同期FIFOの仕様](../../examples/local-fifo/README.md#1-fifoの仕様)から、空・満杯・同時要求・リセットについて、条件・期待結果・観測点・刺激の案をAIに作らせる練習ができます。次に作成担当とは別の担当が仕様と照合し、[既存の検証環境](../../examples/local-fifo/README.md#2-スコアボードとカバレッジ)と比較します。実行結果では、値・順序の比較、構成別の必須目標、誤実装の検出を確認します。
 

@@ -229,4 +229,8 @@ sequenceDiagram
 
 [移行例のactiveモード](../../examples/local-uvm-migration/README.md#active-replay-and-ral)は、保存入力をsequence・driverで再生し、旧新の観測・旧目標と変異検出を比較した後に、追加RAL frontdoor検査を行います。旧環境の全要求をRALへ置換した結果とは分けています。
 
-[APB設定・GAIN・readyの協調例](../../examples/local-uvm-coordination/README.md)は、virtual sequence、3つのagent、2つのmonitorのエッジ単位の対応、設定の採用時点、待ち・取消、native covergroupとSVAを実行します。複数IPのRALサブマップや複数クロックの上位環境は、引き続き設計資料の範囲です。
+[APB設定・GAIN・readyの協調例](../../examples/local-uvm-coordination/README.md)は、virtual sequence、3つのagent、2つのmonitorのエッジ単位の対応、設定の採用時点、待ち・取消、native covergroupとSVAを実行します。
+
+[子環境と上位RALの例](../../examples/local-uvm-hierarchy/README.md)では、共通driverと二つのpassiveな子環境を使い、submapとbase addressの変更を確認します。[複数クロック・個別resetの例](../../examples/local-uvm-multiclock/README.md)では、観測時刻、通知順序、リセット世代、取消と古い応答の拒否、解除順序と復帰を確認します。常時動作する2クロック・最大1未完了要求などの制限は各READMEへ明記しています。
+
+用語は[UVMの用語集](../glossary.md#4-uvmと検証環境)、移行・RAL・観測順序・resetの疑問は[FAQ](../faq.md#16-uvm移行上位再利用複数クロック)から確認できます。

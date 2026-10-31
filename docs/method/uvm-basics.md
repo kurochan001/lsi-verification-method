@@ -94,9 +94,11 @@ analysis portの`write()`は、同じ観測を複数の接続先へ渡すfunctio
 | 3 | [UVMランダム](../../examples/local-uvm-random/README.md) | SVの制約、randomizeの成否、実受理によるnative bin、seed再現。 |
 | 4 | [UVMの設計と再利用](uvm-practical-design.md) | 複数agentの協調、設定の採用時点、上位の所有範囲、SVAと収束判断。 |
 | 5 | [APB設定・GAIN・readyの協調](../../examples/local-uvm-coordination/README.md) | virtual sequence、同時受理と期待値、二つのmonitorの順序、待ち・取消、native bin。 |
-| 6 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
+| 6 | [子環境と上位RAL](../../examples/local-uvm-hierarchy/README.md) | 共通driverとpassiveな子環境、submap、base address変更、独立した読戻しとmirror。 |
+| 7 | [複数クロックと個別reset](../../examples/local-uvm-multiclock/README.md) | 観測時刻と通知順序、リセット世代、取消・古い応答・復帰、解除順序。 |
+| 8 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
 
-設定・データ・readyのvirtual sequenceは協調例で実行します。複数IPのRALサブマップや複数クロックの上位UVM環境は、設計資料として説明しています。現行例で実行した機能と、これから実装する構成を区別して使ってください。
+設定・データ・readyの協調、複数IPのRALサブマップ、複数クロック・個別resetは、それぞれの実行例で確認できます。複数クロック例は固定した2種類のクロック条件と通知順序の範囲です。任意のクロック停止や物理CDC/RDCの安全性まで確認した結果には広げません。[実行済みの範囲と設計案](uvm-practical-design.md#7-実行済みの範囲と設計案を区別する)も参照してください。
 
 ## 8. 症状から戻る確認点
 
@@ -109,5 +111,9 @@ analysis portの`write()`は、同じ観測を複数の接続先へ渡すfunctio
 | reportにエラー0だが検査したか不明 | analysis接続、比較件数、未照合、必須目標、チェッカー無効化時の失敗。 |
 | SVAが失敗してもUVM件数が0 | SVAのactionとUVM reportの接続、外側の終了コード・失敗ラベルの判定。 |
 | カバレッジの割合が合わない | 対象bin、インスタンス、集計方法、ツール版と[校正結果](uvm-practical-design.md#6-未達を埋めることと割合を表示することを分ける)。 |
+| 上位RALで別のIPへアクセスしてしまう | 子のoffsetと上位base address、submap、adapter、独立した読戻し。 |
+| 片側reset後だけ応答が合わない | reset時の保持・取消契約、IDの再利用、世代と観測時刻、相手側に残った応答。 |
+
+用語を調べる場合は[UVMの用語集](../glossary.md#4-uvmと検証環境)、具体的な疑問から調べる場合は[UVM移行・上位協調のFAQ](../faq.md#16-uvm移行上位再利用複数クロック)を参照してください。
 
 UVMを採用するかどうかは、再利用の範囲と運用上の効果から判断します。自動比較、SVA、機能カバレッジ、制約付きランダムは、UVM以外の環境でも使えます。導入そのものと、要求に対する検証の完了は分けて扱います。
