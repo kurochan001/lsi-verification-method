@@ -19,11 +19,13 @@
 ```sh
 sudo apt-get update
 sudo apt-get install -y autoconf automake bison cmake flex g++ gcc gperf \
-  help2man libeigen3-dev libfl-dev llvm make ninja-build perl tcl-dev zlib1g-dev swig
+  help2man libeigen3-dev libfl-dev libtool llvm make ninja-build perl tcl-dev zlib1g-dev swig
 python3 tools/build_native.py --profile full --jobs 2 --out artifacts/toolchains/native
 ```
 
-[`build_native.py`](build_native.py)はIcarus、Verilator、CUDD、OpenSTAを、登録したGitコミットをチェックアウトし、`--out`配下でビルドして`install/`へインストールします。各段階のコマンド・時間上限・ログ・実際のコミットを残し、版不一致やビルド失敗を拒否します。`smoke`ならIcarusとVerilatorだけを構築します。ソース取得にはネットワークが必要です。外部ツールのソース・ライセンスはこの出力先へ保存され、リポジトリには取り込みません。
+[`build_native.py`](build_native.py)はIcarus・Verilator・CUDD・OpenSTAの登録済みGitコミットをチェックアウトし、`--out`配下でビルドして`install/`へインストールします。各段階のコマンド・時間上限・ログ・実際のコミットを残し、版不一致やビルド失敗を拒否します。`smoke`ならIcarusとVerilatorだけを構築します。ソース取得にはネットワークが必要です。外部ツールのソース・ライセンスはこの出力先へ保存され、リポジトリには取り込みません。
+
+CUDDは古いAutomakeの版を参照する生成済みファイルを含むため、`autoreconf -fi`で現在のAutoconf・Automake・Libtoolに合わせて再生成します。
 
 macOSではXcode Command Line ToolsとGit・Python・Node.jsを準備し、Icarus／Verilator／LLVMは使用する配布物の版を確認してください。Homebrewで別の版が入った場合、診断を通すために版チェックを外さず、登録コミットからの構築や専用のインストール先を使います。OpenSTAのmacOSでの構築例は[STAの手順](../examples/local-sta/README.md)にあります。Linux用の上記`apt-get`はmacOSでは実行しません。
 

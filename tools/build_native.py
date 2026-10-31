@@ -35,7 +35,9 @@ def run(a):
             execute('build',['cmake','--build',str(build),'--parallel',str(a.jobs)])
             execute('install',['cmake','--install',str(build)])
         else:
-            execute('generate',['sh','autoconf.sh'] if name=='iverilog' else ['autoconf'] if name=='verilator' else ['test','-x',str(src/'configure')],src)
+            # CUDD's checked-in Makefile.in names Automake 1.14. Regenerate the
+            # complete Autotools chain with the installed version before make.
+            execute('generate',['sh','autoconf.sh'] if name=='iverilog' else ['autoconf'] if name=='verilator' else ['autoreconf','-fi'],src)
             target=prefix/'cudd' if name=='cudd' else prefix
             command=['./configure','--prefix='+str(target)]+(['--enable-static','--disable-shared'] if name=='cudd' else [])
             execute('configure',command,src);execute('build',['make','-j'+str(a.jobs)],src);execute('install',['make','install'],src)
