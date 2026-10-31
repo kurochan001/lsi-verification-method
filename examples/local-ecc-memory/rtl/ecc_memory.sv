@@ -19,7 +19,7 @@ module ecc_memory #(parameter MUTATION=0,DEPTH=4)(
  if(scrub_en)begin
  scrub_corrected<=scrub_c;scrub_uncorrectable<=scrub_u;
  if(scrub_c && MUTATION!=1)mem[scrub_addr]<=scrub_fixed;
- scrub_addr<=scrub_addr==DEPTH-1 ? 0:scrub_addr+1'b1;
+ scrub_addr<=int'(scrub_addr)==DEPTH-1 ? 0:scrub_addr+1'b1;
  end
  if(rd_en && read_c && MUTATION!=4)mem[addr]<=read_fixed;
  if(wr_en)mem[addr]<=encoded;

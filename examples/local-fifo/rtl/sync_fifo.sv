@@ -26,7 +26,7 @@ module sync_fifo #(
   wire write_accept = wr_en && (!full || MUTATION == 2);
   wire read_accept = rd_en && !empty;
 
-  assign full = count == DEPTH;
+  assign full = int'(count) == DEPTH;
   assign empty = count == 0;
 
   always @(posedge clk) begin
@@ -42,12 +42,12 @@ module sync_fifo #(
       rd_valid <= read_accept;
       if (write_accept) begin
         memory[wr_ptr] <= wr_data;
-        wr_ptr <= wr_ptr == DEPTH - 1 ? 0 : wr_ptr + 1'b1;
+        wr_ptr <= int'(wr_ptr) == DEPTH - 1 ? 0 : wr_ptr + 1'b1;
       end
       if (read_accept) begin
         rd_data <= MUTATION == 1 ? memory[rd_ptr] ^ {{(WIDTH-1){1'b0}}, 1'b1}
                                 : memory[rd_ptr];
-        rd_ptr <= rd_ptr == DEPTH - 1 ? 0 : rd_ptr + 1'b1;
+        rd_ptr <= int'(rd_ptr) == DEPTH - 1 ? 0 : rd_ptr + 1'b1;
       end
       case ({write_accept, read_accept})
         2'b10: count <= count + 1'b1;

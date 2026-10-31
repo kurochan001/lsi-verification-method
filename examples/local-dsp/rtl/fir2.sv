@@ -25,10 +25,10 @@ module fir2 #(parameter FRAC=4,LATENCY=1,MUTATION=0)(
    if(in_valid && in_ready)begin
     previous<=sample;busy<=1;remaining<=LATENCY-1;
     saved_clip<=quantized>127 || quantized< -128;
-    if(MUTATION==3)saved_result<=quantized;
+    if(MUTATION==3)saved_result<=8'(quantized);
     else if(quantized>127)saved_result<=127;
     else if(quantized< -128)saved_result<=-128;
-    else saved_result<=quantized;
+    else saved_result<=8'(quantized);
    end
   end
  end

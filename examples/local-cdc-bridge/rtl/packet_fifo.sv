@@ -35,7 +35,7 @@ module packet_fifo #(parameter DEPTH=4, SYNC_STAGES=2, WIDTH=57, MUTATION=0)(
             wsync[0]<=wgray;
             for(integer i=1;i<SYNC_STAGES;i=i+1) wsync[i]<=wsync[i-1];
             rd_valid<=read_ok;
-            if(read_ok) rd_data<=memory[rbin[A-1:0]] ^ (MUTATION==1 ? 8'h01 : 8'h00);
+            if(read_ok) rd_data<=memory[rbin[A-1:0]] ^ (MUTATION==1 ? {{(WIDTH-1){1'b0}},1'b1} : {WIDTH{1'b0}});
             rbin<=rn;rgray<=rg;
             empty<=rg==wsync[SYNC_STAGES-1];
         end

@@ -16,7 +16,7 @@ module reorder_tb;
  held_b=bvalid&&!bready;saved_b={bid,bresp};held_r=rvalid&&!rready;saved_r={rid,rresp,rlast,rdata};
  @(posedge clk);#1;@(negedge clk);cycles=cycles+1;if(cycles>4000)fail("AXIO_TIMEOUT");
  end endtask
- task reset_all;begin rst_n=0;release_enable=0;awvalid=0;wvalid=0;arvalid=0;bready=0;rready=0;held_b=0;held_r=0;tick();rst_n=1;for(integer a=0;a<8192;a=a+1)begin expected_memory[a]=(a*13+7)&255;dut.memory.memory[a]=expected_memory[a];end tick();end endtask
+ task reset_all;begin rst_n=0;release_enable=0;awvalid=0;wvalid=0;arvalid=0;bready=0;rready=0;held_b=0;held_r=0;tick();rst_n=1;for(integer a=0;a<8192;a=a+1)begin expected_memory[a]=(a*13+7)&255;dut.ram.memory[a]=expected_memory[a];end tick();end endtask
  initial begin
  if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"args required");$dumpfile(wave);$dumpvars(0,reorder_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"vectors missing");
  while(!$feof(fd))begin
@@ -52,7 +52,7 @@ module reorder_tb;
  if(v[0]==0)$display("COVER order/same-id");
  for(integer i=0;i<SLOTS;i=i+1)for(integer j=i+1;j<SLOTS;j=j+1)if(((v[0]>>(2*i))&3)==((v[0]>>(2*j))&3))$display("COVER order/duplicate-id");
  if(v[1]!=0)$display("COVER burst/multiple");if(v[2]!=0 && v[2]!=15)$display("COVER write/partial");if(v[2]==0)$display("COVER write/zero");
- for(integer a=0;a<8192;a=a+1)if(dut.memory.memory[a]!==expected_memory[a])fail("AXIO_MEMORY");
+ for(integer a=0;a<8192;a=a+1)if(dut.ram.memory[a]!==expected_memory[a])fail("AXIO_MEMORY");
  checks=checks+1;
  end $display("COUNT steps=%0d",checks);$display("RESULT PASS checks=%0d",checks);$finish;
  end endmodule

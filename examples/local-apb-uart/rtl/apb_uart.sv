@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Teaching APB3 signal subset + existing UART + sticky event interrupts.
 module apb_uart #(
   parameter integer WAIT_CYCLES = 0,

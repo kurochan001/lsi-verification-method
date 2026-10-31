@@ -21,7 +21,7 @@ module cache_dma #(parameter MUTATION=0,LINES=2,LATENCY=1)(
  if(busy)begin
  if(remaining!=0)remaining<=remaining-1;
  else begin
- busy<=0;rsp_valid<=1;rsp_error<=0;rsp_data<=0;index=address%LINES;
+ busy<=0;rsp_valid<=1;rsp_error<=0;rsp_data<=0;index=int'(address)%LINES;
  case(operation)
  1,2:begin
  if(!valid[index] || (tag[index]!=address && MUTATION!=3))begin

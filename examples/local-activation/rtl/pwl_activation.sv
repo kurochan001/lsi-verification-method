@@ -31,7 +31,7 @@ module pwl_activation #(parameter FUNC=0, MUTATION=0)(
     wire [4:0] fraction = MUTATION == 3 ? {1'b0, a[4:1]} : a[4:0];
     wire [10:0] low = KNOTS[11*segment +: 11];
     wire [10:0] high = KNOTS[11*(segment+1) +: 11];
-    wire [15:0] step = (high - low) * fraction + (MUTATION == 2 ? 16'd0 : 16'd16);
+    wire [15:0] step = ({5'b0, high} - {5'b0, low}) * fraction + (MUTATION == 2 ? 16'd0 : 16'd16);
     wire [10:0] half = low + step[15:5];                       // f(|x|) for x >= 0
     wire [11:0] mirrored = FUNC == 0 ? (MUTATION == 1 ? 12'd1023 : 12'd1024) - half
                                      : (MUTATION == 1 ? ~{1'b0, half} : -{1'b0, half});

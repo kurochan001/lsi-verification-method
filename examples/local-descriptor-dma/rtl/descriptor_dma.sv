@@ -39,7 +39,7 @@ module descriptor_dma #(parameter DEPTH=2,MUTATION=0)(
  case(state)
  IDLE:if(start)begin
  done<=0;error<=0;aborted<=0;completed<=0;index<=start_head;left<=start_count;abort_pending<=0;abort_sent<=0;
- if(start_head>=DEPTH || start_count>DEPTH)finish(1,0);else if(start_count==0)finish(0,0);else state<=FETCH_AR;
+ if(int'(start_head)>=DEPTH || int'(start_count)>DEPTH)finish(1,0);else if(start_count==0)finish(0,0);else state<=FETCH_AR;
  end
  FETCH_AR:if(arready)begin state<=FETCH_R;beat<=0;fetch_error<=0;end
  FETCH_R:if(rvalid)begin
@@ -70,7 +70,7 @@ module descriptor_dma #(parameter DEPTH=2,MUTATION=0)(
  completed<=completed+1'b1;
  if(abort_pending || abort_req)finish(0,1);
  else if(left==1)finish(0,0);
- else begin left<=left-1'b1;index<=(index+(MUTATION==1 ? 2:1))%DEPTH;state<=FETCH_AR;end
+ else begin left<=left-1'b1;index<=3'((int'(index)+(MUTATION==1 ? 2:1))%DEPTH);state<=FETCH_AR;end
  end
  end
  end end

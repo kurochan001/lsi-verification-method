@@ -37,20 +37,20 @@ module axi_interconnect #(parameter MUTATION=0)(
   for(t=0;t<2;t=t+1)begin
    eligible_w=0;eligible_r=0;
    for(m=0;m<2;m=m+1)begin
-    eligible_w[m]=wfull[m] && !wa[m][14] && ((wa[m][13] ^ (MUTATION==2))==t);
-    eligible_r[m]=rfull[m] && !ra[m][14] && ((ra[m][13] ^ (MUTATION==2))==t);
+    eligible_w[m]=wfull[m] && !wa[m][14] && ((int'(wa[m][13]) ^ int'(MUTATION==2))==t);
+    eligible_r[m]=rfull[m] && !ra[m][14] && ((int'(ra[m][13]) ^ int'(MUTATION==2))==t);
    end
-   chosen_w[t]=eligible_w[rr_w[t]] && MUTATION!=3 ? rr_w[t] : eligible_w[0] ? 0 : 1;
-   chosen_r[t]=eligible_r[rr_r[t]] && MUTATION!=3 ? rr_r[t] : eligible_r[0] ? 0 : 1;
+   chosen_w[t]=eligible_w[rr_w[t]] && MUTATION!=3 ? int'(rr_w[t]) : eligible_w[0] ? 0 : 1;
+   chosen_r[t]=eligible_r[rr_r[t]] && MUTATION!=3 ? int'(rr_r[t]) : eligible_r[0] ? 0 : 1;
    if(rst_n && !active_w[t] && |eligible_w)grant_w[2*t+chosen_w[t]]=1;
    if(rst_n && !active_r[t] && |eligible_r)grant_r[2*t+chosen_r[t]]=1;
-   ow=owner_w[t];orr=owner_r[t];
+   ow=int'(owner_w[t]);orr=int'(owner_r[t]);
    s_awaddr[t]=wa[ow][12:0];s_awlen[t]=wl[ow];s_awid[t]=wi[ow];
    s_araddr[t]=ra[orr][12:0];s_arlen[t]=rl[orr];s_arid[t]=ri[orr];
    s_wdata[t]=wdata[32*ow+:32] ^ (MUTATION==4 ? 32'b1:0);s_wstrb[t]=wstrb[4*ow+:4];s_wlast[t]=wlast[ow];
    if(active_w[t])begin
     s_awvalid[t]=!sent_w[t];s_wvalid[t]=wvalid[ow];wready[ow]=s_wready[t];
-    bvalid[ow ^ (MUTATION==1)]=s_bvalid[t];bid[2*(ow ^ (MUTATION==1))+:2]=s_bid[t];bresp[2*(ow ^ (MUTATION==1))+:2]=s_bresp[t];s_bready[t]=bready[ow];
+    bvalid[ow ^ int'(MUTATION==1)]=s_bvalid[t];bid[2*(ow ^ int'(MUTATION==1))+:2]=s_bid[t];bresp[2*(ow ^ int'(MUTATION==1))+:2]=s_bresp[t];s_bready[t]=bready[ow];
    end
    if(active_r[t])begin
     s_arvalid[t]=!sent_r[t];rvalid[orr]=s_rvalid[t];rid[2*orr+:2]=s_rid[t];rresp[2*orr+:2]=s_rresp[t];
@@ -77,8 +77,8 @@ module axi_interconnect #(parameter MUTATION=0)(
     end
    end
    for(integer i=0;i<2;i=i+1)begin
-    if(grant_w[2*i] || grant_w[2*i+1])begin active_w[i]<=1;owner_w[i]<=chosen_w[i];sent_w[i]<=0;wfull[chosen_w[i]]<=0;wbusy[chosen_w[i]]<=1;end
-    if(grant_r[2*i] || grant_r[2*i+1])begin active_r[i]<=1;owner_r[i]<=chosen_r[i];sent_r[i]<=0;rfull[chosen_r[i]]<=0;rbusy[chosen_r[i]]<=1;end
+    if(grant_w[2*i] || grant_w[2*i+1])begin active_w[i]<=1;owner_w[i]<=chosen_w[i][0];sent_w[i]<=0;wfull[chosen_w[i]]<=0;wbusy[chosen_w[i]]<=1;end
+    if(grant_r[2*i] || grant_r[2*i+1])begin active_r[i]<=1;owner_r[i]<=chosen_r[i][0];sent_r[i]<=0;rfull[chosen_r[i]]<=0;rbusy[chosen_r[i]]<=1;end
     if(s_awvalid[i] && s_awready[i])sent_w[i]<=1;
     if(s_arvalid[i] && s_arready[i])sent_r[i]<=1;
     if(active_w[i] && s_bvalid[i] && s_bready[i])begin active_w[i]<=0;wbusy[owner_w[i]]<=0;rr_w[i]<=!owner_w[i];end

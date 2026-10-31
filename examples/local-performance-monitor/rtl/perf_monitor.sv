@@ -21,7 +21,7 @@ module perf_monitor #(parameter SLOTS=4, MUTATION=0)(
     reg [7:0] latency;
     wire window_count = window_active && !start;
 
-    assign req_ready = rst_n && req_tag < SLOTS && !outstanding[req_tag];
+    assign req_ready = rst_n && int'(req_tag) < SLOTS && !outstanding[req_tag];
 
     always @* begin
         active_count = 0;
@@ -45,7 +45,7 @@ module perf_monitor #(parameter SLOTS=4, MUTATION=0)(
                 if (stop) window_active <= 0;
             end
             if (resp_valid) begin
-                if (resp_tag < SLOTS && outstanding[resp_tag]) begin
+                if (int'(resp_tag) < SLOTS && outstanding[resp_tag]) begin
                     latency = age[resp_tag] == 8'hff ? 8'hff : age[resp_tag] + 1'b1;
                     if (MUTATION != 4) outstanding[resp_tag] <= 0;
                     total_done <= total_done + 1;

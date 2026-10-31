@@ -4,13 +4,17 @@
 
 | ツール | 用途と手順 |
 | --- | --- |
+| [`check_docs.py`](check_docs.py) | [文書・図・用語集・FAQの検査](QUALITY.md)。内部リンクと見出し、表、フェンス、実際のMermaid構文を判定する。 |
+| [`setup_environment.py`](setup_environment.py)／[`check_environment.py`](check_environment.py) | [環境の一括準備と診断](ENVIRONMENT.md)。docs・smoke・fullを選び、版・import・コンパイル・UVMを確認する。 |
+| [`build_native.py`](build_native.py) | [固定コミットからのネイティブツール構築](ENVIRONMENT.md#2-os側の依存を用意する)。CIでも同じソース版を使う。 |
+| [`run_selftests.py`](run_selftests.py) | [グループ別セルフテスト](QUALITY.md#セルフテスト)。未実行・空・skip・失敗を拒否し、JSON・JUnitを保存する。 |
 | [`verification_plan.py`](verification_plan.py) | [検証項目表と実行証跡の照合](../docs/method/verification-plan-automation.md)。出典・要求・項目・構成・実績・版を確認する。 |
 | [`run_regression.py`](run_regression.py) | [全検証例の統合実行](REGRESSION.md)。構成行列、依存確認、並列数、時間上限、JUnitとソースの照合を管理する。 |
 | [`regression_report.py`](regression_report.py) | [履歴と採用結果の照合](REPORTING.md)。初回失敗を保持し、現在の計画に対する最後の試行を判定する。 |
 | [`regressions.json`](regressions.json) | 全体実行の入口・構成・依存・親子関係の登録表。未登録の例を自動的に省略しない。 |
 | [`run_lint.py`](run_lint.py) | [共通DUT lint](../docs/method/lint-and-waivers.md)。[`lint_targets.json`](lint_targets.json)の構成を読み、[`lint_baseline.json`](lint_baseline.json)からの新規・解消・版変更を拒否する。既知の未解決指摘は警告0件と区別する。 |
 
-セルフテストは`python3 -m unittest discover -s tools/tests -v`で実行できます。Python依存の準備は[統合実行の手順](REGRESSION.md#2-実行環境を明示的に準備する)を参照してください。
+セルフテストは[文書用環境](ENVIRONMENT.md)を準備して実行します。単独なら`python3 -m unittest discover -s tools/tests -v`、証跡付きなら`run_selftests.py --scope tools`です。[CIの起動条件と保存範囲](CI.md)も参照してください。
 
 <a id="case-study-reference-tools"></a>
 

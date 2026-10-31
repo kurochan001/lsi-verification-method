@@ -77,7 +77,7 @@ python3 examples/local-irq-cdc/run.py --profile nightly --seed 17
 
 nightlyは、開始seed・開始seed+1・開始seed+2の各64操作を追加し、変異・X・要求判定と合わせて41項目になります。同じ開始seedなら固定列の再確認です。探索seedを変える場合も、その値とマニフェストを保存します。
 
-このリポジトリにCIの設定はありません。CIサービスで定期実行する場合は、変更ごとにsmoke、定期実行でnightlyを選び、開始seedを記録します。ジョブの成否はランナーの終了コードで決めます。JUnitを結果表示に渡すだけでは、ジョブは失敗になりません。この例のランナーは、失敗・errorを終了コード1へ反映します。運用の考え方は[継続リグレッションの手順](../../docs/method/continuous-regression.md)にまとめています。
+この例は[毎晩の全例CI](../../tools/CI.md)に含まれます。変更時のQualityは代表例に絞るため、このIRQ例を毎回実行する範囲ではありません。個別実行ではsmoke／nightlyと開始seedを記録します。ジョブの成否はランナーの終了コードで決めます。JUnitを結果表示に渡すだけでは、ジョブは失敗になりません。この例のランナーは、失敗・errorを終了コード1へ反映します。運用の考え方は[継続リグレッションの手順](../../docs/method/continuous-regression.md)にまとめています。
 
 ## 4. 保存するものと判定
 

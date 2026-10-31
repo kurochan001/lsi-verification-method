@@ -28,15 +28,15 @@ module apb_dma #(parameter MUTATION=0)(
  endcase
  function automatic [2:0] burst_length(input [31:0] left,input [12:0] src,dst);
   integer count,src_limit,dst_limit;begin
-   count=left<4 ? left:4;src_limit=(4096-src[11:0])/4;dst_limit=(4096-dst[11:0])/4;
+   count=left<4 ? left:4;src_limit=(4096-int'(src[11:0]))/4;dst_limit=(4096-int'(dst[11:0]))/4;
    if(MUTATION!=1)begin if(count>src_limit)count=src_limit;if(count>dst_limit)count=dst_limit;end
-   burst_length=count;
+   burst_length=3'(count); // count is bounded to 0..4 above.
   end
  endfunction
- assign arvalid=rst_n && state==AR;assign araddr=source;assign arlen=chunk-1'b1;assign arid=1;
+ assign arvalid=rst_n && state==AR;assign araddr=source;assign arlen=8'(chunk)-8'd1;assign arid=1;
  assign rready=rst_n && state==READ;
- assign awvalid=rst_n && state==AW;assign awaddr=destination;assign awlen=chunk-1'b1;assign awid=2;
- assign wvalid=rst_n && state==WRITE;assign wdata=buffer[beat] ^ (MUTATION==2 ? 32'b1:0);assign wstrb=15;assign wlast=beat==chunk-1;
+ assign awvalid=rst_n && state==AW;assign awaddr=destination;assign awlen=8'(chunk)-8'd1;assign awid=2;
+ assign wvalid=rst_n && state==WRITE;assign wdata=buffer[beat[1:0]] ^ (MUTATION==2 ? 32'b1:0);assign wstrb=15;assign wlast=beat==chunk-1;
  assign bready=rst_n && state==B;
  task finish(input bad,input stopped);begin state<=IDLE;done<=1;error<=bad;aborted<=stopped;irq_pending<=MUTATION!=3;end endtask
  always @(posedge clk or negedge rst_n)begin
@@ -62,7 +62,7 @@ module apb_dma #(parameter MUTATION=0)(
     end
     AR:if(arready)begin state<=READ;beat<=0;read_error<=0;end
     READ:if(rvalid)begin
-     buffer[beat]<=rdata;read_error<=read_error || rresp!=0 || rid!=1 || rlast!=(beat==chunk-1);
+     buffer[beat[1:0]]<=rdata;read_error<=read_error || rresp!=0 || rid!=1 || rlast!=(beat==chunk-1);
      if(beat==chunk-1)begin
       beat<=0;
       if(read_error || rresp!=0 || rid!=1 || !rlast)finish(1,0);
@@ -75,10 +75,10 @@ module apb_dma #(parameter MUTATION=0)(
     B:if(bvalid)begin
      if(bresp!=0 || bid!=2)finish(1,0);
      else if(abort_pending || abort_now)finish(0,1);
-     else if(remaining==chunk)finish(0,0);
+     else if(remaining==int'(chunk))finish(0,0);
      else begin
-      source<=source+4*chunk;destination<=destination+(MUTATION==4 ? chunk:4*chunk);remaining<=remaining-chunk;
-      chunk<=burst_length(remaining-chunk,source+4*chunk,destination+(MUTATION==4 ? chunk:4*chunk));state<=AR;
+      source<=13'(int'(source)+4*int'(chunk));destination<=13'(int'(destination)+(MUTATION==4 ? int'(chunk):4*int'(chunk)));remaining<=remaining-int'(chunk);
+      chunk<=burst_length(remaining-int'(chunk),13'(int'(source)+4*int'(chunk)),13'(int'(destination)+(MUTATION==4 ? int'(chunk):4*int'(chunk))));state<=AR;
      end
     end
     default:;

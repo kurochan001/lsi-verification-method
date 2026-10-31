@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "python_minimum": {"docs": [3, 10], "smoke": [3, 10], "full": [3, 13]},
+  "packages": {
+    "docs": {"Markdown": {"version": "3.11.2", "import": "markdown"}, "PyYAML": {"version": "6.0.3", "import": "yaml"}},
+    "simulation": {
+      "systemrdl-compiler": {"version": "1.30.1", "import": "systemrdl"},
+      "cocotb": {"version": "2.1.0", "import": "cocotb"},
+      "z3-solver": {"version": "4.15.3.0", "import": "z3"}
+    },
+    "formal": {
+      "yowasp-yosys": {"version": "0.70.0.0.post1259", "import": "yowasp_yosys"},
+      "yowasp-runtime": {"version": "1.96", "import": "yowasp_runtime"},
+      "wasmtime": {"version": "47.0.1", "import": "wasmtime"},
+      "platformdirs": {"version": "4.13.5", "import": "platformdirs"},
+      "click": {"version": "8.5.0", "import": "click"},
+      "z3-solver": {"version": "4.15.3.0", "import": "z3"}
+    }
+  },
+  "native_sources": {
+    "iverilog": {"repository": "https://github.com/steveicarus/iverilog.git", "commit": "ca6b8d376ab60758d1affce3188ec4dcaf485d16"},
+    "verilator": {"repository": "https://github.com/verilator/verilator.git", "commit": "ea338be98e1e838d3518809ce8899f85a009963c", "release": "5.052"},
+    "cudd": {"repository": "https://github.com/cuddorg/cudd.git", "commit": "f54f533303640afd5dbe47a05ebeabb3066f2a25"},
+    "opensta": {"repository": "https://github.com/parallaxsw/OpenSTA.git", "commit": "cc365d0914ddd11b61575c4a06cde3ecceeb0d01", "release": "3.1.0"}
+  }
+}

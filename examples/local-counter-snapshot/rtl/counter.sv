@@ -6,7 +6,7 @@ module counter #(parameter MUTATION=0,WAIT_CYCLES=0)(input wire clk,rst_n,psel,p
  assign pready=rst_n && psel && penable && remaining==0;assign pslverr=pready && bad;assign irq=rst_n && pending && irq_enable;
  always @*begin prdata=0;case(paddr)
  0:prdata=count[31:0];4:prdata=snapshot_valid && MUTATION!=1 ? snapshot_high:count[63:32];
- 16:prdata=compare_value[31:0];20:prdata=compare_value[63:32];24:prdata={30'b0,irq_enable,enabled};28:prdata=pending;
+ 16:prdata=compare_value[31:0];20:prdata=compare_value[63:32];24:prdata={30'b0,irq_enable,enabled};28:prdata={31'b0,pending};
  default:;endcase end
  always @(posedge clk or negedge rst_n)begin
  if(!rst_n)begin count<=0;pending<=0;snapshot_valid<=0;load_low<=0;compare_low<=0;snapshot_high<=0;compare_value<=0;enabled<=0;irq_enable<=0;remaining<=0;end

@@ -6,6 +6,12 @@ import unittest
 ROOT=Path(__file__).resolve().parents[2]
 s=importlib.util.spec_from_file_location('lint_under_test',ROOT/'tools/run_lint.py');L=importlib.util.module_from_spec(s);s.loader.exec_module(L)
 class LintPolicyTests(unittest.TestCase):
+    def test_release_identity_preserves_build_independence(self):
+        for build in ('rev vUNKNOWN-built20260905','rev v5.052'):
+            self.assertEqual(L.release_version('Verilator 5.052 2026-09-05 '+build),'5.052')
+        self.assertEqual(L.release_version('Verilator 5.050 2026-08-01 rev x'),'5.050')
+        for text in ('Verilator 5.052-dev x','Verilator 5.052','Verilator 5.052 x\nextra','5.052'):
+            self.assertIsNone(L.release_version(text))
     def setUp(self):
         self.d=dict(severity='Warning',rule='WIDTHTRUNC',file='examples/x/rtl/x.sv',line=2,column=3,message='width differs')
         self.sha={'examples/x/rtl/x.sv':'digest'}

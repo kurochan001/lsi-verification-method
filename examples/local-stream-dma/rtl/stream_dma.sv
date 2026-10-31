@@ -19,7 +19,7 @@ module stream_dma #(parameter MUTATION=0)(
  else case(state)
  IDLE:if(start)begin
  done<=0;error<=0;addr<=address;left<=byte_count;
- if(address[1:0]!=0 || byte_count>32 || ({1'b0,address}+((int'(byte_count)+3)/4)*4)>8192)finish(1);
+ if(address[1:0]!=0 || byte_count>32 || (int'(address)+((int'(byte_count)+3)/4)*4)>8192)finish(1);
  else if(byte_count==0)finish(0);else state<=direction ? IN:AR;
  end
  AR:if(arready)state<=READ;

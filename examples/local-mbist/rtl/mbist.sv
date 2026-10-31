@@ -6,7 +6,7 @@ module mbist #(parameter MUTATION=0,DEPTH=8)(input wire clk,rst_n,start,output r
  assign req_data=(phase==1 || phase==3) ^ (MUTATION==3);
  wire expected=phase==2 || phase==4;
  wire element_done=phase==0 || phase==5 || second;
- wire last_addr=(phase==3 || phase==4) ? req_addr==0:req_addr==DEPTH-1;
+ wire last_addr=(phase==3 || phase==4) ? req_addr==0:int'(req_addr)==DEPTH-1;
  always @(posedge clk or negedge rst_n)begin
  if(!rst_n)begin busy<=0;done<=0;failed<=0;fail_addr<=0;req_addr<=0;phase<=0;second<=0;end
  else begin
@@ -18,7 +18,7 @@ module mbist #(parameter MUTATION=0,DEPTH=8)(input wire clk,rst_n,start,output r
  second<=0;
  if(last_addr)begin
  if(phase==5)begin busy<=0;done<=1;end
- else begin phase<=phase+1'b1;req_addr<=phase==2 || phase==3 ? DEPTH-1:0;end
+ else begin phase<=phase+1'b1;req_addr<=$clog2(DEPTH)'(phase==2 || phase==3 ? DEPTH-1:0);end
  end else req_addr<=(phase==3 || phase==4) ? req_addr-1'b1:req_addr+1'b1;
  end else second<=1;
  end end end endmodule

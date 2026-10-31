@@ -42,12 +42,12 @@ module requantize #(parameter CH=2, ACT_MIN=-128, ACT_MAX=127, MUTATION=0)(
     wire [31:0] mask = (32'd1 << s_use) - 32'd1;
     wire [31:0] remainder = t0 & mask;
     wire [31:0] threshold = (mask >> 1) + ((t0 < 0 && MUTATION != 2) ? 32'd1 : 32'd0);
-    wire signed [32:0] q_next = (t0 >>> s_use) + (remainder > threshold ? 33'sd1 : 33'sd0);
+    wire signed [32:0] q_next = ($signed({t0[31], t0}) >>> s_use) + (remainder > threshold ? 33'sd1 : 33'sd0);
 
     // Stage 2: zero point and activation range on the full-width value.
     wire signed [7:0] zp_use = MUTATION == 4 ? zp[ch1] : zp1;
-    wire signed [33:0] sum = q1 + zp_use;
-    wire signed [33:0] narrowed = $signed(sum[7:0]);
+    wire signed [33:0] sum = $signed({q1[32], q1}) + $signed({{26{zp_use[7]}}, zp_use});
+    wire signed [33:0] narrowed = $signed({{26{sum[7]}}, sum[7:0]});
     wire signed [33:0] u = MUTATION == 3 ? narrowed : sum;
 
     integer k;
@@ -63,8 +63,8 @@ module requantize #(parameter CH=2, ACT_MIN=-128, ACT_MAX=127, MUTATION=0)(
             if (ready2) begin
                 v2 <= v1;
                 if (v1) begin
-                    if (u < ACT_MIN) begin out_data <= ACT_MIN; out_sat <= 1; end
-                    else if (u > ACT_MAX) begin out_data <= ACT_MAX; out_sat <= 1; end
+                    if (u < 34'(ACT_MIN)) begin out_data <= 8'(ACT_MIN); out_sat <= 1; end
+                    else if (u > 34'(ACT_MAX)) begin out_data <= 8'(ACT_MAX); out_sat <= 1; end
                     else begin out_data <= u[7:0]; out_sat <= 0; end
                 end
             end

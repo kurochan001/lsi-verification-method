@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Teaching peripheral: APB3 signal subset, synchronous active-low reset.
 module apb_regs #(
   parameter integer WAIT_CYCLES = 0,

@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Integration of the existing APB register block with four interrupt sources.
 module apb_irq #(
   parameter integer WAIT_CYCLES = 0,

@@ -5,7 +5,7 @@ module axis_packet_fifo #(parameter DEPTH=2,MUTATION=0)(
 );
  localparam A=$clog2(DEPTH);
  reg [36:0] memory[0:DEPTH-1];reg [A-1:0] head,tail;reg [A:0] count;
- assign s_ready=rst_n && (MUTATION==4 || count<DEPTH || (m_valid && m_ready));
+ assign s_ready=rst_n && (MUTATION==4 || int'(count)<DEPTH || (m_valid && m_ready));
  assign m_valid=rst_n && count!=0;
  assign m_data=memory[head][31:0] ^ (MUTATION==3 ? 32'b1:0);
  assign m_keep=MUTATION==2 ? 4'hf:memory[head][35:32];

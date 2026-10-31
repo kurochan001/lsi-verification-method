@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // APB3 subset wrapper around the existing timer/watchdog teaching core.
 module apb_timer #(parameter WIDTH=4,WAIT_CYCLES=0,MUTATION=0)(
     input wire clk,rst_n,psel,penable,pwrite,
@@ -31,12 +32,12 @@ module apb_timer #(parameter WIDTH=4,WAIT_CYCLES=0,MUTATION=0)(
         prdata=0;
         case(paddr)
             0:prdata={28'b0,control};
-            4:prdata=timer_reload;
-            8:prdata=watchdog_reload;
+            4:prdata=32'(timer_reload);
+            8:prdata=32'(watchdog_reload);
             12:prdata=0;
             16:prdata={29'b0,watchdog_reset_request,timer_expired,pending};
-            20:prdata=timer_count;
-            24:prdata=watchdog_count;
+            20:prdata=32'(timer_count);
+            24:prdata=32'(watchdog_count);
             28:prdata=32'h54494d52;
             default:prdata=0;
         endcase

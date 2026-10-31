@@ -25,9 +25,9 @@ module axi4_ram #(parameter MUTATION=0,MEM_BYTES=8192,CHECK_INVARIANTS=1,ABSTRAC
  function automatic invalid(input [12:0] address,input [7:0] length,input [2:0] size,input [1:0] burst);
    integer finish;
    begin
-     finish={1'b0,address}+(length+1)*4;
+     finish=int'(address)+(int'(length)+1)*4;
      invalid=address[1:0]!=0 || size!=2 || burst!=1 || length>3 || finish>MEM_BYTES ||
-             ({1'b0,address[11:0]}+(length+1)*4)>4096;
+             (int'(address[11:0])+(int'(length)+1)*4)>4096;
    end
  endfunction
  assign awready=rst_n && wc<2;
@@ -71,7 +71,7 @@ module axi4_ram #(parameter MUTATION=0,MEM_BYTES=8192,CHECK_INVARIANTS=1,ABSTRAC
        we[awtail]<=invalid(awaddr,awlen,awsize,awburst);done[awtail]<=0;awtail<=!awtail;
      end
      if(wvalid&&wready) begin
-       base=wa[whead]+4*wbeat;
+       base=int'(wa[whead])+4*int'(wbeat);
        // Unsupported requests have no write side effects. WLAST errors return SLVERR.
        // A late WLAST error does not roll back earlier legal beats.
        if(!we[whead]) for(k=0;k<4;k=k+1)
@@ -90,7 +90,7 @@ module axi4_ram #(parameter MUTATION=0,MEM_BYTES=8192,CHECK_INVARIANTS=1,ABSTRAC
      end
      // Register every beat, so R payload stays stable if a concurrent write changes memory.
      if(!rvalid && rc!=0) begin
-       base=ra[rhead]+4*rbeat;
+       base=int'(ra[rhead])+4*int'(rbeat);
 `ifdef FORMAL
        if(ABSTRACT_DATA)rdata<=formal_read_data;
        else begin

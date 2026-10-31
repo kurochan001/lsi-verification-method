@@ -6,7 +6,7 @@ module fifo_gold #(parameter DEPTH=2,WIDTH=4)(
 );
  reg [WIDTH-1:0] queue[0:DEPTH-1];
  wire push=valid&&in_ready,pop=ready&&out_valid;
- assign in_ready=count<DEPTH;assign out_valid=count!=0;assign out_data=queue[0];
+ assign in_ready=int'(count)<DEPTH;assign out_valid=count!=0;assign out_data=queue[0];
  genvar g;generate for(g=0;g<DEPTH;g=g+1)assign contents[g*WIDTH+:WIDTH]=queue[g];endgenerate
  always @(posedge clk)begin
   if(!rst_n)begin count<=0;for(integer i=0;i<DEPTH;i=i+1)queue[i]<=0;end
@@ -24,7 +24,7 @@ module fifo_optimized #(parameter DEPTH=2,WIDTH=4,MUTATION=0)(
  output reg [$clog2(DEPTH)-1:0] head,tail
 );
  reg [WIDTH-1:0] memory[0:DEPTH-1];wire push=valid&&in_ready,pop=ready&&out_valid;
- assign in_ready=MUTATION==3 ? 1'b1:count<DEPTH;assign out_valid=count!=0;
+ assign in_ready=MUTATION==3 ? 1'b1:int'(count)<DEPTH;assign out_valid=count!=0;
  assign out_data=memory[MUTATION==2 ? tail:head] ^ (MUTATION==4 ? {{(WIDTH-1){1'b0}},1'b1}:0);
  genvar g;generate for(g=0;g<DEPTH;g=g+1)assign contents[g*WIDTH+:WIDTH]=memory[g];endgenerate
  always @(posedge clk)begin

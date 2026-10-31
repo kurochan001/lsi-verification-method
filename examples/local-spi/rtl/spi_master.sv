@@ -14,13 +14,13 @@ module spi_master #(
   localparam integer RELOAD=MUTATION==4 ? HALF_DIV-2 : HALF_DIV-1;
   always @(posedge clk) begin
     if(!rst_n) begin
-      sclk<=CPOL;cs_n<=1;mosi<=0;busy<=0;done<=0;rx_data<=0;
+      sclk<=1'(CPOL);cs_n<=1;mosi<=0;busy<=0;done<=0;rx_data<=0;
       tx_latched<=0;rx_shift<=0;ticks<=0;edges<=0;
     end else begin
       done<=0;
       if(!busy) begin
         if(start) begin
-          tx_latched<=payload;rx_shift<=0;mosi<=payload[7];sclk<=CPOL;
+          tx_latched<=payload;rx_shift<=0;mosi<=payload[7];sclk<=1'(CPOL);
           cs_n<=0;busy<=1;ticks<=RELOAD;edges<=0;
         end
       end else if(ticks!=0) ticks<=ticks-1;
@@ -35,7 +35,7 @@ module spi_master #(
           if(MUTATION==3 && edges==0) cs_n<=1;
         end else begin
           // Hold CS for one half-period after the last SCLK edge.
-          busy<=0;done<=1;cs_n<=1;sclk<=CPOL;
+          busy<=0;done<=1;cs_n<=1;sclk<=1'(CPOL);
           rx_data<=MUTATION==2 ? rx_shift ^ 8'h01 : rx_shift;
         end
       end

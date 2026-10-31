@@ -34,6 +34,8 @@ python3 tools/run_regression.py --suite formal --list
 
 ## 2. 実行環境を明示的に準備する
 
+全例にはPython 3.13以上を使います。[環境の一括準備・診断](ENVIRONMENT.md)の`full`プロファイルで、専用venv・固定パッケージ・公式UVMを準備できます。既存環境を使う場合も`check_environment.py`で版と実行を診断できます。以下は個別に用意する場合の手順です。
+
 Icarus Verilog、Verilator 5.052、C++20コンパイラー、Cコンパイラー、make、OpenSTAを各環境へ用意します。フォーマルは[固定版環境](../examples/local-formal-common/README.md)、UVMは[ライブラリの準備](../examples/local-uvm/README.md#ライブラリの準備)、OpenSTAは[構築手順](../examples/local-sta/README.md)を参照してください。ランナー自身はツールをインストールしません。
 
 シミュレーション側のPython依存は、専用環境へ次のように準備できます。固定するのは記載した3パッケージの版であり、OS・コンパイラー・全推移依存まで同一にする環境イメージではありません。
@@ -117,3 +119,7 @@ python3 -m unittest discover -s tools/tests -v
 初回の全例実行、最終補強後の再実行範囲、ハッシュ照合と環境導入の結果は[2026-10-31の記録](../PROVENANCE.md#verification-workflow-expansion-20261031)を参照してください。
 
 固定計画・JUnit・外部UVMの判定補強と、拡張7例への時間上限の転送、全例の再確認は[2026-11-01のレビュー記録](../PROVENANCE.md#regression-integrity-review-20261101)にまとめています。
+
+## 6. 変更時と定期実行
+
+[QualityとNightlyのCI](CI.md)を用意しています。文書検査・セルフテストは別ステップで行い、EDA例の登録表や要求件数へ加えません。全例の定期実行は上記と同じnightly計画を使います。

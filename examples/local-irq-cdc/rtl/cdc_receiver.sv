@@ -18,7 +18,7 @@ module cdc_receiver #(
       pulse <= 0;
     end else begin
       pulse <= 0;
-      if ((EARLY_A_ONLY || a == b) && a != accepted_toggle) begin
+      if ((EARLY_A_ONLY != 0 || a == b) && a != accepted_toggle) begin
         accepted_toggle <= a;
         pulse <= 1;
       end

@@ -31,9 +31,9 @@ module stream_buffer #(
       if (push) begin
         // Defect 2: lose the incoming item on a full-buffer replacement.
         if (!(MUTATION == 2 && count == DEPTH && pop)) memory[wr_ptr] <= s_data;
-        wr_ptr <= wr_ptr == DEPTH - 1 ? 0 : wr_ptr + 1'b1;
+        wr_ptr <= int'(wr_ptr) == DEPTH - 1 ? 0 : wr_ptr + 1'b1;
       end
-      if (release_item) rd_ptr <= rd_ptr == DEPTH - 1 ? 0 : rd_ptr + 1'b1;
+      if (release_item) rd_ptr <= int'(rd_ptr) == DEPTH - 1 ? 0 : rd_ptr + 1'b1;
       case ({push, release_item})
         2'b10: count <= count + 1;
         2'b01: count <= count - 1;

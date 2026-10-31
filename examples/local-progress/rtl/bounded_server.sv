@@ -12,7 +12,7 @@ module bounded_server #(parameter SERVICE=1,MUTATION=0)(
  always @(posedge clk)begin
   if(!rst_n)begin state<=0;next_owner<=0;remaining<=0;response_owner<=0;end
   else case(state)
-   0:if(|accept)begin response_owner<=chosen ^ (MUTATION==4);remaining<=SERVICE-1;state<=1;end
+   0:if(|accept)begin response_owner<=chosen ^ (MUTATION==4);remaining<=8'(SERVICE-1);state<=1;end
    1:if(MUTATION!=3)begin if(remaining==0)state<=2;else remaining<=remaining-1'b1;end
    2:if(response_ready || MUTATION==2)begin state<=0;next_owner<=!response_owner;end
    default:state<=0;

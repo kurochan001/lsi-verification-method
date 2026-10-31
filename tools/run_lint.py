@@ -46,6 +46,10 @@ def diagnostics(log,root=ROOT):
         result.append(dict(severity=severity,rule=rule or 'ERROR',file=path,line=int(row) if row else None,column=int(col) if col else None,message=message.replace(str(root)+'/','')))
     return result
 def key(d):return json.dumps(d,sort_keys=True,separators=(',',':'))
+def release_version(output):
+    """Gate the release; preserve packaging-specific build identity in tools.json."""
+    m=re.fullmatch(r'Verilator (\d+\.\d+) [^\n]+',output.strip())
+    return m[1] if m else None
 def changes(current,baseline,source_sha256):
     old=Counter()
     for item in baseline.get('diagnostics',[]):
@@ -62,11 +66,12 @@ def run(a):
     if a.baseline.is_file():paths.append(a.baseline)
     e=E.Evidence('local-lint-targets',a,paths,dict(scope='checked-in DUT RTL; each declared module and explicit configuration',targets=targets),ids)
     version=E.P.execute([a.verilator,'--version'],e.out/'verilator-version.log',a.timeout,e.out);version_text=(e.out/'verilator-version.log').read_text().strip()
-    version_ok=not version['error'] and version['returncode']==0 and version_text==baseline.get('tool_version')
-    E.P.write_json(e.out/'tools.json',dict(verilator=version,version=version_text));e.check('tool-version',version_ok,dict(current=version_text,baseline=baseline.get('tool_version')))
+    release=release_version(version_text)
+    version_ok=not version['error'] and version['returncode']==0 and release is not None and release==baseline.get('tool_version')
+    E.P.write_json(e.out/'tools.json',dict(verilator=version,version=version_text,release=release));e.check('tool-version',version_ok,dict(current=version_text,release=release,baseline=baseline.get('tool_version')))
     inv_ok=baseline.get('schema_version')==1 and set(baseline.get('targets',{}))=={t['id'] for t in targets}
     e.check('inventory',inv_ok,dict(targets=len(targets),rtl_files=len(catalog['rtl_files']),baseline_targets=len(baseline.get('targets',{}))))
-    candidate=dict(schema_version=1,tool_version=version_text,policy='Known warning debt is retained explicitly; success means unchanged diagnostics, not warning-free RTL or human approval.',targets={});results=[]
+    candidate=dict(schema_version=1,tool_version=release,policy='Known warning debt is retained explicitly; success means unchanged diagnostics, not warning-free RTL or human approval.',targets={});results=[]
     for t in targets:
         d=e.out/'targets'/t['id'];d.mkdir(parents=True)
         sha={f:digest(ROOT/f) for f in t['sources']}

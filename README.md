@@ -1,4 +1,6 @@
 [![License: Apache-2.0 WITH LLVM-exception](https://img.shields.io/badge/License-Apache--2.0%20WITH%20LLVM--exception-blue)](LICENSE)
+[![Quality](https://github.com/kurochan001/lsi-verification-method/actions/workflows/quality.yml/badge.svg)](https://github.com/kurochan001/lsi-verification-method/actions/workflows/quality.yml)
+[![Nightly](https://github.com/kurochan001/lsi-verification-method/actions/workflows/nightly.yml/badge.svg)](https://github.com/kurochan001/lsi-verification-method/actions/workflows/nightly.yml)
 [![RTL: SystemVerilog](https://img.shields.io/badge/RTL-SystemVerilog-8A2BE2)](examples/README.md)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)](#準備と実行)
 [![Verification: SVA / UVM / Formal](https://img.shields.io/badge/Verification-SVA%20%2F%20UVM%20%2F%20Formal-2e7d32)](#検証の進め方)
@@ -26,7 +28,8 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
-| 手元で実行する | [準備と実行](#準備と実行) |
+| 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
+| 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
 | 用語や結果の読み方を確認する | [用語集](docs/glossary.md)／[FAQの質問別案内](docs/faq.md#疑問に応じた確認の順序) |
 | 適用事例と由来を調べる | [IEEE 1800-2023のケーススタディ](docs/case-study-ieee1800/README.md)／[PROVENANCE.md](PROVENANCE.md) |
@@ -196,6 +199,8 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 リポジトリ全体を取得し、ルートディレクトリから実行します。例同士でRTLや共通ランナーを再利用しています。
 
+文書の編集には`docs`、代表例の実行には`smoke`、全例には`full`の[環境準備・診断](tools/ENVIRONMENT.md)を使えます。全例の準備はPython 3.13以上です。文書の内部リンク・表・Mermaidは[共通検査](tools/QUALITY.md)、変更時のsmokeと毎晩の全例・フォーマルは[GitHub Actions](tools/CI.md)で確認できます。
+
 ### 最初のシミュレーション
 
 POSIX環境（macOS／Linux）、Python 3.10以上、Icarus Verilog（`iverilog`・`vvp`）を用意します。最初は、期待値比較とランダム入力を扱う同期FIFOの例から試せます。
@@ -226,7 +231,7 @@ python3 examples/local-fifo/run.py --depth 3 --width 8 --profile nightly --seed 
 | smoke | 境界テスト＋1 seed・200ランダムサイクル | 期待値比較、3種類の変異検出、構成別の必須目標 |
 | nightly | 境界テスト＋3 seed・各2,000ランダムサイクル | 同じ合格条件で、より長い操作列を確認 |
 
-`nightly`は実行量を選ぶ名前で、自動スケジュールを設定するものではありません。seedは再現の手掛かりとして、実際の入力列・ソース・ツール版と一緒に保存します。
+`nightly`は実行量を選ぶ名前です。定期起動は別の[CI設定](tools/CI.md)で行い、日本時間03:23の予定で全例を実行します。seedは再現の手掛かりとして、実際の入力列・ソース・ツール版と一緒に保存します。
 
 同じ環境で、[AHB-Lite](examples/local-ahb/README.md)や[AXI4-Lite](examples/local-axi/README.md)なども実行できます。オプション、カバレッジ・JUnit・証跡の形式は[Icarus共通手順](examples/local-common/README.md)を参照してください。
 

@@ -56,7 +56,7 @@ module i2c_target #(parameter ADDRESS=7'h42,MUTATION=0)(
                     if(fall && !ack_started) begin
                         ack_started<=1;sda_low<=ack_wanted;
                         if(ack_wanted && stretch_cycles!=0 && MUTATION!=2) begin
-                            scl_low<=1;stretch_remaining<=stretch_cycles;
+                            scl_low<=1;stretch_remaining<=int'(stretch_cycles);
                         end
                     end else if(rise && ack_started) begin
                         ack_seen<=1;

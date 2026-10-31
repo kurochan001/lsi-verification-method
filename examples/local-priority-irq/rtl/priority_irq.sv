@@ -14,7 +14,7 @@ module priority_irq #(parameter MUTATION=0,LEVEL=1,WAIT_CYCLES=1)(
  always @*begin
  winner=0;best=0;
  for(integer i=0;i<4;i=i+1)if(pending[i] && enables[i] &&
-  (MUTATION==1 ? priorities[i]>=best && priorities[i]!=0:priorities[i]>best))begin winner=i+1;best=priorities[i];end
+  (MUTATION==1 ? int'(priorities[i])>=best && priorities[i]!=0:int'(priorities[i])>best))begin winner=i+1;best=int'(priorities[i]);end
  prdata=0;
  case(paddr)
  0:prdata={28'b0,enables};4:prdata={30'b0,threshold};8:prdata={28'b0,pending};12:prdata={28'b0,in_service};16:prdata=winner;

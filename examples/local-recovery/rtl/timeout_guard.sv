@@ -19,7 +19,7 @@ module timeout_guard #(parameter TIMEOUT=4,TAG_BITS=4,MUTATION=0)(
    if(u_response && (u_ready_response || MUTATION==4))begin u_response<=0;state<=IDLE;end
    case(state)
     IDLE:if(u_valid && u_ready)begin
-     serial<=serial+1'b1;active_tag<=MUTATION==3 ? 0:serial+1'b1;saved<=u_data;state<=SEND;
+     serial<=serial+1'b1;active_tag<=MUTATION==3 ? 16'b0:16'(serial)+16'd1;saved<=u_data;state<=SEND;
     end
     SEND:if(d_ready)begin state<=WAIT;age<=0;end
     WAIT:begin

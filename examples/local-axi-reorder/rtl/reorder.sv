@@ -12,7 +12,7 @@ module reorder #(parameter MUTATION=0,SLOTS=2)(
  wire mem_awready,mem_wready,mem_arready,mem_bvalid,mem_rvalid,mem_rlast;wire[1:0]mem_bid,mem_bresp,mem_rid,mem_rresp;wire[31:0]mem_rdata;
  wire mem_bready,mem_rready;integer wc,rc;
  assign awready=mem_awready && wc<SLOTS;assign wready=mem_wready;assign arready=mem_arready && rc<SLOTS;
- axi4_ram memory(.clk(clk),.rst_n(rst_n),.awvalid(awvalid && wc<SLOTS),.awready(mem_awready),.awaddr(awaddr),.awlen(awlen),.awsize(awsize),.awburst(awburst),.awid(awid),.wvalid(wvalid),.wready(mem_wready),.wdata(wdata),.wstrb(wstrb),.wlast(wlast),.bvalid(mem_bvalid),.bready(mem_bready),.bid(mem_bid),.bresp(mem_bresp),.arvalid(arvalid && rc<SLOTS),.arready(mem_arready),.araddr(araddr),.arlen(arlen),.arsize(arsize),.arburst(arburst),.arid(arid),.rvalid(mem_rvalid),.rready(mem_rready),.rdata(mem_rdata),.rid(mem_rid),.rresp(mem_rresp),.rlast(mem_rlast));
+ axi4_ram ram(.clk(clk),.rst_n(rst_n),.awvalid(awvalid && wc<SLOTS),.awready(mem_awready),.awaddr(awaddr),.awlen(awlen),.awsize(awsize),.awburst(awburst),.awid(awid),.wvalid(wvalid),.wready(mem_wready),.wdata(wdata),.wstrb(wstrb),.wlast(wlast),.bvalid(mem_bvalid),.bready(mem_bready),.bid(mem_bid),.bresp(mem_bresp),.arvalid(arvalid && rc<SLOTS),.arready(mem_arready),.araddr(araddr),.arlen(arlen),.arsize(arsize),.arburst(arburst),.arid(arid),.rvalid(mem_rvalid),.rready(mem_rready),.rdata(mem_rdata),.rid(mem_rid),.rresp(mem_rresp),.rlast(mem_rlast));
  reg bb[0:SLOTS-1],rb[0:SLOTS-1],complete[0:SLOTS-1];reg[1:0]bi[0:SLOTS-1],br[0:SLOTS-1],ri[0:SLOTS-1],rr[0:SLOTS-1];
  reg[31:0]rd[0:SLOTS-1][0:3];integer bt[0:SLOTS-1],rt[0:SLOTS-1],length[0:SLOTS-1];
  integer bused,rused,bhold,rhold,rbeat,capture,cbeat,bfree,rfree,bpick,rpick;reg eligible;

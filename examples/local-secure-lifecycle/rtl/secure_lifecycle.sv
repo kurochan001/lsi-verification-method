@@ -86,12 +86,12 @@ module secure_lifecycle #(parameter MUTATION=0, ATTEMPT_LIMIT=3, DEBUG_KEY=16'ha
                         IRQ: if (secure) irq_bits <= irq_bits & ~wdata[1:0];
                         LOCK: if (write_test && wdata[0]) locked <= 1'b1;
                         DEBUG: if (debug_available && secure) begin
-                            if (debug_key == DEBUG_KEY) debug_unlocked <= 1'b1;
+                            if (int'(debug_key) == int'(DEBUG_KEY)) debug_unlocked <= 1'b1;
                             else begin
-                                if (attempts + 1 >= ATTEMPT_LIMIT) begin
+                                if (int'(attempts) + 1 >= ATTEMPT_LIMIT) begin
                                     debug_lockout <= 1'b1; irq_bits[1] <= 1'b1;
                                 end
-                                if (MUTATION != 2 && attempts < ATTEMPT_LIMIT) attempts <= attempts + 1'b1;
+                                if (MUTATION != 2 && int'(attempts) < ATTEMPT_LIMIT) attempts <= attempts + 1'b1;
                             end
                         end
                         default: begin end
