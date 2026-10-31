@@ -1,0 +1,4456 @@
+{
+  "schema_version": 1,
+  "scope": "Checked-in examples/**/rtl/**/*.sv and .v, including vendored DUTs. Testbenches, formal harnesses, generated HDL and gate netlists are outside this common DUT lint gate and are built by their respective runners. Mutations are deliberate negative fixtures, not production configurations.",
+  "configuration_policy": "Every declared DUT module at defaults plus explicit normal parameter variants; not exhaustive Cartesian enumeration. Embedded instance parameters elaborate with their parent top.",
+  "rtl_files": [
+    "examples/local-access-control/rtl/protected_regs.sv",
+    "examples/local-activation/rtl/pwl_activation.sv",
+    "examples/local-address-map/rtl/address_map.sv",
+    "examples/local-ahb/rtl/ahb_regs.sv",
+    "examples/local-apb-irq/rtl/apb_irq.sv",
+    "examples/local-apb-timer/rtl/apb_timer.sv",
+    "examples/local-apb-uart/rtl/apb_uart.sv",
+    "examples/local-apb/rtl/apb_regs.sv",
+    "examples/local-arbiter/rtl/rr_arbiter.sv",
+    "examples/local-async-fifo/rtl/async_fifo.sv",
+    "examples/local-axi-reorder/rtl/reorder.sv",
+    "examples/local-axi/rtl/axi_lite_regs.sv",
+    "examples/local-axi4/rtl/axi4_ram.sv",
+    "examples/local-axis/rtl/axis_packet_fifo.sv",
+    "examples/local-bus-bridge/rtl/bus_bridge.sv",
+    "examples/local-cache-coherence/rtl/coherent_pair.sv",
+    "examples/local-cache-dma/rtl/cache_dma.sv",
+    "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+    "examples/local-cdc-bridge/rtl/packet_fifo.sv",
+    "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
+    "examples/local-clock-reset/rtl/clock_reset.sv",
+    "examples/local-code-coverage/rtl/command_unit.sv",
+    "examples/local-compositional-formal/rtl/blocks.sv",
+    "examples/local-connectivity/rtl/soc_top.sv",
+    "examples/local-constant-time/rtl/constant_time_compare.sv",
+    "examples/local-conv-window/rtl/conv_window.sv",
+    "examples/local-counter-snapshot/rtl/counter.sv",
+    "examples/local-credit-link/rtl/credit_link.sv",
+    "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+    "examples/local-divider/rtl/divider.sv",
+    "examples/local-dma-ownership/rtl/owned_ring.sv",
+    "examples/local-dma/rtl/apb_dma.sv",
+    "examples/local-dram/rtl/dram_controller.sv",
+    "examples/local-dsp/rtl/fir2.sv",
+    "examples/local-ecc-memory/rtl/ecc_memory.sv",
+    "examples/local-ecc/rtl/secded.sv",
+    "examples/local-equivalence/rtl/fifo_pair.sv",
+    "examples/local-fifo/rtl/sync_fifo.sv",
+    "examples/local-gate-sim/rtl/burst_arbiter.sv",
+    "examples/local-i2c/rtl/i2c_target.sv",
+    "examples/local-interconnect/rtl/axi_interconnect.sv",
+    "examples/local-irq-cdc/rtl/cdc_receiver.sv",
+    "examples/local-irq-cdc/rtl/irq_pending.sv",
+    "examples/local-jtag-tap/rtl/jtag_tap.sv",
+    "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
+    "examples/local-mbist/rtl/mbist.sv",
+    "examples/local-mxfp4/rtl/mp_add.sv",
+    "examples/local-mxfp4/rtl/mp_bdp.sv",
+    "examples/local-mxfp4/rtl/mp_encoder.sv",
+    "examples/local-mxfp4/rtl/mp_gemm.sv",
+    "examples/local-mxfp4/rtl/mp_pkg.sv",
+    "examples/local-mxfp4/upstream/rtl/amax_tree32.sv",
+    "examples/local-mxfp4/upstream/rtl/e2m1_decode.sv",
+    "examples/local-mxfp4/upstream/rtl/e2m1_quantize.sv",
+    "examples/local-mxfp4/upstream/rtl/elem_mul.sv",
+    "examples/local-mxfp4/upstream/rtl/gemm_ctrl_fsm.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_bdp.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_bdp_fifo.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_fifo.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_nearfar.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_gemm_top.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_i2f.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv",
+    "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+    "examples/local-mxfp4/upstream/rtl/quant_encoder.sv",
+    "examples/local-mxfp4/upstream/rtl/reduce_tree.sv",
+    "examples/local-mxfp4/upstream/rtl/scale_add.sv",
+    "examples/local-packet-crc/rtl/crc.sv",
+    "examples/local-packet-switch/rtl/packet_switch.sv",
+    "examples/local-performance-monitor/rtl/perf_monitor.sv",
+    "examples/local-power/rtl/power_island.sv",
+    "examples/local-priority-irq/rtl/priority_irq.sv",
+    "examples/local-progress/rtl/bounded_server.sv",
+    "examples/local-recovery/rtl/timeout_guard.sv",
+    "examples/local-reduction/rtl/reduction_irq.sv",
+    "examples/local-requantize/rtl/requantize.sv",
+    "examples/local-retry-link/rtl/crc9.sv",
+    "examples/local-retry-link/rtl/retry_receiver.sv",
+    "examples/local-retry-link/rtl/retry_sender.sv",
+    "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+    "examples/local-riscv-iss/rtl/rv32i_core.sv",
+    "examples/local-riscv-pmp/rtl/pmp.sv",
+    "examples/local-scan-atpg/rtl/scan_logic.sv",
+    "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+    "examples/local-sha256/rtl/sha256_engine.sv",
+    "examples/local-spi/rtl/spi_master.sv",
+    "examples/local-store-buffer/rtl/store_buffer.sv",
+    "examples/local-stream-dma/rtl/stream_dma.sv",
+    "examples/local-stream/rtl/stream_buffer.sv",
+    "examples/local-sv32/rtl/sv32_walk.sv",
+    "examples/local-systolic-array/rtl/systolic_array.sv",
+    "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+    "examples/local-tlb/rtl/sv32_tlb.sv",
+    "examples/local-topk/rtl/topk_select.sv",
+    "examples/local-uart/rtl/uart.sv",
+    "examples/local-uvm-coordination/rtl/gain_pipe.sv",
+    "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
+    "examples/local-width-converter/rtl/axi_width64to32.sv"
+  ],
+  "targets": [
+    {
+      "id": "local-address-map/address_map/default",
+      "file": "examples/local-address-map/rtl/address_map.sv",
+      "top": "address_map",
+      "parameters": {},
+      "sources": [
+        "examples/local-address-map/rtl/address_map.sv"
+      ]
+    },
+    {
+      "id": "local-address-map/address_map/ALIAS=0",
+      "file": "examples/local-address-map/rtl/address_map.sv",
+      "top": "address_map",
+      "parameters": {
+        "ALIAS": 0
+      },
+      "sources": [
+        "examples/local-address-map/rtl/address_map.sv"
+      ]
+    },
+    {
+      "id": "local-address-map/address_map/ALIAS=1",
+      "file": "examples/local-address-map/rtl/address_map.sv",
+      "top": "address_map",
+      "parameters": {
+        "ALIAS": 1
+      },
+      "sources": [
+        "examples/local-address-map/rtl/address_map.sv"
+      ]
+    },
+    {
+      "id": "local-ahb/ahb_regs/default",
+      "file": "examples/local-ahb/rtl/ahb_regs.sv",
+      "top": "ahb_regs",
+      "parameters": {},
+      "sources": [
+        "examples/local-ahb/rtl/ahb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-ahb/ahb_regs/WAIT_CYCLES=0",
+      "file": "examples/local-ahb/rtl/ahb_regs.sv",
+      "top": "ahb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-ahb/rtl/ahb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-ahb/ahb_regs/WAIT_CYCLES=1",
+      "file": "examples/local-ahb/rtl/ahb_regs.sv",
+      "top": "ahb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-ahb/rtl/ahb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-ahb/ahb_regs/WAIT_CYCLES=3",
+      "file": "examples/local-ahb/rtl/ahb_regs.sv",
+      "top": "ahb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 3
+      },
+      "sources": [
+        "examples/local-ahb/rtl/ahb_regs.sv"
+      ]
+    },
+    {
+      "id": "upstream/amax_tree32/default",
+      "file": "examples/local-mxfp4/upstream/rtl/amax_tree32.sv",
+      "top": "amax_tree32",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/amax_tree32.sv"
+      ]
+    },
+    {
+      "id": "local-dma/apb_dma/default",
+      "file": "examples/local-dma/rtl/apb_dma.sv",
+      "top": "apb_dma",
+      "parameters": {},
+      "sources": [
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-apb-irq/apb_irq/default",
+      "file": "examples/local-apb-irq/rtl/apb_irq.sv",
+      "top": "apb_irq",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb-irq/rtl/apb_irq.sv",
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb-irq/apb_irq/WAIT_CYCLES=0",
+      "file": "examples/local-apb-irq/rtl/apb_irq.sv",
+      "top": "apb_irq",
+      "parameters": {
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-irq/rtl/apb_irq.sv",
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb-irq/apb_irq/WAIT_CYCLES=1",
+      "file": "examples/local-apb-irq/rtl/apb_irq.sv",
+      "top": "apb_irq",
+      "parameters": {
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-apb-irq/rtl/apb_irq.sv",
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb-irq/apb_irq/WAIT_CYCLES=3",
+      "file": "examples/local-apb-irq/rtl/apb_irq.sv",
+      "top": "apb_irq",
+      "parameters": {
+        "WAIT_CYCLES": 3
+      },
+      "sources": [
+        "examples/local-apb-irq/rtl/apb_irq.sv",
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb/apb_regs/default",
+      "file": "examples/local-apb/rtl/apb_regs.sv",
+      "top": "apb_regs",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb/apb_regs/WAIT_CYCLES=0",
+      "file": "examples/local-apb/rtl/apb_regs.sv",
+      "top": "apb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb/apb_regs/WAIT_CYCLES=1",
+      "file": "examples/local-apb/rtl/apb_regs.sv",
+      "top": "apb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb/apb_regs/WAIT_CYCLES=2",
+      "file": "examples/local-apb/rtl/apb_regs.sv",
+      "top": "apb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb/apb_regs/WAIT_CYCLES=3",
+      "file": "examples/local-apb/rtl/apb_regs.sv",
+      "top": "apb_regs",
+      "parameters": {
+        "WAIT_CYCLES": 3
+      },
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/default",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/WAIT_CYCLES=0",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=4",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {
+        "WAIT_CYCLES": 0,
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=8",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {
+        "WAIT_CYCLES": 0,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/WAIT_CYCLES=2",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=4",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {
+        "WAIT_CYCLES": 2,
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=8",
+      "file": "examples/local-apb-timer/rtl/apb_timer.sv",
+      "top": "apb_timer",
+      "parameters": {
+        "WAIT_CYCLES": 2,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/default",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=0",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 0,
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=1",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 0,
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=3",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 0,
+        "WAIT_CYCLES": 3
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=0",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 1,
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=1",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 1,
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=3",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 1,
+        "WAIT_CYCLES": 3
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=0",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 2,
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=1",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 2,
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=3",
+      "file": "examples/local-apb-uart/rtl/apb_uart.sv",
+      "top": "apb_uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 2,
+        "WAIT_CYCLES": 3
+      },
+      "sources": [
+        "examples/local-apb-uart/rtl/apb_uart.sv",
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-async-fifo/async_fifo/default",
+      "file": "examples/local-async-fifo/rtl/async_fifo.sv",
+      "top": "async_fifo",
+      "parameters": {},
+      "sources": [
+        "examples/local-async-fifo/rtl/async_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-async-fifo/async_fifo/DEPTH=4/SYNC_STAGES=2",
+      "file": "examples/local-async-fifo/rtl/async_fifo.sv",
+      "top": "async_fifo",
+      "parameters": {
+        "DEPTH": 4,
+        "SYNC_STAGES": 2
+      },
+      "sources": [
+        "examples/local-async-fifo/rtl/async_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-async-fifo/async_fifo/DEPTH=4/SYNC_STAGES=3",
+      "file": "examples/local-async-fifo/rtl/async_fifo.sv",
+      "top": "async_fifo",
+      "parameters": {
+        "DEPTH": 4,
+        "SYNC_STAGES": 3
+      },
+      "sources": [
+        "examples/local-async-fifo/rtl/async_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-async-fifo/async_fifo/DEPTH=8/SYNC_STAGES=2",
+      "file": "examples/local-async-fifo/rtl/async_fifo.sv",
+      "top": "async_fifo",
+      "parameters": {
+        "DEPTH": 8,
+        "SYNC_STAGES": 2
+      },
+      "sources": [
+        "examples/local-async-fifo/rtl/async_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-async-fifo/async_fifo/DEPTH=8/SYNC_STAGES=3",
+      "file": "examples/local-async-fifo/rtl/async_fifo.sv",
+      "top": "async_fifo",
+      "parameters": {
+        "DEPTH": 8,
+        "SYNC_STAGES": 3
+      },
+      "sources": [
+        "examples/local-async-fifo/rtl/async_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-axi4/axi4_ram/default",
+      "file": "examples/local-axi4/rtl/axi4_ram.sv",
+      "top": "axi4_ram",
+      "parameters": {},
+      "sources": [
+        "examples/local-axi4/rtl/axi4_ram.sv"
+      ]
+    },
+    {
+      "id": "local-axi4/axi4_ram/MEM_BYTES=16",
+      "file": "examples/local-axi4/rtl/axi4_ram.sv",
+      "top": "axi4_ram",
+      "parameters": {
+        "MEM_BYTES": 16
+      },
+      "sources": [
+        "examples/local-axi4/rtl/axi4_ram.sv"
+      ]
+    },
+    {
+      "id": "local-axi4/axi4_ram/MEM_BYTES=32",
+      "file": "examples/local-axi4/rtl/axi4_ram.sv",
+      "top": "axi4_ram",
+      "parameters": {
+        "MEM_BYTES": 32
+      },
+      "sources": [
+        "examples/local-axi4/rtl/axi4_ram.sv"
+      ]
+    },
+    {
+      "id": "local-interconnect/axi_interconnect/default",
+      "file": "examples/local-interconnect/rtl/axi_interconnect.sv",
+      "top": "axi_interconnect",
+      "parameters": {},
+      "sources": [
+        "examples/local-axi4/rtl/axi4_ram.sv",
+        "examples/local-interconnect/rtl/axi_interconnect.sv"
+      ]
+    },
+    {
+      "id": "local-axi/axi_lite_regs/default",
+      "file": "examples/local-axi/rtl/axi_lite_regs.sv",
+      "top": "axi_lite_regs",
+      "parameters": {},
+      "sources": [
+        "examples/local-axi/rtl/axi_lite_regs.sv"
+      ]
+    },
+    {
+      "id": "local-axi/axi_lite_regs/RESP_DELAY=0",
+      "file": "examples/local-axi/rtl/axi_lite_regs.sv",
+      "top": "axi_lite_regs",
+      "parameters": {
+        "RESP_DELAY": 0
+      },
+      "sources": [
+        "examples/local-axi/rtl/axi_lite_regs.sv"
+      ]
+    },
+    {
+      "id": "local-axi/axi_lite_regs/RESP_DELAY=2",
+      "file": "examples/local-axi/rtl/axi_lite_regs.sv",
+      "top": "axi_lite_regs",
+      "parameters": {
+        "RESP_DELAY": 2
+      },
+      "sources": [
+        "examples/local-axi/rtl/axi_lite_regs.sv"
+      ]
+    },
+    {
+      "id": "local-width-converter/axi_width64to32/default",
+      "file": "examples/local-width-converter/rtl/axi_width64to32.sv",
+      "top": "axi_width64to32",
+      "parameters": {},
+      "sources": [
+        "examples/local-width-converter/rtl/axi_width64to32.sv"
+      ]
+    },
+    {
+      "id": "local-axis/axis_packet_fifo/default",
+      "file": "examples/local-axis/rtl/axis_packet_fifo.sv",
+      "top": "axis_packet_fifo",
+      "parameters": {},
+      "sources": [
+        "examples/local-axis/rtl/axis_packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-axis/axis_packet_fifo/DEPTH=2",
+      "file": "examples/local-axis/rtl/axis_packet_fifo.sv",
+      "top": "axis_packet_fifo",
+      "parameters": {
+        "DEPTH": 2
+      },
+      "sources": [
+        "examples/local-axis/rtl/axis_packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-axis/axis_packet_fifo/DEPTH=4",
+      "file": "examples/local-axis/rtl/axis_packet_fifo.sv",
+      "top": "axis_packet_fifo",
+      "parameters": {
+        "DEPTH": 4
+      },
+      "sources": [
+        "examples/local-axis/rtl/axis_packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-progress/bounded_server/default",
+      "file": "examples/local-progress/rtl/bounded_server.sv",
+      "top": "bounded_server",
+      "parameters": {},
+      "sources": [
+        "examples/local-progress/rtl/bounded_server.sv"
+      ]
+    },
+    {
+      "id": "local-progress/bounded_server/SERVICE=1",
+      "file": "examples/local-progress/rtl/bounded_server.sv",
+      "top": "bounded_server",
+      "parameters": {
+        "SERVICE": 1
+      },
+      "sources": [
+        "examples/local-progress/rtl/bounded_server.sv"
+      ]
+    },
+    {
+      "id": "local-progress/bounded_server/SERVICE=2",
+      "file": "examples/local-progress/rtl/bounded_server.sv",
+      "top": "bounded_server",
+      "parameters": {
+        "SERVICE": 2
+      },
+      "sources": [
+        "examples/local-progress/rtl/bounded_server.sv"
+      ]
+    },
+    {
+      "id": "local-gate-sim/burst_arbiter/default",
+      "file": "examples/local-gate-sim/rtl/burst_arbiter.sv",
+      "top": "burst_arbiter",
+      "parameters": {},
+      "sources": [
+        "examples/local-gate-sim/rtl/burst_arbiter.sv"
+      ]
+    },
+    {
+      "id": "local-bus-bridge/bus_bridge/default",
+      "file": "examples/local-bus-bridge/rtl/bus_bridge.sv",
+      "top": "bus_bridge",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-bus-bridge/rtl/bus_bridge.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=0",
+      "file": "examples/local-bus-bridge/rtl/bus_bridge.sv",
+      "top": "bus_bridge",
+      "parameters": {
+        "BUS": 0,
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-bus-bridge/rtl/bus_bridge.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=2",
+      "file": "examples/local-bus-bridge/rtl/bus_bridge.sv",
+      "top": "bus_bridge",
+      "parameters": {
+        "BUS": 0,
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-bus-bridge/rtl/bus_bridge.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=0",
+      "file": "examples/local-bus-bridge/rtl/bus_bridge.sv",
+      "top": "bus_bridge",
+      "parameters": {
+        "BUS": 1,
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-bus-bridge/rtl/bus_bridge.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=2",
+      "file": "examples/local-bus-bridge/rtl/bus_bridge.sv",
+      "top": "bus_bridge",
+      "parameters": {
+        "BUS": 1,
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-bus-bridge/rtl/bus_bridge.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-cache-dma/cache_dma/default",
+      "file": "examples/local-cache-dma/rtl/cache_dma.sv",
+      "top": "cache_dma",
+      "parameters": {},
+      "sources": [
+        "examples/local-cache-dma/rtl/cache_dma.sv"
+      ]
+    },
+    {
+      "id": "local-cache-dma/cache_dma/LATENCY=1/LINES=1",
+      "file": "examples/local-cache-dma/rtl/cache_dma.sv",
+      "top": "cache_dma",
+      "parameters": {
+        "LATENCY": 1,
+        "LINES": 1
+      },
+      "sources": [
+        "examples/local-cache-dma/rtl/cache_dma.sv"
+      ]
+    },
+    {
+      "id": "local-cache-dma/cache_dma/LATENCY=3/LINES=2",
+      "file": "examples/local-cache-dma/rtl/cache_dma.sv",
+      "top": "cache_dma",
+      "parameters": {
+        "LATENCY": 3,
+        "LINES": 2
+      },
+      "sources": [
+        "examples/local-cache-dma/rtl/cache_dma.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge/cdc_apb_bridge/default",
+      "file": "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+      "top": "cdc_apb_bridge",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+        "examples/local-cdc-bridge/rtl/packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=2/WAIT_CYCLES=2",
+      "file": "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+      "top": "cdc_apb_bridge",
+      "parameters": {
+        "SYNC_STAGES": 2,
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+        "examples/local-cdc-bridge/rtl/packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=3/WAIT_CYCLES=0",
+      "file": "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+      "top": "cdc_apb_bridge",
+      "parameters": {
+        "SYNC_STAGES": 3,
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
+        "examples/local-cdc-bridge/rtl/packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-handshake/cdc_handshake/default",
+      "file": "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
+      "top": "cdc_handshake",
+      "parameters": {},
+      "sources": [
+        "examples/local-cdc-handshake/rtl/cdc_handshake.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-handshake/cdc_handshake/SYNC_STAGES=2",
+      "file": "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
+      "top": "cdc_handshake",
+      "parameters": {
+        "SYNC_STAGES": 2
+      },
+      "sources": [
+        "examples/local-cdc-handshake/rtl/cdc_handshake.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-handshake/cdc_handshake/SYNC_STAGES=3",
+      "file": "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
+      "top": "cdc_handshake",
+      "parameters": {
+        "SYNC_STAGES": 3
+      },
+      "sources": [
+        "examples/local-cdc-handshake/rtl/cdc_handshake.sv"
+      ]
+    },
+    {
+      "id": "local-irq-cdc/cdc_receiver/default",
+      "file": "examples/local-irq-cdc/rtl/cdc_receiver.sv",
+      "top": "cdc_receiver",
+      "parameters": {},
+      "sources": [
+        "examples/local-irq-cdc/rtl/cdc_receiver.sv"
+      ]
+    },
+    {
+      "id": "local-clock-reset/clock_reset/default",
+      "file": "examples/local-clock-reset/rtl/clock_reset.sv",
+      "top": "clock_reset",
+      "parameters": {},
+      "sources": [
+        "examples/local-clock-reset/rtl/clock_reset.sv"
+      ]
+    },
+    {
+      "id": "local-clock-reset/clock_reset/LATENCY=4/STAGES=2",
+      "file": "examples/local-clock-reset/rtl/clock_reset.sv",
+      "top": "clock_reset",
+      "parameters": {
+        "LATENCY": 4,
+        "STAGES": 2
+      },
+      "sources": [
+        "examples/local-clock-reset/rtl/clock_reset.sv"
+      ]
+    },
+    {
+      "id": "local-clock-reset/clock_reset/LATENCY=4/STAGES=3",
+      "file": "examples/local-clock-reset/rtl/clock_reset.sv",
+      "top": "clock_reset",
+      "parameters": {
+        "LATENCY": 4,
+        "STAGES": 3
+      },
+      "sources": [
+        "examples/local-clock-reset/rtl/clock_reset.sv"
+      ]
+    },
+    {
+      "id": "local-cache-coherence/coherent_pair/default",
+      "file": "examples/local-cache-coherence/rtl/coherent_pair.sv",
+      "top": "coherent_pair",
+      "parameters": {},
+      "sources": [
+        "examples/local-cache-coherence/rtl/coherent_pair.sv"
+      ]
+    },
+    {
+      "id": "local-cache-coherence/coherent_pair/LATENCY=1",
+      "file": "examples/local-cache-coherence/rtl/coherent_pair.sv",
+      "top": "coherent_pair",
+      "parameters": {
+        "LATENCY": 1
+      },
+      "sources": [
+        "examples/local-cache-coherence/rtl/coherent_pair.sv"
+      ]
+    },
+    {
+      "id": "local-cache-coherence/coherent_pair/LATENCY=3",
+      "file": "examples/local-cache-coherence/rtl/coherent_pair.sv",
+      "top": "coherent_pair",
+      "parameters": {
+        "LATENCY": 3
+      },
+      "sources": [
+        "examples/local-cache-coherence/rtl/coherent_pair.sv"
+      ]
+    },
+    {
+      "id": "local-code-coverage/command_unit/default",
+      "file": "examples/local-code-coverage/rtl/command_unit.sv",
+      "top": "command_unit",
+      "parameters": {},
+      "sources": [
+        "examples/local-code-coverage/rtl/command_unit.sv"
+      ]
+    },
+    {
+      "id": "local-constant-time/constant_time_compare/default",
+      "file": "examples/local-constant-time/rtl/constant_time_compare.sv",
+      "top": "constant_time_compare",
+      "parameters": {},
+      "sources": [
+        "examples/local-constant-time/rtl/constant_time_compare.sv"
+      ]
+    },
+    {
+      "id": "local-constant-time/constant_time_compare/BYTES=2",
+      "file": "examples/local-constant-time/rtl/constant_time_compare.sv",
+      "top": "constant_time_compare",
+      "parameters": {
+        "BYTES": 2
+      },
+      "sources": [
+        "examples/local-constant-time/rtl/constant_time_compare.sv"
+      ]
+    },
+    {
+      "id": "local-constant-time/constant_time_compare/BYTES=4",
+      "file": "examples/local-constant-time/rtl/constant_time_compare.sv",
+      "top": "constant_time_compare",
+      "parameters": {
+        "BYTES": 4
+      },
+      "sources": [
+        "examples/local-constant-time/rtl/constant_time_compare.sv"
+      ]
+    },
+    {
+      "id": "local-conv-window/conv_window/default",
+      "file": "examples/local-conv-window/rtl/conv_window.sv",
+      "top": "conv_window",
+      "parameters": {},
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv"
+      ]
+    },
+    {
+      "id": "local-conv-window/conv_window/H=4/STRIDE=1/W=5",
+      "file": "examples/local-conv-window/rtl/conv_window.sv",
+      "top": "conv_window",
+      "parameters": {
+        "H": 4,
+        "STRIDE": 1,
+        "W": 5
+      },
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv"
+      ]
+    },
+    {
+      "id": "local-conv-window/conv_window/H=5/STRIDE=2/W=7",
+      "file": "examples/local-conv-window/rtl/conv_window.sv",
+      "top": "conv_window",
+      "parameters": {
+        "H": 5,
+        "STRIDE": 2,
+        "W": 7
+      },
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv"
+      ]
+    },
+    {
+      "id": "local-counter-snapshot/counter/default",
+      "file": "examples/local-counter-snapshot/rtl/counter.sv",
+      "top": "counter",
+      "parameters": {},
+      "sources": [
+        "examples/local-counter-snapshot/rtl/counter.sv"
+      ]
+    },
+    {
+      "id": "local-counter-snapshot/counter/WAIT_CYCLES=0",
+      "file": "examples/local-counter-snapshot/rtl/counter.sv",
+      "top": "counter",
+      "parameters": {
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-counter-snapshot/rtl/counter.sv"
+      ]
+    },
+    {
+      "id": "local-counter-snapshot/counter/WAIT_CYCLES=2",
+      "file": "examples/local-counter-snapshot/rtl/counter.sv",
+      "top": "counter",
+      "parameters": {
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-counter-snapshot/rtl/counter.sv"
+      ]
+    },
+    {
+      "id": "local-packet-crc/crc/default",
+      "file": "examples/local-packet-crc/rtl/crc.sv",
+      "top": "crc",
+      "parameters": {},
+      "sources": [
+        "examples/local-packet-crc/rtl/crc.sv"
+      ]
+    },
+    {
+      "id": "local-packet-crc/crc/INIT=0",
+      "file": "examples/local-packet-crc/rtl/crc.sv",
+      "top": "crc",
+      "parameters": {
+        "INIT": 0
+      },
+      "sources": [
+        "examples/local-packet-crc/rtl/crc.sv"
+      ]
+    },
+    {
+      "id": "local-packet-crc/crc/INIT=255",
+      "file": "examples/local-packet-crc/rtl/crc.sv",
+      "top": "crc",
+      "parameters": {
+        "INIT": 255
+      },
+      "sources": [
+        "examples/local-packet-crc/rtl/crc.sv"
+      ]
+    },
+    {
+      "id": "local-retry-link/crc9/default",
+      "file": "examples/local-retry-link/rtl/crc9.sv",
+      "top": "crc9",
+      "parameters": {},
+      "sources": [
+        "examples/local-retry-link/rtl/crc9.sv"
+      ]
+    },
+    {
+      "id": "local-credit-link/credit_link/default",
+      "file": "examples/local-credit-link/rtl/credit_link.sv",
+      "top": "credit_link",
+      "parameters": {},
+      "sources": [
+        "examples/local-credit-link/rtl/credit_link.sv"
+      ]
+    },
+    {
+      "id": "local-credit-link/credit_link/DEPTH=2",
+      "file": "examples/local-credit-link/rtl/credit_link.sv",
+      "top": "credit_link",
+      "parameters": {
+        "DEPTH": 2
+      },
+      "sources": [
+        "examples/local-credit-link/rtl/credit_link.sv"
+      ]
+    },
+    {
+      "id": "local-credit-link/credit_link/DEPTH=4",
+      "file": "examples/local-credit-link/rtl/credit_link.sv",
+      "top": "credit_link",
+      "parameters": {
+        "DEPTH": 4
+      },
+      "sources": [
+        "examples/local-credit-link/rtl/credit_link.sv"
+      ]
+    },
+    {
+      "id": "local-descriptor-dma/descriptor_dma/default",
+      "file": "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+      "top": "descriptor_dma",
+      "parameters": {},
+      "sources": [
+        "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-descriptor-dma/descriptor_dma/DEPTH=2",
+      "file": "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+      "top": "descriptor_dma",
+      "parameters": {
+        "DEPTH": 2
+      },
+      "sources": [
+        "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-descriptor-dma/descriptor_dma/DEPTH=4",
+      "file": "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+      "top": "descriptor_dma",
+      "parameters": {
+        "DEPTH": 4
+      },
+      "sources": [
+        "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-divider/divider/default",
+      "file": "examples/local-divider/rtl/divider.sv",
+      "top": "divider",
+      "parameters": {},
+      "sources": [
+        "examples/local-divider/rtl/divider.sv"
+      ]
+    },
+    {
+      "id": "local-divider/divider/W=4",
+      "file": "examples/local-divider/rtl/divider.sv",
+      "top": "divider",
+      "parameters": {
+        "W": 4
+      },
+      "sources": [
+        "examples/local-divider/rtl/divider.sv"
+      ]
+    },
+    {
+      "id": "local-divider/divider/W=8",
+      "file": "examples/local-divider/rtl/divider.sv",
+      "top": "divider",
+      "parameters": {
+        "W": 8
+      },
+      "sources": [
+        "examples/local-divider/rtl/divider.sv"
+      ]
+    },
+    {
+      "id": "local-divider/divider/W=32",
+      "file": "examples/local-divider/rtl/divider.sv",
+      "top": "divider",
+      "parameters": {
+        "W": 32
+      },
+      "sources": [
+        "examples/local-divider/rtl/divider.sv"
+      ]
+    },
+    {
+      "id": "local-dram/dram_controller/default",
+      "file": "examples/local-dram/rtl/dram_controller.sv",
+      "top": "dram_controller",
+      "parameters": {},
+      "sources": [
+        "examples/local-dram/rtl/dram_controller.sv"
+      ]
+    },
+    {
+      "id": "local-dram/dram_controller/CL=2/TRAS=3/TRCD=2/TREFI=24/TRFC=5/TRP=2/TWR=6",
+      "file": "examples/local-dram/rtl/dram_controller.sv",
+      "top": "dram_controller",
+      "parameters": {
+        "CL": 2,
+        "TRAS": 3,
+        "TRCD": 2,
+        "TREFI": 24,
+        "TRFC": 5,
+        "TRP": 2,
+        "TWR": 6
+      },
+      "sources": [
+        "examples/local-dram/rtl/dram_controller.sv"
+      ]
+    },
+    {
+      "id": "local-dram/dram_controller/CL=3/TRAS=5/TRCD=3/TREFI=36/TRFC=7/TRP=3/TWR=8",
+      "file": "examples/local-dram/rtl/dram_controller.sv",
+      "top": "dram_controller",
+      "parameters": {
+        "CL": 3,
+        "TRAS": 5,
+        "TRCD": 3,
+        "TREFI": 36,
+        "TRFC": 7,
+        "TRP": 3,
+        "TWR": 8
+      },
+      "sources": [
+        "examples/local-dram/rtl/dram_controller.sv"
+      ]
+    },
+    {
+      "id": "upstream/e2m1_decode/default",
+      "file": "examples/local-mxfp4/upstream/rtl/e2m1_decode.sv",
+      "top": "e2m1_decode",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_decode.sv"
+      ]
+    },
+    {
+      "id": "upstream/e2m1_quantize/default",
+      "file": "examples/local-mxfp4/upstream/rtl/e2m1_quantize.sv",
+      "top": "e2m1_quantize",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_quantize.sv"
+      ]
+    },
+    {
+      "id": "local-ecc-memory/ecc_memory/default",
+      "file": "examples/local-ecc-memory/rtl/ecc_memory.sv",
+      "top": "ecc_memory",
+      "parameters": {},
+      "sources": [
+        "examples/local-ecc-memory/rtl/ecc_memory.sv",
+        "examples/local-ecc/rtl/secded.sv"
+      ]
+    },
+    {
+      "id": "local-ecc-memory/ecc_memory/DEPTH=4",
+      "file": "examples/local-ecc-memory/rtl/ecc_memory.sv",
+      "top": "ecc_memory",
+      "parameters": {
+        "DEPTH": 4
+      },
+      "sources": [
+        "examples/local-ecc-memory/rtl/ecc_memory.sv",
+        "examples/local-ecc/rtl/secded.sv"
+      ]
+    },
+    {
+      "id": "local-ecc-memory/ecc_memory/DEPTH=8",
+      "file": "examples/local-ecc-memory/rtl/ecc_memory.sv",
+      "top": "ecc_memory",
+      "parameters": {
+        "DEPTH": 8
+      },
+      "sources": [
+        "examples/local-ecc-memory/rtl/ecc_memory.sv",
+        "examples/local-ecc/rtl/secded.sv"
+      ]
+    },
+    {
+      "id": "upstream/elem_mul/default",
+      "file": "examples/local-mxfp4/upstream/rtl/elem_mul.sv",
+      "top": "elem_mul",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/elem_mul.sv"
+      ]
+    },
+    {
+      "id": "local-equivalence/fifo_gold/default",
+      "file": "examples/local-equivalence/rtl/fifo_pair.sv",
+      "top": "fifo_gold",
+      "parameters": {},
+      "sources": [
+        "examples/local-equivalence/rtl/fifo_pair.sv"
+      ]
+    },
+    {
+      "id": "local-equivalence/fifo_gold/DEPTH=2/WIDTH=4",
+      "file": "examples/local-equivalence/rtl/fifo_pair.sv",
+      "top": "fifo_gold",
+      "parameters": {
+        "DEPTH": 2,
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-equivalence/rtl/fifo_pair.sv"
+      ]
+    },
+    {
+      "id": "local-equivalence/fifo_gold/DEPTH=4/WIDTH=4",
+      "file": "examples/local-equivalence/rtl/fifo_pair.sv",
+      "top": "fifo_gold",
+      "parameters": {
+        "DEPTH": 4,
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-equivalence/rtl/fifo_pair.sv"
+      ]
+    },
+    {
+      "id": "local-equivalence/fifo_optimized/default",
+      "file": "examples/local-equivalence/rtl/fifo_pair.sv",
+      "top": "fifo_optimized",
+      "parameters": {},
+      "sources": [
+        "examples/local-equivalence/rtl/fifo_pair.sv"
+      ]
+    },
+    {
+      "id": "local-equivalence/fifo_optimized/DEPTH=2/WIDTH=4",
+      "file": "examples/local-equivalence/rtl/fifo_pair.sv",
+      "top": "fifo_optimized",
+      "parameters": {
+        "DEPTH": 2,
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-equivalence/rtl/fifo_pair.sv"
+      ]
+    },
+    {
+      "id": "local-equivalence/fifo_optimized/DEPTH=4/WIDTH=4",
+      "file": "examples/local-equivalence/rtl/fifo_pair.sv",
+      "top": "fifo_optimized",
+      "parameters": {
+        "DEPTH": 4,
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-equivalence/rtl/fifo_pair.sv"
+      ]
+    },
+    {
+      "id": "local-dsp/fir2/default",
+      "file": "examples/local-dsp/rtl/fir2.sv",
+      "top": "fir2",
+      "parameters": {},
+      "sources": [
+        "examples/local-dsp/rtl/fir2.sv"
+      ]
+    },
+    {
+      "id": "local-dsp/fir2/FRAC=3/LATENCY=1",
+      "file": "examples/local-dsp/rtl/fir2.sv",
+      "top": "fir2",
+      "parameters": {
+        "FRAC": 3,
+        "LATENCY": 1
+      },
+      "sources": [
+        "examples/local-dsp/rtl/fir2.sv"
+      ]
+    },
+    {
+      "id": "local-dsp/fir2/FRAC=4/LATENCY=3",
+      "file": "examples/local-dsp/rtl/fir2.sv",
+      "top": "fir2",
+      "parameters": {
+        "FRAC": 4,
+        "LATENCY": 3
+      },
+      "sources": [
+        "examples/local-dsp/rtl/fir2.sv"
+      ]
+    },
+    {
+      "id": "local-uvm-coordination/gain_pipe/default",
+      "file": "examples/local-uvm-coordination/rtl/gain_pipe.sv",
+      "top": "gain_pipe",
+      "parameters": {},
+      "sources": [
+        "examples/local-uvm-coordination/rtl/gain_pipe.sv"
+      ]
+    },
+    {
+      "id": "upstream/gemm_ctrl_fsm/default",
+      "file": "examples/local-mxfp4/upstream/rtl/gemm_ctrl_fsm.sv",
+      "top": "gemm_ctrl_fsm",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/gemm_ctrl_fsm.sv"
+      ]
+    },
+    {
+      "id": "local-i2c/i2c_target/default",
+      "file": "examples/local-i2c/rtl/i2c_target.sv",
+      "top": "i2c_target",
+      "parameters": {},
+      "sources": [
+        "examples/local-i2c/rtl/i2c_target.sv"
+      ]
+    },
+    {
+      "id": "local-irq-cdc/irq_pending/default",
+      "file": "examples/local-irq-cdc/rtl/irq_pending.sv",
+      "top": "irq_pending",
+      "parameters": {},
+      "sources": [
+        "examples/local-irq-cdc/rtl/irq_pending.sv"
+      ]
+    },
+    {
+      "id": "local-jtag-tap/jtag_tap/default",
+      "file": "examples/local-jtag-tap/rtl/jtag_tap.sv",
+      "top": "jtag_tap",
+      "parameters": {},
+      "sources": [
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ]
+    },
+    {
+      "id": "local-jtag-tap/jtag_tap/IDCODE=305419897",
+      "file": "examples/local-jtag-tap/rtl/jtag_tap.sv",
+      "top": "jtag_tap",
+      "parameters": {
+        "IDCODE": 305419897
+      },
+      "sources": [
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ]
+    },
+    {
+      "id": "local-jtag-tap/jtag_tap/IDCODE=3735928559",
+      "file": "examples/local-jtag-tap/rtl/jtag_tap.sv",
+      "top": "jtag_tap",
+      "parameters": {
+        "IDCODE": 3735928559
+      },
+      "sources": [
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ]
+    },
+    {
+      "id": "local-lockstep-monitor/lockstep_monitor/default",
+      "file": "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
+      "top": "lockstep_monitor",
+      "parameters": {},
+      "sources": [
+        "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv"
+      ]
+    },
+    {
+      "id": "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=0",
+      "file": "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
+      "top": "lockstep_monitor",
+      "parameters": {
+        "FAULT_BIT": 0
+      },
+      "sources": [
+        "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv"
+      ]
+    },
+    {
+      "id": "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=7",
+      "file": "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
+      "top": "lockstep_monitor",
+      "parameters": {
+        "FAULT_BIT": 7
+      },
+      "sources": [
+        "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv"
+      ]
+    },
+    {
+      "id": "local-mbist/mbist/default",
+      "file": "examples/local-mbist/rtl/mbist.sv",
+      "top": "mbist",
+      "parameters": {},
+      "sources": [
+        "examples/local-mbist/rtl/mbist.sv"
+      ]
+    },
+    {
+      "id": "local-mbist/mbist/DEPTH=8",
+      "file": "examples/local-mbist/rtl/mbist.sv",
+      "top": "mbist",
+      "parameters": {
+        "DEPTH": 8
+      },
+      "sources": [
+        "examples/local-mbist/rtl/mbist.sv"
+      ]
+    },
+    {
+      "id": "local-mbist/mbist/DEPTH=16",
+      "file": "examples/local-mbist/rtl/mbist.sv",
+      "top": "mbist",
+      "parameters": {
+        "DEPTH": 16
+      },
+      "sources": [
+        "examples/local-mbist/rtl/mbist.sv"
+      ]
+    },
+    {
+      "id": "local-mxfp4/mp_add/default",
+      "file": "examples/local-mxfp4/rtl/mp_add.sv",
+      "top": "mp_add",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/rtl/mp_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/rtl/mp_add.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv"
+      ]
+    },
+    {
+      "id": "local-mxfp4/mp_bdp/default",
+      "file": "examples/local-mxfp4/rtl/mp_bdp.sv",
+      "top": "mp_bdp",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/rtl/mp_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/rtl/mp_add.sv",
+        "examples/local-mxfp4/rtl/mp_bdp.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv"
+      ]
+    },
+    {
+      "id": "local-mxfp4/mp_encoder/default",
+      "file": "examples/local-mxfp4/rtl/mp_encoder.sv",
+      "top": "mp_encoder",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/rtl/mp_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/rtl/mp_encoder.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_quantize.sv"
+      ]
+    },
+    {
+      "id": "local-mxfp4/mp_gemm/default",
+      "file": "examples/local-mxfp4/rtl/mp_gemm.sv",
+      "top": "mp_gemm",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/rtl/mp_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/rtl/mp_add.sv",
+        "examples/local-mxfp4/rtl/mp_bdp.sv",
+        "examples/local-mxfp4/rtl/mp_gemm.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_bdp/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_bdp.sv",
+      "top": "mxfp4_bdp",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_decode.sv",
+        "examples/local-mxfp4/upstream/rtl/elem_mul.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_bdp.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_nearfar.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_i2f.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv",
+        "examples/local-mxfp4/upstream/rtl/reduce_tree.sv",
+        "examples/local-mxfp4/upstream/rtl/scale_add.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_bdp_fifo/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_bdp_fifo.sv",
+      "top": "mxfp4_bdp_fifo",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_decode.sv",
+        "examples/local-mxfp4/upstream/rtl/elem_mul.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_bdp.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_bdp_fifo.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fifo.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_nearfar.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_i2f.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv",
+        "examples/local-mxfp4/upstream/rtl/reduce_tree.sv",
+        "examples/local-mxfp4/upstream/rtl/scale_add.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_fifo/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_fifo.sv",
+      "top": "mxfp4_fifo",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fifo.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_fp32_add_core/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv",
+      "top": "mxfp4_fp32_add_core",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_fp32_add_nearfar/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_nearfar.sv",
+      "top": "mxfp4_fp32_add_nearfar",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_nearfar.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_gemm_top/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_gemm_top.sv",
+      "top": "mxfp4_gemm_top",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_decode.sv",
+        "examples/local-mxfp4/upstream/rtl/elem_mul.sv",
+        "examples/local-mxfp4/upstream/rtl/gemm_ctrl_fsm.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_bdp.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_core.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_fp32_add_nearfar.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_gemm_top.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_i2f.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv",
+        "examples/local-mxfp4/upstream/rtl/reduce_tree.sv",
+        "examples/local-mxfp4/upstream/rtl/scale_add.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_i2f/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_i2f.sv",
+      "top": "mxfp4_i2f",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_i2f.sv"
+      ]
+    },
+    {
+      "id": "upstream/mxfp4_lza/default",
+      "file": "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv",
+      "top": "mxfp4_lza",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/mxfp4_lza.sv"
+      ]
+    },
+    {
+      "id": "local-dma-ownership/owned_ring/default",
+      "file": "examples/local-dma-ownership/rtl/owned_ring.sv",
+      "top": "owned_ring",
+      "parameters": {},
+      "sources": [
+        "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+        "examples/local-dma-ownership/rtl/owned_ring.sv",
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-dma-ownership/owned_ring/DEPTH=2",
+      "file": "examples/local-dma-ownership/rtl/owned_ring.sv",
+      "top": "owned_ring",
+      "parameters": {
+        "DEPTH": 2
+      },
+      "sources": [
+        "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+        "examples/local-dma-ownership/rtl/owned_ring.sv",
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-dma-ownership/owned_ring/DEPTH=4",
+      "file": "examples/local-dma-ownership/rtl/owned_ring.sv",
+      "top": "owned_ring",
+      "parameters": {
+        "DEPTH": 4
+      },
+      "sources": [
+        "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
+        "examples/local-dma-ownership/rtl/owned_ring.sv",
+        "examples/local-dma/rtl/apb_dma.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge/packet_fifo/default",
+      "file": "examples/local-cdc-bridge/rtl/packet_fifo.sv",
+      "top": "packet_fifo",
+      "parameters": {},
+      "sources": [
+        "examples/local-cdc-bridge/rtl/packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge/packet_fifo/SYNC_STAGES=2",
+      "file": "examples/local-cdc-bridge/rtl/packet_fifo.sv",
+      "top": "packet_fifo",
+      "parameters": {
+        "SYNC_STAGES": 2
+      },
+      "sources": [
+        "examples/local-cdc-bridge/rtl/packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-cdc-bridge/packet_fifo/SYNC_STAGES=3",
+      "file": "examples/local-cdc-bridge/rtl/packet_fifo.sv",
+      "top": "packet_fifo",
+      "parameters": {
+        "SYNC_STAGES": 3
+      },
+      "sources": [
+        "examples/local-cdc-bridge/rtl/packet_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-packet-switch/packet_switch/default",
+      "file": "examples/local-packet-switch/rtl/packet_switch.sv",
+      "top": "packet_switch",
+      "parameters": {},
+      "sources": [
+        "examples/local-packet-switch/rtl/packet_switch.sv"
+      ]
+    },
+    {
+      "id": "local-packet-switch/packet_switch/WIDTH=8",
+      "file": "examples/local-packet-switch/rtl/packet_switch.sv",
+      "top": "packet_switch",
+      "parameters": {
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-packet-switch/rtl/packet_switch.sv"
+      ]
+    },
+    {
+      "id": "local-packet-switch/packet_switch/WIDTH=16",
+      "file": "examples/local-packet-switch/rtl/packet_switch.sv",
+      "top": "packet_switch",
+      "parameters": {
+        "WIDTH": 16
+      },
+      "sources": [
+        "examples/local-packet-switch/rtl/packet_switch.sv"
+      ]
+    },
+    {
+      "id": "local-performance-monitor/perf_monitor/default",
+      "file": "examples/local-performance-monitor/rtl/perf_monitor.sv",
+      "top": "perf_monitor",
+      "parameters": {},
+      "sources": [
+        "examples/local-performance-monitor/rtl/perf_monitor.sv"
+      ]
+    },
+    {
+      "id": "local-performance-monitor/perf_monitor/SLOTS=2",
+      "file": "examples/local-performance-monitor/rtl/perf_monitor.sv",
+      "top": "perf_monitor",
+      "parameters": {
+        "SLOTS": 2
+      },
+      "sources": [
+        "examples/local-performance-monitor/rtl/perf_monitor.sv"
+      ]
+    },
+    {
+      "id": "local-performance-monitor/perf_monitor/SLOTS=4",
+      "file": "examples/local-performance-monitor/rtl/perf_monitor.sv",
+      "top": "perf_monitor",
+      "parameters": {
+        "SLOTS": 4
+      },
+      "sources": [
+        "examples/local-performance-monitor/rtl/perf_monitor.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-pmp/pmp/default",
+      "file": "examples/local-riscv-pmp/rtl/pmp.sv",
+      "top": "pmp",
+      "parameters": {},
+      "sources": [
+        "examples/local-riscv-pmp/rtl/pmp.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-pmp/pmp/AW=16",
+      "file": "examples/local-riscv-pmp/rtl/pmp.sv",
+      "top": "pmp",
+      "parameters": {
+        "AW": 16
+      },
+      "sources": [
+        "examples/local-riscv-pmp/rtl/pmp.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-pmp/pmp/AW=18",
+      "file": "examples/local-riscv-pmp/rtl/pmp.sv",
+      "top": "pmp",
+      "parameters": {
+        "AW": 18
+      },
+      "sources": [
+        "examples/local-riscv-pmp/rtl/pmp.sv"
+      ]
+    },
+    {
+      "id": "local-power/power_island/default",
+      "file": "examples/local-power/rtl/power_island.sv",
+      "top": "power_island",
+      "parameters": {},
+      "sources": [
+        "examples/local-power/rtl/power_island.sv"
+      ]
+    },
+    {
+      "id": "local-power/power_island/LATENCY=1",
+      "file": "examples/local-power/rtl/power_island.sv",
+      "top": "power_island",
+      "parameters": {
+        "LATENCY": 1
+      },
+      "sources": [
+        "examples/local-power/rtl/power_island.sv"
+      ]
+    },
+    {
+      "id": "local-power/power_island/LATENCY=3",
+      "file": "examples/local-power/rtl/power_island.sv",
+      "top": "power_island",
+      "parameters": {
+        "LATENCY": 3
+      },
+      "sources": [
+        "examples/local-power/rtl/power_island.sv"
+      ]
+    },
+    {
+      "id": "local-priority-irq/priority_irq/default",
+      "file": "examples/local-priority-irq/rtl/priority_irq.sv",
+      "top": "priority_irq",
+      "parameters": {},
+      "sources": [
+        "examples/local-priority-irq/rtl/priority_irq.sv"
+      ]
+    },
+    {
+      "id": "local-priority-irq/priority_irq/LEVEL=0/WAIT_CYCLES=2",
+      "file": "examples/local-priority-irq/rtl/priority_irq.sv",
+      "top": "priority_irq",
+      "parameters": {
+        "LEVEL": 0,
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-priority-irq/rtl/priority_irq.sv"
+      ]
+    },
+    {
+      "id": "local-priority-irq/priority_irq/LEVEL=1/WAIT_CYCLES=1",
+      "file": "examples/local-priority-irq/rtl/priority_irq.sv",
+      "top": "priority_irq",
+      "parameters": {
+        "LEVEL": 1,
+        "WAIT_CYCLES": 1
+      },
+      "sources": [
+        "examples/local-priority-irq/rtl/priority_irq.sv"
+      ]
+    },
+    {
+      "id": "local-access-control/protected_regs/default",
+      "file": "examples/local-access-control/rtl/protected_regs.sv",
+      "top": "protected_regs",
+      "parameters": {},
+      "sources": [
+        "examples/local-access-control/rtl/protected_regs.sv"
+      ]
+    },
+    {
+      "id": "local-access-control/protected_regs/WAIT_CYCLES=0",
+      "file": "examples/local-access-control/rtl/protected_regs.sv",
+      "top": "protected_regs",
+      "parameters": {
+        "WAIT_CYCLES": 0
+      },
+      "sources": [
+        "examples/local-access-control/rtl/protected_regs.sv"
+      ]
+    },
+    {
+      "id": "local-access-control/protected_regs/WAIT_CYCLES=2",
+      "file": "examples/local-access-control/rtl/protected_regs.sv",
+      "top": "protected_regs",
+      "parameters": {
+        "WAIT_CYCLES": 2
+      },
+      "sources": [
+        "examples/local-access-control/rtl/protected_regs.sv"
+      ]
+    },
+    {
+      "id": "local-activation/pwl_activation/default",
+      "file": "examples/local-activation/rtl/pwl_activation.sv",
+      "top": "pwl_activation",
+      "parameters": {},
+      "sources": [
+        "examples/local-activation/rtl/pwl_activation.sv"
+      ]
+    },
+    {
+      "id": "local-activation/pwl_activation/FUNC=0",
+      "file": "examples/local-activation/rtl/pwl_activation.sv",
+      "top": "pwl_activation",
+      "parameters": {
+        "FUNC": 0
+      },
+      "sources": [
+        "examples/local-activation/rtl/pwl_activation.sv"
+      ]
+    },
+    {
+      "id": "local-activation/pwl_activation/FUNC=1",
+      "file": "examples/local-activation/rtl/pwl_activation.sv",
+      "top": "pwl_activation",
+      "parameters": {
+        "FUNC": 1
+      },
+      "sources": [
+        "examples/local-activation/rtl/pwl_activation.sv"
+      ]
+    },
+    {
+      "id": "upstream/quant_encoder/default",
+      "file": "examples/local-mxfp4/upstream/rtl/quant_encoder.sv",
+      "top": "quant_encoder",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/amax_tree32.sv",
+        "examples/local-mxfp4/upstream/rtl/e2m1_quantize.sv",
+        "examples/local-mxfp4/upstream/rtl/quant_encoder.sv"
+      ]
+    },
+    {
+      "id": "upstream/reduce_tree/default",
+      "file": "examples/local-mxfp4/upstream/rtl/reduce_tree.sv",
+      "top": "reduce_tree",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/reduce_tree.sv"
+      ]
+    },
+    {
+      "id": "local-reduction/reduction_irq/default",
+      "file": "examples/local-reduction/rtl/reduction_irq.sv",
+      "top": "reduction_irq",
+      "parameters": {},
+      "sources": [
+        "examples/local-irq-cdc/rtl/irq_pending.sv",
+        "examples/local-reduction/rtl/reduction_irq.sv"
+      ]
+    },
+    {
+      "id": "local-axi-reorder/reorder/default",
+      "file": "examples/local-axi-reorder/rtl/reorder.sv",
+      "top": "reorder",
+      "parameters": {},
+      "sources": [
+        "examples/local-axi-reorder/rtl/reorder.sv",
+        "examples/local-axi4/rtl/axi4_ram.sv"
+      ]
+    },
+    {
+      "id": "local-axi-reorder/reorder/SLOTS=2",
+      "file": "examples/local-axi-reorder/rtl/reorder.sv",
+      "top": "reorder",
+      "parameters": {
+        "SLOTS": 2
+      },
+      "sources": [
+        "examples/local-axi-reorder/rtl/reorder.sv",
+        "examples/local-axi4/rtl/axi4_ram.sv"
+      ]
+    },
+    {
+      "id": "local-axi-reorder/reorder/SLOTS=4",
+      "file": "examples/local-axi-reorder/rtl/reorder.sv",
+      "top": "reorder",
+      "parameters": {
+        "SLOTS": 4
+      },
+      "sources": [
+        "examples/local-axi-reorder/rtl/reorder.sv",
+        "examples/local-axi4/rtl/axi4_ram.sv"
+      ]
+    },
+    {
+      "id": "local-requantize/requantize/default",
+      "file": "examples/local-requantize/rtl/requantize.sv",
+      "top": "requantize",
+      "parameters": {},
+      "sources": [
+        "examples/local-requantize/rtl/requantize.sv"
+      ]
+    },
+    {
+      "id": "local-requantize/requantize/ACT_MAX=100/ACT_MIN=-20/CH=4",
+      "file": "examples/local-requantize/rtl/requantize.sv",
+      "top": "requantize",
+      "parameters": {
+        "ACT_MAX": 100,
+        "ACT_MIN": -20,
+        "CH": 4
+      },
+      "sources": [
+        "examples/local-requantize/rtl/requantize.sv"
+      ]
+    },
+    {
+      "id": "local-requantize/requantize/ACT_MAX=127/ACT_MIN=-128/CH=2",
+      "file": "examples/local-requantize/rtl/requantize.sv",
+      "top": "requantize",
+      "parameters": {
+        "ACT_MAX": 127,
+        "ACT_MIN": -128,
+        "CH": 2
+      },
+      "sources": [
+        "examples/local-requantize/rtl/requantize.sv"
+      ]
+    },
+    {
+      "id": "local-compositional-formal/request_sink/default",
+      "file": "examples/local-compositional-formal/rtl/blocks.sv",
+      "top": "request_sink",
+      "parameters": {},
+      "sources": [
+        "examples/local-compositional-formal/rtl/blocks.sv"
+      ]
+    },
+    {
+      "id": "local-compositional-formal/request_source/default",
+      "file": "examples/local-compositional-formal/rtl/blocks.sv",
+      "top": "request_source",
+      "parameters": {},
+      "sources": [
+        "examples/local-compositional-formal/rtl/blocks.sv"
+      ]
+    },
+    {
+      "id": "local-uvm-multiclock/reset_mailbox/default",
+      "file": "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
+      "top": "reset_mailbox",
+      "parameters": {},
+      "sources": [
+        "examples/local-uvm-multiclock/rtl/reset_mailbox.sv"
+      ]
+    },
+    {
+      "id": "local-retry-link/retry_receiver/default",
+      "file": "examples/local-retry-link/rtl/retry_receiver.sv",
+      "top": "retry_receiver",
+      "parameters": {},
+      "sources": [
+        "examples/local-packet-crc/rtl/crc.sv",
+        "examples/local-retry-link/rtl/crc9.sv",
+        "examples/local-retry-link/rtl/retry_receiver.sv"
+      ]
+    },
+    {
+      "id": "local-retry-link/retry_sender/default",
+      "file": "examples/local-retry-link/rtl/retry_sender.sv",
+      "top": "retry_sender",
+      "parameters": {},
+      "sources": [
+        "examples/local-retry-link/rtl/crc9.sv",
+        "examples/local-retry-link/rtl/retry_sender.sv"
+      ]
+    },
+    {
+      "id": "local-retry-link/retry_sender/RETRIES=2/TIMEOUT=3",
+      "file": "examples/local-retry-link/rtl/retry_sender.sv",
+      "top": "retry_sender",
+      "parameters": {
+        "RETRIES": 2,
+        "TIMEOUT": 3
+      },
+      "sources": [
+        "examples/local-retry-link/rtl/crc9.sv",
+        "examples/local-retry-link/rtl/retry_sender.sv"
+      ]
+    },
+    {
+      "id": "local-retry-link/retry_sender/RETRIES=3/TIMEOUT=5",
+      "file": "examples/local-retry-link/rtl/retry_sender.sv",
+      "top": "retry_sender",
+      "parameters": {
+        "RETRIES": 3,
+        "TIMEOUT": 5
+      },
+      "sources": [
+        "examples/local-retry-link/rtl/crc9.sv",
+        "examples/local-retry-link/rtl/retry_sender.sv"
+      ]
+    },
+    {
+      "id": "local-arbiter/rr_arbiter/default",
+      "file": "examples/local-arbiter/rtl/rr_arbiter.sv",
+      "top": "rr_arbiter",
+      "parameters": {},
+      "sources": [
+        "examples/local-arbiter/rtl/rr_arbiter.sv"
+      ]
+    },
+    {
+      "id": "local-arbiter/rr_arbiter/PORTS=2",
+      "file": "examples/local-arbiter/rtl/rr_arbiter.sv",
+      "top": "rr_arbiter",
+      "parameters": {
+        "PORTS": 2
+      },
+      "sources": [
+        "examples/local-arbiter/rtl/rr_arbiter.sv"
+      ]
+    },
+    {
+      "id": "local-arbiter/rr_arbiter/PORTS=3",
+      "file": "examples/local-arbiter/rtl/rr_arbiter.sv",
+      "top": "rr_arbiter",
+      "parameters": {
+        "PORTS": 3
+      },
+      "sources": [
+        "examples/local-arbiter/rtl/rr_arbiter.sv"
+      ]
+    },
+    {
+      "id": "local-arbiter/rr_arbiter/PORTS=4",
+      "file": "examples/local-arbiter/rtl/rr_arbiter.sv",
+      "top": "rr_arbiter",
+      "parameters": {
+        "PORTS": 4
+      },
+      "sources": [
+        "examples/local-arbiter/rtl/rr_arbiter.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/default",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "parameters": {},
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=0",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "parameters": {
+        "PREDICT": 0
+      },
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "parameters": {
+        "PREDICT": 0,
+        "TRAPS": 1
+      },
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "parameters": {
+        "PREDICT": 1
+      },
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=2",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "parameters": {
+        "PREDICT": 2
+      },
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "parameters": {
+        "PREDICT": 2,
+        "TRAPS": 1
+      },
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ]
+    },
+    {
+      "id": "local-riscv-decoder/rv32i_decoder/default",
+      "file": "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+      "top": "rv32i_decoder",
+      "parameters": {},
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv"
+      ]
+    },
+    {
+      "id": "upstream/scale_add/default",
+      "file": "examples/local-mxfp4/upstream/rtl/scale_add.sv",
+      "top": "scale_add",
+      "parameters": {},
+      "sources": [
+        "examples/local-mxfp4/upstream/rtl/mxfp4_pkg.sv",
+        "examples/local-mxfp4/upstream/rtl/scale_add.sv"
+      ]
+    },
+    {
+      "id": "local-scan-atpg/scan_logic/default",
+      "file": "examples/local-scan-atpg/rtl/scan_logic.sv",
+      "top": "scan_logic",
+      "parameters": {},
+      "sources": [
+        "examples/local-scan-atpg/rtl/scan_logic.sv"
+      ]
+    },
+    {
+      "id": "local-scan-atpg/scan_logic/REVERSE=0",
+      "file": "examples/local-scan-atpg/rtl/scan_logic.sv",
+      "top": "scan_logic",
+      "parameters": {
+        "REVERSE": 0
+      },
+      "sources": [
+        "examples/local-scan-atpg/rtl/scan_logic.sv"
+      ]
+    },
+    {
+      "id": "local-scan-atpg/scan_logic/REVERSE=1",
+      "file": "examples/local-scan-atpg/rtl/scan_logic.sv",
+      "top": "scan_logic",
+      "parameters": {
+        "REVERSE": 1
+      },
+      "sources": [
+        "examples/local-scan-atpg/rtl/scan_logic.sv"
+      ]
+    },
+    {
+      "id": "local-ecc/secded/default",
+      "file": "examples/local-ecc/rtl/secded.sv",
+      "top": "secded",
+      "parameters": {},
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv"
+      ]
+    },
+    {
+      "id": "local-secure-lifecycle/secure_lifecycle/default",
+      "file": "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+      "top": "secure_lifecycle",
+      "parameters": {},
+      "sources": [
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv"
+      ]
+    },
+    {
+      "id": "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=2/DEBUG_KEY=23205",
+      "file": "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+      "top": "secure_lifecycle",
+      "parameters": {
+        "ATTEMPT_LIMIT": 2,
+        "DEBUG_KEY": 23205
+      },
+      "sources": [
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv"
+      ]
+    },
+    {
+      "id": "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=3/DEBUG_KEY=42330",
+      "file": "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+      "top": "secure_lifecycle",
+      "parameters": {
+        "ATTEMPT_LIMIT": 3,
+        "DEBUG_KEY": 42330
+      },
+      "sources": [
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv"
+      ]
+    },
+    {
+      "id": "local-sha256/sha256_engine/default",
+      "file": "examples/local-sha256/rtl/sha256_engine.sv",
+      "top": "sha256_engine",
+      "parameters": {},
+      "sources": [
+        "examples/local-sha256/rtl/sha256_engine.sv"
+      ]
+    },
+    {
+      "id": "local-sha256/sha256_engine/ROUNDS=1",
+      "file": "examples/local-sha256/rtl/sha256_engine.sv",
+      "top": "sha256_engine",
+      "parameters": {
+        "ROUNDS": 1
+      },
+      "sources": [
+        "examples/local-sha256/rtl/sha256_engine.sv"
+      ]
+    },
+    {
+      "id": "local-sha256/sha256_engine/ROUNDS=2",
+      "file": "examples/local-sha256/rtl/sha256_engine.sv",
+      "top": "sha256_engine",
+      "parameters": {
+        "ROUNDS": 2
+      },
+      "sources": [
+        "examples/local-sha256/rtl/sha256_engine.sv"
+      ]
+    },
+    {
+      "id": "local-connectivity/soc_top/default",
+      "file": "examples/local-connectivity/rtl/soc_top.sv",
+      "top": "soc_top",
+      "parameters": {},
+      "sources": [
+        "examples/local-connectivity/ip_blackbox.sv",
+        "examples/local-connectivity/rtl/soc_top.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/default",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {},
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=2",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 0,
+        "CPOL": 0,
+        "HALF_DIV": 2
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=4",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 0,
+        "CPOL": 0,
+        "HALF_DIV": 4
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=2",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 0,
+        "CPOL": 1,
+        "HALF_DIV": 2
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=4",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 0,
+        "CPOL": 1,
+        "HALF_DIV": 4
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=2",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 1,
+        "CPOL": 0,
+        "HALF_DIV": 2
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=4",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 1,
+        "CPOL": 0,
+        "HALF_DIV": 4
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=2",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 1,
+        "CPOL": 1,
+        "HALF_DIV": 2
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=4",
+      "file": "examples/local-spi/rtl/spi_master.sv",
+      "top": "spi_master",
+      "parameters": {
+        "CPHA": 1,
+        "CPOL": 1,
+        "HALF_DIV": 4
+      },
+      "sources": [
+        "examples/local-spi/rtl/spi_master.sv"
+      ]
+    },
+    {
+      "id": "local-store-buffer/store_buffer/default",
+      "file": "examples/local-store-buffer/rtl/store_buffer.sv",
+      "top": "store_buffer",
+      "parameters": {},
+      "sources": [
+        "examples/local-store-buffer/rtl/store_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-store-buffer/store_buffer/DEPTH=2",
+      "file": "examples/local-store-buffer/rtl/store_buffer.sv",
+      "top": "store_buffer",
+      "parameters": {
+        "DEPTH": 2
+      },
+      "sources": [
+        "examples/local-store-buffer/rtl/store_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-store-buffer/store_buffer/DEPTH=3",
+      "file": "examples/local-store-buffer/rtl/store_buffer.sv",
+      "top": "store_buffer",
+      "parameters": {
+        "DEPTH": 3
+      },
+      "sources": [
+        "examples/local-store-buffer/rtl/store_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-stream/stream_buffer/default",
+      "file": "examples/local-stream/rtl/stream_buffer.sv",
+      "top": "stream_buffer",
+      "parameters": {},
+      "sources": [
+        "examples/local-stream/rtl/stream_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-stream/stream_buffer/DEPTH=1/WIDTH=8",
+      "file": "examples/local-stream/rtl/stream_buffer.sv",
+      "top": "stream_buffer",
+      "parameters": {
+        "DEPTH": 1,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-stream/rtl/stream_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-stream/stream_buffer/DEPTH=1/WIDTH=16",
+      "file": "examples/local-stream/rtl/stream_buffer.sv",
+      "top": "stream_buffer",
+      "parameters": {
+        "DEPTH": 1,
+        "WIDTH": 16
+      },
+      "sources": [
+        "examples/local-stream/rtl/stream_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-stream/stream_buffer/DEPTH=3/WIDTH=8",
+      "file": "examples/local-stream/rtl/stream_buffer.sv",
+      "top": "stream_buffer",
+      "parameters": {
+        "DEPTH": 3,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-stream/rtl/stream_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-stream/stream_buffer/DEPTH=3/WIDTH=16",
+      "file": "examples/local-stream/rtl/stream_buffer.sv",
+      "top": "stream_buffer",
+      "parameters": {
+        "DEPTH": 3,
+        "WIDTH": 16
+      },
+      "sources": [
+        "examples/local-stream/rtl/stream_buffer.sv"
+      ]
+    },
+    {
+      "id": "local-stream-dma/stream_dma/default",
+      "file": "examples/local-stream-dma/rtl/stream_dma.sv",
+      "top": "stream_dma",
+      "parameters": {},
+      "sources": [
+        "examples/local-stream-dma/rtl/stream_dma.sv"
+      ]
+    },
+    {
+      "id": "local-tlb/sv32_tlb/default",
+      "file": "examples/local-tlb/rtl/sv32_tlb.sv",
+      "top": "sv32_tlb",
+      "parameters": {},
+      "sources": [
+        "examples/local-sv32/rtl/sv32_walk.sv",
+        "examples/local-tlb/rtl/sv32_tlb.sv"
+      ]
+    },
+    {
+      "id": "local-tlb/sv32_tlb/ENTRIES=2",
+      "file": "examples/local-tlb/rtl/sv32_tlb.sv",
+      "top": "sv32_tlb",
+      "parameters": {
+        "ENTRIES": 2
+      },
+      "sources": [
+        "examples/local-sv32/rtl/sv32_walk.sv",
+        "examples/local-tlb/rtl/sv32_tlb.sv"
+      ]
+    },
+    {
+      "id": "local-tlb/sv32_tlb/ENTRIES=4",
+      "file": "examples/local-tlb/rtl/sv32_tlb.sv",
+      "top": "sv32_tlb",
+      "parameters": {
+        "ENTRIES": 4
+      },
+      "sources": [
+        "examples/local-sv32/rtl/sv32_walk.sv",
+        "examples/local-tlb/rtl/sv32_tlb.sv"
+      ]
+    },
+    {
+      "id": "local-sv32/sv32_walk/default",
+      "file": "examples/local-sv32/rtl/sv32_walk.sv",
+      "top": "sv32_walk",
+      "parameters": {},
+      "sources": [
+        "examples/local-sv32/rtl/sv32_walk.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/default",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {},
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/DEPTH=1/WIDTH=8",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {
+        "DEPTH": 1,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/DEPTH=1/WIDTH=16",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {
+        "DEPTH": 1,
+        "WIDTH": 16
+      },
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/DEPTH=3/WIDTH=8",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {
+        "DEPTH": 3,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/DEPTH=3/WIDTH=16",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {
+        "DEPTH": 3,
+        "WIDTH": 16
+      },
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/DEPTH=8/WIDTH=8",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {
+        "DEPTH": 8,
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-fifo/sync_fifo/DEPTH=8/WIDTH=16",
+      "file": "examples/local-fifo/rtl/sync_fifo.sv",
+      "top": "sync_fifo",
+      "parameters": {
+        "DEPTH": 8,
+        "WIDTH": 16
+      },
+      "sources": [
+        "examples/local-fifo/rtl/sync_fifo.sv"
+      ]
+    },
+    {
+      "id": "local-systolic-array/systolic_array/default",
+      "file": "examples/local-systolic-array/rtl/systolic_array.sv",
+      "top": "systolic_array",
+      "parameters": {},
+      "sources": [
+        "examples/local-systolic-array/rtl/systolic_array.sv"
+      ]
+    },
+    {
+      "id": "local-systolic-array/systolic_array/N=2",
+      "file": "examples/local-systolic-array/rtl/systolic_array.sv",
+      "top": "systolic_array",
+      "parameters": {
+        "N": 2
+      },
+      "sources": [
+        "examples/local-systolic-array/rtl/systolic_array.sv"
+      ]
+    },
+    {
+      "id": "local-systolic-array/systolic_array/N=4",
+      "file": "examples/local-systolic-array/rtl/systolic_array.sv",
+      "top": "systolic_array",
+      "parameters": {
+        "N": 4
+      },
+      "sources": [
+        "examples/local-systolic-array/rtl/systolic_array.sv"
+      ]
+    },
+    {
+      "id": "local-recovery/timeout_guard/default",
+      "file": "examples/local-recovery/rtl/timeout_guard.sv",
+      "top": "timeout_guard",
+      "parameters": {},
+      "sources": [
+        "examples/local-recovery/rtl/timeout_guard.sv"
+      ]
+    },
+    {
+      "id": "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=4",
+      "file": "examples/local-recovery/rtl/timeout_guard.sv",
+      "top": "timeout_guard",
+      "parameters": {
+        "TAG_BITS": 4,
+        "TIMEOUT": 4
+      },
+      "sources": [
+        "examples/local-recovery/rtl/timeout_guard.sv"
+      ]
+    },
+    {
+      "id": "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=8",
+      "file": "examples/local-recovery/rtl/timeout_guard.sv",
+      "top": "timeout_guard",
+      "parameters": {
+        "TAG_BITS": 4,
+        "TIMEOUT": 8
+      },
+      "sources": [
+        "examples/local-recovery/rtl/timeout_guard.sv"
+      ]
+    },
+    {
+      "id": "local-timer-watchdog/timer_watchdog/default",
+      "file": "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+      "top": "timer_watchdog",
+      "parameters": {},
+      "sources": [
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-timer-watchdog/timer_watchdog/WIDTH=4",
+      "file": "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+      "top": "timer_watchdog",
+      "parameters": {
+        "WIDTH": 4
+      },
+      "sources": [
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-timer-watchdog/timer_watchdog/WIDTH=8",
+      "file": "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+      "top": "timer_watchdog",
+      "parameters": {
+        "WIDTH": 8
+      },
+      "sources": [
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-topk/topk_select/default",
+      "file": "examples/local-topk/rtl/topk_select.sv",
+      "top": "topk_select",
+      "parameters": {},
+      "sources": [
+        "examples/local-topk/rtl/topk_select.sv"
+      ]
+    },
+    {
+      "id": "local-topk/topk_select/K=2/N=4",
+      "file": "examples/local-topk/rtl/topk_select.sv",
+      "top": "topk_select",
+      "parameters": {
+        "K": 2,
+        "N": 4
+      },
+      "sources": [
+        "examples/local-topk/rtl/topk_select.sv"
+      ]
+    },
+    {
+      "id": "local-topk/topk_select/K=3/N=8",
+      "file": "examples/local-topk/rtl/topk_select.sv",
+      "top": "topk_select",
+      "parameters": {
+        "K": 3,
+        "N": 8
+      },
+      "sources": [
+        "examples/local-topk/rtl/topk_select.sv"
+      ]
+    },
+    {
+      "id": "local-bus-bridge/transaction_apb/default",
+      "file": "examples/local-bus-bridge/rtl/bus_bridge.sv",
+      "top": "transaction_apb",
+      "parameters": {},
+      "sources": [
+        "examples/local-apb-timer/rtl/apb_timer.sv",
+        "examples/local-apb/rtl/apb_regs.sv",
+        "examples/local-bus-bridge/rtl/bus_bridge.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/default",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {},
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/DIVISOR=8/PARITY=0",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 0
+      },
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/DIVISOR=8/PARITY=1",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 1
+      },
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/DIVISOR=8/PARITY=2",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {
+        "DIVISOR": 8,
+        "PARITY": 2
+      },
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/DIVISOR=16/PARITY=0",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {
+        "DIVISOR": 16,
+        "PARITY": 0
+      },
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/DIVISOR=16/PARITY=1",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {
+        "DIVISOR": 16,
+        "PARITY": 1
+      },
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    },
+    {
+      "id": "local-uart/uart/DIVISOR=16/PARITY=2",
+      "file": "examples/local-uart/rtl/uart.sv",
+      "top": "uart",
+      "parameters": {
+        "DIVISOR": 16,
+        "PARITY": 2
+      },
+      "sources": [
+        "examples/local-uart/rtl/uart.sv"
+      ]
+    }
+  ],
+  "examples": {
+    "local-access-control": {
+      "scope": "dut",
+      "targets": [
+        "local-access-control/protected_regs/default",
+        "local-access-control/protected_regs/WAIT_CYCLES=0",
+        "local-access-control/protected_regs/WAIT_CYCLES=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-activation": {
+      "scope": "dut",
+      "targets": [
+        "local-activation/pwl_activation/default",
+        "local-activation/pwl_activation/FUNC=0",
+        "local-activation/pwl_activation/FUNC=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-address-map": {
+      "scope": "dut",
+      "targets": [
+        "local-address-map/address_map/default",
+        "local-address-map/address_map/ALIAS=0",
+        "local-address-map/address_map/ALIAS=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-advanced-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-dma/apb_dma/default",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32",
+        "local-interconnect/axi_interconnect/default",
+        "local-axis/axis_packet_fifo/default",
+        "local-axis/axis_packet_fifo/DEPTH=2",
+        "local-axis/axis_packet_fifo/DEPTH=4",
+        "local-progress/bounded_server/default",
+        "local-progress/bounded_server/SERVICE=1",
+        "local-progress/bounded_server/SERVICE=2",
+        "local-dsp/fir2/default",
+        "local-dsp/fir2/FRAC=3/LATENCY=1",
+        "local-dsp/fir2/FRAC=4/LATENCY=3"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-ahb": {
+      "scope": "dut",
+      "targets": [
+        "local-ahb/ahb_regs/default",
+        "local-ahb/ahb_regs/WAIT_CYCLES=0",
+        "local-ahb/ahb_regs/WAIT_CYCLES=1",
+        "local-ahb/ahb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-ai-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "upstream/amax_tree32/default",
+        "local-conv-window/conv_window/default",
+        "local-conv-window/conv_window/H=4/STRIDE=1/W=5",
+        "local-conv-window/conv_window/H=5/STRIDE=2/W=7",
+        "upstream/e2m1_decode/default",
+        "upstream/e2m1_quantize/default",
+        "upstream/elem_mul/default",
+        "upstream/gemm_ctrl_fsm/default",
+        "local-mxfp4/mp_add/default",
+        "local-mxfp4/mp_bdp/default",
+        "local-mxfp4/mp_encoder/default",
+        "local-mxfp4/mp_gemm/default",
+        "upstream/mxfp4_bdp/default",
+        "upstream/mxfp4_bdp_fifo/default",
+        "upstream/mxfp4_fifo/default",
+        "upstream/mxfp4_fp32_add_core/default",
+        "upstream/mxfp4_fp32_add_nearfar/default",
+        "upstream/mxfp4_gemm_top/default",
+        "upstream/mxfp4_i2f/default",
+        "upstream/mxfp4_lza/default",
+        "local-activation/pwl_activation/default",
+        "local-activation/pwl_activation/FUNC=0",
+        "local-activation/pwl_activation/FUNC=1",
+        "upstream/quant_encoder/default",
+        "upstream/reduce_tree/default",
+        "local-requantize/requantize/default",
+        "local-requantize/requantize/ACT_MAX=100/ACT_MIN=-20/CH=4",
+        "local-requantize/requantize/ACT_MAX=127/ACT_MIN=-128/CH=2",
+        "upstream/scale_add/default",
+        "local-systolic-array/systolic_array/default",
+        "local-systolic-array/systolic_array/N=2",
+        "local-systolic-array/systolic_array/N=4",
+        "local-topk/topk_select/default",
+        "local-topk/topk_select/K=2/N=4",
+        "local-topk/topk_select/K=3/N=8"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-ai-review": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-irq-cdc/irq_pending/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-apb": {
+      "scope": "dut",
+      "targets": [
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-apb-irq": {
+      "scope": "dut",
+      "targets": [
+        "local-apb-irq/apb_irq/default",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=0",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=1",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=3",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-apb-irq-coverage": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-apb-irq/apb_irq/default",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=0",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=1",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=3",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-apb-timer": {
+      "scope": "dut",
+      "targets": [
+        "local-apb-timer/apb_timer/default",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=4",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=8",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=4",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=8",
+        "local-timer-watchdog/timer_watchdog/default",
+        "local-timer-watchdog/timer_watchdog/WIDTH=4",
+        "local-timer-watchdog/timer_watchdog/WIDTH=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-apb-uart": {
+      "scope": "dut",
+      "targets": [
+        "local-apb-uart/apb_uart/default",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=0",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=1",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=3",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=0",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=1",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=3",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=0",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=1",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=3",
+        "local-uart/uart/default",
+        "local-uart/uart/DIVISOR=8/PARITY=0",
+        "local-uart/uart/DIVISOR=8/PARITY=1",
+        "local-uart/uart/DIVISOR=8/PARITY=2",
+        "local-uart/uart/DIVISOR=16/PARITY=0",
+        "local-uart/uart/DIVISOR=16/PARITY=1",
+        "local-uart/uart/DIVISOR=16/PARITY=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-arbiter": {
+      "scope": "dut",
+      "targets": [
+        "local-arbiter/rr_arbiter/default",
+        "local-arbiter/rr_arbiter/PORTS=2",
+        "local-arbiter/rr_arbiter/PORTS=3",
+        "local-arbiter/rr_arbiter/PORTS=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-async-fifo": {
+      "scope": "dut",
+      "targets": [
+        "local-async-fifo/async_fifo/default",
+        "local-async-fifo/async_fifo/DEPTH=4/SYNC_STAGES=2",
+        "local-async-fifo/async_fifo/DEPTH=4/SYNC_STAGES=3",
+        "local-async-fifo/async_fifo/DEPTH=8/SYNC_STAGES=2",
+        "local-async-fifo/async_fifo/DEPTH=8/SYNC_STAGES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-axi": {
+      "scope": "dut",
+      "targets": [
+        "local-axi/axi_lite_regs/default",
+        "local-axi/axi_lite_regs/RESP_DELAY=0",
+        "local-axi/axi_lite_regs/RESP_DELAY=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-axi-reorder": {
+      "scope": "dut",
+      "targets": [
+        "local-axi-reorder/reorder/default",
+        "local-axi-reorder/reorder/SLOTS=2",
+        "local-axi-reorder/reorder/SLOTS=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-axi4": {
+      "scope": "dut",
+      "targets": [
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-axi4-formal": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-axis": {
+      "scope": "dut",
+      "targets": [
+        "local-axis/axis_packet_fifo/default",
+        "local-axis/axis_packet_fifo/DEPTH=2",
+        "local-axis/axis_packet_fifo/DEPTH=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-branch-predictor": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-bus-bridge": {
+      "scope": "dut",
+      "targets": [
+        "local-bus-bridge/bus_bridge/default",
+        "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=0",
+        "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=2",
+        "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=0",
+        "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=2",
+        "local-bus-bridge/transaction_apb/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-bus-formal": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-ahb/ahb_regs/default",
+        "local-ahb/ahb_regs/WAIT_CYCLES=0",
+        "local-ahb/ahb_regs/WAIT_CYCLES=1",
+        "local-ahb/ahb_regs/WAIT_CYCLES=3",
+        "local-axi/axi_lite_regs/default",
+        "local-axi/axi_lite_regs/RESP_DELAY=0",
+        "local-axi/axi_lite_regs/RESP_DELAY=2"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-bus-validation": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-ahb/ahb_regs/default",
+        "local-ahb/ahb_regs/WAIT_CYCLES=0",
+        "local-ahb/ahb_regs/WAIT_CYCLES=1",
+        "local-ahb/ahb_regs/WAIT_CYCLES=3",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-apb-timer/apb_timer/default",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=4",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=8",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=4",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=8",
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32",
+        "local-axi/axi_lite_regs/default",
+        "local-axi/axi_lite_regs/RESP_DELAY=0",
+        "local-axi/axi_lite_regs/RESP_DELAY=2",
+        "local-bus-bridge/bus_bridge/default",
+        "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=0",
+        "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=2",
+        "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=0",
+        "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=2",
+        "local-timer-watchdog/timer_watchdog/default",
+        "local-timer-watchdog/timer_watchdog/WIDTH=4",
+        "local-timer-watchdog/timer_watchdog/WIDTH=8",
+        "local-bus-bridge/transaction_apb/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-c-driver": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-cache-coherence": {
+      "scope": "dut",
+      "targets": [
+        "local-cache-coherence/coherent_pair/default",
+        "local-cache-coherence/coherent_pair/LATENCY=1",
+        "local-cache-coherence/coherent_pair/LATENCY=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-cache-dma": {
+      "scope": "dut",
+      "targets": [
+        "local-cache-dma/cache_dma/default",
+        "local-cache-dma/cache_dma/LATENCY=1/LINES=1",
+        "local-cache-dma/cache_dma/LATENCY=3/LINES=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-cdc-bridge": {
+      "scope": "dut",
+      "targets": [
+        "local-cdc-bridge/cdc_apb_bridge/default",
+        "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=2/WAIT_CYCLES=2",
+        "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=3/WAIT_CYCLES=0",
+        "local-cdc-bridge/packet_fifo/default",
+        "local-cdc-bridge/packet_fifo/SYNC_STAGES=2",
+        "local-cdc-bridge/packet_fifo/SYNC_STAGES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-cdc-handshake": {
+      "scope": "dut",
+      "targets": [
+        "local-cdc-handshake/cdc_handshake/default",
+        "local-cdc-handshake/cdc_handshake/SYNC_STAGES=2",
+        "local-cdc-handshake/cdc_handshake/SYNC_STAGES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-clock-reset": {
+      "scope": "dut",
+      "targets": [
+        "local-clock-reset/clock_reset/default",
+        "local-clock-reset/clock_reset/LATENCY=4/STAGES=2",
+        "local-clock-reset/clock_reset/LATENCY=4/STAGES=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-cocotb": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-code-coverage": {
+      "scope": "dut",
+      "targets": [
+        "local-code-coverage/command_unit/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-compositional-formal": {
+      "scope": "dut",
+      "targets": [
+        "local-compositional-formal/request_sink/default",
+        "local-compositional-formal/request_source/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-connectivity": {
+      "scope": "dut",
+      "targets": [
+        "local-connectivity/soc_top/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-constant-time": {
+      "scope": "dut",
+      "targets": [
+        "local-constant-time/constant_time_compare/default",
+        "local-constant-time/constant_time_compare/BYTES=2",
+        "local-constant-time/constant_time_compare/BYTES=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-conv-window": {
+      "scope": "dut",
+      "targets": [
+        "local-conv-window/conv_window/default",
+        "local-conv-window/conv_window/H=4/STRIDE=1/W=5",
+        "local-conv-window/conv_window/H=5/STRIDE=2/W=7"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-counter-snapshot": {
+      "scope": "dut",
+      "targets": [
+        "local-counter-snapshot/counter/default",
+        "local-counter-snapshot/counter/WAIT_CYCLES=0",
+        "local-counter-snapshot/counter/WAIT_CYCLES=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-coverage-feedback": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-credit-link": {
+      "scope": "dut",
+      "targets": [
+        "local-credit-link/credit_link/default",
+        "local-credit-link/credit_link/DEPTH=2",
+        "local-credit-link/credit_link/DEPTH=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-descriptor-dma": {
+      "scope": "dut",
+      "targets": [
+        "local-descriptor-dma/descriptor_dma/default",
+        "local-descriptor-dma/descriptor_dma/DEPTH=2",
+        "local-descriptor-dma/descriptor_dma/DEPTH=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-differential": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-divider": {
+      "scope": "dut",
+      "targets": [
+        "local-divider/divider/default",
+        "local-divider/divider/W=4",
+        "local-divider/divider/W=8",
+        "local-divider/divider/W=32"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-dma": {
+      "scope": "dut",
+      "targets": [
+        "local-dma/apb_dma/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-dma-ownership": {
+      "scope": "dut",
+      "targets": [
+        "local-dma-ownership/owned_ring/default",
+        "local-dma-ownership/owned_ring/DEPTH=2",
+        "local-dma-ownership/owned_ring/DEPTH=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-dram": {
+      "scope": "dut",
+      "targets": [
+        "local-dram/dram_controller/default",
+        "local-dram/dram_controller/CL=2/TRAS=3/TRCD=2/TREFI=24/TRFC=5/TRP=2/TWR=6",
+        "local-dram/dram_controller/CL=3/TRAS=5/TRCD=3/TREFI=36/TRFC=7/TRP=3/TWR=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-dsp": {
+      "scope": "dut",
+      "targets": [
+        "local-dsp/fir2/default",
+        "local-dsp/fir2/FRAC=3/LATENCY=1",
+        "local-dsp/fir2/FRAC=4/LATENCY=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-ecc": {
+      "scope": "dut",
+      "targets": [
+        "local-ecc/secded/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-ecc-memory": {
+      "scope": "dut",
+      "targets": [
+        "local-ecc-memory/ecc_memory/default",
+        "local-ecc-memory/ecc_memory/DEPTH=4",
+        "local-ecc-memory/ecc_memory/DEPTH=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-equivalence": {
+      "scope": "dut",
+      "targets": [
+        "local-equivalence/fifo_gold/default",
+        "local-equivalence/fifo_gold/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_gold/DEPTH=4/WIDTH=4",
+        "local-equivalence/fifo_optimized/default",
+        "local-equivalence/fifo_optimized/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_optimized/DEPTH=4/WIDTH=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-extension-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-dma/apb_dma/default",
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32",
+        "local-axis/axis_packet_fifo/default",
+        "local-axis/axis_packet_fifo/DEPTH=2",
+        "local-axis/axis_packet_fifo/DEPTH=4",
+        "local-counter-snapshot/counter/default",
+        "local-counter-snapshot/counter/WAIT_CYCLES=0",
+        "local-counter-snapshot/counter/WAIT_CYCLES=2",
+        "local-packet-crc/crc/default",
+        "local-packet-crc/crc/INIT=0",
+        "local-packet-crc/crc/INIT=255",
+        "local-descriptor-dma/descriptor_dma/default",
+        "local-descriptor-dma/descriptor_dma/DEPTH=2",
+        "local-descriptor-dma/descriptor_dma/DEPTH=4",
+        "local-mbist/mbist/default",
+        "local-mbist/mbist/DEPTH=8",
+        "local-mbist/mbist/DEPTH=16",
+        "local-dma-ownership/owned_ring/default",
+        "local-dma-ownership/owned_ring/DEPTH=2",
+        "local-dma-ownership/owned_ring/DEPTH=4",
+        "local-axi-reorder/reorder/default",
+        "local-axi-reorder/reorder/SLOTS=2",
+        "local-axi-reorder/reorder/SLOTS=4",
+        "local-stream-dma/stream_dma/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-failure-reduction": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-failure-triage": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-irq-cdc/irq_pending/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-fifo": {
+      "scope": "dut",
+      "targets": [
+        "local-fifo/sync_fifo/default",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=16"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-fifo-formal": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-fifo/sync_fifo/default",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=16"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-formal-replay": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-functional-coverage": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-dram/dram_controller/default",
+        "local-dram/dram_controller/CL=2/TRAS=3/TRCD=2/TREFI=24/TRFC=5/TRP=2/TWR=6",
+        "local-dram/dram_controller/CL=3/TRAS=5/TRCD=3/TREFI=36/TRFC=7/TRP=3/TWR=8",
+        "local-packet-switch/packet_switch/default",
+        "local-packet-switch/packet_switch/WIDTH=8",
+        "local-packet-switch/packet_switch/WIDTH=16",
+        "local-sha256/sha256_engine/default",
+        "local-sha256/sha256_engine/ROUNDS=1",
+        "local-sha256/sha256_engine/ROUNDS=2"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-gap-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-address-map/address_map/default",
+        "local-address-map/address_map/ALIAS=0",
+        "local-address-map/address_map/ALIAS=1",
+        "local-cdc-handshake/cdc_handshake/default",
+        "local-cdc-handshake/cdc_handshake/SYNC_STAGES=2",
+        "local-cdc-handshake/cdc_handshake/SYNC_STAGES=3",
+        "local-jtag-tap/jtag_tap/default",
+        "local-jtag-tap/jtag_tap/IDCODE=305419897",
+        "local-jtag-tap/jtag_tap/IDCODE=3735928559",
+        "local-lockstep-monitor/lockstep_monitor/default",
+        "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=0",
+        "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=7",
+        "local-performance-monitor/perf_monitor/default",
+        "local-performance-monitor/perf_monitor/SLOTS=2",
+        "local-performance-monitor/perf_monitor/SLOTS=4",
+        "local-secure-lifecycle/secure_lifecycle/default",
+        "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=2/DEBUG_KEY=23205",
+        "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=3/DEBUG_KEY=42330"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-gate-sim": {
+      "scope": "dut",
+      "targets": [
+        "local-gate-sim/burst_arbiter/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-generated-ral": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-i2c": {
+      "scope": "dut",
+      "targets": [
+        "local-i2c/i2c_target/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-interconnect": {
+      "scope": "dut",
+      "targets": [
+        "local-interconnect/axi_interconnect/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-irq-cdc": {
+      "scope": "dut",
+      "targets": [
+        "local-irq-cdc/cdc_receiver/default",
+        "local-irq-cdc/irq_pending/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-jtag-tap": {
+      "scope": "dut",
+      "targets": [
+        "local-jtag-tap/jtag_tap/default",
+        "local-jtag-tap/jtag_tap/IDCODE=305419897",
+        "local-jtag-tap/jtag_tap/IDCODE=3735928559"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-lint": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-address-map/address_map/default",
+        "local-address-map/address_map/ALIAS=0",
+        "local-address-map/address_map/ALIAS=1",
+        "local-ahb/ahb_regs/default",
+        "local-ahb/ahb_regs/WAIT_CYCLES=0",
+        "local-ahb/ahb_regs/WAIT_CYCLES=1",
+        "local-ahb/ahb_regs/WAIT_CYCLES=3",
+        "upstream/amax_tree32/default",
+        "local-dma/apb_dma/default",
+        "local-apb-irq/apb_irq/default",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=0",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=1",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=3",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-apb-timer/apb_timer/default",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=4",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=0/WIDTH=8",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=4",
+        "local-apb-timer/apb_timer/WAIT_CYCLES=2/WIDTH=8",
+        "local-apb-uart/apb_uart/default",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=0",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=1",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=0/WAIT_CYCLES=3",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=0",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=1",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=1/WAIT_CYCLES=3",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=0",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=1",
+        "local-apb-uart/apb_uart/DIVISOR=8/PARITY=2/WAIT_CYCLES=3",
+        "local-async-fifo/async_fifo/default",
+        "local-async-fifo/async_fifo/DEPTH=4/SYNC_STAGES=2",
+        "local-async-fifo/async_fifo/DEPTH=4/SYNC_STAGES=3",
+        "local-async-fifo/async_fifo/DEPTH=8/SYNC_STAGES=2",
+        "local-async-fifo/async_fifo/DEPTH=8/SYNC_STAGES=3",
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32",
+        "local-interconnect/axi_interconnect/default",
+        "local-axi/axi_lite_regs/default",
+        "local-axi/axi_lite_regs/RESP_DELAY=0",
+        "local-axi/axi_lite_regs/RESP_DELAY=2",
+        "local-width-converter/axi_width64to32/default",
+        "local-axis/axis_packet_fifo/default",
+        "local-axis/axis_packet_fifo/DEPTH=2",
+        "local-axis/axis_packet_fifo/DEPTH=4",
+        "local-progress/bounded_server/default",
+        "local-progress/bounded_server/SERVICE=1",
+        "local-progress/bounded_server/SERVICE=2",
+        "local-gate-sim/burst_arbiter/default",
+        "local-bus-bridge/bus_bridge/default",
+        "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=0",
+        "local-bus-bridge/bus_bridge/BUS=0/WAIT_CYCLES=2",
+        "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=0",
+        "local-bus-bridge/bus_bridge/BUS=1/WAIT_CYCLES=2",
+        "local-cache-dma/cache_dma/default",
+        "local-cache-dma/cache_dma/LATENCY=1/LINES=1",
+        "local-cache-dma/cache_dma/LATENCY=3/LINES=2",
+        "local-cdc-bridge/cdc_apb_bridge/default",
+        "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=2/WAIT_CYCLES=2",
+        "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=3/WAIT_CYCLES=0",
+        "local-cdc-handshake/cdc_handshake/default",
+        "local-cdc-handshake/cdc_handshake/SYNC_STAGES=2",
+        "local-cdc-handshake/cdc_handshake/SYNC_STAGES=3",
+        "local-irq-cdc/cdc_receiver/default",
+        "local-clock-reset/clock_reset/default",
+        "local-clock-reset/clock_reset/LATENCY=4/STAGES=2",
+        "local-clock-reset/clock_reset/LATENCY=4/STAGES=3",
+        "local-cache-coherence/coherent_pair/default",
+        "local-cache-coherence/coherent_pair/LATENCY=1",
+        "local-cache-coherence/coherent_pair/LATENCY=3",
+        "local-code-coverage/command_unit/default",
+        "local-constant-time/constant_time_compare/default",
+        "local-constant-time/constant_time_compare/BYTES=2",
+        "local-constant-time/constant_time_compare/BYTES=4",
+        "local-conv-window/conv_window/default",
+        "local-conv-window/conv_window/H=4/STRIDE=1/W=5",
+        "local-conv-window/conv_window/H=5/STRIDE=2/W=7",
+        "local-counter-snapshot/counter/default",
+        "local-counter-snapshot/counter/WAIT_CYCLES=0",
+        "local-counter-snapshot/counter/WAIT_CYCLES=2",
+        "local-packet-crc/crc/default",
+        "local-packet-crc/crc/INIT=0",
+        "local-packet-crc/crc/INIT=255",
+        "local-retry-link/crc9/default",
+        "local-credit-link/credit_link/default",
+        "local-credit-link/credit_link/DEPTH=2",
+        "local-credit-link/credit_link/DEPTH=4",
+        "local-descriptor-dma/descriptor_dma/default",
+        "local-descriptor-dma/descriptor_dma/DEPTH=2",
+        "local-descriptor-dma/descriptor_dma/DEPTH=4",
+        "local-divider/divider/default",
+        "local-divider/divider/W=4",
+        "local-divider/divider/W=8",
+        "local-divider/divider/W=32",
+        "local-dram/dram_controller/default",
+        "local-dram/dram_controller/CL=2/TRAS=3/TRCD=2/TREFI=24/TRFC=5/TRP=2/TWR=6",
+        "local-dram/dram_controller/CL=3/TRAS=5/TRCD=3/TREFI=36/TRFC=7/TRP=3/TWR=8",
+        "upstream/e2m1_decode/default",
+        "upstream/e2m1_quantize/default",
+        "local-ecc-memory/ecc_memory/default",
+        "local-ecc-memory/ecc_memory/DEPTH=4",
+        "local-ecc-memory/ecc_memory/DEPTH=8",
+        "upstream/elem_mul/default",
+        "local-equivalence/fifo_gold/default",
+        "local-equivalence/fifo_gold/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_gold/DEPTH=4/WIDTH=4",
+        "local-equivalence/fifo_optimized/default",
+        "local-equivalence/fifo_optimized/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_optimized/DEPTH=4/WIDTH=4",
+        "local-dsp/fir2/default",
+        "local-dsp/fir2/FRAC=3/LATENCY=1",
+        "local-dsp/fir2/FRAC=4/LATENCY=3",
+        "local-uvm-coordination/gain_pipe/default",
+        "upstream/gemm_ctrl_fsm/default",
+        "local-i2c/i2c_target/default",
+        "local-irq-cdc/irq_pending/default",
+        "local-jtag-tap/jtag_tap/default",
+        "local-jtag-tap/jtag_tap/IDCODE=305419897",
+        "local-jtag-tap/jtag_tap/IDCODE=3735928559",
+        "local-lockstep-monitor/lockstep_monitor/default",
+        "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=0",
+        "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=7",
+        "local-mbist/mbist/default",
+        "local-mbist/mbist/DEPTH=8",
+        "local-mbist/mbist/DEPTH=16",
+        "local-mxfp4/mp_add/default",
+        "local-mxfp4/mp_bdp/default",
+        "local-mxfp4/mp_encoder/default",
+        "local-mxfp4/mp_gemm/default",
+        "upstream/mxfp4_bdp/default",
+        "upstream/mxfp4_bdp_fifo/default",
+        "upstream/mxfp4_fifo/default",
+        "upstream/mxfp4_fp32_add_core/default",
+        "upstream/mxfp4_fp32_add_nearfar/default",
+        "upstream/mxfp4_gemm_top/default",
+        "upstream/mxfp4_i2f/default",
+        "upstream/mxfp4_lza/default",
+        "local-dma-ownership/owned_ring/default",
+        "local-dma-ownership/owned_ring/DEPTH=2",
+        "local-dma-ownership/owned_ring/DEPTH=4",
+        "local-cdc-bridge/packet_fifo/default",
+        "local-cdc-bridge/packet_fifo/SYNC_STAGES=2",
+        "local-cdc-bridge/packet_fifo/SYNC_STAGES=3",
+        "local-packet-switch/packet_switch/default",
+        "local-packet-switch/packet_switch/WIDTH=8",
+        "local-packet-switch/packet_switch/WIDTH=16",
+        "local-performance-monitor/perf_monitor/default",
+        "local-performance-monitor/perf_monitor/SLOTS=2",
+        "local-performance-monitor/perf_monitor/SLOTS=4",
+        "local-riscv-pmp/pmp/default",
+        "local-riscv-pmp/pmp/AW=16",
+        "local-riscv-pmp/pmp/AW=18",
+        "local-power/power_island/default",
+        "local-power/power_island/LATENCY=1",
+        "local-power/power_island/LATENCY=3",
+        "local-priority-irq/priority_irq/default",
+        "local-priority-irq/priority_irq/LEVEL=0/WAIT_CYCLES=2",
+        "local-priority-irq/priority_irq/LEVEL=1/WAIT_CYCLES=1",
+        "local-access-control/protected_regs/default",
+        "local-access-control/protected_regs/WAIT_CYCLES=0",
+        "local-access-control/protected_regs/WAIT_CYCLES=2",
+        "local-activation/pwl_activation/default",
+        "local-activation/pwl_activation/FUNC=0",
+        "local-activation/pwl_activation/FUNC=1",
+        "upstream/quant_encoder/default",
+        "upstream/reduce_tree/default",
+        "local-reduction/reduction_irq/default",
+        "local-axi-reorder/reorder/default",
+        "local-axi-reorder/reorder/SLOTS=2",
+        "local-axi-reorder/reorder/SLOTS=4",
+        "local-requantize/requantize/default",
+        "local-requantize/requantize/ACT_MAX=100/ACT_MIN=-20/CH=4",
+        "local-requantize/requantize/ACT_MAX=127/ACT_MIN=-128/CH=2",
+        "local-compositional-formal/request_sink/default",
+        "local-compositional-formal/request_source/default",
+        "local-uvm-multiclock/reset_mailbox/default",
+        "local-retry-link/retry_receiver/default",
+        "local-retry-link/retry_sender/default",
+        "local-retry-link/retry_sender/RETRIES=2/TIMEOUT=3",
+        "local-retry-link/retry_sender/RETRIES=3/TIMEOUT=5",
+        "local-arbiter/rr_arbiter/default",
+        "local-arbiter/rr_arbiter/PORTS=2",
+        "local-arbiter/rr_arbiter/PORTS=3",
+        "local-arbiter/rr_arbiter/PORTS=4",
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default",
+        "upstream/scale_add/default",
+        "local-scan-atpg/scan_logic/default",
+        "local-scan-atpg/scan_logic/REVERSE=0",
+        "local-scan-atpg/scan_logic/REVERSE=1",
+        "local-ecc/secded/default",
+        "local-secure-lifecycle/secure_lifecycle/default",
+        "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=2/DEBUG_KEY=23205",
+        "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=3/DEBUG_KEY=42330",
+        "local-sha256/sha256_engine/default",
+        "local-sha256/sha256_engine/ROUNDS=1",
+        "local-sha256/sha256_engine/ROUNDS=2",
+        "local-connectivity/soc_top/default",
+        "local-spi/spi_master/default",
+        "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=4",
+        "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=4",
+        "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=4",
+        "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=4",
+        "local-store-buffer/store_buffer/default",
+        "local-store-buffer/store_buffer/DEPTH=2",
+        "local-store-buffer/store_buffer/DEPTH=3",
+        "local-stream/stream_buffer/default",
+        "local-stream/stream_buffer/DEPTH=1/WIDTH=8",
+        "local-stream/stream_buffer/DEPTH=1/WIDTH=16",
+        "local-stream/stream_buffer/DEPTH=3/WIDTH=8",
+        "local-stream/stream_buffer/DEPTH=3/WIDTH=16",
+        "local-stream-dma/stream_dma/default",
+        "local-tlb/sv32_tlb/default",
+        "local-tlb/sv32_tlb/ENTRIES=2",
+        "local-tlb/sv32_tlb/ENTRIES=4",
+        "local-sv32/sv32_walk/default",
+        "local-fifo/sync_fifo/default",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=16",
+        "local-systolic-array/systolic_array/default",
+        "local-systolic-array/systolic_array/N=2",
+        "local-systolic-array/systolic_array/N=4",
+        "local-recovery/timeout_guard/default",
+        "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=4",
+        "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=8",
+        "local-timer-watchdog/timer_watchdog/default",
+        "local-timer-watchdog/timer_watchdog/WIDTH=4",
+        "local-timer-watchdog/timer_watchdog/WIDTH=8",
+        "local-topk/topk_select/default",
+        "local-topk/topk_select/K=2/N=4",
+        "local-topk/topk_select/K=3/N=8",
+        "local-bus-bridge/transaction_apb/default",
+        "local-uart/uart/default",
+        "local-uart/uart/DIVISOR=8/PARITY=0",
+        "local-uart/uart/DIVISOR=8/PARITY=1",
+        "local-uart/uart/DIVISOR=8/PARITY=2",
+        "local-uart/uart/DIVISOR=16/PARITY=0",
+        "local-uart/uart/DIVISOR=16/PARITY=1",
+        "local-uart/uart/DIVISOR=16/PARITY=2"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-load-store": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-lockstep-monitor": {
+      "scope": "dut",
+      "targets": [
+        "local-lockstep-monitor/lockstep_monitor/default",
+        "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=0",
+        "local-lockstep-monitor/lockstep_monitor/FAULT_BIT=7"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-mbist": {
+      "scope": "dut",
+      "targets": [
+        "local-mbist/mbist/default",
+        "local-mbist/mbist/DEPTH=8",
+        "local-mbist/mbist/DEPTH=16"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-memory-order": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-mxfp4": {
+      "scope": "dut",
+      "targets": [
+        "local-mxfp4/mp_add/default",
+        "local-mxfp4/mp_bdp/default",
+        "local-mxfp4/mp_encoder/default",
+        "local-mxfp4/mp_gemm/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-packet-crc": {
+      "scope": "dut",
+      "targets": [
+        "local-packet-crc/crc/default",
+        "local-packet-crc/crc/INIT=0",
+        "local-packet-crc/crc/INIT=255"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-packet-switch": {
+      "scope": "dut",
+      "targets": [
+        "local-packet-switch/packet_switch/default",
+        "local-packet-switch/packet_switch/WIDTH=8",
+        "local-packet-switch/packet_switch/WIDTH=16"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-performance-monitor": {
+      "scope": "dut",
+      "targets": [
+        "local-performance-monitor/perf_monitor/default",
+        "local-performance-monitor/perf_monitor/SLOTS=2",
+        "local-performance-monitor/perf_monitor/SLOTS=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-plan-traceability": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-irq-cdc/irq_pending/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-power": {
+      "scope": "dut",
+      "targets": [
+        "local-power/power_island/default",
+        "local-power/power_island/LATENCY=1",
+        "local-power/power_island/LATENCY=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-priority-irq": {
+      "scope": "dut",
+      "targets": [
+        "local-priority-irq/priority_irq/default",
+        "local-priority-irq/priority_irq/LEVEL=0/WAIT_CYCLES=2",
+        "local-priority-irq/priority_irq/LEVEL=1/WAIT_CYCLES=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-progress": {
+      "scope": "dut",
+      "targets": [
+        "local-progress/bounded_server/default",
+        "local-progress/bounded_server/SERVICE=1",
+        "local-progress/bounded_server/SERVICE=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-recovery": {
+      "scope": "dut",
+      "targets": [
+        "local-recovery/timeout_guard/default",
+        "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=4",
+        "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-reduction": {
+      "scope": "dut",
+      "targets": [
+        "local-irq-cdc/irq_pending/default",
+        "local-reduction/reduction_irq/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-register-spec": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-regression-report": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-fifo/sync_fifo/default",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=1/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=3/WIDTH=16",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=8",
+        "local-fifo/sync_fifo/DEPTH=8/WIDTH=16"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-requantize": {
+      "scope": "dut",
+      "targets": [
+        "local-requantize/requantize/default",
+        "local-requantize/requantize/ACT_MAX=100/ACT_MIN=-20/CH=4",
+        "local-requantize/requantize/ACT_MAX=127/ACT_MIN=-128/CH=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-retry-link": {
+      "scope": "dut",
+      "targets": [
+        "local-retry-link/crc9/default",
+        "local-retry-link/retry_receiver/default",
+        "local-retry-link/retry_sender/default",
+        "local-retry-link/retry_sender/RETRIES=2/TIMEOUT=3",
+        "local-retry-link/retry_sender/RETRIES=3/TIMEOUT=5"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-riscv-decoder": {
+      "scope": "dut",
+      "targets": [
+        "local-riscv-decoder/rv32i_decoder/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-riscv-iss": {
+      "scope": "dut",
+      "targets": [
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-riscv-pmp": {
+      "scope": "dut",
+      "targets": [
+        "local-riscv-pmp/pmp/default",
+        "local-riscv-pmp/pmp/AW=16",
+        "local-riscv-pmp/pmp/AW=18"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-riscv-traps": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-scan-atpg": {
+      "scope": "dut",
+      "targets": [
+        "local-scan-atpg/scan_logic/default",
+        "local-scan-atpg/scan_logic/REVERSE=0",
+        "local-scan-atpg/scan_logic/REVERSE=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-secure-lifecycle": {
+      "scope": "dut",
+      "targets": [
+        "local-secure-lifecycle/secure_lifecycle/default",
+        "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=2/DEBUG_KEY=23205",
+        "local-secure-lifecycle/secure_lifecycle/ATTEMPT_LIMIT=3/DEBUG_KEY=42330"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sha256": {
+      "scope": "dut",
+      "targets": [
+        "local-sha256/sha256_engine/default",
+        "local-sha256/sha256_engine/ROUNDS=1",
+        "local-sha256/sha256_engine/ROUNDS=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-soc-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-dma/apb_dma/default",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32",
+        "local-cache-dma/cache_dma/default",
+        "local-cache-dma/cache_dma/LATENCY=1/LINES=1",
+        "local-cache-dma/cache_dma/LATENCY=3/LINES=2",
+        "local-credit-link/credit_link/default",
+        "local-credit-link/credit_link/DEPTH=2",
+        "local-credit-link/credit_link/DEPTH=4",
+        "local-descriptor-dma/descriptor_dma/default",
+        "local-descriptor-dma/descriptor_dma/DEPTH=2",
+        "local-descriptor-dma/descriptor_dma/DEPTH=4",
+        "local-equivalence/fifo_gold/default",
+        "local-equivalence/fifo_gold/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_gold/DEPTH=4/WIDTH=4",
+        "local-equivalence/fifo_optimized/default",
+        "local-equivalence/fifo_optimized/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_optimized/DEPTH=4/WIDTH=4",
+        "local-priority-irq/priority_irq/default",
+        "local-priority-irq/priority_irq/LEVEL=0/WAIT_CYCLES=2",
+        "local-priority-irq/priority_irq/LEVEL=1/WAIT_CYCLES=1"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-spec-change": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-apb-irq/apb_irq/default",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=0",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=1",
+        "local-apb-irq/apb_irq/WAIT_CYCLES=3",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-spi": {
+      "scope": "dut",
+      "targets": [
+        "local-spi/spi_master/default",
+        "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=4",
+        "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=4",
+        "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=4",
+        "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=2",
+        "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sta": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-store-buffer": {
+      "scope": "dut",
+      "targets": [
+        "local-store-buffer/store_buffer/default",
+        "local-store-buffer/store_buffer/DEPTH=2",
+        "local-store-buffer/store_buffer/DEPTH=3"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-stream": {
+      "scope": "dut",
+      "targets": [
+        "local-stream/stream_buffer/default",
+        "local-stream/stream_buffer/DEPTH=1/WIDTH=8",
+        "local-stream/stream_buffer/DEPTH=1/WIDTH=16",
+        "local-stream/stream_buffer/DEPTH=3/WIDTH=8",
+        "local-stream/stream_buffer/DEPTH=3/WIDTH=16"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-stream-dma": {
+      "scope": "dut",
+      "targets": [
+        "local-stream-dma/stream_dma/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sv32": {
+      "scope": "dut",
+      "targets": [
+        "local-sv32/sv32_walk/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sva": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-irq-cdc/irq_pending/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-system-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-dma/apb_dma/default",
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-axi4/axi4_ram/default",
+        "local-axi4/axi4_ram/MEM_BYTES=16",
+        "local-axi4/axi4_ram/MEM_BYTES=32",
+        "local-interconnect/axi_interconnect/default",
+        "local-cdc-bridge/cdc_apb_bridge/default",
+        "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=2/WAIT_CYCLES=2",
+        "local-cdc-bridge/cdc_apb_bridge/SYNC_STAGES=3/WAIT_CYCLES=0",
+        "local-equivalence/fifo_gold/default",
+        "local-equivalence/fifo_gold/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_gold/DEPTH=4/WIDTH=4",
+        "local-equivalence/fifo_optimized/default",
+        "local-equivalence/fifo_optimized/DEPTH=2/WIDTH=4",
+        "local-equivalence/fifo_optimized/DEPTH=4/WIDTH=4",
+        "local-cdc-bridge/packet_fifo/default",
+        "local-cdc-bridge/packet_fifo/SYNC_STAGES=2",
+        "local-cdc-bridge/packet_fifo/SYNC_STAGES=3",
+        "local-power/power_island/default",
+        "local-power/power_island/LATENCY=1",
+        "local-power/power_island/LATENCY=3",
+        "local-recovery/timeout_guard/default",
+        "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=4",
+        "local-recovery/timeout_guard/TAG_BITS=4/TIMEOUT=8"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-systolic-array": {
+      "scope": "dut",
+      "targets": [
+        "local-systolic-array/systolic_array/default",
+        "local-systolic-array/systolic_array/N=2",
+        "local-systolic-array/systolic_array/N=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-timer-watchdog": {
+      "scope": "dut",
+      "targets": [
+        "local-timer-watchdog/timer_watchdog/default",
+        "local-timer-watchdog/timer_watchdog/WIDTH=4",
+        "local-timer-watchdog/timer_watchdog/WIDTH=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-tlb": {
+      "scope": "dut",
+      "targets": [
+        "local-tlb/sv32_tlb/default",
+        "local-tlb/sv32_tlb/ENTRIES=2",
+        "local-tlb/sv32_tlb/ENTRIES=4",
+        "local-sv32/sv32_walk/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-topk": {
+      "scope": "dut",
+      "targets": [
+        "local-topk/topk_select/default",
+        "local-topk/topk_select/K=2/N=4",
+        "local-topk/topk_select/K=3/N=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uart": {
+      "scope": "dut",
+      "targets": [
+        "local-uart/uart/default",
+        "local-uart/uart/DIVISOR=8/PARITY=0",
+        "local-uart/uart/DIVISOR=8/PARITY=1",
+        "local-uart/uart/DIVISOR=8/PARITY=2",
+        "local-uart/uart/DIVISOR=16/PARITY=0",
+        "local-uart/uart/DIVISOR=16/PARITY=1",
+        "local-uart/uart/DIVISOR=16/PARITY=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uvm": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-uvm-coordination": {
+      "scope": "dut",
+      "targets": [
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-uvm-coordination/gain_pipe/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uvm-hierarchy": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-uvm-migration": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-uvm-multiclock": {
+      "scope": "dut",
+      "targets": [
+        "local-uvm-multiclock/reset_mailbox/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uvm-random": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-width-converter": {
+      "scope": "dut",
+      "targets": [
+        "local-width-converter/axi_width64to32/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-workflow-regression": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-apb/apb_regs/default",
+        "local-apb/apb_regs/WAIT_CYCLES=0",
+        "local-apb/apb_regs/WAIT_CYCLES=1",
+        "local-apb/apb_regs/WAIT_CYCLES=2",
+        "local-apb/apb_regs/WAIT_CYCLES=3",
+        "local-width-converter/axi_width64to32/default",
+        "local-axis/axis_packet_fifo/default",
+        "local-axis/axis_packet_fifo/DEPTH=2",
+        "local-axis/axis_packet_fifo/DEPTH=4",
+        "local-clock-reset/clock_reset/default",
+        "local-clock-reset/clock_reset/LATENCY=4/STAGES=2",
+        "local-clock-reset/clock_reset/LATENCY=4/STAGES=3",
+        "local-ecc-memory/ecc_memory/default",
+        "local-ecc-memory/ecc_memory/DEPTH=4",
+        "local-ecc-memory/ecc_memory/DEPTH=8",
+        "local-access-control/protected_regs/default",
+        "local-access-control/protected_regs/WAIT_CYCLES=0",
+        "local-access-control/protected_regs/WAIT_CYCLES=2",
+        "local-ecc/secded/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    }
+  },
+  "blackbox_sources": {
+    "examples/local-connectivity/ip_blackbox.sv": "接続性だけを証明する例の正式なIPポート宣言。内部動作を検査したとは扱わない。別例の同名UARTを誤って結合しない。"
+  }
+}

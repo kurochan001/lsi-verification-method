@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "origin": "Teaching fixtures authored for this repository; not transcripts of model output",
+  "specification": "Synchronous reset clears pending. An accepted event sets pending even while masked and wins over a simultaneous W1C clear. IRQ is pending AND enable.",
+  "requirements": ["reset", "event", "clear", "collision", "masked-storage", "irq-output"],
+  "proposals": [
+    {"id": "missing-condition", "requirements": ["reset", "event", "clear", "masked-storage", "irq-output"], "flags": {}, "omit_collision": true, "expected_findings": ["requirement-omitted", "collision-not-observed", "mutation-survived"]},
+    {"id": "wrong-past", "requirements": ["reset", "event", "clear", "collision", "masked-storage", "irq-output"], "flags": {"sva_mode": 1}, "omit_collision": false, "expected_findings": ["assertion-rejects-correct-rtl"]},
+    {"id": "vacuous-assertion", "requirements": ["reset", "event", "clear", "collision", "masked-storage", "irq-output"], "flags": {"sva_mode": 2, "model": 2, "mutation": 1}, "omit_collision": false, "expected_findings": ["antecedent-unreachable", "incorrect-rtl-passed"]},
+    {"id": "correlated-model", "requirements": ["reset", "event", "clear", "collision", "masked-storage", "irq-output"], "flags": {"sva_off": 1, "model": 1, "mutation": 1}, "omit_collision": false, "expected_findings": ["rtl-and-model-share-error", "independent-check-disabled", "incorrect-rtl-passed"]}
+  ]
+}

@@ -83,6 +83,7 @@
 | [CDCハンドシェイク](local-cdc-handshake/README.md) | 複数ビットの4相req/ack、パルス同期、リセットの非同期アサート・同期デアサート | Icarus |
 | [クロック停止とリセット](local-clock-reset/README.md) | 処理の排出・停止・再開、停止中のリセット、同期解除 | Icarus |
 | [低電力制御](local-power/README.md) | 排出・隔離・状態保持・復帰のRTL動作モデル（UPF実行は対象外） | Icarus |
+| [複数クロックと個別リセットの上位UVM](local-uvm-multiclock/README.md) | 片側リセット、解除順序、時刻順の観測、取消・古い応答・復帰、2種類のクロック条件 | UVM |
 
 ## 演算・故障注入・保護・性能・DFT
 
@@ -163,6 +164,9 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 | [検証項目表と結果の自動照合](local-plan-traceability/README.md) | 仕様・6要求・6項目・native SVAの対応、構成と版、未実行・不足・古い証跡の拒否 | Verilator |
 | [仕様変更の再検証](local-spec-change/README.md) | APB＋割り込みのr1／r2を同じ入力で比較、古い期待値・SVA・証跡の拒否、native SVAと行カバレッジ | Icarus＋Verilator |
 | [初回失敗と再実行のレポート](local-regression-report/README.md) | 実際のFIFO時間切れ、同じ計画の再実行、全履歴・最後の試行・未達の照合 | Icarus |
+| [全DUTの共通lintと警告管理](local-lint/README.md) | 明示した構成・共有ソース、指摘の追加・解消・除外の失効、幅・ラッチ・暗黙ネット等の負例 | Verilator |
+| [失敗解析と修正後の再実行](local-failure-triage/README.md) | RTL・期待値・SVA設定・ツール不足・時間切れの切分け、同じ入力での回帰確認、不具合票 | Verilator |
+| [AIの悪い提案をレビューする](local-ai-review/README.md) | 要求抜け、誤った`$past`、空虚な成立、DUTと参照モデルの相関した誤り。APIキー不要 | Verilator |
 | [コードカバレッジの未達分析](local-code-coverage/README.md) | 行・分岐・式・toggle・FSM、追加試験、DB統合・注釈、カバレッジ達成時の機能不正 | Verilator |
 | [ネイティブ機能カバレッジ](local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
 | [UVMの制約付きランダム検証](local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
@@ -187,9 +191,11 @@ RISC-Vの命令・保護機構と、プロセッサを構成する回路の9例�
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-2026-11-01の追加確認では、nightly対応89例の記載構成、7集約ランナー、全11フォーマル例を実行しました。最終補強した履歴レポート例を再実行し、新しいツールで全88ジョブの採用結果を照合しています。共通シミュレーション58例・124構成のnightlyはJUnit 1122件、上位UVMは20件、仕様変更は46件、履歴レポートは6件です。分割証明を含む22構成の170フォーマルタスク、証明依存の親9判定、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しています。
+2026-11-01の最新確認では、nightly対応の個別92例、集約8本、全11フォーマル例、固定計画の共通lint・STAを、114登録項目・92ルートジョブから実行しました。個別103例のJUnit 2431件、共通lintの子261判定、集約・診断・証明依存等の親70判定が成功しています。セルフテストは113グループ・861件です。
 
-各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と集約判定を分けた件数、再実行した範囲、時間上限、ツール版、ソースの照合は[最新の確認記録](../PROVENANCE.md#workflow-capstone-and-composition-20261101)を参照してください。
+分割証明を含む22構成の170フォーマルタスク、反例再現用の新規BMC 8件、手法書の割り込み例8タスク、OpenSTAの全構成も確認しました。新しい失敗解析例は12判定、AIレビュー例は9判定、複数クロックUVMはnightly 44判定です。共通lintは99 RTLファイル・100モジュール・258構成を確認し、957件の既知指摘を残しています。差分なしの成功と警告0件を区別します。
+
+各例の既定計画に含まれる正常動作・変異・診断を確認し、予定した反例や未到達の識別も成功と判定しています。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果と親判定を分けた件数、時間上限、入力ハッシュの照合と未確認は[最新の確認記録](../PROVENANCE.md#verification-quality-20261101)を参照してください。
 
 ## 初期の11例の構成
 

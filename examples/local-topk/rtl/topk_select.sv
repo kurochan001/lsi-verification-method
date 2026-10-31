@@ -15,9 +15,10 @@ module topk_select #(parameter N=4, K=2, MUTATION=0)(
     reg swap;
     integer stage, i;
     always @* begin
+        held_score = 0; held_index = 0; swap = 0;
         for (i = 0; i < N; i = i + 1) begin
             score[i] = in_scores[8*i +: 8];
-            index[i] = i;
+            index[i] = IW'(i);
         end
         for (stage = 0; stage < N; stage = stage + 1)
             for (i = stage % 2; i + 1 < N; i = i + 2)

@@ -42,7 +42,8 @@ module address_map #(parameter ALIAS=1, MUTATION=0)(
                     8'h00: prdata = timer_ctrl;
                     8'h04: prdata = {16'b0, timer_count};
                     8'h08: prdata = timer_match;
-                    8'h0c: prdata = {30'b0, irq_bits[0]};
+                    8'h0c: prdata = {31'b0, irq_bits[0]};
+                    default: begin prdata = 0; pslverr = 1; end
                 endcase
             end else if (gpio_ok && known_gpio) begin
                 if (pwrite && (offset == 8'h04 || partial)) pslverr = 1;
@@ -50,7 +51,8 @@ module address_map #(parameter ALIAS=1, MUTATION=0)(
                     8'h00: prdata = {28'b0, gpio_out};
                     8'h04: prdata = {28'b0, gpio_in};
                     8'h08: prdata = gpio_edge;
-                    8'h0c: prdata = {30'b0, irq_bits[1]};
+                    8'h0c: prdata = {31'b0, irq_bits[1]};
+                    default: begin prdata = 0; pslverr = 1; end
                 endcase
             end else pslverr = MUTATION == 1 ? 0 : 1;
         end

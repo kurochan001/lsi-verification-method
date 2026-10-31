@@ -104,6 +104,21 @@
       }
     },
     {
+      "id": "local-ai-review",
+      "script": "examples/local-ai-review/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "verilator",
+        "make",
+        "c++"
+      ]
+    },
+    {
       "id": "local-apb",
       "script": "examples/local-apb/run.py",
       "kind": "simulation",
@@ -800,6 +815,21 @@
       ]
     },
     {
+      "id": "local-failure-triage",
+      "script": "examples/local-failure-triage/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "verilator",
+        "make",
+        "c++"
+      ]
+    },
+    {
       "id": "local-fifo",
       "script": "examples/local-fifo/run.py",
       "kind": "simulation",
@@ -985,6 +1015,31 @@
       "tools": [
         "iverilog",
         "vvp"
+      ]
+    },
+    {
+      "id": "local-lint",
+      "script": "examples/local-lint/run.py",
+      "kind": "aggregate",
+      "profile": false,
+      "options": [
+        "child-timeout"
+      ],
+      "tools": [
+        "verilator"
+      ],
+      "children": {
+        "local-lint-targets": "targets"
+      }
+    },
+    {
+      "id": "local-lint-targets",
+      "script": "tools/run_lint.py",
+      "kind": "aggregate",
+      "profile": false,
+      "options": [],
+      "tools": [
+        "verilator"
       ]
     },
     {
@@ -1655,6 +1710,22 @@
           "active"
         ]
       }
+    },
+    {
+      "id": "local-uvm-multiclock",
+      "script": "examples/local-uvm-multiclock/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "verilator",
+        "make",
+        "c++"
+      ]
     },
     {
       "id": "local-uvm-random",

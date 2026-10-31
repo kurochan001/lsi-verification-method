@@ -20,6 +20,8 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
 | 失敗・再実行・採用結果をまとめる | [履歴レポート](tools/REPORTING.md)／[実際の時間切れから再実行する例](examples/local-regression-report/README.md) |
+| lintの指摘や失敗を解析する | [警告の扱い](docs/method/lint-and-waivers.md)／[失敗解析](docs/method/failure-analysis.md)／[不具合票](docs/templates/verification-issue.md) |
+| AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
@@ -129,6 +131,9 @@ flowchart TD
 | <a id="コードカバレッジを確認する"></a>[コードカバレッジ](docs/method/code-coverage.md) | 行・分岐・式・toggle・FSMの計測、未達分析、追加試験、DB統合と除外 |
 | [ミューテーション検証](docs/method/mutation-verification.md) | 意図的な誤りで検出力を確認し、未検出・等価な変異・未完了を区別する |
 | [継続的リグレッション](docs/method/continuous-regression.md) | 変更時・定期・サインオフの計画、予定と結果の照合、資源・再実行・証跡管理 |
+| [静的検査と警告管理](docs/method/lint-and-waivers.md) | 全DUTの構成台帳、新規・解消した警告、既知指摘と除外、入力変更時の再レビュー |
+| [失敗解析と回帰試験](docs/method/failure-analysis.md) | 元の証跡の保存、RTL・期待値・検査設定・環境の切分け、同一入力での修正確認 |
+| [AI提案のレビュー](docs/method/ai-verification-review.md) | 要求抜け、誤った履歴参照、前件未到達、DUTと参照モデルの相関した誤り |
 
 機能カバレッジの例では、パケットスイッチの「出力ポート×末尾の有無×受信側ready」をcrossで計測し、どの組合せを試したかを確認します。コードカバレッジの例では、基礎試験で残ったXORや拒否応答などの未達を、追加試験とDB統合で補います。未達の原因を調べ、刺激不足、到達不能、計測の問題、要求・実装の不足を分けて扱います。
 
@@ -149,6 +154,9 @@ flowchart TD
 | 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
 | 複数agentを協調させる | [APB設定＋GAINデータパス](examples/local-uvm-coordination/README.md) | virtual sequence、同時設定と入力の期待値、観測順序、待ち・取消、native bin |
 | UVMの子環境を上位で再利用する | [二つのIPと階層RAL](examples/local-uvm-hierarchy/README.md) | 共通driver・子のpassive観測、submap、配置変更、上位virtual sequence |
+| 複数クロックと個別リセットを協調させる | [上位UVMの実行例](examples/local-uvm-multiclock/README.md) | 時刻順の観測、リセット世代、片側リセットでの取消、古い応答の拒否、解除順序 |
+| 静的検査と警告の差分を管理する | [共通lint](examples/local-lint/README.md) | 全DUT・共有RTLの構成、既知指摘と除外、警告0件と差分なしの違い |
+| 失敗ログから原因を切り分ける | [失敗解析の実習](examples/local-failure-triage/README.md) | 同じ比較エラーでもRTLと期待値を仕様へ別々に照合、環境不良と検査無効の識別 |
 | RTLの入出力を自動で比較する | [同期FIFO](examples/local-fifo/README.md) | 独立した参照キュー、空／満杯、データ順序、変異検出 |
 | 周辺回路を結合して確認する | [APB・UART・割り込み](examples/local-apb-uart/README.md) | バス操作から送受信・IRQまでのつながり、待ち・リセット |
 | 波形の目視確認を自動判定にする | [割り込みのSVA](examples/local-sva/README.md) | assertとcover、サンプリング、検出力、終了判定 |
@@ -156,7 +164,7 @@ flowchart TD
 | RTLの未実行箇所を調べる | [コードカバレッジ](examples/local-code-coverage/README.md) | 基礎試験と追加試験、DB統合、注釈付きソース |
 | 入力空間の広い回路を証明する | [RISC-V命令デコーダ](examples/local-riscv-decoder/README.md) | 全命令語の合法性判定、合法命令の出力、誤実装の反例 |
 | 分割証明の仮定と保証を管理する | [送信側・受信側・接続契約](examples/local-compositional-formal/README.md) | 仮定を満たす側の証明、配線、依存する証明の欠落・古い版・循環 |
-| AIを使った検証を学ぶ | [AIの使い方](docs/method/spec-to-verification-method.md#12-並列化とaiの使い方)／[適用事例](docs/case-study-ieee1800/README.md) | 要求抽出・テスト案作成、作成とレビューの分担、実行証跡による確認 |
+| AIを使った検証を学ぶ | [使い方と依頼記録](docs/method/ai-verification-review.md)／[保存した提案を動かす演習](examples/local-ai-review/README.md)／[適用事例](docs/case-study-ieee1800/README.md) | 要求抽出・提案・独立レビュー、悪い期待値やSVAを見抜く、実行と検出力の確認 |
 
 AIは、要求の整理、テスト・アサーション案の作成、未達や失敗の分析を支援するために使います。提案は仕様と照合し、独立レビューと実際の実行結果で、妥当性と不具合の検出力を確認します。
 
@@ -178,7 +186,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 
-2026-11-01に、総合演習・履歴レポート・上位UVM・分割証明を追加し、nightly対応全89例、集約7本、全11フォーマル例の既定全タスクを再確認しました。最終補強したレポート例は別出力先で再実行し、新しいレポートツールで全88ジョブの採用結果と版を照合しています。[追加内容と最終確認](PROVENANCE.md#workflow-capstone-and-composition-20261101)に、初回と再実行の範囲、判定、証跡を記録しています。
+2026-11-01の最新追加では、共通lint・失敗解析・AI提案レビュー・複数クロックUVMを実装し、nightly対応の個別92例と、フォーマル・STA・lintを全92ルートジョブから確認しました。セルフテスト861件も成功しています。lintの既知指摘と除外を含む[追加内容と確認範囲](PROVENANCE.md#verification-quality-20261101)に、件数・版・証跡・未確認を記録しています。
 
 ## 準備と実行
 
@@ -310,7 +318,7 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 1. **手法の改訂**：検証手順書に、ケーススタディで得た知見を反映し続けます。
 2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
-4. **テンプレート**：検証領域の適用範囲とサインオフ記録の雛形を起点に、要求台帳、照合案、検証者のチェックリスト、課題票を整備します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
+4. **テンプレートの実案件への適用**：検証領域の適用範囲、サインオフ、[不具合票](docs/templates/verification-issue.md)、[AIへの依頼・採否](docs/templates/ai-verification-request.md)の雛形を、実際の担当・構成・証跡へ対応付けて見直します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
 
 ### 注意
 

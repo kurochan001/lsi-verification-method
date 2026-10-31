@@ -30,6 +30,8 @@ python3 tools/run_regression.py --suite formal --list
 
 `--suite simulation`には反例をシミュレーションで再現する例があり、その内部では新しいBMCも実行します。`--suite formal`は証明専用の入口の選択です。部分選択の成功を全例の成功と扱いません。
 
+[共通lintと警告管理](../examples/local-lint/README.md)は`--suite all`に含みます。`--example local-lint`なら、全DUTの構成別lintと負例を実行します。子の`local-lint-targets`は親から一度起動します。lintは固定計画で、nightlyでも同じ範囲です。既知指摘が残った差分なしの成功と、警告0件を区別します。新しい[失敗解析](../examples/local-failure-triage/README.md)、[AIレビュー](../examples/local-ai-review/README.md)、[複数クロックUVM](../examples/local-uvm-multiclock/README.md)はシミュレーション例として両プロファイルに登録しています。
+
 ## 2. 実行環境を明示的に準備する
 
 Icarus Verilog、Verilator 5.052、C++20コンパイラー、Cコンパイラー、make、OpenSTAを各環境へ用意します。フォーマルは[固定版環境](../examples/local-formal-common/README.md)、UVMは[ライブラリの準備](../examples/local-uvm/README.md#ライブラリの準備)、OpenSTAは[構築手順](../examples/local-sta/README.md)を参照してください。ランナー自身はツールをインストールしません。

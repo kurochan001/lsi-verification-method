@@ -172,6 +172,15 @@ factoryで制約を足した型へ差し替える場合も、実際の生成型�
 | SV制約とnative covergroup | [UVMランダム例](../../examples/local-uvm-random/README.md)で実行。 |
 | GAINの同時更新、設定・データ・readyのvirtual sequence、二つのmonitorの順序、native bin | [複数agentの協調例](../../examples/local-uvm-coordination/README.md)で実行。 |
 | 二つの子環境、上位RAL・submap、配置変更、上位virtual sequence | [上位再利用例](../../examples/local-uvm-hierarchy/README.md)で実行。 |
-| 任意の内部tap、複数クロックをまたぐ上位協調 | 本書の設計例。実行済みの単一クロック例から別に評価する。 |
+| 複数クロック、個別reset、時刻順の観測、世代ごとの取消と復帰 | [複数クロックの上位UVM例](../../examples/local-uvm-multiclock/README.md)で実行。 |
+| 任意の内部tap、停止を含む任意のクロック条件 | 本書の設計案。実行済みの構成から別に評価する。 |
 
 製品へ適用する際は、[移行計画](../templates/uvm-migration-plan.md)、[クロスモデルの記録](../templates/interaction-coverage-plan.md)、[サインオフ記録](../templates/signoff-record.md)へ、必須範囲、実行証跡、未確認、残リスクを対応付けます。
+
+## 8. 複数クロックと個別リセットを協調させる
+
+モニターから届いた順番と、回路で受理・完了した時刻は一致するとは限りません。各ドメインで実際のハンドシェイクを観測し、エッジ時刻とIDを新しい観測オブジェクトへ保存します。同時刻の扱いと通知遅延の上限を決め、scoreboardへ届く順序に依存しないようにします。
+
+resetでは、期待値を保持するか、全体を破棄するか、片側だけ取り消すかを仕様にします。[実行例](../../examples/local-uvm-multiclock/README.md)は、どちらかのresetでチャネルを破棄する契約です。世代を進めて未完了要求を取り消し、受理数＝完了数＋取消数＋未完了数を検査します。IDを再利用せず、取消済みIDの応答を拒否します。単に期待キューを空にするだけでは、古い応答が新しい要求へ誤って対応する可能性があります。
+
+両端の解除順序、片側reset中の相手の動作、復帰後の通常転送を別の確認項目にします。上位sequenceは送信・受信ready・resetの各所有者を協調させ、複数driverが同じ信号を駆動しないようにします。論理シミュレーションで確認した世代管理と、物理CDC/RDCやresetのタイミング解析の結果は分けて記録します。

@@ -430,6 +430,8 @@ AIは、仕様から検証へ落とし込む作業を補助するために使い
 
 ### 小さな実行例で試す
 
+[AI提案のレビュー手順](ai-verification-review.md)と[依頼・採否の雛形](../templates/ai-verification-request.md)を用意しています。[保存済みの悪い提案を使う演習](../../examples/local-ai-review/README.md)では、要求抜け、誤った`$past`、前件未到達、DUTと期待値の相関した誤りを、外部APIなしで実行して確認します。[失敗解析の実習](../../examples/local-failure-triage/README.md)では、同じ比較エラーでもRTLと期待値を独立した仕様値へ照合して切り分けます。
+
 [同期FIFOの仕様](../../examples/local-fifo/README.md#1-fifoの仕様)から、空・満杯・同時要求・リセットについて、条件・期待結果・観測点・刺激の案をAIに作らせる練習ができます。次に作成担当とは別の担当が仕様と照合し、[既存の検証環境](../../examples/local-fifo/README.md#2-スコアボードとカバレッジ)と比較します。実行結果では、値・順序の比較、構成別の必須目標、誤実装の検出を確認します。
 
 アサーション案を扱う場合は、[目視確認から自動判定へ移す手順](assertion-based-regression.md)と[割り込みのSVA例](../../examples/local-sva/README.md)へ進めます。プロンプトや提案の記録だけでなく、採用・修正した内容と仕様の根拠、レビュー結果、実行IDを残します。
