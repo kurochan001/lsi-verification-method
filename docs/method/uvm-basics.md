@@ -96,7 +96,8 @@ analysis portの`write()`は、同じ観測を複数の接続先へ渡すfunctio
 | 5 | [APB設定・GAIN・readyの協調](../../examples/local-uvm-coordination/README.md) | virtual sequence、同時受理と期待値、二つのmonitorの順序、待ち・取消、native bin。 |
 | 6 | [子環境と上位RAL](../../examples/local-uvm-hierarchy/README.md) | 共通driverとpassiveな子環境、submap、base address変更、独立した読戻しとmirror。 |
 | 7 | [複数クロックと個別reset](../../examples/local-uvm-multiclock/README.md) | 観測時刻と通知順序、リセット世代、取消・古い応答・復帰、解除順序。 |
-| 8 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
+| 8 | [複数未完了・順不同応答](../../examples/local-uvm-outstanding/README.md) | ID・tokenによる対応付け、再利用、reset取消し、独立台帳、SVAの実DBとの照合。 |
+| 9 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
 
 設定・データ・readyの協調、複数IPのRALサブマップ、複数クロック・個別resetは、それぞれの実行例で確認できます。複数クロック例は固定した2種類のクロック条件と通知順序の範囲です。任意のクロック停止や物理CDC/RDCの安全性まで確認した結果には広げません。[実行済みの範囲と設計案](uvm-practical-design.md#7-実行済みの範囲と設計案を区別する)も参照してください。
 

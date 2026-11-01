@@ -173,6 +173,7 @@ factoryで制約を足した型へ差し替える場合も、実際の生成型�
 | GAINの同時更新、設定・データ・readyのvirtual sequence、二つのmonitorの順序、native bin | [複数agentの協調例](../../examples/local-uvm-coordination/README.md)で実行。 |
 | 二つの子環境、上位RAL・submap、配置変更、上位virtual sequence | [上位再利用例](../../examples/local-uvm-hierarchy/README.md)で実行。 |
 | 複数クロック、個別reset、時刻順の観測、世代ごとの取消と復帰 | [複数クロックの上位UVM例](../../examples/local-uvm-multiclock/README.md)で実行。 |
+| 4件同時未完了、ID再利用、順不同応答、reset取消し、独立台帳とSVA照合 | [順不同応答のUVM例](../../examples/local-uvm-outstanding/README.md)で実行。 |
 | 任意の内部tap、停止を含む任意のクロック条件 | 本書の設計案。実行済みの構成から別に評価する。 |
 
 製品へ適用する際は、[移行計画](../templates/uvm-migration-plan.md)、[クロスモデルの記録](../templates/interaction-coverage-plan.md)、[サインオフ記録](../templates/signoff-record.md)へ、必須範囲、実行証跡、未確認、残リスクを対応付けます。
