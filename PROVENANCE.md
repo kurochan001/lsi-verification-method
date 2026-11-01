@@ -1555,4 +1555,10 @@ Qualityの保存成果物`documents-41322627618-1`（artifact ID `13089637784`�
 
 文書を実際に読み取ったバイト列からSHA-256を計算し、記録した入力ハッシュとも照合するよう修正しました。解析後・記録前の変更を`source-freshness`で拒否し、`documentation-check.json`の`document_read_sha256`に解析対象の版を残します。CRLFの文書でも元のバイト列のハッシュが一致することを確認しています。関連23テストが成功し、再現例の終了コードも0から1へ変わりました。RTL・モデル・要求・構成・lint台帳は変更していません。
 
-証跡はGit管理外の`artifacts/final-review-followup-20261102/`へ保存します。`document-drift-before.json`と`document-drift-after.json`は、読取り時と記録時のハッシュ、変更検出の判定、終了コードを記録した再現結果です。`quality-tools.log`は関連テストの結果です。macOS arm64・Python 3.13.15で、`selftests-all/`の全124グループ・1,028件と、`docs-first/`の文書検査408判定が成功しました。209文書の読取りハッシュも記録・現物と照合しています。`audit-carried/`では、前節のnightly全103ジョブの計画・完了・JUnit・生成入力・ソース・外部UVM／OSSの記録を現行入力へ再照合して成功しました。回路のnightlyを新しく実行した結果とは区別します。Linux CIと最終文書の確認結果は完了後に追記します。
+証跡はGit管理外の`artifacts/final-review-followup-20261102/`へ保存しました。`document-drift-before.json`と`document-drift-after.json`は、読取り時と記録時のハッシュ、変更検出の判定、終了コードを記録した再現結果です。`quality-tools.log`は関連テストの結果です。修正コミットは`0ea9aedc8d6f99e627608e4a8be2e36a5c7e748a`です。macOS arm64・Python 3.13.15で、`selftests-all/`の全124グループ・1,028件と、`docs-first/`の文書検査408判定が成功しました。209文書の読取りハッシュも記録・現物と照合しています。`audit-carried/`では、前節のnightly全103ジョブの計画・完了・JUnit・生成入力・ソース・外部UVM／OSSの記録を現行入力へ再照合して成功しました。回路のnightlyを新しく実行した結果とは区別します。
+
+Ubuntu 24.04では、修正版に対する[Quality](https://github.com/kurochan001/lsi-verification-method/actions/runs/41351097625)と[Affected verification](https://github.com/kurochan001/lsi-verification-method/actions/runs/41351097797)が成功しました。全103ジョブのsmokeを新規実行・監査し、`hardware_verified: true`と保存完了を確認しています。保存成果物`affected-41351097797-1`（artifact ID `13102851449`）を取得し、103ジョブの一覧・合否・監査、リポジトリ内607ソースに対する1,481ハッシュ、全314構成のlint結果を再照合しました。既知のlint指摘487件は増減なしです。ZIPのSHA-256もGitHubのartifact digestと一致しています。再照合の対象は、保存されたジョブの結果とリポジトリ内ソースです。集計は`ci-campaign-evidence.json`、取得元は`ci-campaign-artifact.json`に記録しています。
+
+Qualityの保存成果物`documents-41351097625-1`（artifact ID `13100673100`）でも、209文書の読取りハッシュが、マニフェスト・現行ファイルの両方と一致することを確認しました。ツールの119テストが成功し、セルフテストが記録したリポジトリ入力1,004ファイルのハッシュも一致しています。ZIPのdigest照合とこれらの再照合は`ci-document-read-evidence.json`へ、取得元は`ci-quality-artifact.json`へ保存しました。
+
+最終の文書検査は`docs-final/`、その文書を入力に含む全セルフテストは`selftests-final/`へ保存します。文書の更新後にも`audit-final/`でnightlyの保存結果を再監査します。これらの後続変更は文書だけで、検査器・テスト・RTL・モデル・要求・構成は修正コミットから変更していません。
