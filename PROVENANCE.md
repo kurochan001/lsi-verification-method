@@ -1255,7 +1255,7 @@ lintの初期整理で、CRCとTop-Kの組合せ処理内の一時変数に初�
 
 専用のdocs／full環境を実際に準備し、最終版のfull診断29判定も成功しました。手法書のフォーマル例は抽出した8タスクを再実行し、成立・反例・未到達と実際のプロパティ一覧を確認しました。Python 278ファイルの3.10構文と、actionlint 1.7.12による2ワークフローの構文も確認しています。全例用パッケージの準備・実行はPython 3.13.15を使いました。
 
-ローカル証跡はGit管理外の`artifacts/quality-automation-20261101/`へ保存します。全例は`nightly-all/`、セルフテストは`selftests-portable/`、環境診断は`environment-final/`、手法書の証明は`formal-document/`、履歴照合は`effective-report/`です。
+ローカル証跡はGit管理外の`artifacts/quality-automation-20261101/`へ保存します。全例は`nightly-all/`、セルフテストは`selftests-complete/`、環境診断は`environment-final/`、手法書の証明は`formal-document/`、履歴照合は`effective-report/`です。
 
 
 ### 修正後の全体確認
@@ -1286,3 +1286,6 @@ lintの初期整理で、CRCとTop-Kの組合せ処理内の一時変数に初�
 
 
 `91fc54e`の[最初の実行](https://github.com/kurochan001/lsi-verification-method/actions/runs/41256331474/attempts/1)は、UbuntuのAzureミラーへの接続待ちが8分以上続いたため中止し、ログを回収しました。依存取得の停止を検証結果へ混ぜず、CIでは公式HTTPSミラー、通信タイムアウト・再試行上限、OS導入ステップの時間上限と`--error-on=any`を指定する構成へ補強しました。
+
+
+文書検査の追加レビューでは、Gitで無視される生成ディレクトリが手元に存在すると、そのディレクトリへのリンクを見逃す箇所も修正しました。対象ファイルを含むディレクトリと、無視されるディレクトリを対照確認し、全113グループ・880件のセルフテストと全文書検査を再実行して成功しています。

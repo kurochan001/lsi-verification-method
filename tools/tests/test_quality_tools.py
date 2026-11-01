@@ -70,7 +70,7 @@ class DocumentTests(unittest.TestCase):
         (self.root/'docs').mkdir()
         (self.root/'docs/glossary.md').write_text('| 用語 | 意味 |\n| --- | --- |\n| DUT | 対象 |\n')
         (self.root/'docs/faq.md').write_text('# Q1. 質問\n回答\n')
-        (self.root/'README.md').write_text('# Main\n[FAQ](docs/faq.md#q1-質問)\n\n```mermaid\nflowchart LR\n A-->B\n```\n')
+        (self.root/'README.md').write_text('# Main\n[FAQ](docs/faq.md#q1-質問)\n[Documents](docs/)\n\n```mermaid\nflowchart LR\n A-->B\n```\n')
     def run_docs(self,node='node'):
         a=argparse.Namespace(root=self.root,node=Q.executable(node),timeout=30,out=self.base/'out')
         with redirect_stdout(io.StringIO()):rc=D.run(a)
@@ -84,12 +84,14 @@ class DocumentTests(unittest.TestCase):
         detail=next(r['detail'] for r in result['results'] if r['id']=='document/README.md')
         self.assertEqual({r['error'] for r in detail},{'missing/untracked target','missing heading/anchor'})
     def test_ignored_and_outside_files_do_not_satisfy_links(self):
-        (self.root/'.gitignore').write_text('hidden.md\n')
+        (self.root/'.gitignore').write_text('hidden.md\ncache/\n')
         (self.root/'hidden.md').write_text('# Exists')
+        (self.root/'cache').mkdir();(self.root/'cache/generated.txt').write_text('ignored output')
         (self.base/'outside.md').write_text('# Exists')
-        (self.root/'README.md').write_text('[ignored](hidden.md)\n[outside](../outside.md)')
+        (self.root/'README.md').write_text('[ignored](hidden.md)\n[ignored directory](cache/)\n[outside](../outside.md)')
         rc,result=self.run_docs();self.assertEqual(rc,1)
         detail=next(r['detail'] for r in result['results'] if r['id']=='document/README.md')
+        self.assertEqual(len(detail),3)
         self.assertEqual({r['error'] for r in detail},{'missing/untracked target','link escapes repository'})
     def test_invalid_diagram_fails_even_when_documents_have_no_link_errors(self):
         (self.root/'README.md').write_text('```mermaid\nflowchart LR\n A --[\n```\n')

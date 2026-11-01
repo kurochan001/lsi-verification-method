@@ -92,7 +92,8 @@ def run(a):
             link_count+=1;target=(root/name).parent/unquote(u.path) if u.path else root/name;target=target.resolve()
             if not target.is_relative_to(root):problems[name].append(dict(link=href,error='link escapes repository'));continue
             relative=str(target.relative_to(root))
-            if not target.exists() or target.is_file() and relative not in files:problems[name].append(dict(link=href,error='missing/untracked target'));continue
+            listed=relative in files or target.is_dir() and (relative=='.' or any(n.startswith(relative+'/') for n in files))
+            if not target.exists() or not listed:problems[name].append(dict(link=href,error='missing/untracked target'));continue
             if target.is_file():inputs.append(target)
             if u.fragment and target.suffix.lower()=='.md':
                 heading_count+=1
