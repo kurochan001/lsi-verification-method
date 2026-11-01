@@ -44,6 +44,12 @@
     "examples/local-fifo/rtl/sync_fifo.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
+    "examples/local-image-sobel/rtl/sobel_stream.sv",
+    "examples/local-image-soc/rtl/cpu_ahb.sv",
+    "examples/local-image-soc/rtl/image_dma.sv",
+    "examples/local-image-soc/rtl/image_fabric.sv",
+    "examples/local-image-soc/rtl/image_memory.sv",
+    "examples/local-image-soc/rtl/image_soc.sv",
     "examples/local-interconnect/rtl/axi_interconnect.sv",
     "examples/local-irq-cdc/rtl/cdc_receiver.sv",
     "examples/local-irq-cdc/rtl/irq_pending.sv",
@@ -3014,6 +3020,230 @@
         "examples/local-uvm-outstanding/rtl/tagged_reorder.sv"
       ],
       "parameters": {}
+    },
+    {
+      "id": "local-conv-window/conv_window/H=5/STRIDE=1/W=5",
+      "file": "examples/local-conv-window/rtl/conv_window.sv",
+      "top": "conv_window",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv"
+      ],
+      "parameters": {
+        "W": 5,
+        "H": 5,
+        "STRIDE": 1
+      }
+    },
+    {
+      "id": "local-conv-window/conv_window/H=5/STRIDE=1/W=7",
+      "file": "examples/local-conv-window/rtl/conv_window.sv",
+      "top": "conv_window",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv"
+      ],
+      "parameters": {
+        "W": 7,
+        "H": 5,
+        "STRIDE": 1
+      }
+    },
+    {
+      "id": "local-image-sobel/sobel_stream/H=4/W=5",
+      "file": "examples/local-image-sobel/rtl/sobel_stream.sv",
+      "top": "sobel_stream",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv"
+      ],
+      "parameters": {
+        "W": 5,
+        "H": 4
+      }
+    },
+    {
+      "id": "local-image-sobel/sobel_stream/H=5/W=5",
+      "file": "examples/local-image-sobel/rtl/sobel_stream.sv",
+      "top": "sobel_stream",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv"
+      ],
+      "parameters": {
+        "W": 5,
+        "H": 5
+      }
+    },
+    {
+      "id": "local-image-sobel/sobel_stream/H=5/W=7",
+      "file": "examples/local-image-sobel/rtl/sobel_stream.sv",
+      "top": "sobel_stream",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv"
+      ],
+      "parameters": {
+        "W": 7,
+        "H": 5
+      }
+    },
+    {
+      "id": "local-image-sobel/sobel_stream/default",
+      "file": "examples/local-image-sobel/rtl/sobel_stream.sv",
+      "top": "sobel_stream",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-image-soc/cpu_ahb/default",
+      "file": "examples/local-image-soc/rtl/cpu_ahb.sv",
+      "top": "cpu_ahb",
+      "sources": [
+        "examples/local-image-soc/rtl/cpu_ahb.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-image-soc/image_dma/H=5/W=5/WAIT_CYCLES=1",
+      "file": "examples/local-image-soc/rtl/image_dma.sv",
+      "top": "image_dma",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv",
+        "examples/local-image-soc/rtl/image_dma.sv"
+      ],
+      "parameters": {
+        "W": 5,
+        "H": 5,
+        "WAIT_CYCLES": 1
+      }
+    },
+    {
+      "id": "local-image-soc/image_dma/H=5/W=7/WAIT_CYCLES=3",
+      "file": "examples/local-image-soc/rtl/image_dma.sv",
+      "top": "image_dma",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv",
+        "examples/local-image-soc/rtl/image_dma.sv"
+      ],
+      "parameters": {
+        "W": 7,
+        "H": 5,
+        "WAIT_CYCLES": 3
+      }
+    },
+    {
+      "id": "local-image-soc/image_dma/default",
+      "file": "examples/local-image-soc/rtl/image_dma.sv",
+      "top": "image_dma",
+      "sources": [
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv",
+        "examples/local-image-soc/rtl/image_dma.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-image-soc/image_fabric/WAIT_CYCLES=0",
+      "file": "examples/local-image-soc/rtl/image_fabric.sv",
+      "top": "image_fabric",
+      "sources": [
+        "examples/local-image-soc/rtl/image_fabric.sv"
+      ],
+      "parameters": {
+        "WAIT_CYCLES": 0
+      }
+    },
+    {
+      "id": "local-image-soc/image_fabric/WAIT_CYCLES=2",
+      "file": "examples/local-image-soc/rtl/image_fabric.sv",
+      "top": "image_fabric",
+      "sources": [
+        "examples/local-image-soc/rtl/image_fabric.sv"
+      ],
+      "parameters": {
+        "WAIT_CYCLES": 2
+      }
+    },
+    {
+      "id": "local-image-soc/image_fabric/default",
+      "file": "examples/local-image-soc/rtl/image_fabric.sv",
+      "top": "image_fabric",
+      "sources": [
+        "examples/local-image-soc/rtl/image_fabric.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-image-soc/image_memory/default",
+      "file": "examples/local-image-soc/rtl/image_memory.sv",
+      "top": "image_memory",
+      "sources": [
+        "examples/local-image-soc/rtl/image_memory.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-image-soc/image_soc/H=5/W=5/WAIT_CYCLES=0",
+      "file": "examples/local-image-soc/rtl/image_soc.sv",
+      "top": "image_soc",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv",
+        "examples/local-image-soc/rtl/cpu_ahb.sv",
+        "examples/local-image-soc/rtl/image_dma.sv",
+        "examples/local-image-soc/rtl/image_fabric.sv",
+        "examples/local-image-soc/rtl/image_memory.sv",
+        "examples/local-image-soc/rtl/image_soc.sv"
+      ],
+      "parameters": {
+        "W": 5,
+        "H": 5,
+        "WAIT_CYCLES": 0
+      }
+    },
+    {
+      "id": "local-image-soc/image_soc/H=5/W=7/WAIT_CYCLES=2",
+      "file": "examples/local-image-soc/rtl/image_soc.sv",
+      "top": "image_soc",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv",
+        "examples/local-image-soc/rtl/cpu_ahb.sv",
+        "examples/local-image-soc/rtl/image_dma.sv",
+        "examples/local-image-soc/rtl/image_fabric.sv",
+        "examples/local-image-soc/rtl/image_memory.sv",
+        "examples/local-image-soc/rtl/image_soc.sv"
+      ],
+      "parameters": {
+        "W": 7,
+        "H": 5,
+        "WAIT_CYCLES": 2
+      }
+    },
+    {
+      "id": "local-image-soc/image_soc/default",
+      "file": "examples/local-image-soc/rtl/image_soc.sv",
+      "top": "image_soc",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-conv-window/rtl/conv_window.sv",
+        "examples/local-image-sobel/rtl/sobel_stream.sv",
+        "examples/local-image-soc/rtl/cpu_ahb.sv",
+        "examples/local-image-soc/rtl/image_dma.sv",
+        "examples/local-image-soc/rtl/image_fabric.sv",
+        "examples/local-image-soc/rtl/image_memory.sv",
+        "examples/local-image-soc/rtl/image_soc.sv"
+      ],
+      "parameters": {}
     }
   ],
   "examples": {
@@ -4499,6 +4729,48 @@
         "local-uvm-outstanding/tagged_reorder/default"
       ],
       "reason": "専用DUTの正常構成。意図的な誤実装は動作確認の対照ケースで扱う。"
+    },
+    "local-image-sobel": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-image-sobel/sobel_stream/default",
+        "local-image-sobel/sobel_stream/H=4/W=5",
+        "local-image-sobel/sobel_stream/H=5/W=7",
+        "local-image-sobel/sobel_stream/H=5/W=5",
+        "local-conv-window/conv_window/H=5/STRIDE=1/W=7",
+        "local-conv-window/conv_window/H=5/STRIDE=1/W=5"
+      ],
+      "reason": "Sobelの全構成とSoCで再利用する窓生成・ラインメモリを静的検査"
+    },
+    "local-image-soc": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-image-sobel/sobel_stream/default",
+        "local-image-sobel/sobel_stream/H=4/W=5",
+        "local-image-sobel/sobel_stream/H=5/W=7",
+        "local-image-sobel/sobel_stream/H=5/W=5",
+        "local-conv-window/conv_window/H=5/STRIDE=1/W=7",
+        "local-conv-window/conv_window/H=5/STRIDE=1/W=5",
+        "local-image-soc/cpu_ahb/default",
+        "local-image-soc/image_fabric/default",
+        "local-image-soc/image_fabric/WAIT_CYCLES=0",
+        "local-image-soc/image_fabric/WAIT_CYCLES=2",
+        "local-image-soc/image_memory/default",
+        "local-image-soc/image_dma/default",
+        "local-image-soc/image_dma/H=5/W=5/WAIT_CYCLES=1",
+        "local-image-soc/image_dma/H=5/W=7/WAIT_CYCLES=3",
+        "local-image-soc/image_soc/default",
+        "local-image-soc/image_soc/H=5/W=5/WAIT_CYCLES=0",
+        "local-image-soc/image_soc/H=5/W=7/WAIT_CYCLES=2",
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default"
+      ],
+      "reason": "CPU・デコーダ・画像IPとAHB/APB/AXI接続を全構成で静的検査"
     }
   },
   "blackbox_sources": {

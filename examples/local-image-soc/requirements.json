@@ -1,0 +1,11 @@
+{
+  "schema_version":1,
+  "revision":1,
+  "requirements":[
+    {"id":"SOC-BOOT","description":"CPUがROM命令を実行し割り込みハンドラーから復帰して画素を比較する","goals":["boot/rom","boot/rom-data","firmware/interrupt","firmware/mret","firmware/pixel-check"]},
+    {"id":"SOC-BUSES","description":"AHBの二相転送、APBのsetup/accessと待ち、AXIの保持を確認する","goals":["bus/ahb-address","bus/ahb-wait","bus/apb-setup","bus/apb-wait","bus/axi-backpressure"]},
+    {"id":"SOC-DMA","description":"共有RAM上の画像をINCRバーストで転送し最終B応答後に通知する","goals":["dma/read-burst","dma/write-burst","dma/tail-burst","ram/cpu-dma-contention","completion/last-b-response","completion/irq","frame/restart"]},
+    {"id":"SOC-ERROR","description":"不正設定・アクセス・DMA応答エラーを成功扱いにしない","goals":["config/rejected","config/unaligned","config/range","config/overlap","bus/apb-error","bus/ahb-error","dma/read-error","dma/write-error"]},
+    {"id":"SOC-RESET","description":"全体リセットで未完了転送を取消しROMから再起動する","goals":["reset/read-inflight","reset/write-inflight"]}
+  ]
+}

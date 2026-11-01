@@ -1408,3 +1408,26 @@ Ubuntu 24.04では、実装コミットに対する[Quality](https://github.com/
 初回の失敗は`nightly/`へ保存し、短時間プロセスの最終再現試験は`cleanup-probe-final.json`、入力変更の結合テストは`selection-drift-result.json`、実行前の依存不足で起動件数0を確認した結果は`preflight-result.json`に残しました。
 
 Ubuntu 24.04では、終了処理の修正コミットに対する[Quality](https://github.com/kurochan001/lsi-verification-method/actions/runs/41283871865)と[Affected verification](https://github.com/kurochan001/lsi-verification-method/actions/runs/41283871907)が成功しました。後者は共通入力の変更から全95ジョブを選択し、smokeの全95ジョブの新規実行・監査・入力照合を完了して、`hardware_verified: true`となりました。ローカルの全例nightlyと、Linuxの全例smokeは実行範囲を分けて記録しています。この確認後の変更はREADMEと本記録のみです。
+
+<a id="image-soc-20261101"></a>
+
+## 画像処理分野とROM起動SoCの追加（2026-11-01）
+
+起点は`d32004fe37b93cb6495844228defb4c82e4c2c6a`です。利用者の依頼に従い、ラインメモリ付き画像処理IPを独立した分野として収録し、その同じRTLをCPU・ROM・RAM・AHB-Lite／APB／AXI4へ接続する小規模SoCを追加しました。
+
+- `local-image-sobel`：2ライン分の履歴、ゼロパディングした3×3 Sobel、符号付き成分の絶対値和と8ビットへの飽和、待ち・連続フレーム・リセットを確認します。画像配列を直接参照する独立モデルで全画素を比較します。既存の`conv_window`を再利用し、同回路は変更していません。
+- `local-image-soc`：既存RV32Iコアとデコーダを再利用し、ROM起動、CPUによるRAM初期化、APB設定、AXI4 DMA、最終B応答後のIRQ、ハンドラー・MRET、CPUの全画素確認を実行します。アダプター、ファブリック、DMA、メモリモデル、ROMプログラムと結合チェッカーを追加しました。既存CPUのRTLは変更していません。
+
+Sobelは2構成・3要求・12観測目標、SoCは2構成・5要求・27観測目標です。双方に4種類の意図的な誤実装を用意し、指定した検査ラベルでの検出を要求します。SoCはRRESP／BRESPエラー、非整列・範囲超過・入力出力の重複、ROM書込み、busy中の設定変更・再開始、読出し中／書込み中の全体リセットも確認します。エラー試験での観測や変異のヒットを、通常結果へ無条件に加算しません。
+
+専用のRISC-VコンパイラーやPythonパッケージは追加せず、既存のRV32Iアセンブラー、Python、Icarus Verilogを使います。各ケースで入力画像・期待画像・ROMの内容をハッシュへ固定し、VCD、退出命令ログ、RAM読戻し、完了・IRQ・CPU比較件数を保存します。独立した画像モデルとPythonで、RAMの全ワードも再照合します。
+
+`artifacts/image-soc-20261101/registered-reviewed/`で、統合ランナーから追加2例のnightlyを実行し成功しました。SobelのJUnitは22件、SoCは32件です。`selftests-all/`の全118グループ・952テストも成功し、追加2例のセルフテスト14件を含みます。失敗・スキップはありません。
+
+共通lintへ6 RTLファイル・6モジュール・17構成を追加しました。全体は108 RTLファイル・109モジュール・278構成です。新17構成は警告0件、既存487件（未解決439・限定した除外48）は増減なしです。Sobelの係数0の中心、入力スロットの未使用パディングは、局所的なunused信号として意図を明示しています。新しい警告を台帳へ免除して合格にしていません。
+
+「画像処理」の分野案内・検証手順、単体とSoCのREADME、用語集の画像処理6項目、FAQ 4問を追加しました。従来の`local-soc-regression`は個別例の集約であることも明記しています。
+
+このSoCの命令フェッチはROM直結、CPUデータアクセスは整列LW／SWです。AXI4は1〜4ビートINCR・各方向1件、単一クロック・キャッシュなしの限定モデルです。ラインメモリはシフト配列、RAMはデジタル動作モデルで、SRAM・FPGAの資源推論や物理特性を確認していません。観測目標はTBログの計測で、ネイティブcovergroup DB、コードカバレッジ、SoC全体のフォーマル証明とは区別します。既存CPUのISS比較や証明専用例のタスクへ、SoCの件数を合算していません。
+
+全119登録項目・97ルートジョブのnightlyと、全文書・保存結果の監査・Linux CIの結果は、完了後に本節へ追記します。

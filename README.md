@@ -32,6 +32,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
+| 画像処理IPからCPU付きSoCへ進む | [画像処理の検証手順](docs/method/image-processing-verification.md)／[Sobel単体IP](examples/local-image-sobel/README.md)／[ROM起動SoC](examples/local-image-soc/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
 | 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
@@ -157,6 +158,8 @@ flowchart TD
 | 学びたいこと | 入口となる資料・例 | 見るポイント |
 | --- | --- | --- |
 | 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
+| ラインメモリ付き画像処理を検証する | [画像処理の手順](docs/method/image-processing-verification.md)／[Sobel IP](examples/local-image-sobel/README.md) | 端・角・フレーム境界、符号と飽和、待ち、全画素の独立比較 |
+| CPU・メモリ・バス・IPを接続して検証する | [小規模画像処理SoC](examples/local-image-soc/README.md) | ROM起動、AHB-Lite／APB／AXI4、DMA、最終応答とIRQ、CPUによる全画素確認 |
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
@@ -188,6 +191,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
+| <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
 | <a id="フォーマル検証等価性反例再現"></a>[フォーマル検証・等価性・反例再現](examples/README.md#フォーマル検証等価性反例再現) | 証明、到達性、等価性、反例再現、接続性 |
@@ -197,9 +201,9 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 2026-11-01の拡充では、UVMの複数未完了・順不同応答、自動ミューテーションと等価性、公平性を前提とする期限のない進行証明、変更影響によるリグレッション選択を追加しました。環境の一括準備・診断、文書検査、変更時・毎晩のCIも用意しています。実行環境・合格条件・制限は上の各入口、追加時の実績は[追加と再検証の記録](PROVENANCE.md#advanced-verification-20261101)を参照してください。
 
-最新の全体レビューでは、固定版UVMの照合、差分実行の起動件数・検証済み表示、外部ツールの証跡、macOSでのプロセス終了処理を修正しました。修正内容と最新の確認結果は[全体レビュー記録](PROVENANCE.md#evidence-review-20261101)にまとめています。用語集・FAQの整備履歴は[文書レビューの確認記録](PROVENANCE.md#documentation-refresh-20261101)を参照してください。
+続く全体レビューでは、固定版UVMの照合、差分実行の起動件数・検証済み表示、外部ツールの証跡、macOSでのプロセス終了処理を修正しました。修正内容は[全体レビュー記録](PROVENANCE.md#evidence-review-20261101)にまとめています。用語集・FAQの整備履歴は[文書レビューの確認記録](PROVENANCE.md#documentation-refresh-20261101)を参照してください。
 
-修正後のmacOSで、全例nightlyの95ルートジョブ、全12フォーマル例・23構成・175タスク、セルフテスト116グループ・938件、保存結果の監査が成功しました。LinuxでもQualityと全95ジョブのsmoke・監査が成功しています。lintは既存の指摘487件を台帳と照合しており、警告ゼロを意味しません。
+画像処理分野として、2ライン分の履歴を使うSobel IPと、CPU・ROM・RAM・AHB-Lite／APB／AXI4を実際に接続する小規模SoCを追加しました。単体の演算・境界・待ちと、ROM起動からDMA・IRQ・CPUの結果確認までを分けて学べます。最新の実行条件と確認実績は[画像処理IP・SoCの追加記録](PROVENANCE.md#image-soc-20261101)を参照してください。
 
 ## 準備と実行
 

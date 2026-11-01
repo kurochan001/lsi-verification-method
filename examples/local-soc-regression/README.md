@@ -2,6 +2,8 @@
 
 次の7例をローカルでまとめて実行します。
 
+この入口は既存例の集約です。CPU・ROM・RAM・AHB-Lite／APB／AXI4と画像処理IPを実際に接続した回路は、別の[小規模画像処理SoC](../local-image-soc/README.md)に収録しています。
+
 1. [UVMの制約付きランダム化とネイティブcovergroup](../local-uvm-random/README.md)
 2. [SystemRDLからRTL・Cヘッダー・RALを生成して照合](../local-register-spec/README.md)
 3. [フォーマル反例のシミュレーション再現](../local-formal-replay/README.md)

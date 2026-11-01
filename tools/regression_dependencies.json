@@ -293,6 +293,23 @@
     "examples/local-i2c/run.py",
     "examples/local-i2c/tb/i2c_tb.sv",
     "examples/local-i2c/tests/test_i2c.py",
+    "examples/local-image-sobel/model.py",
+    "examples/local-image-sobel/requirements.json",
+    "examples/local-image-sobel/rtl/sobel_stream.sv",
+    "examples/local-image-sobel/run.py",
+    "examples/local-image-sobel/support.py",
+    "examples/local-image-sobel/tb/sobel_tb.sv",
+    "examples/local-image-sobel/tests/test_image.py",
+    "examples/local-image-soc/firmware.py",
+    "examples/local-image-soc/requirements.json",
+    "examples/local-image-soc/rtl/cpu_ahb.sv",
+    "examples/local-image-soc/rtl/image_dma.sv",
+    "examples/local-image-soc/rtl/image_fabric.sv",
+    "examples/local-image-soc/rtl/image_memory.sv",
+    "examples/local-image-soc/rtl/image_soc.sv",
+    "examples/local-image-soc/run.py",
+    "examples/local-image-soc/tb/image_soc_tb.sv",
+    "examples/local-image-soc/tests/test_soc.py",
     "examples/local-interconnect/requirements.json",
     "examples/local-interconnect/rtl/axi_interconnect.sv",
     "examples/local-interconnect/run.py",
@@ -705,6 +722,8 @@
       "local-fifo",
       "local-gate-sim",
       "local-i2c",
+      "local-image-sobel",
+      "local-image-soc",
       "local-interconnect",
       "local-irq-cdc",
       "local-jtag-tap",
@@ -1023,6 +1042,16 @@
     ],
     "local-i2c": [
       "local-common"
+    ],
+    "local-image-sobel": [
+      "local-conv-window",
+      "local-exploration-common"
+    ],
+    "local-image-soc": [
+      "local-conv-window",
+      "local-image-sobel",
+      "local-riscv-decoder",
+      "local-riscv-iss"
     ],
     "local-interconnect": [
       "local-axi4",

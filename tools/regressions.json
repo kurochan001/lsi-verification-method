@@ -996,6 +996,32 @@
       ]
     },
     {
+      "id": "local-image-sobel",
+      "script": "examples/local-image-sobel/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-image-soc",
+      "script": "examples/local-image-soc/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
       "id": "local-interconnect",
       "script": "examples/local-interconnect/run.py",
       "kind": "simulation",
