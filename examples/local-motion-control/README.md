@@ -7,10 +7,10 @@
 ## 接続と時間関係
 
 ```mermaid
-flowchart LR
+flowchart TD
   accTitle: 実際のPWM出力でプラントを駆動する1軸の閉ループ
   accDescr: 目標位置とエンコーダの差を周期的にPIへ渡し、指令をPWMへ反映する。DUTのPWMがTBの簡易モーターを駆動し、モーター位置からA Bが生成されDUTへ戻る。別のPythonモデルが全状態と追従を照合する。異常時は駆動を抑止する。
-  TARGET["目標位置"] --> E["周期サンプル・偏差"] --> PI["固定小数点PI<br/>飽和・アンチワインドアップ"]
+  TARGET["目標位置"] --> E["周期サンプル・偏差"] --> PI["固定小数点PI<br/>飽和<br/>アンチワインドアップ"]
   PI --> PWM["shadow設定・周期境界反映<br/>相補PWM・空白"] --> PLANT["TBの簡易モーター<br/>実DUTのPWMで更新"]
   PLANT --> AB["A / B生成"] --> QEI["2段サンプル・フィルター<br/>位置・不正遷移"] --> E
   FAULT["非常停止・期限・進捗<br/>過速度・折返し"] --> PWM
@@ -46,6 +46,7 @@ stateDiagram-v2
   accDescr: OFFから正常なARMで運転する。非常停止、不正エンコーダ、演算期限、進捗タイムアウト、過速度、位置折返しでFAULTへ移る。ackはIRQだけを解除する。異常源が解消した後の明示ARMで再開し、最初は中立指令を使用する。disarmは通常停止する。
   [*] --> OFF
   OFF --> RUN: ARM
+  OFF --> FAULT: estop
   RUN --> OFF: disarm
   RUN --> FAULT: 異常
   FAULT --> FAULT: ack
