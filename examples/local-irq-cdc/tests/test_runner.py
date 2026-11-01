@@ -206,6 +206,21 @@ class RunnerIntegrationTests(unittest.TestCase):
 
 
 class ProcessCleanupTests(unittest.TestCase):
+    def test_zombie_group_permission_error_is_not_cleanup_failure(self):
+        proc=mock.Mock(pid=12345)
+        with mock.patch.object(MODULE.os,'killpg',side_effect=PermissionError('denied')),mock.patch.object(MODULE.subprocess,'check_output',return_value='PGID STAT\n12345 Z\n'):
+            self.assertIsNone(MODULE.stop_process_group(proc))
+        proc.kill.assert_not_called()
+        proc.wait.assert_called_once_with(timeout=5)
+
+    def test_failed_group_inspection_preserves_cleanup_error(self):
+        proc=mock.Mock(pid=12345)
+        with mock.patch.object(MODULE.os,'killpg',side_effect=PermissionError('denied')),mock.patch.object(MODULE.subprocess,'check_output',side_effect=subprocess.CalledProcessError(1,['ps'])):
+            error=MODULE.stop_process_group(proc)
+        self.assertIn('process group termination failed',error)
+        proc.kill.assert_called_once_with()
+        proc.wait.assert_called_once_with(timeout=5)
+
     def test_denied_group_signal_preserves_timeout_evidence(self):
         with tempfile.TemporaryDirectory() as tmp:
             log=Path(tmp)/'command.log'

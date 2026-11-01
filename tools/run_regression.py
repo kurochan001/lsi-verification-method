@@ -252,6 +252,9 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
     return dict(junit=len(cases),source_hashes=count)
 
 
+signal_group=P.signal_process_group
+
+
 def stop_tree(process):
     """Include detached child sessions created by the example runners."""
     rows=subprocess.check_output(['ps','-axo','pid,ppid,pgid'],text=True).splitlines()[1:]
@@ -261,18 +264,16 @@ def stop_tree(process):
         expanded=owned|{pid for pid,parent,_ in table if parent in owned}
         if expanded==owned:break
         owned=expanded
-    groups={group for pid,_,group in table if pid in owned}-{os.getpgrp()}
+    groups={group for pid,_,group in table if pid in owned and group>1}-{os.getpgrp()}
     # Stop the root first, before it can launch another child.
     for group in [process.pid,*sorted(groups-{process.pid})]:
-        try:os.killpg(group,signal.SIGTERM)
-        except ProcessLookupError:pass
+        signal_group(group,signal.SIGTERM)
     time.sleep(.2)
     process.poll()
     rows=subprocess.check_output(['ps','-axo','pid,pgid,stat'],text=True).splitlines()[1:]
     live_groups={int(row.split()[1]) for row in rows if int(row.split()[0]) in owned and not row.split()[2].startswith('Z')}
     for group in groups & live_groups:
-        try:os.killpg(group,signal.SIGKILL)
-        except ProcessLookupError:pass
+        signal_group(group,signal.SIGKILL)
     process.wait(timeout=5)
 
 

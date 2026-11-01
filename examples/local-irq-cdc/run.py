@@ -136,16 +136,31 @@ def execute(command, log, timeout, cwd):
                 seconds=time.monotonic() - started)
 
 
+def signal_process_group(group, signum):
+    """Signal a child group; macOS can deny signals to zombie-only groups."""
+    if group <= 1 or group == os.getpgrp():
+        raise ValueError("unsafe process group")
+    try:
+        os.killpg(group, signum)
+    except ProcessLookupError:
+        pass
+    except PermissionError:
+        # Suppress EPERM only after confirming that no live member remains.
+        # A failed inspection or a live member must still fail cleanup.
+        rows = subprocess.check_output(["ps", "-axo", "pgid,stat"], text=True).splitlines()[1:]
+        if any(int(row.split()[0]) == group and not row.split()[1].startswith("Z")
+               for row in rows):
+            raise
+
+
 def stop_process_group(proc):
     """Try group cleanup, preserve failures as evidence and bound the final wait."""
     if proc is None:
         return None
     error = None
     try:
-        os.killpg(proc.pid, signal.SIGKILL)
-    except ProcessLookupError:
-        pass
-    except OSError as exc:
+        signal_process_group(proc.pid, signal.SIGKILL)
+    except (OSError, subprocess.SubprocessError) as exc:
         # A denied group signal must not discard summary/JUnit output. Killing
         # the direct child is a fallback, not evidence that descendants stopped.
         error = f"process group termination failed: {exc}"

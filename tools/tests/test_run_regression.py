@@ -208,6 +208,35 @@ class CampaignTests(unittest.TestCase):
         self.assertFalse(R.save(directory,[job],[],False,True))
         self.assertFalse(R.save(directory,[job],[dict(id='job',success=True,message='ok')],True,True,'changed registry'))
         self.assertIn('changed registry',(directory/'junit.xml').read_text())
+    def test_permission_error_for_zombie_group_is_ignored(self):
+        with patch.object(R.os,'killpg',side_effect=PermissionError),patch.object(R.os,'getpgrp',return_value=77),patch.object(R.subprocess,'check_output',return_value='PGID STAT\n321 Z\n322 S\n'):
+            R.signal_group(321,signal.SIGTERM)
+    def test_permission_error_for_live_group_remains_failure(self):
+        for states in ('321 S','321 Z\n321 S'):
+            with self.subTest(states=states),patch.object(R.os,'killpg',side_effect=PermissionError),patch.object(R.os,'getpgrp',return_value=77),patch.object(R.subprocess,'check_output',return_value='PGID STAT\n'+states+'\n'):
+                with self.assertRaises(PermissionError):R.signal_group(321,signal.SIGTERM)
+    def test_permission_error_for_disappeared_group_is_ignored(self):
+        with patch.object(R.os,'killpg',side_effect=PermissionError),patch.object(R.os,'getpgrp',return_value=77),patch.object(R.subprocess,'check_output',return_value='PGID STAT\n322 S\n'):
+            R.signal_group(321,signal.SIGTERM)
+    def test_unsafe_process_groups_are_never_signalled(self):
+        with patch.object(R.os,'getpgrp',return_value=77),patch.object(R.os,'killpg') as kill:
+            for group in (-1,0,1,77):
+                with self.subTest(group=group),self.assertRaises(ValueError):R.signal_group(group,signal.SIGTERM)
+            kill.assert_not_called()
+    @unittest.skipUnless(os.name=='posix','POSIX process groups required')
+    def test_already_exited_runner_can_be_reaped(self):
+        child=subprocess.Popen([sys.executable,'-c','pass'],start_new_session=True)
+        try:
+            deadline=time.monotonic()+5
+            while time.monotonic()<deadline:
+                state=subprocess.run(['ps','-p',str(child.pid),'-o','stat='],capture_output=True,text=True)
+                if state.returncode or state.stdout.strip().startswith('Z'):break
+                time.sleep(.02)
+            else:self.fail('short child did not exit')
+            R.stop_tree(child);self.assertEqual(child.returncode,0)
+        finally:
+            if child.poll() is None:child.terminate()
+            child.wait(timeout=5)
     @unittest.skipUnless(os.name=='posix','POSIX process groups required')
     def test_cancellation_stops_detached_grandchild(self):
         pidfile=self.root/'child.pid'
