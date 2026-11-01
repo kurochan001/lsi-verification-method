@@ -1255,7 +1255,7 @@ lintの初期整理で、CRCとTop-Kの組合せ処理内の一時変数に初�
 
 専用のdocs／full環境を実際に準備し、最終版のfull診断29判定も成功しました。手法書のフォーマル例は抽出した8タスクを再実行し、成立・反例・未到達と実際のプロパティ一覧を確認しました。Python 278ファイルの3.10構文と、actionlint 1.7.12による2ワークフローの構文も確認しています。全例用パッケージの準備・実行はPython 3.13.15を使いました。
 
-ローカル証跡はGit管理外の`artifacts/quality-automation-20261101/`へ保存します。全例は`nightly-all/`、セルフテストは`selftests-reviewed/`、環境診断は`environment-final/`、手法書の証明は`formal-document/`、履歴照合は`effective-report/`です。
+ローカル証跡はGit管理外の`artifacts/quality-automation-20261101/`へ保存します。全例は`nightly-all/`、セルフテストは`selftests-portable/`、環境診断は`environment-final/`、手法書の証明は`formal-document/`、履歴照合は`effective-report/`です。
 
 
 ### 修正後の全体確認
@@ -1278,3 +1278,8 @@ lintの初期整理で、CRCとTop-Kの組合せ処理内の一時変数に初�
 
 
 [初回Nightly](https://github.com/kurochan001/lsi-verification-method/actions/runs/41252788211)では、CUDDの生成済みMakefileがAutomake 1.14を参照しており、Ubuntu側の版と合わず構築に失敗しました。失敗ログと証跡を保持し、CUDDで`autoreconf -fi`を実行するよう修正し、Libtoolも準備する構成へ改めました。この変更はRTL・フォーマルのモデルや判定を変更するものではありません。関連するtoolsのセルフテスト73件とワークフロー構文を再確認しています。
+
+
+[環境構築修正後のNightly](https://github.com/kurochan001/lsi-verification-method/actions/runs/41254542123)では、構築とfull診断は成功しましたが、STAのセルフテスト2件が固定のローカル配置を前提としており、CIのOpenSTAを見つけられずskipになりました。全体のskip拒否がこの不足を検出したため、PATHからOpenSTAを選び、リポジトリ外の配置にも相対パス指定で対応するよう修正しました。外部の配置先をPATHに入れた実機確認では9件すべてがスキップなしで成功しました。
+
+ネイティブツールのキャッシュは、環境診断の成功直後に保存する構成へ変更しました。後段の検証失敗時にも、診断済みの構築結果を再利用できます。CIの保存対象には、セルフテストの`tests.json`、文書・図・lint・履歴レポートのJSONも追加しました。失敗した実行のログと証跡は保持しています。

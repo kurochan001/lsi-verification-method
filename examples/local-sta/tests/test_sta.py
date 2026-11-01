@@ -1,6 +1,8 @@
 import copy
 import json
+import os
 from pathlib import Path
+import shutil
 import sys
 import tempfile
 import unittest
@@ -9,7 +11,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'local-common'))
 from local_test_support import load_example,run_example
 P=load_example('local-sta')
 C=json.loads(P.CONTRACT.read_text())
-STA=P.ROOT/'artifacts/toolchains/opensta-build/sta'
+STA=Path(shutil.which('sta') or P.ROOT/'artifacts/toolchains/opensta-build/sta')
 
 
 def evidence():
@@ -38,7 +40,7 @@ class StaTests(unittest.TestCase):
     @unittest.skipUnless(STA.exists(),'build OpenSTA as described in README')
     def test_real_sta_two_corners_and_all_negative_cases(self):
         with tempfile.TemporaryDirectory() as tmp:
-            out=Path(tmp)/'out';r=run_example('local-sta',out,'--sta',str(STA.relative_to(P.ROOT)))
+            out=Path(tmp)/'out';r=run_example('local-sta',out,'--sta',os.path.relpath(STA,P.ROOT))
             self.assertEqual(r.returncode,0,r.stdout+r.stderr)
             s=json.loads((out/'summary.json').read_text());self.assertTrue(s['success']);self.assertTrue(s['evidence_ok'])
             self.assertEqual(len(s['results']),10);self.assertEqual(sum(r['status']=='detected' for r in s['results']),8)

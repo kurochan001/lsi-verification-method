@@ -54,7 +54,7 @@ jobs:
           python-version: '3.13'
       - name: Native build prerequisites
         run: sudo apt-get update && sudo apt-get install -y autoconf automake bison flex g++ gcc gperf help2man libfl-dev make perl zlib1g-dev
-      - uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         id: native
         with:
           path: artifacts/ci-native
@@ -64,6 +64,12 @@ jobs:
         run: python tools/build_native.py --profile smoke --jobs 2 --out artifacts/ci-native
       - name: Prepare and diagnose smoke environment
         run: python tools/setup_environment.py --profile smoke --tool-bin "$PWD/artifacts/ci-native/install/bin" --out artifacts/ci-env
+      - name: Save diagnosed native tools before verification
+        if: steps.native.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: artifacts/ci-native
+          key: ${{ steps.native.outputs.cache-primary-key }}
       - name: FIFO, APB, stream and native SVA smoke
         run: >-
           artifacts/ci-env/python/bin/python tools/run_regression.py
