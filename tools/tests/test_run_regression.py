@@ -12,6 +12,7 @@ import threading
 import time
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 S=importlib.util.spec_from_file_location('campaign',Path(__file__).resolve().parents[1]/'run_regression.py');R=importlib.util.module_from_spec(S);S.loader.exec_module(R)
 class CampaignTests(unittest.TestCase):
@@ -124,14 +125,66 @@ class CampaignTests(unittest.TestCase):
         manifest=json.loads((directory/'manifest.json').read_text());manifest['check_ids']=['check','missing']
         (directory/'manifest.json').write_text(json.dumps(manifest))
         with self.assertRaisesRegex(ValueError,'manifest'):R.inspect_output(directory,entry,{},self.root,'nightly')
+    def uvm_snapshot(self,directory):
+        home=self.root/'uvm';(home/'src').mkdir(parents=True)
+        for name in ('src/uvm_pkg.sv','src/uvm_macros.svh','LICENSE.txt','NOTICE.txt'):(home/name).write_text('official '+name)
+        expected={str(p.relative_to(home)):hashlib.sha256(p.read_bytes()).hexdigest() for p in home.rglob('*') if p.is_file()}
+        pin=self.root/'tools/uvm-source-sha256.json';pin.parent.mkdir(exist_ok=True);pin.write_text(json.dumps(dict(sha256=expected)))
+        record=dict(root=str(home),source_sha256={n:h for n,h in expected.items() if n.startswith('src/')})
+        (directory/'uvm-source.json').write_text(json.dumps(record))
+        return home,record
     def test_uvm_library_snapshot_cannot_be_missing_empty_or_stale(self):
-        directory,entry=self.output();entry['options']=['uvm-home']
+        directory,entry=self.output();entry['options']=['uvm-home'];home,valid=self.uvm_snapshot(directory)
+        (directory/'uvm-source.json').unlink()
         for record in (None,dict(root=str(self.root),source_sha256={}),dict(root=str(self.root),source_sha256={'rtl.sv':'stale'})):
             if record is not None:(directory/'uvm-source.json').write_text(json.dumps(record))
             with self.subTest(record=record), self.assertRaisesRegex(ValueError,'UVM'):
                 R.inspect_output(directory,entry,{},self.root,'nightly')
-        (directory/'uvm-source.json').write_text(json.dumps(dict(root=str(self.root),source_sha256={'rtl.sv':R.hashlib.sha256((self.root/'rtl.sv').read_bytes()).hexdigest()})))
+        (directory/'uvm-source.json').write_text(json.dumps(valid))
         self.assertEqual(R.inspect_output(directory,entry,{},self.root,'nightly')['junit'],1)
+    def test_changed_uvm_and_self_consistent_snapshot_are_rejected(self):
+        directory,entry=self.output();entry['options']=['uvm-home'];home,record=self.uvm_snapshot(directory)
+        source=home/'src/uvm_pkg.sv';source.write_text('modified library')
+        record['source_sha256']['src/uvm_pkg.sv']=hashlib.sha256(source.read_bytes()).hexdigest()
+        (directory/'uvm-source.json').write_text(json.dumps(record))
+        with self.assertRaisesRegex(ValueError,'UVM'):R.inspect_output(directory,entry,{},self.root,'nightly')
+    def test_uvm_subset_and_added_unrecorded_source_are_rejected(self):
+        directory,entry=self.output();entry['options']=['uvm-home'];home,record=self.uvm_snapshot(directory)
+        source=home/'src/uvm_macros.svh';original=source.read_bytes();expected=record['source_sha256'].pop('src/uvm_macros.svh');source.unlink()
+        (directory/'uvm-source.json').write_text(json.dumps(record))
+        with self.assertRaisesRegex(ValueError,'UVM'):R.inspect_output(directory,entry,{},self.root,'nightly')
+        source.write_bytes(original);record['source_sha256']['src/uvm_macros.svh']=expected
+        (directory/'uvm-source.json').write_text(json.dumps(record));(home/'src/extra.svh').write_text('unrecorded source')
+        with self.assertRaisesRegex(ValueError,'UVM'):R.inspect_output(directory,entry,{},self.root,'nightly')
+    def test_uvm_license_and_notice_are_bound(self):
+        directory,entry=self.output();entry['options']=['uvm-home'];home,record=self.uvm_snapshot(directory)
+        for name in ('LICENSE.txt','NOTICE.txt'):
+            path=home/name;original=path.read_bytes();path.write_text('modified')
+            with self.subTest(name=name),self.assertRaisesRegex(ValueError,'UVM'):R.inspect_output(directory,entry,{},self.root,'nightly')
+            path.write_bytes(original)
+    def test_uvm_legacy_snapshot_field_uses_same_pin(self):
+        directory,entry=self.output();entry['options']=['uvm-home'];home,record=self.uvm_snapshot(directory)
+        record['sha256']=record.pop('source_sha256');(directory/'uvm-source.json').write_text(json.dumps(record))
+        self.assertEqual(R.inspect_output(directory,entry,{},self.root,'nightly')['junit'],1)
+    def test_preflight_rejects_modified_uvm_before_execution(self):
+        directory,entry=self.output();home,record=self.uvm_snapshot(directory)
+        self.entries['local-child']['options']=['uvm-home']
+        args=self.args(example=['local-child'],uvm_home=home);jobs=R.make_plan(self.entries,args,self.root)
+        with patch.object(R,'ROOT',self.root):
+            self.assertTrue(R.preflight(jobs,self.entries,args,dict(os.environ))['success'])
+            (home/'src/uvm_pkg.sv').write_text('modified library')
+            check=R.preflight(jobs,self.entries,args,dict(os.environ))
+            self.assertFalse(check['success']);self.assertIn('UVM verification failed',';'.join(check['errors']))
+    def test_execution_plan_binds_the_uvm_pin(self):
+        args=self.args(registry=self.registry);job=dict(command=['runner','--uvm-home','library'])
+        self.assertIn(self.root/'tools/uvm-source-sha256.json',R.plan_inputs(args,[job],self.root))
+        self.assertNotIn(self.root/'tools/uvm-source-sha256.json',R.plan_inputs(args,[dict(command=['runner'])],self.root))
+    def test_failed_preflight_records_jobs_as_not_started(self):
+        self.entries['local-child']['tools']=['missing-tool-review-20261101']
+        args=self.args(out=self.root/'preflight',registry=self.registry,check_tools=False,jobs=1,job_timeout=1)
+        self.assertEqual(R.run(args,self.entries,R.make_plan(self.entries,args,self.root)),1)
+        data=json.loads((args.out/'summary.json').read_text())
+        self.assertTrue(all(r['started'] is False for r in data['results']))
     def test_oss_toolchain_snapshot_is_required_and_content_checked(self):
         directory,entry=self.output();entry['options']=['oss-home']
         with self.assertRaisesRegex(ValueError,'missing OSS CAD'):R.inspect_output(directory,entry,{},self.root,'nightly')
@@ -186,8 +239,10 @@ class CampaignTests(unittest.TestCase):
             while not ready.exists() and time.monotonic()<deadline:time.sleep(.02)
             if ready.exists():os.kill(os.getpid(),signal.SIGTERM)
         sender=threading.Thread(target=stop_when_started,daemon=True);sender.start()
-        try:self.assertEqual(R.run(args,self.entries,[job]),143)
+        second=dict(job,id='queued-fixture',out=str(out/'runs/queued'),command=[sys.executable,'-c','raise SystemExit(99)'])
+        try:self.assertEqual(R.run(args,self.entries,[job,second]),143)
         finally:sender.join(timeout=6)
         progress=json.loads((out/'progress.json').read_text());summary=json.loads((out/'summary.json').read_text())
         self.assertEqual(progress['active'],[]);self.assertTrue(progress['interrupted']);self.assertFalse(summary['success']);self.assertFalse(summary['complete'])
+        self.assertEqual({r['id']:r['started'] for r in summary['results']},{'interrupt-fixture':True,'queued-fixture':False})
 if __name__=='__main__':unittest.main()

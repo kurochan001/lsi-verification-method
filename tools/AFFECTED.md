@@ -46,7 +46,7 @@ artifacts/toolchains/full/python/bin/python tools/select_regression.py \
 
 ## 結果の意味と台帳更新
 
-`selection.json`の`status`、`changed`、`reasons`、`full_reasons`、`selected_jobs`、`executed_jobs`を確認します。`hardware_verified`は、選択した回路を実際に実行して監査まで成功した場合だけtrueです。計画のみ・文書のみ・差分なしはfalseです。選択自体の成功を、全例の合格と読み替えません。実行途中の入力の変更・追加・削除も失敗にします。
+`selection.json`の`status`、`changed`、`reasons`、`full_reasons`、`selected_jobs`、`executed_jobs`を確認します。`executed_jobs`は、統合ランナーが実際に起動したルートジョブの数です。起動前の依存不足を数えず、起動後の失敗・時間切れ・中断は起動済みとして記録します。シミュレーションや子タスクの件数とは区別します。`hardware_verified`は、全選択ジョブの実行・監査・終了時の入力照合が成功した場合だけtrueです。計画のみ・文書のみ・差分なしはfalseです。選択自体の成功を、全例の合格と読み替えません。実行途中の入力の変更・追加・削除も失敗にし、`hardware_verified`をfalseにします。
 
 例や依存を追加したら、次で候補を生成し、差分をレビューします。台帳だけを更新して影響するテストを省略する判断には使いません。
 

@@ -121,8 +121,8 @@ def run(a):
         r=Q.P.execute(command,report.out/'campaign.log',a.execution_timeout,root);good=False
         try:
             data=json.loads((report.out/'campaign/summary.json').read_text());manifest=json.loads((report.out/'campaign/manifest.json').read_text())
-            selection['executed_jobs']=len(data['results'])
-            good=not r['error'] and r['returncode']==0 and data['success'] is True and data['complete'] is True and [j['id'] for j in manifest['jobs']]==selection['selected_jobs'] and data['planned']==len(jobs)
+            selection['executed_jobs']=sum(row.get('started') is True for row in data['results'])
+            good=not r['error'] and r['returncode']==0 and data['success'] is True and data['complete'] is True and [j['id'] for j in manifest['jobs']]==selection['selected_jobs'] and data['planned']==len(jobs) and selection['executed_jobs']==len(jobs)
         except (OSError,ValueError,KeyError,TypeError):pass
         report.check('execution',good,r)
         r=Q.P.execute([sys.executable,str(root/'tools/regression_report.py'),'--plan',str(report.out/'campaign/manifest.json'),'--campaign',str(report.out/'campaign'),'--out',str(report.out/'audit')],report.out/'audit.log',a.execution_timeout,root)
@@ -138,6 +138,7 @@ def run(a):
         if changes(root,a.base,a.head,a.include_worktree)!=(records,resolved,uncertain):changed.append('Git changes or references changed')
     except (ValueError,subprocess.SubprocessError) as exc:changed.append(str(exc))
     if dependency_inventory(root,entries)!=inventory:changed.append('runtime/dependency inventory changed during selection or execution')
+    if changed:selection['hardware_verified']=False
     report.check('source-freshness',not changed,changed);Q.write(report.out/'selection.json',selection)
     print('Selection:',selection['status'],'planned',len(jobs),'executed',selection['executed_jobs'],'hardware_verified',selection['hardware_verified'])
     return report.finish()

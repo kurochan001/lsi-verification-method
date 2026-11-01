@@ -84,6 +84,34 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(next(r['status'] for r in summary['results'] if r['id']=='source-freshness'),'fail')
     def test_new_shared_input_during_selection_is_rejected(self):
         self.assertEqual(self.run_fixture('shared')[0],1)
+    def run_hardware_fixture(self,mode='pass',drift=False):
+        for name in ('run_regression.py','regression_report.py'):(self.root/'tools'/name).write_text('# fixture')
+        (self.root/'tools/regressions.json').write_text(json.dumps(dict(schema_version=1,examples=list(self.entries.values()))))
+        config=self.root/'tools/regression_dependencies.json';config.write_text(json.dumps(S.dependency_inventory(self.root,self.entries)))
+        self.git('add','.');self.git('commit','-qm','complete fixture')
+        (self.root/'examples/local-a/run.py').write_text('# changed source')
+        a=SimpleNamespace(base='HEAD',head='HEAD',include_worktree=True,profile='smoke',seed=17,run=True,out=self.root/'out',runner_args=[],execution_timeout=5)
+        def execute(command,log,*unused):
+            Path(log).write_text('');campaign=a.out/'campaign';audit=a.out/'audit'
+            if 'run_regression.py' in command[1]:
+                campaign.mkdir();jobs=S.R.make_plan(self.entries,S.plan_args(a,campaign,['local-a','local-b']),self.root)
+                rows=[dict(id=j['id'],started=mode=='pass' or mode=='partial' and i==0,success=mode=='pass',returncode=0 if mode=='pass' else None) for i,j in enumerate(jobs)]
+                (campaign/'summary.json').write_text(json.dumps(dict(success=mode=='pass',complete=mode=='pass',planned=len(jobs),results=rows)))
+                (campaign/'manifest.json').write_text(json.dumps(dict(jobs=jobs)))
+            else:
+                audit.mkdir();(audit/'summary.json').write_text(json.dumps(dict(success=mode=='pass')))
+                if drift:(self.root/'tools/new-helper.py').write_text('# added during execution')
+            return dict(returncode=0 if mode=='pass' else 1,error=None,command=command)
+        with patch.object(S.Q,'ROOT',self.root),patch.object(S,'DEPENDENCIES',config),patch.object(S.Q.P,'execute',execute),redirect_stdout(io.StringIO()):rc=S.run(a)
+        return rc,json.loads((a.out/'selection.json').read_text())
+    def test_successful_execution_and_audit_set_verified(self):
+        rc,selection=self.run_hardware_fixture();self.assertEqual(rc,0);self.assertTrue(selection['hardware_verified']);self.assertEqual(selection['executed_jobs'],2)
+    def test_source_drift_clears_verified_after_successful_execution_and_audit(self):
+        rc,selection=self.run_hardware_fixture(drift=True);self.assertEqual(rc,1);self.assertFalse(selection['hardware_verified']);self.assertEqual(selection['executed_jobs'],2)
+    def test_failed_preflight_does_not_count_unstarted_jobs(self):
+        rc,selection=self.run_hardware_fixture('preflight');self.assertEqual(rc,1);self.assertFalse(selection['hardware_verified']);self.assertEqual(selection['executed_jobs'],0)
+    def test_partial_execution_counts_only_started_jobs(self):
+        rc,selection=self.run_hardware_fixture('partial');self.assertEqual(rc,1);self.assertEqual(selection['executed_jobs'],1)
     def test_repository_catalog_matches_current_runtime_inventory(self):
         root=Path(S.__file__).resolve().parents[1];entries=S.R.load_registry(root/'tools/regressions.json',root)
         self.assertEqual(json.loads(S.DEPENDENCIES.read_text()),S.dependency_inventory(root,entries))

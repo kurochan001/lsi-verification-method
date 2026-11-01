@@ -108,7 +108,7 @@ def build_report(plan,campaigns,root=ROOT):
                 if row.get('success') is not True or type(row.get('returncode')) is not int or row['returncode']!=0:raise ValueError(row.get('message','job not completed successfully'))
                 info=R.inspect_output(Path(job['out']),entries[job['example']],entries,root,plan['profile'])
                 record.update(success=True,reason='current plan, completion, JUnit and sources verified',**info)
-                for filename in ('manifest.json','summary.json','junit.xml','uvm-source.json'):
+                for filename in ('manifest.json','summary.json','junit.xml','uvm-source.json','oss-source.json'):
                     for path in Path(job['out']).rglob(filename):inputs[str(path)]=digest(path)
             except (OSError,ValueError,KeyError,TypeError,ET.ParseError) as exc:record['reason']=str(exc)
             history[identity].append(record)

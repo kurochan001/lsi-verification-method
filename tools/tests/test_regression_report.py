@@ -8,6 +8,7 @@ import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 S=importlib.util.spec_from_file_location('report_under_test',Path(__file__).resolve().parents[1]/'regression_report.py');T=importlib.util.module_from_spec(S);S.loader.exec_module(T)
 
 class ReportTests(unittest.TestCase):
@@ -73,6 +74,12 @@ class ReportTests(unittest.TestCase):
         T.R.save(good,jobs,rows,True,True,'changed campaign source');self.assertFalse(self.report(good)['success'])
         (good/'junit.xml').write_text('<testsuite tests="0"/>')
         with self.assertRaisesRegex(ValueError,'JUnit'):self.report(good)
+    def test_oss_snapshot_is_included_in_report_input_hashes(self):
+        good=self.campaign('good');snapshot=good/'runs/local-fixture/oss-source.json'
+        snapshot.write_text('{"root":"fixture"}')
+        # Isolate artifact enumeration; toolchain validation has its own tests.
+        with patch.object(T.R,'inspect_output',return_value=dict(junit=1,source_hashes=1)):report=self.report(good)
+        self.assertTrue(report['success']);self.assertEqual(report['input_sha256'][str(snapshot.resolve())],T.digest(snapshot))
     def test_missing_campaigns_cannot_produce_success(self):
         with self.assertRaises(ValueError):self.report()
         p=copy.deepcopy(self.plan);p['jobs'][0]['configuration']={'unexpected':1}

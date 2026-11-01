@@ -117,8 +117,22 @@ def plan_document(args,jobs):
 
 def plan_inputs(args,jobs,root=ROOT):
     paths=[root/'tools/run_regression.py',args.registry,root/'examples/local-irq-cdc/run.py']
+    if any('--uvm-home' in j['command'] for j in jobs):paths.append(root/'tools/uvm-source-sha256.json')
     if any('--oss-home' in j['command'] for j in jobs):paths += [root/'tools/oss_cad.py',root/'tools/oss_cad.json']
     return paths
+
+
+def verify_uvm(home,recorded=None,root=ROOT):
+    expected=json.loads((root/'tools/uvm-source-sha256.json').read_text())['sha256']
+    sources={name:value for name,value in expected.items() if name.startswith('src/')}
+    if not sources or recorded is not None and recorded!=sources:raise ValueError('UVM snapshot differs from pinned source inventory')
+    home=Path(home)
+    observed={str(p.relative_to(home)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((home/'src').rglob('*')) if p.is_file()}
+    if observed!=sources:raise ValueError('UVM installation differs from pinned sources')
+    for name,value in expected.items():
+        if name in sources:continue
+        path=home/name
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=value:raise ValueError('UVM pinned metadata differs: '+name)
 
 
 def environment(args):
@@ -138,6 +152,9 @@ def preflight(jobs,entries,args,env):
         entry=entries[name];required.update(entry['tools'])
         for interpreter,modules in entry.get('packages',{}).items():packages.setdefault(interpreter,set()).update(modules)
         if 'uvm-home' in entry['options'] and (args.uvm_home is None or not (args.uvm_home/'src/uvm_pkg.sv').is_file()):errors.append('UVM library required: '+name)
+    if any('uvm-home' in entries[n]['options'] for n in closure) and args.uvm_home is not None:
+        try:verify_uvm(args.uvm_home,root=ROOT)
+        except (OSError,ValueError,KeyError,TypeError) as exc:errors.append('UVM verification failed: '+str(exc))
     for command in sorted(required):
         if oss_required and command in ('yosys','sby','mcy','yosys-abc'):
             candidate=oss_home/'bin'/command if oss_home else None
@@ -223,9 +240,7 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
         record=json.loads(snapshot.read_text())
         hashes=record.get('source_sha256',record.get('sha256',{}))
         if not isinstance(hashes,dict) or not hashes:raise ValueError('empty/invalid UVM source snapshot')
-        for name,expected in hashes.items():
-            path=Path(record['root'])/name
-            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=expected:raise ValueError('stale UVM source: '+str(path))
+        verify_uvm(record['root'],hashes,root)
     oss_snapshots=list(directory.rglob('oss-source.json'))
     if 'oss-home' in entry.get('options',[]) and not oss_snapshots:raise ValueError('missing OSS CAD Suite source snapshot')
     if oss_snapshots:
@@ -288,7 +303,7 @@ def run(args,entries,jobs):
     P.write_json(out/'manifest.json',plan_document(args,jobs))
     check=preflight(jobs,entries,args,env);P.write_json(out/'preflight.json',check)
     if not check['success']:
-        results=[dict(id=j['id'],success=False,message='preflight failed; job not started') for j in jobs]
+        results=[dict(id=j['id'],success=False,started=False,message='preflight failed; job not started') for j in jobs]
         save(out,jobs,results,False,False)
         for error in check['errors']:print(error,file=sys.stderr)
         return 1
@@ -314,11 +329,11 @@ def run(args,entries,jobs):
         except (OSError,ValueError,KeyError,TypeError,ET.ParseError) as exc:message=str(exc)
         finally:
             with lock:active.discard(job['id'])
-        return dict(id=job['id'],example=job['example'],success=ok,message=message,returncode=code,seconds=round(time.monotonic()-started,3),**details)
+        return dict(id=job['id'],example=job['example'],success=ok,started=process is not None,message=message,returncode=code,seconds=round(time.monotonic()-started,3),**details)
     def interrupted(signum,_frame):
         if not cancel.is_set():cancel.set();raise P.RunInterrupted(signum)
     previous={sig:signal.signal(sig,interrupted) for sig in (signal.SIGTERM,signal.SIGINT)}
-    pool=concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs);futures={pool.submit(execute,j) for j in jobs};exit_code=None
+    pool=concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs);submitted={pool.submit(execute,j) for j in jobs};futures=set(submitted);exit_code=None
     try:
         while futures:
             done,futures=concurrent.futures.wait(futures,timeout=10,return_when=concurrent.futures.FIRST_COMPLETED)
@@ -334,7 +349,11 @@ def run(args,entries,jobs):
         for sig,handler in previous.items():signal.signal(sig,handler)
     if exit_code is not None:
         completed={r['id'] for r in results}
-        results += [dict(id=j['id'],success=False,message='interrupted; no completed evidence') for j in jobs if j['id'] not in completed]
+        for future in submitted:
+            if future.cancelled():continue
+            result=future.result()
+            if result['id'] not in completed:results.append(result);completed.add(result['id'])
+        results += [dict(id=j['id'],success=False,started=False,message='interrupted; no completed evidence') for j in jobs if j['id'] not in completed]
         P.write_json(out/'progress.json',dict(completed=len(completed),planned=len(jobs),active=[],interrupted=True))
         save(out,jobs,results,False,True);return exit_code
     integrity_error=None
