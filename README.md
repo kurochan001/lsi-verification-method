@@ -25,6 +25,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | lintの指摘や失敗を解析する | [警告の扱い](docs/method/lint-and-waivers.md)／[失敗解析](docs/method/failure-analysis.md)／[不具合票](docs/templates/verification-issue.md) |
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
+| ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
 | 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
 | 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
 | 自動生成した誤実装でテストを評価する | [MCY・機能等価性・検出率](examples/local-auto-mutation/README.md) |
@@ -168,6 +169,7 @@ flowchart TD
 | CPU・メモリ・バス・IPを接続して検証する | [小規模画像処理SoC](examples/local-image-soc/README.md) | ROM起動、AHB-Lite／APB／AXI4、DMA、最終応答とIRQ、CPUによる全画素確認 |
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
+| ランダム検証を学ぶ | [計画と完了判定](docs/method/constrained-random-verification.md)／[PythonのFIFO例](examples/local-fifo/README.md)／[SV・UVMの実行例](examples/local-uvm-random/README.md) | 固定ケースとの併用、制約の合法性、seedと入力列の再現、独立比較、未達への刺激調整と失敗列の縮小 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
 | 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
 | 複数agentを協調させる | [APB設定＋GAINデータパス](examples/local-uvm-coordination/README.md) | virtual sequence、同時設定と入力の期待値、観測順序、待ち・取消、native bin |
@@ -218,9 +220,11 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 航空宇宙・高信頼システム分野には、TMR制御レジスタとECC・ウォッチドッグ付きFDIRサブシステムを追加しました。単一故障の保護、保証外の限界、異常時の取消・出力抑止、検査付き復帰を分けて学べます。航空と宇宙の保証活動、RTLで確認する範囲は[検証手順](docs/method/aerospace-verification.md)、実行条件は[追加記録](PROVENANCE.md#aerospace-20261101)を参照してください。
 
-macOSで全103ジョブのnightly、既存の全12フォーマル例・23構成・175タスク、セルフテスト124グループ・1,023件、保存結果の監査が成功しました。Linuxでも全103ジョブのsmokeと監査が成功しています。追加したモーション制御2例は、Verilatorでも34ケース（通常25・変異9）を照合しました。新12構成のlintは警告0件で、既存の指摘487件は増減なしです。
+macOSで全103ジョブのnightly、既存の全12フォーマル例・23構成・175タスク、セルフテスト124グループ・1,026件、保存結果の監査が成功しました。Linuxでも全103ジョブのsmokeと監査が成功しています。追加したモーション制御2例は、Verilatorでも34ケース（通常25・変異9）を照合しました。新12構成のlintは警告0件で、既存の指摘487件は増減なしです。
 
 ロボティクス・モーション制御分野には、相補PWM・直交エンコーダの単体例と、実際のPWM出力で簡易プラントを動かす1軸の閉ループ例を追加しました。固定小数点PI、追従窓、負荷変動、停止・再開、期限超過を自動確認します。正規化モデルと実機の評価範囲は[検証手順](docs/method/robotics-verification.md)、実行条件は[追加記録](PROVENANCE.md#robotics-20261101)を参照してください。
+
+最終レビューでは、セルフテスト中の参照モデル・RTL・要求等の変更を見逃す問題を修正しました。文書の集計案内と分野別の点検表を更新し、ランダム検証も目的・学習項目から直接選べるようにしました。[修正内容と全体の確認実績](PROVENANCE.md#final-review-20261102)に、再現試験・入力の版・実行範囲を記録しています。
 
 ## 準備と実行
 
