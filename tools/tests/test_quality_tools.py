@@ -24,6 +24,8 @@ class QualityEvidenceTests(unittest.TestCase):
     def test_added_test_during_execution_invalidates_inventory(self):
         with tempfile.TemporaryDirectory() as directory,redirect_stdout(io.StringIO()):
             root=Path(directory);group=root/'tools/tests';group.mkdir(parents=True)
+            subprocess.run(['git','init','-q',str(root)],check=True)
+            (root/'.gitignore').write_text('out/\n')
             (group/'test_first.py').write_text('# original test')
             def execute(command,log,*args):
                 Path(log).write_text('Ran 1 test in 0.1s\n\nOK\n')
@@ -34,6 +36,36 @@ class QualityEvidenceTests(unittest.TestCase):
             self.assertEqual(rc,1)
             summary=json.loads((a.out/'summary.json').read_text())
             self.assertEqual(next(r['status'] for r in summary['results'] if r['id']=='source-freshness'),'fail')
+    def run_selftest_source_fixture(self,change=None):
+        with tempfile.TemporaryDirectory() as directory,redirect_stdout(io.StringIO()):
+            root=Path(directory);subprocess.run(['git','init','-q',str(root)],check=True)
+            for name,text in {'.gitignore':'cache/\n','tools/tests/test_fixture.py':'# test','examples/local-a/model.py':'# model','examples/local-a/rtl/dut.sv':'// RTL','examples/local-a/requirements.json':'{}'}.items():
+                p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text)
+            def execute(command,log,*args):
+                Path(log).write_text('Ran 1 test in 0.1s\n\nOK\n')
+                if change=='add':(root/'examples/local-a/new.py').write_text('# new implementation')
+                elif change=='delete':(root/'examples/local-a/model.py').unlink()
+                elif change=='ignored':(root/'cache').mkdir();(root/'cache/generated.json').write_text('{}')
+                elif change:
+                    name={'model':'model.py','rtl':'rtl/dut.sv','requirements':'requirements.json'}[change]
+                    (root/'examples/local-a'/name).write_text('# changed input')
+                return dict(command=command,error=None,returncode=0)
+            a=argparse.Namespace(scope='tools',out=root/'out',python=sys.executable,timeout=1,jobs=1)
+            with patch.object(Q,'ROOT',root),patch.object(Q.P,'execute',side_effect=execute):rc=S.run(a)
+            return rc,json.loads((a.out/'summary.json').read_text()),json.loads((a.out/'manifest.json').read_text())
+    def test_selftests_bind_implementation_rtl_and_requirements_even_in_tools_scope(self):
+        rc,summary,manifest=self.run_selftest_source_fixture();self.assertEqual(rc,0);self.assertTrue(summary['success'])
+        sources=manifest['source_sha256']
+        self.assertFalse(any('/out/' in p for p in sources))
+        for name in ('model.py','rtl/dut.sv','requirements.json'):
+            self.assertTrue(any(p.endswith('/examples/local-a/'+name) for p in sources))
+    def test_implementation_changes_additions_and_deletions_invalidate_selftests(self):
+        for change in ('model','rtl','requirements','add','delete'):
+            with self.subTest(change=change):
+                rc,summary,_=self.run_selftest_source_fixture(change);self.assertEqual(rc,1);self.assertFalse(summary['success'])
+                self.assertEqual(next(r['status'] for r in summary['results'] if r['id']=='source-freshness'),'fail')
+    def test_ignored_generated_files_do_not_invalidate_selftests(self):
+        self.assertEqual(self.run_selftest_source_fixture('ignored')[0],0)
     def test_incomplete_and_changed_inputs_fail(self):
         with tempfile.TemporaryDirectory() as directory,redirect_stdout(io.StringIO()):
             p=Path(directory);source=p/'source';source.write_text('original')

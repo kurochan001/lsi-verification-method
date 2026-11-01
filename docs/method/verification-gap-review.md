@@ -67,6 +67,19 @@
 | SCOPE-PROTOCOL-DATA / SECURITY | [SHA-256](../../examples/local-sha256/README.md) | 0〜119バイトのパディングとブロック連鎖、hashlibとのダイジェスト照合。HMAC・鍵管理・物理的な漏えい・暗号認証は対象外 |
 | SCOPE-PROTOCOL-DATA / PERFORMANCE | [パケットスイッチ](../../examples/local-packet-switch/README.md) | ヘッダーによる経路保持、パケット単位の仲裁と占有、入力の空白・出力待ち。ネットワーク全体のデッドロック回避は対象外 |
 
+分野別の例では、IP単体の判定を、接続・ソフトウェア・故障反応まで追跡する検証へつなげます。[画像処理](image-processing-verification.md)、[ネットワーク](network-verification.md)、[航空宇宙](aerospace-verification.md)、[ロボティクス](robotics-verification.md)の手順も併せて参照してください。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-PROTOCOL-DATA / PERFORMANCE | [ラインメモリ付きSobel](../../examples/local-image-sobel/README.md) | 画素位置・画像境界・ライン履歴・出力待ち。独立した全画素比較 |
+| SCOPE-SYSTEM-SW / FAULT-RECOVERY | [CPU付き画像処理SoC](../../examples/local-image-soc/README.md) | ROM起動、共有RAM、バス・DMA・エラー・IRQ、CPUによる全画素確認 |
+| SCOPE-PROTOCOL-DATA / PERFORMANCE | [ARP・UDPエコーIP](../../examples/local-network-echo/README.md) | 停止できないRX、フレーム破棄、FCS・チェックサム、送信待ち。PHY・規格全体の適合は対象外 |
+| SCOPE-SYSTEM-SW / PROTOCOL-DATA | [CPU付きネットワークSoC](../../examples/local-network-soc/README.md) | DMAの所有権、メモリ順序、IRQ、CPUによる返信生成 |
+| SCOPE-FAULT-RECOVERY | [TMR制御レジスタ](../../examples/local-tmr/README.md) | 単一故障の多数決・修復、二重故障・共通故障に対する保護の限界 |
+| SCOPE-FAULT-RECOVERY / SYSTEM-SW | [FDIRサブシステム](../../examples/local-fdir/README.md) | ECC・進捗監視、異常とcommitの競合、取消、原因保持、検査付き復帰。実機認証は対象外 |
+| SCOPE-PROTOCOL-DATA / PERFORMANCE | [PWM・直交エンコーダ](../../examples/local-motion-io/README.md) | 相補出力、デッドタイム、設定反映、ノイズ・不正遷移・位置折返し |
+| SCOPE-PERFORMANCE / FAULT-RECOVERY | [1軸の閉ループ制御](../../examples/local-motion-control/README.md) | PI・実PWMで動くプラント、追従窓、負荷、演算期限、停止・再開。正規化モデルであり、実機の制動評価は対象外 |
+
 これらの実行例を加えても、実プロセス・配線後のSTA、物理的なCDC/RDC成立性、DFTの実装制約、DRC/LVS、AMS、シリコン評価を確認済みにはしません。対象製品の要求があれば、以下の計画と製品側の証跡へ展開します。
 
 ## 2. 静的検査と構成ごとの読み込み

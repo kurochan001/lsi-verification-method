@@ -6,9 +6,14 @@ from datetime import datetime,timezone
 import math
 from pathlib import Path
 import re
+import subprocess
 import sys
 import quality_common as Q
 def groups(root,scope):return ([root/'tools/tests'] if scope=='tools' else sorted((root/'examples').glob('*/tests'))+[root/'tools/tests'])
+def repository_inputs(root,out):
+    data=subprocess.check_output(['git','-C',str(root),'ls-files','-z','--cached','--others','--exclude-standard'])
+    paths={root/p.decode() for p in data.split(b'\0') if p}
+    return sorted(p for p in paths if p.is_file() and not p.resolve().is_relative_to(out.resolve()))
 def evaluate(execution,log):
     counts=re.findall(r'^Ran (\d+) tests? in ',log,re.M)
     skips=re.findall(r"^.*?\.\.\. skipped (.+)$",log,re.M)
@@ -17,8 +22,8 @@ def evaluate(execution,log):
 def run(a):
     selected=groups(Q.ROOT,a.scope);names=[p.parent.name if p.parent.name!='tools' else 'tools' for p in selected]
     if len(names)!=len(set(names)):raise ValueError('duplicate unittest group')
-    files=[p for path in selected for p in sorted(path.rglob('*.py'))]
-    report=Q.Report('selftests',a.out,[Path(__file__),*files],['inventory',*names,'source-freshness'],dict(groups=[str(p.relative_to(Q.ROOT)) for p in selected],python=a.python,scope=a.scope))
+    files=[p for path in selected for p in sorted(path.rglob('*.py'))];inputs=repository_inputs(Q.ROOT,a.out)
+    report=Q.Report('selftests',a.out,[Path(__file__),*inputs,*files],['inventory',*names,'source-freshness'],dict(groups=[str(p.relative_to(Q.ROOT)) for p in selected],python=a.python,scope=a.scope))
     report.check('inventory',bool(names),dict(groups=len(names),test_files=len(files)))
     def execute(item):
         name,path=item;r=Q.P.execute([a.python,'-m','unittest','discover','-s',str(path),'-v'],report.out/(name+'.log'),a.timeout,Q.ROOT)
@@ -30,6 +35,7 @@ def run(a):
     changed=report.fresh()
     current=groups(Q.ROOT,a.scope)
     if current!=selected or [p for path in current for p in sorted(path.rglob('*.py'))]!=files:changed.append('unittest inventory changed')
+    if repository_inputs(Q.ROOT,a.out)!=inputs:changed.append('repository input inventory changed')
     report.check('source-freshness',not changed,changed)
     Q.write(report.out/'tests.json',dict(groups=len(results),tests=sum(r['tests'] for r in results),results=results));return report.finish()
 def main():
@@ -38,5 +44,5 @@ def main():
     if not 1<=a.jobs<=16 or not math.isfinite(a.timeout) or a.timeout<=0 or a.out.exists():p.error('valid jobs, finite positive timeout and fresh --out required')
     a.python=Q.executable(a.python)
     try:return run(a)
-    except (OSError,ValueError,KeyError,TypeError) as exc:print('SELFTEST_ERROR',exc,file=sys.stderr);return 1
+    except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as exc:print('SELFTEST_ERROR',exc,file=sys.stderr);return 1
 if __name__=='__main__':sys.exit(main())
