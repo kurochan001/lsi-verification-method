@@ -84,7 +84,7 @@ python3 examples/local-network-soc/run.py --profile nightly --out artifacts/netw
 
 Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 34件／nightly 38件です。nightlyはランダムseedを1→3へ増やします。
 
-送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致する退出命令列、CPUのRAM読出し、終了署名を照合します。生成入力・期待値・ROMのハッシュ、`ram-readback.hex`、`retirement.log`、VCD・ログ・要求別観測を保存します。リセットケースのRAMと退出ログは再起動後の実行分で、reset数は別に残します。証跡を[全体ランナー](../../tools/REGRESSION.md)から監査できます。
+送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致するリタイア命令列、CPUのRAM読出し、終了署名を照合します。生成入力・期待値・ROMのハッシュ、`ram-readback.hex`、`retirement.log`、VCD・ログ・要求別観測を保存します。リセットケースのRAMとリタイアログは再起動後の実行分で、reset数は別に残します。証跡を[全体ランナー](../../tools/REGRESSION.md)から監査できます。
 
 ## 適用範囲
 
