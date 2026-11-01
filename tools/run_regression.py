@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Run the repository's registered example matrices with explicit tool preflight."""
 import argparse
+from collections import Counter
 import concurrent.futures
 from datetime import datetime, timezone
 import hashlib
@@ -25,6 +26,13 @@ P=importlib.util.module_from_spec(spec);spec.loader.exec_module(P)
 REDUCTION_GATES={'learning','selection','comparison'}|{f'{kind}/normal' for kind in ('full','coverage_only','guarded')}|{f'{kind}/mutation{i}' for kind in ('full','coverage_only','guarded') for i in range(1,5)}
 
 
+def child_relative(value):
+    if not isinstance(value,str) or not value.strip():raise ValueError('invalid child evidence path')
+    path=Path(value)
+    if path.is_absolute() or not path.parts or '..' in path.parts:raise ValueError('child evidence path must stay below its parent')
+    return path
+
+
 def load_registry(path,root=ROOT):
     data=json.loads(path.read_text());entries=data.get('examples')
     if type(data.get('schema_version')) is not int or data['schema_version']!=1 or not isinstance(entries,list) or not entries:raise ValueError('invalid registry')
@@ -40,6 +48,10 @@ def load_registry(path,root=ROOT):
         matrix=entry.get('matrix',{})
         if not isinstance(matrix,dict) or any(not re.fullmatch(r'[a-z][a-z0-9-]*',k) or not isinstance(v,list) or not v or
                 any(type(x) not in (int,str) or not re.fullmatch(r'[A-Za-z0-9_-]+',str(x)) for x in v) or len(v)!=len(set(map(str,v))) for k,v in matrix.items()):raise ValueError('invalid matrix: '+name)
+        children=entry.get('children',{})
+        if not isinstance(children,dict):raise ValueError('invalid child evidence mapping: '+name)
+        locations=[child_relative(value) for value in children.values()]
+        if len(locations)!=len(set(locations)):raise ValueError('duplicate child evidence path: '+name)
         result[name]=entry
     actual={str(p.relative_to(root)) for p in (root/'examples').glob('*/run.py')}
     registered={e['script'] for e in entries if e['script'].endswith('/run.py')}
@@ -167,6 +179,10 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
         if len(expected)!=data['planned'] or (ids and ids!=set(expected)):raise ValueError('summary differs from manifest check plan')
         ids=set(expected)
     xml=ET.parse(directory/'junit.xml').getroot();cases=list(xml.iter('testcase'))
+    parents={child:parent for parent in xml.iter() for child in parent}
+    if (xml.tag not in ('testsuite','testsuites') or not list(xml.iter('testsuite')) or
+            any(parents[c].tag!='testsuite' for c in cases) or
+            any(parents[n].tag!='testsuites' for n in xml.iter() if n is not xml and n.tag in ('testsuite','testsuites'))):raise ValueError('unsupported JUnit structure')
     keys=[(c.get('classname',''),c.get('name')) for c in cases]
     if (not cases or len(keys)!=len(set(keys)) or any(not name for _,name in keys) or
             list(xml.iter('error')) or list(xml.iter('failure')) or list(xml.iter('skipped'))):raise ValueError('JUnit incomplete, duplicate, skipped or failed')
@@ -176,7 +192,13 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
         if any(int(node.get(key,'0'))!=0 for key in ('failures','errors','skipped')):raise ValueError('JUnit reports failed/skipped tests')
         if node.tag=='testsuites' and 'tests' in node.attrib and int(node.get('tests'))!=len(list(node.iter('testcase'))):raise ValueError('JUnit total test count differs')
     if ids-{c.get('name') for c in cases}:raise ValueError('summary case missing from JUnit')
-    for child,relative in entry.get('children',{}).items():inspect_output(directory/relative,entries[child],entries,root,profile)
+    names=Counter(c.get('name') for c in cases)
+    if any(names[name]!=1 for name in ids):raise ValueError('planned JUnit case is ambiguous')
+    for child,relative in entry.get('children',{}).items():
+        child_directory=directory/child_relative(relative)
+        parent_root=directory.resolve();child_root=child_directory.resolve()
+        if child_root==parent_root or not child_root.is_relative_to(parent_root):raise ValueError('child evidence must resolve strictly below its parent')
+        inspect_output(child_directory,entries[child],entries,root,profile)
     count=0
     for manifest in directory.rglob('manifest.json'):
         for name,expected in json.loads(manifest.read_text()).get('source_sha256',{}).items():

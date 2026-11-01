@@ -44,6 +44,15 @@ class CampaignTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'cycle'):R.load_registry(self.registry,self.root)
         self.entries['local-child'].pop('children');self.entries['local-child']['matrix']={'width':['../escape']};self.write_registry()
         with self.assertRaisesRegex(ValueError,'matrix'):R.load_registry(self.registry,self.root)
+    def test_child_evidence_paths_must_be_distinct_relative_descendants(self):
+        for children in ({'local-child':p} for p in ('','.', '../old', 'nested/../../old', str(self.root/'old'), None)):
+            self.entries['local-parent']['children']=children;self.write_registry()
+            with self.subTest(children=children),self.assertRaisesRegex(ValueError,'child evidence'):
+                R.load_registry(self.registry,self.root)
+        for children in ([], {'local-child':'nested/result','local-proof':'nested/./result'}):
+            self.entries['local-parent']['children']=children;self.write_registry()
+            with self.subTest(children=children),self.assertRaisesRegex(ValueError,'child evidence'):
+                R.load_registry(self.registry,self.root)
     def test_missing_tools_are_a_preflight_failure(self):
         self.entries['local-proof']['tools']=['no-such-verification-tool-20261031']
         jobs=R.make_plan(self.entries,self.args(),self.root);result=R.preflight(jobs,self.entries,self.args(),dict(os.environ))
@@ -69,6 +78,30 @@ class CampaignTests(unittest.TestCase):
                     '<testsuites tests="2"><testsuite tests="1"><testcase name="check"/></testsuite></testsuites>'):
             (directory/'junit.xml').write_text(xml)
             with self.assertRaises(ValueError):R.inspect_output(directory,entry,{},self.root,'nightly')
+    def test_junit_root_hierarchy_and_planned_case_identity_are_checked(self):
+        directory,entry=self.output()
+        for xml in ('<result><testcase name="check"/></result>',
+                    '<testsuites tests="1"><testsuite tests="0"/><testcase name="check"/></testsuites>',
+                    '<testsuites tests="1"><wrapper><testsuite tests="1"><testcase name="check"/></testsuite></wrapper></testsuites>',
+                    '<testsuite tests="2"><testcase classname="first" name="check"/><testcase classname="second" name="check"/></testsuite>'):
+            (directory/'junit.xml').write_text(xml)
+            with self.subTest(xml=xml),self.assertRaisesRegex(ValueError,'JUnit'):
+                R.inspect_output(directory,entry,{},self.root,'nightly')
+        (directory/'junit.xml').write_text('<testsuites tests="1"><testsuite tests="1"><testcase name="check"/></testsuite></testsuites>')
+        self.assertEqual(R.inspect_output(directory,entry,{},self.root,'nightly')['junit'],1)
+    def test_child_evidence_cannot_borrow_parent_or_external_output(self):
+        directory,entry=self.output();borrowed=self.root/'borrowed';borrowed.mkdir()
+        for name in ('manifest.json','summary.json','junit.xml'):(borrowed/name).write_bytes((directory/name).read_bytes())
+        (directory/'linked').symlink_to(borrowed,target_is_directory=True)
+        (directory/'self-linked').symlink_to(directory,target_is_directory=True)
+        for relative in ('.','../borrowed',str(borrowed),'linked','self-linked'):
+            parent=dict(entry,children={'local-child':relative})
+            with self.subTest(relative=relative),self.assertRaisesRegex(ValueError,'child evidence'):
+                R.inspect_output(directory,parent,{'local-child':entry},self.root,'nightly')
+        child=directory/'nested/child';child.mkdir(parents=True)
+        for name in ('manifest.json','summary.json','junit.xml'):(child/name).write_bytes((directory/name).read_bytes())
+        parent=dict(entry,children={'local-child':'nested/child'})
+        self.assertEqual(R.inspect_output(directory,parent,{'local-child':entry},self.root,'nightly')['junit'],1)
     def test_stale_source_and_wrong_profile_are_rejected(self):
         directory,entry=self.output()
         with self.assertRaisesRegex(ValueError,'profile'):R.inspect_output(directory,entry,{},self.root,'smoke')
