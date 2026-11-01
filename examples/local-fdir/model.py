@@ -12,11 +12,13 @@ DATA_BITS=(2,4,5,6,8,9,10,11);PARITY_BITS=(0,1,3,7,12)
 def valid(code):return code.bit_count()%2==0 and all(sum((code>>(i-1))&1 for i in range(1,13) if i&(1<<p))%2==0 for p in range(4))
 
 def encode(data):
+    if type(data) is not int or not 0<=data<=255:raise ValueError('8-bit data required')
     base=sum(((data>>i)&1)<<b for i,b in enumerate(DATA_BITS))
     return next(code for p in range(32) if valid(code:=base|sum(((p>>i)&1)<<b for i,b in enumerate(PARITY_BITS))))
 CODES=tuple(encode(v) for v in range(256))
 @lru_cache(maxsize=8192)
 def decode(code):
+    if type(code) is not int or not 0<=code<8192:raise ValueError('13-bit code required')
     for data,word in enumerate(CODES):
         distance=(code^word).bit_count()
         if distance<=1:return data,int(distance==1),0,word
@@ -33,7 +35,12 @@ class Node:
         self.cfg=T.Register(8);self.mem=[0]*self.depth;self.scrub_at=0;self.scrub_c=0;self.scrub_u=0;self.wd=0
         self.commit=self.cancel=self.recovered=self.failed=0
     def before(self,row):
-        a=dict(zip(FIELDS,row));p=self.pending;value,c,u,fixed=decode(self.mem[self.scan if self.state==3 else a['maint_addr'] if self.state==2 else p[1] if p else 0])
+        if len(row)!=len(FIELDS) or any(type(v) is not int or v<0 for v in row):raise ValueError('complete unsigned input row required')
+        a=dict(zip(FIELDS,row))
+        for field in FIELDS:
+            bound=self.depth if field in ('addr','inject_addr','maint_addr') else 8192 if field=='inject_mask' else 4 if field=='op' else 256 if field in ('cfg_data','f0','f1','f2','maint_data','data','seq') else 2
+            if a[field]>=bound:raise ValueError('input exceeds port width: '+field)
+        p=self.pending;value,c,u,fixed=decode(self.mem[self.scan if self.state==3 else a['maint_addr'] if self.state==2 else p[1] if p else 0])
         pre=(int(self.cfg.mismatch() and self.streak>=self.trip-1)|2*int(self.scrub_u or (p is not None and p[0]==1 and u))|4*int(self.wd==1 and not a['kick']))
         ready=int(bool(a['rst'] and self.state==1 and p is None and pre==0));accepted=bool(a['valid'] and ready)
         event=(pre|8*int(accepted and (a['op']>1 or a['seq']!=self.seq))) if self.state==1 else 0

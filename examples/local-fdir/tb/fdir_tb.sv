@@ -18,6 +18,14 @@ module fdir_tb;
         while(!$feof(fd))begin
             for(integer j=0;j<22;j=j+1)begin rc=$fscanf(fd,"%h\n",v[j]);if(rc!=1)$fatal(1,"bad input");end 
             for(integer j=0;j<21+DEPTH;j=j+1)begin rc=$fscanf(ef,"%h\n",e[j]);if(rc!=1)$fatal(1,"bad oracle");end 
+            for(integer j=0;j<22;j=j+1)begin
+                if((j==12 || j==15 || j==19) ? v[j]>=DEPTH : j==13 ? v[j]>=8192 : j==18 ? v[j]>=4 :
+                   (j==7 || j==8 || j==9 || j==10 || j==16 || j==20 || j==21) ? v[j]>=256 : v[j]>=2)fail("FDIR_INPUT_RANGE");
+            end
+            for(integer j=0;j<21+DEPTH;j=j+1)begin
+                if(j>=21 ? e[j]>=8192 : (j==0 ? e[j]>=4 : j==1 ? e[j]>=16 :
+                   (j==3 || j==8 || j==9 || j==11 || j>=18) ? e[j]>=256 : j==10 ? e[j]>=16 : j==13 ? e[j]>=DEPTH : j==17 ? e[j]>TRIP : e[j]>=2))fail("FDIR_ORACLE_RANGE");
+            end
             rst_n=v[0][0];start=v[1][0];kick=v[2][0];ack=v[3][0];recover=v[4][0];scrub_en=v[5][0];cfg_write=v[6][0];cfg_data=v[7][7:0];
             fault0=v[8][7:0];fault1=v[9][7:0];fault2=v[10][7:0];inject_en=v[11][0];inject_addr=$clog2(DEPTH)'(v[12]);inject_mask=v[13][12:0];
             maint_write=v[14][0];maint_addr=$clog2(DEPTH)'(v[15]);maint_data=v[16][7:0];cmd_valid=v[17][0];cmd_op=v[18][1:0];cmd_addr=$clog2(DEPTH)'(v[19]);cmd_data=v[20][7:0];cmd_seq=v[21][7:0];

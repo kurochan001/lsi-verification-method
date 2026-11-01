@@ -13,6 +13,11 @@ class EccTests(unittest.TestCase):
         for value,code in enumerate(M.CODES):
             for b in range(13):self.assertEqual(M.decode(code^(1<<b)),(value,1,0,code))
             for a,b in combinations(range(13),2):self.assertEqual(M.decode(code^(1<<a)^(1<<b))[1:3],(0,1))
+    def test_invalid_data_and_code_widths_are_rejected(self):
+        for value in (-1,256,1000):
+            with self.assertRaises(ValueError):M.encode(value)
+        for code in (-1,8192):
+            with self.assertRaises(ValueError):M.decode(code)
     def test_outside_guarantee_has_miscorrection_and_undetected_values(self):
         self.assertEqual(M.decode(7)[:3],(1,1,0));self.assertEqual(M.decode(M.CODES[1])[:3],(1,0,0))
 
@@ -45,6 +50,17 @@ class CampaignTests(unittest.TestCase):
     def test_simultaneous_causes_are_retained(self):
         for p in PARS:
             rows,oracle,n=C.make('simultaneous',p);self.assertTrue(any(o[0]==2 and o[1]==5 and o[2]==1 for o in oracle));self.assertEqual(n['cancels'],1)
+    def test_all_generated_ports_and_observations_fit_widths(self):
+        for p in PARS:
+            for name in (*C.NAMES,'random'):
+                rows,oracle,n=C.make(name,p)
+                for row,o in zip(rows,oracle):
+                    for field in ('cfg_data','f0','f1','f2','maint_data','data','seq'):self.assertLess(row[M.FIELDS.index(field)],256)
+                    for i in (3,8,9,11,18,19,20):self.assertLess(o[i],256)
+    def test_range_errors_cannot_be_hidden_by_port_truncation(self):
+        c=C.Campaign(4,5,3)
+        for values in (dict(data=256),dict(inject_mask=8192),dict(seq=-1),dict(op=4),dict(addr=4),dict(kick=2)):
+            with self.assertRaises(ValueError):c.tick(**values)
     def test_random_inputs_are_reproducible(self):
         self.assertEqual(C.make('random',PARS[0],17),C.make('random',PARS[0],17));self.assertNotEqual(C.make('random',PARS[0],17)[0],C.make('random',PARS[0],18)[0])
 if __name__=='__main__':unittest.main()

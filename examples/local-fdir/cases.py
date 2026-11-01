@@ -37,7 +37,7 @@ def make(name,pars,seed=17,random_count=16):
     c=Campaign(pars['DEPTH'],pars['WD_LIMIT'],pars['TRIP']);d=c.m.depth
     if name=='normal':
         c.tick(cfg_write=1,cfg_data=17)  # RUN must also ignore configuration writes.
-        for a in range(d):c.command(0,a,50+a*30);c.command(1,a)
+        for a in range(d):c.command(0,a,(50+a*30)&255);c.command(1,a)
     elif name=='single-bit':
         c.command(0,0,201)
         for bit in range(13):c.tick(inject=1,inject_mask=1<<bit,scrub=0);c.command(1,scrub=0)

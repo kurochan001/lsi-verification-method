@@ -20,6 +20,9 @@ class VoterTests(unittest.TestCase):
         m=R.M.Register();m.step([1,0,0,0,1,0,0]);self.assertEqual(m.step([1,1,0xaa,1,0,0,1]),[0xaa,1,0,0xaa,0xaa,0xab])
     def test_stimulus_is_reproducible_and_has_active_reset(self):
         a=R.stimuli(8,17);self.assertEqual(a,R.stimuli(8,17));self.assertNotEqual(a,R.stimuli(8,18));self.assertEqual(R.expected(a,8)[1]['resets'],1)
+    def test_invalid_port_widths_are_rejected(self):
+        for row in ([1,1,256,0,0,0,0],[1,0,0,0,256,0,0],[2,0,0,0,0,0,0],[1,0,0,0,0,0,-1]):
+            with self.assertRaises(ValueError):R.M.Register().step(row)
     def test_completion_rejects_missing_extra_and_duplicate_counts(self):
         for log in ('COUNT rows=1\n','COUNT rows=1\nCOUNT rows=1\n','COUNT rows=1\nCOUNT extra=0\n'):
             with self.assertRaises(ValueError):R.S.completion(log,dict(rows=2))

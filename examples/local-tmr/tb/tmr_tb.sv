@@ -18,6 +18,8 @@ module tmr_tb;
             
             for(integer j=0;j<6;j=j+1)begin rc=$fscanf(ef,"%h\n",e[j]);if(rc!=1)$fatal(1,"bad oracle");end
             
+            for(integer j=0;j<7;j=j+1)if((j==0 || j==1 || j==3) ? v[j]>=2 : v[j]>=(32'd1<<WIDTH))fail("TMR_INPUT_RANGE");
+            for(integer j=0;j<6;j=j+1)if((j==1 || j==2) ? e[j]>=2 : e[j]>=(32'd1<<WIDTH))fail("TMR_ORACLE_RANGE");
             rst_n=v[0][0];write_en=v[1][0];write_data=WIDTH'(v[2]);repair_en=v[3][0];fault0=WIDTH'(v[4]);fault1=WIDTH'(v[5]);fault2=WIDTH'(v[6]);
             if(old_rst&&!rst_n)begin resets=resets+1;$display("COVER reset/active");end old_rst=rst_n;
             old_bad=disagreement;old_vote=voted;
