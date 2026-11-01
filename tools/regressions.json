@@ -1903,6 +1903,32 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-motion-io",
+      "script": "examples/local-motion-io/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-motion-control",
+      "script": "examples/local-motion-control/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
     }
   ]
 }

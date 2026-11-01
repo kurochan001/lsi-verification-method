@@ -1,0 +1,7 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"AXIS-LOOP","goals":["control/update","control/positive","control/negative","control/settled","control/load-rejection"]},
+ {"id":"AXIS-PI","goals":["control/saturation","control/antiwindup"]},
+ {"id":"AXIS-FAULT","goals":["fault/estop","fault/encoder","fault/deadline","fault/progress","fault/overspeed","fault/wrap","fault/cancel","fault/ack-priority"]},
+ {"id":"AXIS-RECOVERY","goals":["recovery/explicit-arm","recovery/ack-keeps-off","recovery/neutral"]},
+ {"id":"AXIS-TIME","goals":["deadline/boundary-on-time","reset/pending","origin/atomic-arm","origin/ignored-running"]}
+]}

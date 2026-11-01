@@ -35,6 +35,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 画像処理IPからCPU付きSoCへ進む | [画像処理の検証手順](docs/method/image-processing-verification.md)／[Sobel単体IP](examples/local-image-sobel/README.md)／[ROM起動SoC](examples/local-image-soc/README.md) |
 | ネットワークIPからCPU付きNICへ進む | [ネットワークの検証手順](docs/method/network-verification.md)／[ARP・UDPエコーIP](examples/local-network-echo/README.md)／[ネットワークSoC](examples/local-network-soc/README.md) |
 | 航空宇宙・高信頼の故障反応を学ぶ | [検証手順](docs/method/aerospace-verification.md)／[TMRレジスタ](examples/local-tmr/README.md)／[FDIRサブシステム](examples/local-fdir/README.md) |
+| ロボティクスの計測・制御・駆動を学ぶ | [検証手順](docs/method/robotics-verification.md)／[PWM・エンコーダ](examples/local-motion-io/README.md)／[1軸の閉ループ](examples/local-motion-control/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
 | 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
@@ -160,6 +161,7 @@ flowchart TD
 | 学びたいこと | 入口となる資料・例 | 見るポイント |
 | --- | --- | --- |
 | 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
+| 制御演算と時間関係を結合して確認する | [ロボティクスの手順](docs/method/robotics-verification.md)／[単体I/O](examples/local-motion-io/README.md)／[閉ループ制御](examples/local-motion-control/README.md) | 相補PWM、Gray復号、PIの飽和、プラントとの追従、演算期限・取消、停止と再開 |
 | 冗長化・故障の封じ込め・復旧を検証する | [航空宇宙の手順](docs/method/aerospace-verification.md)／[TMR](examples/local-tmr/README.md)／[FDIR](examples/local-fdir/README.md) | 故障モデル、単一故障と保証外、異常とcommitの競合、ackと復帰の区別、全メモリ再走査 |
 | ネットワーク・パケット処理を検証する | [検証手順](docs/method/network-verification.md)／[Ethernet・ARP・UDP IP](examples/local-network-echo/README.md)／[CPU付きNIC](examples/local-network-soc/README.md) | 停止できないRX、全フレーム破棄、FCS・チェックサム、DMA所有権とIRQ、CPUの返信生成 |
 | ラインメモリ付き画像処理を検証する | [画像処理の手順](docs/method/image-processing-verification.md)／[Sobel IP](examples/local-image-sobel/README.md) | 端・角・フレーム境界、符号と飽和、待ち、全画素の独立比較 |
@@ -197,6 +199,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
 | <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
 | <a id="航空宇宙高信頼システム"></a>[航空宇宙・高信頼システム](examples/README.md#航空宇宙高信頼システム) | TMR、ECC・スクラブ、故障注入、FDIR、期限監視、保守と復帰 |
+| <a id="ロボティクスモーション制御"></a>[ロボティクス・モーション制御](examples/README.md#ロボティクスモーション制御) | PWM、直交エンコーダ、固定小数点PI、閉ループ、期限・進捗監視 |
 | <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
@@ -215,7 +218,9 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 航空宇宙・高信頼システム分野には、TMR制御レジスタとECC・ウォッチドッグ付きFDIRサブシステムを追加しました。単一故障の保護、保証外の限界、異常時の取消・出力抑止、検査付き復帰を分けて学べます。航空と宇宙の保証活動、RTLで確認する範囲は[検証手順](docs/method/aerospace-verification.md)、実行条件は[追加記録](PROVENANCE.md#aerospace-20261101)を参照してください。
 
-追加後のmacOSで、全101ジョブのnightly、全12フォーマル例・23構成・175タスク、セルフテスト122グループ・998件、保存結果の監査が成功しました。Linuxでも、修正影響のあるTMR・FDIR・共通lintの3ジョブと監査、保存刺激・期待状態・完了件数の照合が成功しています。新9構成のlintは警告0件で、既存の指摘487件は増減なしです。
+航空宇宙追加時は、macOSで全101ジョブのnightly、全12フォーマル例・23構成・175タスク、セルフテスト122グループ・998件、保存結果の監査が成功しました。Linuxでも、修正影響のあるTMR・FDIR・共通lintの3ジョブと監査、保存刺激・期待状態・完了件数の照合が成功しています。新9構成のlintは警告0件で、既存の指摘487件は増減なしです。
+
+ロボティクス・モーション制御分野には、相補PWM・直交エンコーダの単体例と、実際のPWM出力で簡易プラントを動かす1軸の閉ループ例を追加しました。固定小数点PI、追従窓、負荷変動、停止・再開、期限超過を自動確認します。正規化モデルと実機の評価範囲は[検証手順](docs/method/robotics-verification.md)、実行条件は[追加記録](PROVENANCE.md#robotics-20261101)を参照してください。
 
 ## 準備と実行
 

@@ -59,6 +59,10 @@
     "examples/local-liveness/rtl/fair_arbiter.sv",
     "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
     "examples/local-mbist/rtl/mbist.sv",
+    "examples/local-motion-control/rtl/fixed_pi.sv",
+    "examples/local-motion-control/rtl/motion_axis.sv",
+    "examples/local-motion-io/rtl/quadrature_decoder.sv",
+    "examples/local-motion-io/rtl/safe_pwm.sv",
     "examples/local-mxfp4/rtl/mp_add.sv",
     "examples/local-mxfp4/rtl/mp_bdp.sv",
     "examples/local-mxfp4/rtl/mp_encoder.sv",
@@ -3559,6 +3563,153 @@
         "WD_LIMIT": 9,
         "TRIP": 2
       }
+    },
+    {
+      "id": "local-motion-io/safe_pwm/default",
+      "file": "examples/local-motion-io/rtl/safe_pwm.sv",
+      "top": "safe_pwm",
+      "sources": [
+        "examples/local-motion-io/rtl/safe_pwm.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-motion-io/safe_pwm/DEAD=2/PERIOD=16",
+      "file": "examples/local-motion-io/rtl/safe_pwm.sv",
+      "top": "safe_pwm",
+      "sources": [
+        "examples/local-motion-io/rtl/safe_pwm.sv"
+      ],
+      "parameters": {
+        "PERIOD": 16,
+        "DEAD": 2
+      }
+    },
+    {
+      "id": "local-motion-io/safe_pwm/DEAD=3/PERIOD=24",
+      "file": "examples/local-motion-io/rtl/safe_pwm.sv",
+      "top": "safe_pwm",
+      "sources": [
+        "examples/local-motion-io/rtl/safe_pwm.sv"
+      ],
+      "parameters": {
+        "PERIOD": 24,
+        "DEAD": 3
+      }
+    },
+    {
+      "id": "local-motion-io/quadrature_decoder/default",
+      "file": "examples/local-motion-io/rtl/quadrature_decoder.sv",
+      "top": "quadrature_decoder",
+      "sources": [
+        "examples/local-motion-io/rtl/quadrature_decoder.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-motion-io/quadrature_decoder/FILTER=2",
+      "file": "examples/local-motion-io/rtl/quadrature_decoder.sv",
+      "top": "quadrature_decoder",
+      "sources": [
+        "examples/local-motion-io/rtl/quadrature_decoder.sv"
+      ],
+      "parameters": {
+        "FILTER": 2
+      }
+    },
+    {
+      "id": "local-motion-io/quadrature_decoder/FILTER=3",
+      "file": "examples/local-motion-io/rtl/quadrature_decoder.sv",
+      "top": "quadrature_decoder",
+      "sources": [
+        "examples/local-motion-io/rtl/quadrature_decoder.sv"
+      ],
+      "parameters": {
+        "FILTER": 3
+      }
+    },
+    {
+      "id": "local-motion-control/fixed_pi/default",
+      "file": "examples/local-motion-control/rtl/fixed_pi.sv",
+      "top": "fixed_pi",
+      "sources": [
+        "examples/local-motion-control/rtl/fixed_pi.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-motion-control/fixed_pi/LATENCY=3/LIMIT=8",
+      "file": "examples/local-motion-control/rtl/fixed_pi.sv",
+      "top": "fixed_pi",
+      "sources": [
+        "examples/local-motion-control/rtl/fixed_pi.sv"
+      ],
+      "parameters": {
+        "LIMIT": 8,
+        "LATENCY": 3
+      }
+    },
+    {
+      "id": "local-motion-control/fixed_pi/LATENCY=5/LIMIT=12",
+      "file": "examples/local-motion-control/rtl/fixed_pi.sv",
+      "top": "fixed_pi",
+      "sources": [
+        "examples/local-motion-control/rtl/fixed_pi.sv"
+      ],
+      "parameters": {
+        "LIMIT": 12,
+        "LATENCY": 5
+      }
+    },
+    {
+      "id": "local-motion-control/motion_axis/default",
+      "file": "examples/local-motion-control/rtl/motion_axis.sv",
+      "top": "motion_axis",
+      "sources": [
+        "examples/local-motion-io/rtl/safe_pwm.sv",
+        "examples/local-motion-io/rtl/quadrature_decoder.sv",
+        "examples/local-motion-control/rtl/fixed_pi.sv",
+        "examples/local-motion-control/rtl/motion_axis.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-motion-control/motion_axis/DEAD=2/FILTER=2/LATENCY=3/PERIOD=16/SAMPLE=64/SPEED_LIMIT=6",
+      "file": "examples/local-motion-control/rtl/motion_axis.sv",
+      "top": "motion_axis",
+      "sources": [
+        "examples/local-motion-io/rtl/safe_pwm.sv",
+        "examples/local-motion-io/rtl/quadrature_decoder.sv",
+        "examples/local-motion-control/rtl/fixed_pi.sv",
+        "examples/local-motion-control/rtl/motion_axis.sv"
+      ],
+      "parameters": {
+        "PERIOD": 16,
+        "DEAD": 2,
+        "FILTER": 2,
+        "SAMPLE": 64,
+        "LATENCY": 3,
+        "SPEED_LIMIT": 6
+      }
+    },
+    {
+      "id": "local-motion-control/motion_axis/DEAD=3/FILTER=3/LATENCY=5/PERIOD=24/SAMPLE=96/SPEED_LIMIT=8",
+      "file": "examples/local-motion-control/rtl/motion_axis.sv",
+      "top": "motion_axis",
+      "sources": [
+        "examples/local-motion-io/rtl/safe_pwm.sv",
+        "examples/local-motion-io/rtl/quadrature_decoder.sv",
+        "examples/local-motion-control/rtl/fixed_pi.sv",
+        "examples/local-motion-control/rtl/motion_axis.sv"
+      ],
+      "parameters": {
+        "PERIOD": 24,
+        "DEAD": 3,
+        "FILTER": 3,
+        "SAMPLE": 96,
+        "LATENCY": 5,
+        "SPEED_LIMIT": 8
+      }
     }
   ],
   "examples": {
@@ -5162,6 +5313,36 @@
         "local-timer-watchdog/timer_watchdog/WIDTH=8"
       ],
       "reason": "TMR・SECDED RAM・ウォッチドッグを接続する耐故障機器制御の全通常構成を静的検査"
+    },
+    "local-motion-io": {
+      "scope": "dut",
+      "targets": [
+        "local-motion-io/safe_pwm/default",
+        "local-motion-io/safe_pwm/DEAD=2/PERIOD=16",
+        "local-motion-io/safe_pwm/DEAD=3/PERIOD=24",
+        "local-motion-io/quadrature_decoder/default",
+        "local-motion-io/quadrature_decoder/FILTER=2",
+        "local-motion-io/quadrature_decoder/FILTER=3"
+      ],
+      "reason": "相補PWM・デッドタイム・原子更新とフィルター付き直交エンコーダの全通常構成を静的検査"
+    },
+    "local-motion-control": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-motion-io/safe_pwm/default",
+        "local-motion-io/safe_pwm/DEAD=2/PERIOD=16",
+        "local-motion-io/safe_pwm/DEAD=3/PERIOD=24",
+        "local-motion-io/quadrature_decoder/default",
+        "local-motion-io/quadrature_decoder/FILTER=2",
+        "local-motion-io/quadrature_decoder/FILTER=3",
+        "local-motion-control/fixed_pi/default",
+        "local-motion-control/fixed_pi/LATENCY=3/LIMIT=8",
+        "local-motion-control/fixed_pi/LATENCY=5/LIMIT=12",
+        "local-motion-control/motion_axis/default",
+        "local-motion-control/motion_axis/DEAD=2/FILTER=2/LATENCY=3/PERIOD=16/SAMPLE=64/SPEED_LIMIT=6",
+        "local-motion-control/motion_axis/DEAD=3/FILTER=3/LATENCY=5/PERIOD=24/SAMPLE=96/SPEED_LIMIT=8"
+      ],
+      "reason": "固定小数点PI・PWM・エンコーダと周期・異常停止・再開を全通常構成で静的検査"
     }
   },
   "blackbox_sources": {

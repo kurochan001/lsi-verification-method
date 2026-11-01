@@ -363,6 +363,23 @@
     "examples/local-memory-order/requirements.json",
     "examples/local-memory-order/run.py",
     "examples/local-memory-order/tests/test_system.py",
+    "examples/local-motion-control/cases.py",
+    "examples/local-motion-control/model.py",
+    "examples/local-motion-control/requirements.json",
+    "examples/local-motion-control/rtl/fixed_pi.sv",
+    "examples/local-motion-control/rtl/motion_axis.sv",
+    "examples/local-motion-control/run.py",
+    "examples/local-motion-control/tb/motion_axis_tb.sv",
+    "examples/local-motion-control/tests/test_motion_axis.py",
+    "examples/local-motion-io/cases.py",
+    "examples/local-motion-io/model.py",
+    "examples/local-motion-io/requirements.json",
+    "examples/local-motion-io/rtl/quadrature_decoder.sv",
+    "examples/local-motion-io/rtl/safe_pwm.sv",
+    "examples/local-motion-io/run.py",
+    "examples/local-motion-io/support.py",
+    "examples/local-motion-io/tb/motion_io_tb.sv",
+    "examples/local-motion-io/tests/test_motion_io.py",
     "examples/local-mxfp4/MULTIPRECISION.md",
     "examples/local-mxfp4/multiprecision.py",
     "examples/local-mxfp4/reference.py",
@@ -762,6 +779,8 @@
       "local-liveness",
       "local-lockstep-monitor",
       "local-mbist",
+      "local-motion-control",
+      "local-motion-io",
       "local-mxfp4",
       "local-network-echo",
       "local-network-soc",
@@ -1196,6 +1215,12 @@
     "local-memory-order": [
       "local-common",
       "local-interconnect"
+    ],
+    "local-motion-control": [
+      "local-motion-io"
+    ],
+    "local-motion-io": [
+      "local-exploration-common"
     ],
     "local-mxfp4": [
       "local-exploration-common"
