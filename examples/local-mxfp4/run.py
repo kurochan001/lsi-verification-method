@@ -148,7 +148,7 @@ def main():
     parser.add_argument('--iterations',type=int)
     parser.add_argument('--verilator',default='verilator')
     parser.add_argument('--jobs',type=int,default=4)
-    parser.add_argument('--timeout',type=float,default=120)
+    parser.add_argument('--timeout',type=float,default=600)
     parser.add_argument('--build-timeout',type=float,default=300)
     parser.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('local-mxfp4-%Y%m%dT%H%M%S%fZ'))
     args=parser.parse_args()
