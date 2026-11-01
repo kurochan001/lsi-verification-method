@@ -110,6 +110,24 @@ class DocumentTests(unittest.TestCase):
     def test_good_repository_uses_real_mermaid_parser(self):
         rc,result=self.run_docs();self.assertEqual(rc,0);self.assertTrue(result['complete'])
         self.assertTrue(any(r['id'].startswith('diagram/') for r in result['results']))
+    def test_edit_after_read_before_manifest_capture_invalidates_documents(self):
+        import markdown
+        source=self.root/'README.md';original=Q.digest(source);render=markdown.markdown
+        def edit_after_render(text,*args,**kwargs):
+            result=render(text,*args,**kwargs)
+            if text.startswith('# Main'):source.write_text('# Edited\n[broken](missing.md)\n')
+            return result
+        with patch.object(markdown,'markdown',side_effect=edit_after_render):rc,result=self.run_docs()
+        self.assertEqual(rc,1);self.assertFalse(result['success'])
+        gate=next(r for r in result['results'] if r['id']=='source-freshness');self.assertEqual(gate['status'],'fail')
+        self.assertIn('document changed before input snapshot: README.md',gate['detail'])
+        record=json.loads((self.base/'out/documentation-check.json').read_text())
+        self.assertEqual(record['document_read_sha256']['README.md'],original);self.assertNotEqual(original,Q.digest(source))
+    def test_document_read_hash_preserves_crlf_bytes(self):
+        source=self.root/'README.md';source.write_bytes(source.read_bytes().replace(b'\n',b'\r\n'))
+        expected=Q.digest(source);rc,result=self.run_docs();self.assertEqual(rc,0);self.assertTrue(result['success'])
+        record=json.loads((self.base/'out/documentation-check.json').read_text())
+        self.assertEqual(record['document_read_sha256']['README.md'],expected)
     def test_missing_link_and_heading_are_reported(self):
         (self.root/'README.md').write_text('[missing](absent.md)\n[heading](docs/faq.md#absent)\n')
         rc,result=self.run_docs();self.assertEqual(rc,1)

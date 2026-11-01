@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime,timezone
 from html.parser import HTMLParser
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -79,9 +80,9 @@ def run(a):
     import markdown
     root=a.root.resolve();files=inventory(root);names=[n for n in files if n.lower().endswith('.md')]
     if not names:raise ValueError('no Markdown documents')
-    pages={};problems={};blocks=[];inputs=[Path(__file__),HERE/'docs-requirements.txt',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs']
+    pages={};problems={};blocks=[];read_hashes={};inputs=[Path(__file__),HERE/'docs-requirements.txt',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs']
     for name in names:
-        path=root/name;inputs.append(path);raw=path.read_text();p=Page();p.feed(markdown.markdown(raw,extensions=['fenced_code','tables']));pages[name]=p
+        path=root/name;inputs.append(path);content=path.read_bytes();read_hashes[name]=hashlib.sha256(content).hexdigest();raw=content.decode('utf-8');p=Page();p.feed(markdown.markdown(raw,extensions=['fenced_code','tables']));pages[name]=p
         errors,diagrams=structure(raw,name);problems[name]=errors;blocks+=diagrams
     if len({b['id'] for b in blocks})!=len(blocks):raise ValueError('duplicate diagram identity')
     link_count=heading_count=0
@@ -120,9 +121,11 @@ def run(a):
     results={r['id']:r for r in result.get('results',[])}
     for block in blocks:
         r=results.get(block['id'],{});report.check('diagram/'+block['id'],runtime_ok and r.get('success') is True,r)
-    changed=report.fresh();changed+=['Markdown inventory changed'] if [n for n in inventory(root) if n.lower().endswith('.md')]!=names else []
+    changed=report.fresh()
+    changed += ['document changed before input snapshot: '+name for name,h in read_hashes.items() if report.sources[str(root/name)]!=h]
+    changed+=['Markdown inventory changed'] if [n for n in inventory(root) if n.lower().endswith('.md')]!=names else []
     report.check('source-freshness',not changed,changed)
-    Q.write(report.out/'documentation-check.json',dict(counts=dict(documents=len(names),tables=sum(len(p.tables) for p in pages.values()),mermaid=len(blocks),local_links=link_count,heading_links=heading_count,**counts),errors={n:e for n,e in problems.items() if e}))
+    Q.write(report.out/'documentation-check.json',dict(counts=dict(documents=len(names),tables=sum(len(p.tables) for p in pages.values()),mermaid=len(blocks),local_links=link_count,heading_links=heading_count,**counts),errors={n:e for n,e in problems.items() if e},document_read_sha256=read_hashes))
     return report.finish()
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=Q.ROOT);p.add_argument('--node',default='node');p.add_argument('--timeout',type=float,default=120);p.add_argument('--out',type=Path,default=Q.ROOT/'artifacts'/datetime.now(timezone.utc).strftime('docs-%Y%m%dT%H%M%S%fZ'))
