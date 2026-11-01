@@ -1283,3 +1283,6 @@ lintの初期整理で、CRCとTop-Kの組合せ処理内の一時変数に初�
 [環境構築修正後のNightly](https://github.com/kurochan001/lsi-verification-method/actions/runs/41254542123)では、構築とfull診断は成功しましたが、STAのセルフテスト2件が固定のローカル配置を前提としており、CIのOpenSTAを見つけられずskipになりました。全体のskip拒否がこの不足を検出したため、PATHからOpenSTAを選び、リポジトリ外の配置にも相対パス指定で対応するよう修正しました。外部の配置先をPATHに入れた実機確認では9件すべてがスキップなしで成功しました。
 
 ネイティブツールのキャッシュは、環境診断の成功直後に保存する構成へ変更しました。後段の検証失敗時にも、診断済みの構築結果を再利用できます。CIの保存対象には、セルフテストの`tests.json`、文書・図・lint・履歴レポートのJSONも追加しました。失敗した実行のログと証跡は保持しています。
+
+
+`91fc54e`の[最初の実行](https://github.com/kurochan001/lsi-verification-method/actions/runs/41256331474/attempts/1)は、UbuntuのAzureミラーへの接続待ちが8分以上続いたため中止し、ログを回収しました。依存取得の停止を検証結果へ混ぜず、CIでは公式HTTPSミラー、通信タイムアウト・再試行上限、OS導入ステップの時間上限と`--error-on=any`を指定する構成へ補強しました。
