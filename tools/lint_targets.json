@@ -79,6 +79,11 @@
     "examples/local-mxfp4/upstream/rtl/quant_encoder.sv",
     "examples/local-mxfp4/upstream/rtl/reduce_tree.sv",
     "examples/local-mxfp4/upstream/rtl/scale_add.sv",
+    "examples/local-network-echo/rtl/network_echo.sv",
+    "examples/local-network-echo/rtl/packet_codec.sv",
+    "examples/local-network-echo/rtl/rx_frame_queue.sv",
+    "examples/local-network-soc/rtl/network_nic.sv",
+    "examples/local-network-soc/rtl/network_soc.sv",
     "examples/local-packet-crc/rtl/crc.sv",
     "examples/local-packet-switch/rtl/packet_switch.sv",
     "examples/local-performance-monitor/rtl/perf_monitor.sv",
@@ -3244,6 +3249,201 @@
         "examples/local-image-soc/rtl/image_soc.sv"
       ],
       "parameters": {}
+    },
+    {
+      "id": "local-network-echo/rx_frame_queue/default",
+      "file": "examples/local-network-echo/rtl/rx_frame_queue.sv",
+      "top": "rx_frame_queue",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-network-echo/rx_frame_queue/MAX_FRAME=96",
+      "file": "examples/local-network-echo/rtl/rx_frame_queue.sv",
+      "top": "rx_frame_queue",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 96
+      }
+    },
+    {
+      "id": "local-network-echo/rx_frame_queue/MAX_FRAME=128",
+      "file": "examples/local-network-echo/rtl/rx_frame_queue.sv",
+      "top": "rx_frame_queue",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 128
+      }
+    },
+    {
+      "id": "local-network-echo/packet_codec/default",
+      "file": "examples/local-network-echo/rtl/packet_codec.sv",
+      "top": "packet_codec",
+      "sources": [
+        "examples/local-network-echo/rtl/packet_codec.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-network-echo/packet_codec/MAX_FRAME=96",
+      "file": "examples/local-network-echo/rtl/packet_codec.sv",
+      "top": "packet_codec",
+      "sources": [
+        "examples/local-network-echo/rtl/packet_codec.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 96
+      }
+    },
+    {
+      "id": "local-network-echo/packet_codec/MAX_FRAME=128",
+      "file": "examples/local-network-echo/rtl/packet_codec.sv",
+      "top": "packet_codec",
+      "sources": [
+        "examples/local-network-echo/rtl/packet_codec.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 128
+      }
+    },
+    {
+      "id": "local-network-echo/network_echo/default",
+      "file": "examples/local-network-echo/rtl/network_echo.sv",
+      "top": "network_echo",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-echo/rtl/network_echo.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-network-echo/network_echo/MAX_FRAME=96",
+      "file": "examples/local-network-echo/rtl/network_echo.sv",
+      "top": "network_echo",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-echo/rtl/network_echo.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 96
+      }
+    },
+    {
+      "id": "local-network-echo/network_echo/MAX_FRAME=128",
+      "file": "examples/local-network-echo/rtl/network_echo.sv",
+      "top": "network_echo",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-echo/rtl/network_echo.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 128
+      }
+    },
+    {
+      "id": "local-network-soc/network_nic/default",
+      "file": "examples/local-network-soc/rtl/network_nic.sv",
+      "top": "network_nic",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-soc/rtl/network_nic.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-network-soc/network_nic/MAX_FRAME=96/WAIT_CYCLES=1",
+      "file": "examples/local-network-soc/rtl/network_nic.sv",
+      "top": "network_nic",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-soc/rtl/network_nic.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 96,
+        "WAIT_CYCLES": 1
+      }
+    },
+    {
+      "id": "local-network-soc/network_nic/MAX_FRAME=128/WAIT_CYCLES=3",
+      "file": "examples/local-network-soc/rtl/network_nic.sv",
+      "top": "network_nic",
+      "sources": [
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-soc/rtl/network_nic.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 128,
+        "WAIT_CYCLES": 3
+      }
+    },
+    {
+      "id": "local-network-soc/network_soc/default",
+      "file": "examples/local-network-soc/rtl/network_soc.sv",
+      "top": "network_soc",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-image-soc/rtl/cpu_ahb.sv",
+        "examples/local-image-soc/rtl/image_fabric.sv",
+        "examples/local-image-soc/rtl/image_memory.sv",
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-soc/rtl/network_nic.sv",
+        "examples/local-network-soc/rtl/network_soc.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-network-soc/network_soc/MAX_FRAME=96/WAIT_CYCLES=0",
+      "file": "examples/local-network-soc/rtl/network_soc.sv",
+      "top": "network_soc",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-image-soc/rtl/cpu_ahb.sv",
+        "examples/local-image-soc/rtl/image_fabric.sv",
+        "examples/local-image-soc/rtl/image_memory.sv",
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-soc/rtl/network_nic.sv",
+        "examples/local-network-soc/rtl/network_soc.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 96,
+        "WAIT_CYCLES": 0
+      }
+    },
+    {
+      "id": "local-network-soc/network_soc/MAX_FRAME=128/WAIT_CYCLES=2",
+      "file": "examples/local-network-soc/rtl/network_soc.sv",
+      "top": "network_soc",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-image-soc/rtl/cpu_ahb.sv",
+        "examples/local-image-soc/rtl/image_fabric.sv",
+        "examples/local-image-soc/rtl/image_memory.sv",
+        "examples/local-network-echo/rtl/rx_frame_queue.sv",
+        "examples/local-network-echo/rtl/packet_codec.sv",
+        "examples/local-network-soc/rtl/network_nic.sv",
+        "examples/local-network-soc/rtl/network_soc.sv"
+      ],
+      "parameters": {
+        "MAX_FRAME": 128,
+        "WAIT_CYCLES": 2
+      }
     }
   ],
   "examples": {
@@ -4771,6 +4971,54 @@
         "local-riscv-decoder/rv32i_decoder/default"
       ],
       "reason": "CPU・デコーダ・画像IPとAHB/APB/AXI接続を全構成で静的検査"
+    },
+    "local-network-echo": {
+      "scope": "dut",
+      "targets": [
+        "local-network-echo/rx_frame_queue/default",
+        "local-network-echo/rx_frame_queue/MAX_FRAME=96",
+        "local-network-echo/rx_frame_queue/MAX_FRAME=128",
+        "local-network-echo/packet_codec/default",
+        "local-network-echo/packet_codec/MAX_FRAME=96",
+        "local-network-echo/packet_codec/MAX_FRAME=128",
+        "local-network-echo/network_echo/default",
+        "local-network-echo/network_echo/MAX_FRAME=96",
+        "local-network-echo/network_echo/MAX_FRAME=128"
+      ],
+      "reason": "停止できないRX・全フレーム検査・ARP/UDPエコーの通常2サイズを静的検査"
+    },
+    "local-network-soc": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-network-echo/rx_frame_queue/default",
+        "local-network-echo/rx_frame_queue/MAX_FRAME=96",
+        "local-network-echo/rx_frame_queue/MAX_FRAME=128",
+        "local-network-echo/packet_codec/default",
+        "local-network-echo/packet_codec/MAX_FRAME=96",
+        "local-network-echo/packet_codec/MAX_FRAME=128",
+        "local-network-echo/network_echo/default",
+        "local-network-echo/network_echo/MAX_FRAME=96",
+        "local-network-echo/network_echo/MAX_FRAME=128",
+        "local-network-soc/network_nic/default",
+        "local-network-soc/network_nic/MAX_FRAME=96/WAIT_CYCLES=1",
+        "local-network-soc/network_nic/MAX_FRAME=128/WAIT_CYCLES=3",
+        "local-network-soc/network_soc/default",
+        "local-network-soc/network_soc/MAX_FRAME=96/WAIT_CYCLES=0",
+        "local-network-soc/network_soc/MAX_FRAME=128/WAIT_CYCLES=2",
+        "local-riscv-iss/rv32i_core/default",
+        "local-riscv-iss/rv32i_core/PREDICT=0",
+        "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default",
+        "local-image-soc/cpu_ahb/default",
+        "local-image-soc/image_fabric/WAIT_CYCLES=0",
+        "local-image-soc/image_fabric/WAIT_CYCLES=2",
+        "local-image-soc/image_fabric/default",
+        "local-image-soc/image_memory/default"
+      ],
+      "reason": "NICの通常構成と再利用するCPU・AHB/APB・共有RAMを静的検査"
     }
   },
   "blackbox_sources": {

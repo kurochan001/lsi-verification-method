@@ -1851,6 +1851,32 @@
         "local-uvm": "local-uvm",
         "local-width-converter": "local-width-converter"
       }
+    },
+    {
+      "id": "local-network-echo",
+      "script": "examples/local-network-echo/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-network-soc",
+      "script": "examples/local-network-soc/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
     }
   ]
 }

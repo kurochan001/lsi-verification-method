@@ -1,0 +1,6 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"NIC-CPU","goals":["cpu/build-and-check","reply/packet"]},
+ {"id":"NIC-FLOW","goals":["flow/tx-hold","bus/axi-wait","bus/apb-wait","bus/apb-error"]},
+ {"id":"NIC-OWNERSHIP","goals":["ownership/release","ownership/w1c-keeps-buffer","completion/rx-b-response","completion/wire-last"]},
+ {"id":"NIC-ERROR","goals":["error/rx-b","error/tx-r","drop/packet","reset/global"]}
+]}

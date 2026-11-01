@@ -33,6 +33,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
 | 画像処理IPからCPU付きSoCへ進む | [画像処理の検証手順](docs/method/image-processing-verification.md)／[Sobel単体IP](examples/local-image-sobel/README.md)／[ROM起動SoC](examples/local-image-soc/README.md) |
+| ネットワークIPからCPU付きNICへ進む | [ネットワークの検証手順](docs/method/network-verification.md)／[ARP・UDPエコーIP](examples/local-network-echo/README.md)／[ネットワークSoC](examples/local-network-soc/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
 | 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
@@ -158,6 +159,7 @@ flowchart TD
 | 学びたいこと | 入口となる資料・例 | 見るポイント |
 | --- | --- | --- |
 | 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
+| ネットワーク・パケット処理を検証する | [検証手順](docs/method/network-verification.md)／[Ethernet・ARP・UDP IP](examples/local-network-echo/README.md)／[CPU付きNIC](examples/local-network-soc/README.md) | 停止できないRX、全フレーム破棄、FCS・チェックサム、DMA所有権とIRQ、CPUの返信生成 |
 | ラインメモリ付き画像処理を検証する | [画像処理の手順](docs/method/image-processing-verification.md)／[Sobel IP](examples/local-image-sobel/README.md) | 端・角・フレーム境界、符号と飽和、待ち、全画素の独立比較 |
 | CPU・メモリ・バス・IPを接続して検証する | [小規模画像処理SoC](examples/local-image-soc/README.md) | ROM起動、AHB-Lite／APB／AXI4、DMA、最終応答とIRQ、CPUによる全画素確認 |
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
@@ -191,6 +193,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
+| <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
 | <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
@@ -205,7 +208,9 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 画像処理分野として、2ライン分の履歴を使うSobel IPと、CPU・ROM・RAM・AHB-Lite／APB／AXI4を実際に接続する小規模SoCを追加しました。単体の演算・境界・待ちと、ROM起動からDMA・IRQ・CPUの結果確認までを分けて学べます。最新の実行条件と確認実績は[画像処理IP・SoCの追加記録](PROVENANCE.md#image-soc-20261101)を参照してください。
 
-追加後のmacOSで全97ジョブのnightly、全12フォーマル例・23構成・175タスク、セルフテスト118グループ・952件、保存結果の監査が成功しました。Linuxでも全97ジョブのsmoke・監査と、保存した画像・ROM・RAM読戻しの照合が成功しています。新17構成のlintは警告0件で、既存の指摘487件は増減なしです。
+画像処理追加時は、macOSで全97ジョブのnightly、全12フォーマル例・23構成・175タスク、セルフテスト118グループ・952件、保存結果の監査が成功しました。Linuxでも全97ジョブのsmoke・監査と、保存した画像・ROM・RAM読戻しの照合が成功しています。新17構成のlintは警告0件で、既存の指摘487件は増減なしです。
+
+ネットワーク分野には、停止できないRXと全フレーム破棄を扱うARP／UDPエコーIPと、CPUが応答を生成するNIC付きSoCを追加しました。既存のスイッチ・クレジット・CRC・再送・DMAとも関連付けています。PHYや規格全体への適合は対象外で、[対応範囲と確認記録](PROVENANCE.md#network-20261101)を明記しています。
 
 ## 準備と実行
 

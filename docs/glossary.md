@@ -43,6 +43,7 @@ flowchart TD
 - [失敗解析](#13-失敗解析)
 - [AIを使う検証](#14-aiを使う検証)
 - [画像処理とラインメモリ](#15-画像処理とラインメモリ)
+- [ネットワークとパケット](#16-ネットワークとパケット)
 - [表記の参考資料](#表記の参考資料)
 
 ## 1. 基本用語
@@ -329,6 +330,21 @@ flowchart TD
 | 画像ピッチ（image pitch） | メモリ上の隣接する行の先頭間のバイト数。画素の密詰め、行末の余白、演算上のストライドによる出力間隔を区別する |
 
 参照：[画像処理の検証手順](method/image-processing-verification.md)、[Sobel単体IP](../examples/local-image-sobel/README.md)、[CPU付きSoC](../examples/local-image-soc/README.md)。
+
+## 16. ネットワークとパケット
+
+| 用語 | 意味・検証で確認すること |
+| --- | --- |
+| Ethernetフレーム／FCS | MACアドレス等を含むリンク層の単位／誤り検出用のCRC-32。入力端子にプリアンブルやFCSを含むか、計算範囲・初期値・反転・送出順を固定する |
+| ARP（Address Resolution Protocol） | 同一リンク上のIPv4アドレスとMACアドレスの対応を求める手順。要求・返信、対象IP、送信元情報、バイト順を確認する |
+| IPv4／UDP／疑似ヘッダー | ネットワーク層のパケット／データグラム転送／UDPチェックサムへ加える送受信IP・プロトコル・UDP長。IP全長とUDP長、奇数末尾、チェックサム0の意味を分ける |
+| Ethernetパディング | 最小フレーム長に達するための埋め草。IP全長やUDPペイロードへ混ぜない |
+| NIC（Network Interface Controller） | 通信インターフェースをCPU・メモリへ接続する回路。RX／TX、DMA、完了通知、バッファの所有権と返却を確認する |
+| フレーム単位の破棄（whole-frame drop） | 容量不足・誤り等でフレーム全体を不採用にする契約。途中から採用したり、部分的なフレームを公開したりしない |
+| バッファ所有権（buffer ownership） | ハードウェアとソフトウェアのどちらがその領域を変更・再利用できるかという契約。IRQのW1Cと明示返却を区別する |
+| NoC（Network on Chip）／仮想チャネル | チップ内のパケット接続網／物理リンクを共有する論理的なチャネル。経路・仲裁・クレジットと、外部Ethernetのプロトコルを区別する |
+
+参照：[ネットワーク検証の手順](method/network-verification.md)、[単体IP](../examples/local-network-echo/README.md)、[CPU付きNIC](../examples/local-network-soc/README.md)。
 
 ## 表記の参考資料
 

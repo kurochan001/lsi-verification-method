@@ -450,6 +450,22 @@
     "examples/local-mxfp4/upstream/tb/uvm/mxfp4_uvm_pkg.sv",
     "examples/local-mxfp4/vectors.py",
     "examples/local-mxfp4/vectors_mp.py",
+    "examples/local-network-echo/model.py",
+    "examples/local-network-echo/requirements.json",
+    "examples/local-network-echo/rtl/network_echo.sv",
+    "examples/local-network-echo/rtl/packet_codec.sv",
+    "examples/local-network-echo/rtl/rx_frame_queue.sv",
+    "examples/local-network-echo/run.py",
+    "examples/local-network-echo/support.py",
+    "examples/local-network-echo/tb/network_tb.sv",
+    "examples/local-network-echo/tests/test_packets.py",
+    "examples/local-network-soc/firmware.py",
+    "examples/local-network-soc/requirements.json",
+    "examples/local-network-soc/rtl/network_nic.sv",
+    "examples/local-network-soc/rtl/network_soc.sv",
+    "examples/local-network-soc/run.py",
+    "examples/local-network-soc/tb/network_soc_tb.sv",
+    "examples/local-network-soc/tests/test_firmware.py",
     "examples/local-packet-crc/requirements.json",
     "examples/local-packet-crc/rtl/crc.sv",
     "examples/local-packet-crc/run.py",
@@ -731,6 +747,8 @@
       "local-lockstep-monitor",
       "local-mbist",
       "local-mxfp4",
+      "local-network-echo",
+      "local-network-soc",
       "local-packet-crc",
       "local-packet-switch",
       "local-performance-monitor",
@@ -1159,6 +1177,15 @@
     ],
     "local-mxfp4": [
       "local-exploration-common"
+    ],
+    "local-network-echo": [
+      "local-exploration-common"
+    ],
+    "local-network-soc": [
+      "local-image-soc",
+      "local-network-echo",
+      "local-riscv-decoder",
+      "local-riscv-iss"
     ],
     "local-packet-crc": [
       "local-common"

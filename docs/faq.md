@@ -58,6 +58,7 @@ flowchart TD
 - [環境準備・文書検査・ツール版](#18-環境準備文書検査ツール版)
 - [順不同応答・差分選択・自動変異・期限なしの進行](#19-順不同応答差分選択自動変異期限なしの進行)
 - [画像処理とCPU付きSoC](#20-画像処理とcpu付きsoc)
+- [ネットワークとNIC](#21-ネットワークとnic)
 
 ## 1. 導入と適用範囲
 
@@ -470,3 +471,21 @@ python3 examples/local-code-coverage/run.py
 ### Q80. このSoC例でAMBA全体やFPGA実装も確認できますか
 
 例の範囲は、AHB-Liteの整列ワード転送、APBの設定、AXI4の1〜4ビートINCRと各方向1件の未完了転送です。規格全体への適合、FPGAのRAM推論やタイミング、カメラ・ディスプレイ、キャッシュ・OS、複数クロックは確認していません。[画像処理の手順](method/image-processing-verification.md#5-実行記録と適用範囲を分ける)から、実製品にある要求を追加します。
+
+## 21. ネットワークとNIC
+
+### Q81. パケットスイッチやCRC例があれば、Ethernetも確認できていますか
+
+それぞれの範囲を確認します。既存CRC例はCRC-8で、スイッチやクレジットはチップ内通信の要素です。[新しい単体IP](../examples/local-network-echo/README.md)はEthernet FCSのCRC-32とARP／IPv4／UDPを扱いますが、PHY、通常MTU、VLAN、TCP等は含みません。[分野の案内](method/network-verification.md)で共通技法と別のプロトコル要求を整理しています。
+
+### Q82. 送信側にバックプレッシャーを掛けたら、ネットワーク受信も停止しますか
+
+今回のRXにはreadyがなく、TXを停止しても入力は到着し続けます。受信枠がなければフレーム全体を破棄し、途中で空いてもそのフレームは採用しません。[単体IPの満杯・回復ケース](../examples/local-network-echo/README.md#満杯と破棄の契約)は、次のフレームの回復まで照合します。実配線上のEthernetをTX readyで途中停止できる、という意味でもありません。
+
+### Q83. NICの受信割り込みを解除したら、そのRAMを再利用してよいですか
+
+所有権の契約に従います。[ネットワークSoC](../examples/local-network-soc/README.md#apbレジスタと所有権)では、STATUSのW1Cは通知の解除で、RX_RELEASEがバッファの返却です。CPUが応答を作っている間は再利用させません。RX_DONEは最後のB応答後、TX_DONEは最後の送信バイト受理後に通知します。DMAが送信RAMを読み終わった時点も、送信完了とは区別します。
+
+### Q84. UDPチェックサム0と0xffffは同じですか
+
+IPv4 UDPの受信0はチェックサム省略を表し、計算したチェックサムが0になった場合は0xffffを送ります。奇数バイトの末尾は計算だけ0で補い、Ethernetパディングをペイロードへ加えません。[単体IP](../examples/local-network-echo/README.md#固定した対応範囲)と[CPUファームウェア](../examples/local-network-soc/firmware.py)に両方の境界例があります。IPv6へこの省略規則をそのまま適用しません。[RFC 768](https://www.rfc-editor.org/rfc/rfc768.html)
