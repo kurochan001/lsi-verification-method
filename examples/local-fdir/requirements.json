@@ -1,0 +1,7 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"FDIR-NORMAL","goals":["normal/commit","command/sequence-wrap","tmr/masked"]},
+ {"id":"FDIR-ECC","goals":["ecc/write-priority","ecc/read-repair","ecc/scrub-repair","fault/pending"]},
+ {"id":"FDIR-SAFE","goals":["safe/simultaneous","safe/tmr","safe/ecc","safe/watchdog","safe/command","containment/cancel"]},
+ {"id":"FDIR-RECOVERY","goals":["recovery/config-blocked","recovery/ack-keeps-safe","recovery/maintenance","recovery/success","recovery/refused"]},
+ {"id":"FDIR-PRIORITY","goals":["config/locked","deadline/kick-wins","irq/event-wins","reset/active"]}
+]}

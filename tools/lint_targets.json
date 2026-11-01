@@ -41,6 +41,8 @@
     "examples/local-ecc-memory/rtl/ecc_memory.sv",
     "examples/local-ecc/rtl/secded.sv",
     "examples/local-equivalence/rtl/fifo_pair.sv",
+    "examples/local-fdir/rtl/fdir_node.sv",
+    "examples/local-fdir/rtl/protected_store.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
@@ -110,6 +112,7 @@
     "examples/local-systolic-array/rtl/systolic_array.sv",
     "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
     "examples/local-tlb/rtl/sv32_tlb.sv",
+    "examples/local-tmr/rtl/tmr_register.sv",
     "examples/local-topk/rtl/topk_select.sv",
     "examples/local-uart/rtl/uart.sv",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
@@ -3444,6 +3447,118 @@
         "MAX_FRAME": 128,
         "WAIT_CYCLES": 2
       }
+    },
+    {
+      "id": "local-tmr/tmr_register/default",
+      "file": "examples/local-tmr/rtl/tmr_register.sv",
+      "top": "tmr_register",
+      "sources": [
+        "examples/local-tmr/rtl/tmr_register.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-tmr/tmr_register/WIDTH=8",
+      "file": "examples/local-tmr/rtl/tmr_register.sv",
+      "top": "tmr_register",
+      "sources": [
+        "examples/local-tmr/rtl/tmr_register.sv"
+      ],
+      "parameters": {
+        "WIDTH": 8
+      }
+    },
+    {
+      "id": "local-tmr/tmr_register/WIDTH=16",
+      "file": "examples/local-tmr/rtl/tmr_register.sv",
+      "top": "tmr_register",
+      "sources": [
+        "examples/local-tmr/rtl/tmr_register.sv"
+      ],
+      "parameters": {
+        "WIDTH": 16
+      }
+    },
+    {
+      "id": "local-fdir/protected_store/default",
+      "file": "examples/local-fdir/rtl/protected_store.sv",
+      "top": "protected_store",
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv",
+        "examples/local-fdir/rtl/protected_store.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fdir/protected_store/DEPTH=4",
+      "file": "examples/local-fdir/rtl/protected_store.sv",
+      "top": "protected_store",
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv",
+        "examples/local-fdir/rtl/protected_store.sv"
+      ],
+      "parameters": {
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-fdir/protected_store/DEPTH=8",
+      "file": "examples/local-fdir/rtl/protected_store.sv",
+      "top": "protected_store",
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv",
+        "examples/local-fdir/rtl/protected_store.sv"
+      ],
+      "parameters": {
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-fdir/fdir_node/default",
+      "file": "examples/local-fdir/rtl/fdir_node.sv",
+      "top": "fdir_node",
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv",
+        "examples/local-tmr/rtl/tmr_register.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+        "examples/local-fdir/rtl/protected_store.sv",
+        "examples/local-fdir/rtl/fdir_node.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fdir/fdir_node/DEPTH=4/TRIP=3/WD_LIMIT=5",
+      "file": "examples/local-fdir/rtl/fdir_node.sv",
+      "top": "fdir_node",
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv",
+        "examples/local-tmr/rtl/tmr_register.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+        "examples/local-fdir/rtl/protected_store.sv",
+        "examples/local-fdir/rtl/fdir_node.sv"
+      ],
+      "parameters": {
+        "DEPTH": 4,
+        "WD_LIMIT": 5,
+        "TRIP": 3
+      }
+    },
+    {
+      "id": "local-fdir/fdir_node/DEPTH=8/TRIP=2/WD_LIMIT=9",
+      "file": "examples/local-fdir/rtl/fdir_node.sv",
+      "top": "fdir_node",
+      "sources": [
+        "examples/local-ecc/rtl/secded.sv",
+        "examples/local-tmr/rtl/tmr_register.sv",
+        "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
+        "examples/local-fdir/rtl/protected_store.sv",
+        "examples/local-fdir/rtl/fdir_node.sv"
+      ],
+      "parameters": {
+        "DEPTH": 8,
+        "WD_LIMIT": 9,
+        "TRIP": 2
+      }
     }
   ],
   "examples": {
@@ -5019,6 +5134,34 @@
         "local-image-soc/image_memory/default"
       ],
       "reason": "NICの通常構成と再利用するCPU・AHB/APB・共有RAMを静的検査"
+    },
+    "local-tmr": {
+      "scope": "dut",
+      "targets": [
+        "local-tmr/tmr_register/default",
+        "local-tmr/tmr_register/WIDTH=8",
+        "local-tmr/tmr_register/WIDTH=16"
+      ],
+      "reason": "TMR制御レジスタの多数決・不一致検出・修復を8/16ビットで静的検査"
+    },
+    "local-fdir": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-tmr/tmr_register/default",
+        "local-tmr/tmr_register/WIDTH=8",
+        "local-tmr/tmr_register/WIDTH=16",
+        "local-fdir/protected_store/default",
+        "local-fdir/protected_store/DEPTH=4",
+        "local-fdir/protected_store/DEPTH=8",
+        "local-fdir/fdir_node/default",
+        "local-fdir/fdir_node/DEPTH=4/TRIP=3/WD_LIMIT=5",
+        "local-fdir/fdir_node/DEPTH=8/TRIP=2/WD_LIMIT=9",
+        "local-ecc/secded/default",
+        "local-timer-watchdog/timer_watchdog/default",
+        "local-timer-watchdog/timer_watchdog/WIDTH=4",
+        "local-timer-watchdog/timer_watchdog/WIDTH=8"
+      ],
+      "reason": "TMR・SECDED RAM・ウォッチドッグを接続する耐故障機器制御の全通常構成を静的検査"
     }
   },
   "blackbox_sources": {

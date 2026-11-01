@@ -1,0 +1,6 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"TMR-MASK","goals":["normal/write","fault/lane0","fault/lane1","fault/lane2"]},
+ {"id":"TMR-REPAIR","goals":["repair/attempt","repair/write-priority","repair/disabled"]},
+ {"id":"TMR-LIMIT","goals":["limit/multiple-lanes","limit/common-cause","limit/wrong-majority"]},
+ {"id":"TMR-RESET","goals":["reset/active"]}
+]}

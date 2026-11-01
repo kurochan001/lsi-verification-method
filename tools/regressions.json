@@ -1877,6 +1877,32 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-tmr",
+      "script": "examples/local-tmr/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-fdir",
+      "script": "examples/local-fdir/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
     }
   ]
 }

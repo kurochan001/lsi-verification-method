@@ -253,6 +253,14 @@
     "examples/local-failure-triage/support.py",
     "examples/local-failure-triage/tb/top.sv",
     "examples/local-failure-triage/tests/test_oracle.py",
+    "examples/local-fdir/cases.py",
+    "examples/local-fdir/model.py",
+    "examples/local-fdir/requirements.json",
+    "examples/local-fdir/rtl/fdir_node.sv",
+    "examples/local-fdir/rtl/protected_store.sv",
+    "examples/local-fdir/run.py",
+    "examples/local-fdir/tb/fdir_tb.sv",
+    "examples/local-fdir/tests/test_fdir.py",
     "examples/local-fifo-formal/fifo.sby.in",
     "examples/local-fifo-formal/fifo_formal.sv",
     "examples/local-fifo-formal/run.py",
@@ -637,6 +645,13 @@
     "examples/local-tlb/run.py",
     "examples/local-tlb/tb/tlb_tb.sv",
     "examples/local-tlb/tests/test_example.py",
+    "examples/local-tmr/model.py",
+    "examples/local-tmr/requirements.json",
+    "examples/local-tmr/rtl/tmr_register.sv",
+    "examples/local-tmr/run.py",
+    "examples/local-tmr/support.py",
+    "examples/local-tmr/tb/tmr_tb.sv",
+    "examples/local-tmr/tests/test_tmr.py",
     "examples/local-topk/rtl/topk_select.sv",
     "examples/local-topk/run.py",
     "examples/local-topk/tb/topk_tb.sv",
@@ -735,6 +750,7 @@
       "local-ecc",
       "local-ecc-memory",
       "local-equivalence",
+      "local-fdir",
       "local-fifo",
       "local-gate-sim",
       "local-i2c",
@@ -773,6 +789,7 @@
       "local-systolic-array",
       "local-timer-watchdog",
       "local-tlb",
+      "local-tmr",
       "local-topk",
       "local-uart",
       "local-uvm-coordination",
@@ -1014,6 +1031,11 @@
       "local-exploration-common",
       "local-irq-cdc",
       "local-uvm-random"
+    ],
+    "local-fdir": [
+      "local-ecc",
+      "local-timer-watchdog",
+      "local-tmr"
     ],
     "local-fifo": [
       "local-irq-cdc"
@@ -1320,6 +1342,9 @@
     "local-tlb": [
       "local-common",
       "local-sv32"
+    ],
+    "local-tmr": [
+      "local-exploration-common"
     ],
     "local-topk": [
       "local-formal-common"
