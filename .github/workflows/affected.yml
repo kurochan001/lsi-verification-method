@@ -133,6 +133,7 @@ jobs:
             artifacts/ci/**/state-graph.json
             artifacts/ci/**/lasso.json
             artifacts/ci/**/vectors.txt
+            artifacts/ci/**/*.hex
             artifacts/ci/**/trace*.vcd
             artifacts/ci/**/trace*.yw
             artifacts/ci-env/*.log

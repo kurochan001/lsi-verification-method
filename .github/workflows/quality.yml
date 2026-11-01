@@ -101,6 +101,7 @@ jobs:
             artifacts/ci/**/coverage.json
             artifacts/ci/**/coverage.dat
             artifacts/ci/**/vectors.txt
+            artifacts/ci/**/*.hex
             artifacts/ci-env/*.log
             artifacts/ci-env/diagnosis/**
             artifacts/ci-native/logs/**
