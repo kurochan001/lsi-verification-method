@@ -1,0 +1,146 @@
+name: Affected verification
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: affected-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  affected:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: |
+            tools/docs-requirements.txt
+            tools/simulation-requirements.txt
+            examples/local-fifo-formal/tools-requirements.txt
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tools/docs/package-lock.json
+      - name: Select affected jobs
+        id: selection
+        env:
+          CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+        run: |
+          python tools/select_regression.py --base "$CHANGE_BASE" --out artifacts/ci/selection
+          python -c 'import json,os; d=json.load(open("artifacts/ci/selection/selection.json")); open(os.environ["GITHUB_OUTPUT"],"a").write("jobs="+str(len(d["selected_jobs"]))+"\n")'
+      - name: Native build prerequisites
+        if: steps.selection.outputs.jobs != '0'
+        timeout-minutes: 10
+        run: |
+          if [[ -f /etc/apt/apt-mirrors.txt && "$(dpkg --print-architecture)" == amd64 ]]; then
+            echo 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
+          lsi_apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+          sudo apt-get "${lsi_apt_options[@]}" update --error-on=any
+          sudo apt-get "${lsi_apt_options[@]}" install -y autoconf automake bison cmake flex g++ gcc gperf help2man libeigen3-dev libfl-dev libtool llvm make ninja-build perl tcl-dev zlib1g-dev swig
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        if: steps.selection.outputs.jobs != '0'
+        id: native
+        with:
+          path: artifacts/ci-native
+          key: native-full-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/environment.json', 'tools/build_native.py', 'tools/quality_common.py') }}
+      - name: Build fixed native sources
+        if: steps.selection.outputs.jobs != '0' && steps.native.outputs.cache-hit != 'true'
+        run: python tools/build_native.py --profile full --jobs 2 --out artifacts/ci-native
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        if: steps.selection.outputs.jobs != '0'
+        id: oss
+        with:
+          path: artifacts/ci-oss/oss-cad-suite
+          key: oss-cad-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/oss_cad.json') }}
+      - name: Install pinned OSS CAD Suite
+        if: steps.selection.outputs.jobs != '0' && steps.oss.outputs.cache-hit != 'true'
+        run: python tools/setup_oss_cad.py --out artifacts/ci-oss
+      - name: Prepare and diagnose full environment
+        if: steps.selection.outputs.jobs != '0'
+        run: python tools/setup_environment.py --profile full --tool-bin "$PWD/artifacts/ci-native/install/bin" --oss-home "$PWD/artifacts/ci-oss/oss-cad-suite" --out artifacts/ci-env
+      - name: Save diagnosed native tools before verification
+        if: steps.selection.outputs.jobs != '0' && steps.native.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: artifacts/ci-native
+          key: ${{ steps.native.outputs.cache-primary-key }}
+      - name: Save diagnosed OSS CAD Suite
+        if: steps.selection.outputs.jobs != '0' && steps.oss.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: artifacts/ci-oss/oss-cad-suite
+          key: ${{ steps.oss.outputs.cache-primary-key }}
+      - name: Run and audit the selected jobs
+        if: steps.selection.outputs.jobs != '0'
+        env:
+          CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+        run: >-
+          artifacts/ci-env/python/bin/python tools/select_regression.py
+          --base "$CHANGE_BASE" --run --profile smoke
+          --out artifacts/ci/affected --
+          --jobs 2 --job-timeout 10800 --command-timeout 60
+          --formal-timeout 1800 --child-timeout 7200 --build-timeout 600
+          --python "$PWD/artifacts/ci-env/python/bin/python"
+          --formal-python "$PWD/artifacts/ci-env/formal/bin/python"
+          --rdl-python "$PWD/artifacts/ci-env/python/bin/python"
+          --cocotb-python "$PWD/artifacts/ci-env/python/bin/python"
+          --uvm-home "$PWD/artifacts/ci-env/uvm/1800.2-2020.3.2"
+          --oss-home "$PWD/artifacts/ci-oss/oss-cad-suite"
+          --tool-bin "$PWD/artifacts/ci-native/install/bin"
+          --tool-bin "$PWD/artifacts/ci-env/formal/bin"
+      - name: Preserve results, including failures
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: affected-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            artifacts/ci/**/selection.json
+            artifacts/ci/**/command.json
+            artifacts/ci/**/manifest.json
+            artifacts/ci/**/summary.json
+            artifacts/ci/**/tests.json
+            artifacts/ci/**/documentation-check.json
+            artifacts/ci/**/mermaid.json
+            artifacts/ci/**/diagnostics.json
+            artifacts/ci/**/progress.json
+            artifacts/ci/**/report.json
+            artifacts/ci/**/*.xml
+            artifacts/ci/**/*.log
+            artifacts/ci/**/*.html
+            artifacts/ci/**/result.json
+            artifacts/ci/**/executions.json
+            artifacts/ci/**/coverage.json
+            artifacts/ci/**/coverage.dat
+            artifacts/ci/**/tools.json
+            artifacts/ci/**/uvm-source.json
+            artifacts/ci/**/oss-source.json
+            artifacts/ci/**/mutation-report.json
+            artifacts/ci/**/db.sqlite3
+            artifacts/ci/**/mutated.v
+            artifacts/ci/**/config.mcy
+            artifacts/ci/**/properties.json
+            artifacts/ci/**/state-graph.json
+            artifacts/ci/**/lasso.json
+            artifacts/ci/**/vectors.txt
+            artifacts/ci/**/trace*.vcd
+            artifacts/ci/**/trace*.yw
+            artifacts/ci-env/*.log
+            artifacts/ci-env/manifest.json
+            artifacts/ci-env/summary.json
+            artifacts/ci-env/diagnosis/**
+            artifacts/ci-native/logs/**
+            artifacts/ci-native/native-sources.json
+            artifacts/ci-oss/*.json
+            artifacts/ci-oss/*.xml
+            artifacts/ci-oss/*.log

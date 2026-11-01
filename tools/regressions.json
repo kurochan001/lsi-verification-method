@@ -243,6 +243,23 @@
       ]
     },
     {
+      "id": "local-auto-mutation",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "child-timeout",
+        "oss-home"
+      ],
+      "tools": [
+        "mcy",
+        "yosys",
+        "sby",
+        "iverilog",
+        "vvp"
+      ],
+      "script": "examples/local-auto-mutation/run.py"
+    },
+    {
       "id": "local-axi",
       "script": "examples/local-axi/run.py",
       "kind": "simulation",
@@ -1043,6 +1060,21 @@
       ]
     },
     {
+      "id": "local-liveness",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "oss-home",
+        "timeout"
+      ],
+      "tools": [
+        "sby",
+        "yosys",
+        "yosys-abc"
+      ],
+      "script": "examples/local-liveness/run.py"
+    },
+    {
       "id": "local-load-store",
       "script": "examples/local-load-store/run.py",
       "kind": "simulation",
@@ -1726,6 +1758,22 @@
         "make",
         "c++"
       ]
+    },
+    {
+      "id": "local-uvm-outstanding",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ],
+      "script": "examples/local-uvm-outstanding/run.py"
     },
     {
       "id": "local-uvm-random",

@@ -1,17 +1,18 @@
 # CIの実行範囲と結果の読み方
 
-GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と、定期実行の[Nightly verification](../.github/workflows/nightly.yml)を用意しています。ローカルと同じPython入口・登録表を使い、依存の存在確認だけでは合格にしません。
+GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と、変更影響を調べる[Affected verification](../.github/workflows/affected.yml)と、定期実行の[Nightly verification](../.github/workflows/nightly.yml)を用意しています。ローカルと同じPython入口・登録表を使い、依存の存在確認だけでは合格にしません。
 
 | ワークフロー | 起動条件 | 実行する範囲 |
 | --- | --- | --- |
 | Quality | push、pull request、手動 | 全文書・Mermaid、toolsのセルフテスト、FIFO・APB・stream・ネイティブSVAのsmoke構成行列 |
+| Affected verification | push、pull request、手動 | [差分選択](AFFECTED.md)した例のsmokeと履歴監査。不明な依存・共通入力変更は全例へ戻す。文書のみは回路0件と記録 |
 | Nightly verification | 毎日UTC 18:23（日本時間翌03:23）、手動 | 全文書、skipなしの全セルフテスト、全例のnightly、全フォーマル・STA・lint、保存結果の履歴照合 |
 
 スケジュールはmainのワークフローを使います。GitHub側の混雑等で開始が遅れる場合があり、時刻どおりの開始を保証する仕組みではありません。`--profile nightly`というランナー引数自体には、定期起動の機能はありません。
 
 ## 実行環境
 
-Ubuntu 24.04、Python 3.13、Node.js 24を使います。[環境の準備と診断](ENVIRONMENT.md)でPython・Mermaid・UVM・フォーマルの依存パッケージを導入し、Icarus・Verilator・OpenSTA・CUDDは[`environment.json`](environment.json)のコミットから構築します。Actionsの参照も完全なコミットSHAに固定しています。ネイティブツールのキャッシュは、OS・CPUと構築コード・版台帳のハッシュをキーにします。キャッシュがあっても、環境診断と実際の検証は毎回行います。
+Ubuntu 24.04、Python 3.13、Node.js 24を使います。[環境の準備と診断](ENVIRONMENT.md)でPython・Mermaid・UVM・フォーマルの依存パッケージを導入し、Icarus・Verilator・OpenSTA・CUDDは[`environment.json`](environment.json)のコミットから構築します。MCY・ネイティブYosys・SBY・ABCは[固定版OSS CAD Suite](ENVIRONMENT.md#oss-cad-suiteの固定版)を別キャッシュで準備し、配布アーカイブと展開内容のハッシュを照合します。Actionsの参照も完全なコミットSHAに固定しています。ネイティブツールのキャッシュは、OS・CPUと構築コード・版台帳のハッシュをキーにします。キャッシュがあっても、環境診断と実際の検証は毎回行います。
 
 ツール取得にはネットワークを使います。OSイメージや全推移依存まで固定する構成ではないため、更新時の診断失敗はログの版と取得先から切り分けます。キャッシュは検証結果の代用ではありません。
 
@@ -34,6 +35,7 @@ GitHubのActions画面でワークフローとmainを選び、Run workflowから
 ```sh
 gh workflow run quality.yml --ref main
 gh workflow run nightly.yml --ref main
+gh workflow run affected.yml --ref main
 gh run list --workflow nightly.yml --limit 5
 ```
 

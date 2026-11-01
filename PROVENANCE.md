@@ -1336,3 +1336,15 @@ macOS・Python 3.13.15でも、上限変更後のAI集約6例（MXFP4の26判定
 Ubuntuでは[実装版のQuality CI](https://github.com/kurochan001/lsi-verification-method/actions/runs/41266949901)が成功し、文書・ツールのテストと代表RTLの全14ルートジョブを確認しました。今回の全例nightlyの再実行は上記macOS環境の結果です。
 
 ローカル証跡はGit管理外の`artifacts/repository-review-20261101/`に保存しました。全例は`nightly-all/`、セルフテストは`selftests/`、環境診断は`environment/`、文書は`docs-final/`、履歴照合は`effective-report/`、最終の独立照合は`final-audit.json`です。文書検査の範囲は[品質検査の手順](tools/QUALITY.md)に従い、各例の仮定・モデル・適用範囲は維持しています。
+
+<a id="advanced-verification-20261101"></a>
+
+## 複数未完了UVM・変更影響選択・自動変異・期限なし進行の追加（2026-11-01）
+
+起点は`e25c022ba20e6d5634acd023edf745bbda759cc6`です。利用者の依頼に従い、UVMのID付き順不同応答、Git差分からの保守的な選択、MCYによる自動生成候補の検出力比較、公平性を前提とする非有界の最終完了証明を追加しました。既存の例を変更する場合と同じく、検証モデル・比較範囲・負例・証跡を各READMEに記載しています。
+
+外部ツールはYosysHQ OSS CAD Suiteの2026-10-31版を使い、公式配布アーカイブのSHA-256と、展開後の全ファイル・リンク・実行ビットのハッシュを`tools/oss_cad.json`へ固定しました。Linux x64・macOS arm64を対象とし、ツール本体とライセンスは無視対象の導入先へ保存します。上流コードを本リポジトリのライセンスへ読み替えて取り込んでいません。
+
+活性の例は、macOS arm64版にsuproveがないため、両OSで同じ方式を使えるようSBY `live`ではなく、有限状態機械の正確なliveness-to-safety変換とABC PDRを使用します。単純な2要求者の契約に限り、独立した全状態グラフと入力による反例再生でも確認します。方式の参照は[Schuppan・Biereの論文](https://fmv.jku.at/papers/SchuppanBiere-STTT-5-2-3-2004.pdf)、自動変異の分類は[MCYの方法論](https://yosyshq.readthedocs.io/projects/mcy/en/latest/methodology.html)です。
+
+確認結果は、最終版の全体実行後に追記します。

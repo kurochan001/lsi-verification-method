@@ -13,6 +13,7 @@
     "examples/local-apb/rtl/apb_regs.sv",
     "examples/local-arbiter/rtl/rr_arbiter.sv",
     "examples/local-async-fifo/rtl/async_fifo.sv",
+    "examples/local-auto-mutation/rtl/irq_regs.sv",
     "examples/local-axi-reorder/rtl/reorder.sv",
     "examples/local-axi/rtl/axi_lite_regs.sv",
     "examples/local-axi4/rtl/axi4_ram.sv",
@@ -47,6 +48,7 @@
     "examples/local-irq-cdc/rtl/cdc_receiver.sv",
     "examples/local-irq-cdc/rtl/irq_pending.sv",
     "examples/local-jtag-tap/rtl/jtag_tap.sv",
+    "examples/local-liveness/rtl/fair_arbiter.sv",
     "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
     "examples/local-mbist/rtl/mbist.sv",
     "examples/local-mxfp4/rtl/mp_add.sv",
@@ -101,6 +103,7 @@
     "examples/local-uart/rtl/uart.sv",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
     "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
+    "examples/local-uvm-outstanding/rtl/tagged_reorder.sv",
     "examples/local-width-converter/rtl/axi_width64to32.sv"
   ],
   "targets": [
@@ -2984,6 +2987,33 @@
       "sources": [
         "examples/local-uart/rtl/uart.sv"
       ]
+    },
+    {
+      "id": "local-auto-mutation/irq_regs/default",
+      "file": "examples/local-auto-mutation/rtl/irq_regs.sv",
+      "top": "irq_regs",
+      "sources": [
+        "examples/local-auto-mutation/rtl/irq_regs.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-liveness/fair_arbiter/default",
+      "file": "examples/local-liveness/rtl/fair_arbiter.sv",
+      "top": "fair_arbiter",
+      "sources": [
+        "examples/local-liveness/rtl/fair_arbiter.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-uvm-outstanding/tagged_reorder/default",
+      "file": "examples/local-uvm-outstanding/rtl/tagged_reorder.sv",
+      "top": "tagged_reorder",
+      "sources": [
+        "examples/local-uvm-outstanding/rtl/tagged_reorder.sv"
+      ],
+      "parameters": {}
     }
   ],
   "examples": {
@@ -4448,6 +4478,27 @@
         "local-ecc/secded/default"
       ],
       "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-auto-mutation": {
+      "scope": "dut",
+      "targets": [
+        "local-auto-mutation/irq_regs/default"
+      ],
+      "reason": "専用DUTの正常構成。意図的な誤実装は動作確認の対照ケースで扱う。"
+    },
+    "local-liveness": {
+      "scope": "dut",
+      "targets": [
+        "local-liveness/fair_arbiter/default"
+      ],
+      "reason": "専用DUTの正常構成。意図的な誤実装は動作確認の対照ケースで扱う。"
+    },
+    "local-uvm-outstanding": {
+      "scope": "dut",
+      "targets": [
+        "local-uvm-outstanding/tagged_reorder/default"
+      ],
+      "reason": "専用DUTの正常構成。意図的な誤実装は動作確認の対照ケースで扱う。"
     }
   },
   "blackbox_sources": {

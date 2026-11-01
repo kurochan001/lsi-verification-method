@@ -10,6 +10,7 @@ import re
 import shutil
 import sys
 import quality_common as Q
+import oss_cad as O
 HERE=Path(__file__).resolve().parent
 DOC_TOOLS={'git':['--version'],'node':['--version'],'npm':['--version']}
 SIM_TOOLS={'iverilog':['-V'],'vvp':['-V'],'verilator':['--version'],'verilator_coverage':['--version'],'c++':['--version'],'cc':['--version'],'make':['--version']}
@@ -36,6 +37,7 @@ def uvm_snapshot(home,expected):
     good=set(observed)=={n for n in expected if n.startswith('src/')} and all((home/n).is_file() and Q.digest(home/n)==h for n,h in expected.items())
     return good,observed
 def run(a):
+    O.prepare_environment()
     config=json.loads((HERE/'environment.json').read_text());tools=tool_plan(a.profile)
     roles={'docs':(a.python,config['packages']['docs'])} if a.profile in ('docs','full') else {}
     if a.profile=='full':
@@ -43,9 +45,9 @@ def run(a):
     ids=['python',*['tool/'+n for n in tools],*['packages/'+r for r in roles]]
     if a.profile in ('docs','full'):ids+=['docs-runtime']
     if a.profile in ('smoke','full'):ids+=['cxx20','c11']
-    if a.profile=='full':ids+=['uvm']
+    if a.profile=='full':ids+=['uvm','oss-cad','oss/yosys','oss/sby','oss/mcy']
     ids+=['source-freshness']
-    report=Q.Report('environment',a.out,[Path(__file__),HERE/'environment.json',HERE/'uvm-source-sha256.json',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs',HERE/'docs-requirements.txt',HERE/'simulation-requirements.txt',Q.ROOT/'examples/local-fifo-formal/tools-requirements.txt'],ids,dict(profile=a.profile,python=a.python,formal_python=a.formal_python,tool_bin=[str(p) for p in a.tool_bin]))
+    report=Q.Report('environment',a.out,[Path(__file__),Path(O.__file__),O.CONFIG,HERE/'environment.json',HERE/'uvm-source-sha256.json',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs',HERE/'docs-requirements.txt',HERE/'simulation-requirements.txt',Q.ROOT/'examples/local-fifo-formal/tools-requirements.txt'],ids,dict(profile=a.profile,python=a.python,formal_python=a.formal_python,oss_home=str(getattr(a,'oss_home',None)),tool_bin=[str(p) for p in a.tool_bin]))
     env_path=os.pathsep.join([*[str(p.absolute()) for p in a.tool_bin],str(Path(a.formal_python).absolute().parent),os.environ.get('PATH','')]);os.environ['PATH']=env_path
     r=Q.P.execute([a.python,'-c','import json,sys;print(json.dumps(list(sys.version_info[:3])))'],report.out/'python.log',a.timeout,report.out)
     try:py=json.loads((report.out/'python.log').read_text());ok=not r['error'] and r['returncode']==0 and isinstance(py,list) and tuple(py)>=tuple(config['python_minimum'][a.profile])
@@ -78,9 +80,16 @@ def run(a):
         good,observed_uvm=uvm_snapshot(home,expected)
         report.check('uvm',good,dict(root=str(home),files=len(observed_uvm),guidance='examples/local-uvm/setup_uvm.pyで固定SHA-256の公式アーカイブを準備。'))
         Q.write(report.out/'uvm-source.json',dict(root=str(home),source_sha256=observed_uvm))
+        try:oss=O.verify(a.oss_home);good=True
+        except (OSError,ValueError,TypeError,RuntimeError) as exc:oss=dict(error=str(exc));good=False
+        report.check('oss-cad',good,oss);Q.write(report.out/'oss-source.json',oss)
+        for name,flags in [('yosys',['-V']),('sby',['--version']),('mcy',['--help'])]:
+            r=Q.P.execute([str(a.oss_home/'bin'/name),*flags],report.out/('oss-'+name+'.log'),a.timeout,report.out) if good else dict(returncode=None,error='toolchain not verified')
+            report.check('oss/'+name,not r['error'] and r['returncode']==0,r)
     Q.write(report.out/'tools.json',observed);changed=report.fresh();report.check('source-freshness',not changed,changed);return report.finish()
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--profile',choices=('docs','smoke','full'),default='full');p.add_argument('--python',default=sys.executable);p.add_argument('--formal-python');p.add_argument('--rdl-python');p.add_argument('--cocotb-python');p.add_argument('--uvm-home',type=Path,default=Q.ROOT/'artifacts/toolchains/quality/uvm/1800.2-2020.3.2');p.add_argument('--tool-bin',type=Path,action='append',default=[]);p.add_argument('--timeout',type=float,default=60);p.add_argument('--out',type=Path,default=Q.ROOT/'artifacts'/datetime.now(timezone.utc).strftime('environment-%Y%m%dT%H%M%S%fZ'))
+    p.add_argument('--oss-home',type=Path,default=Q.ROOT/'artifacts/toolchains/oss/oss-cad-suite')
     a=p.parse_args()
     if not math.isfinite(a.timeout) or a.timeout<=0 or a.out.exists():p.error('positive finite timeout and fresh --out required')
     a.python=Q.executable(a.python)

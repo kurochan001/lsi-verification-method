@@ -2037,6 +2037,9 @@
       "source_sha256": {"examples/local-uart/rtl/uart.sv": "0787aee75619399dccc18bd92520b524dbc8d7c3782c6e9fc9a60ed5cc6783bf"},
       "diagnostics": [
       ]
-    }
+    },
+    "local-auto-mutation/irq_regs/default": {"target_sha256": "8cceb0f37bb3967827d8fb52e395c6386c7be62b68959e70b87de8497a5f6aad", "source_sha256": {"examples/local-auto-mutation/rtl/irq_regs.sv": "48bc554b0f3594edbbdba09f0990b611c5aaffafb5813b6c58ed20a1a7cac3c7"}, "diagnostics": []},
+    "local-liveness/fair_arbiter/default": {"target_sha256": "638002b59e51e928dcabd52253d912a83cf52363ffe09fa0c58093fc76bbdbfe", "source_sha256": {"examples/local-liveness/rtl/fair_arbiter.sv": "4272fb2f58ffd612654c937021c5d90d301949464785c68795ab748ac3a72059"}, "diagnostics": []},
+    "local-uvm-outstanding/tagged_reorder/default": {"target_sha256": "5466d63a6edde334a8d7ea09e2364afbf7ad464d5d00f0dfeea8a1d8644c87f5", "source_sha256": {"examples/local-uvm-outstanding/rtl/tagged_reorder.sv": "87ae83c918b93cc6ad3a07438062f71ef3edfbd95b004a6ba5e3dfa264f58ba0"}, "diagnostics": []}
   }
 }

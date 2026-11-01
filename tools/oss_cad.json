@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "release": "2026-10-31",
+  "repository": "https://github.com/YosysHQ/oss-cad-suite-build",
+  "platforms": {
+    "darwin-arm64": {
+      "url": "https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2026-10-31/oss-cad-suite-darwin-arm64-20261031.tgz",
+      "sha256": "558fb494953e94b60ede9693eaa12dfddbbb07d92e2b8217cf7c1d712c248cff",
+      "tree_sha256": "7edc545fdcf48e1a0e6ce92c0e44263e077c160b701b3939a47015a649bcca78"
+    },
+    "linux-x64": {
+      "url": "https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2026-10-31/oss-cad-suite-linux-x64-20261031.tgz",
+      "sha256": "e0349f66547ca1ac9a24b5e06287d4719aa0213d431e1168eb319915340dc665",
+      "tree_sha256": "b4a3aa8af01c70d5fe2f4184ee6a7de5cf3b98948e0009bcddbae991f4a4f2b4"
+    }
+  }
+}

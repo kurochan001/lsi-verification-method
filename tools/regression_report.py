@@ -56,7 +56,7 @@ def validate_plan(plan,root):
     if args.uvm_home is not None:args.uvm_home=Path(args.uvm_home)
     if plan.get('profile')!=args.profile or plan.get('suite')!=args.suite or plan.get('seed')!=args.seed:raise ValueError('plan options differ')
     registry_key=str(args.registry.relative_to(root) if args.registry.is_relative_to(root) else args.registry)
-    expected={'tools/run_regression.py','examples/local-irq-cdc/run.py',registry_key}
+    expected={str(path.relative_to(root) if path.is_relative_to(root) else path) for path in R.plan_inputs(args,plan['jobs'],root)}
     sources(plan,root,expected)
     entries=R.load_registry(args.registry,root);generated=R.make_plan(entries,args,root)
     jobs=jobs_index(plan['jobs'])

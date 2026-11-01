@@ -24,7 +24,7 @@ python3 tools/run_regression.py --suite formal --list
 | --- | --- |
 | `--suite all`（既定） | 全登録例。集約ランナーを使い、その子は別に重複起動しない。 |
 | `--suite simulation` | シミュレーションとSTAの個別例。集約ランナーと証明専用の入口を選ばない。 |
-| `--suite formal` | 証明用の11例。除算器は`formal.py`、FIFOは両深さを含む。分割証明は内部タスクと依存判定を親から一度実行する。 |
+| `--suite formal` | 証明用の12例。除算器は`formal.py`、FIFOは両深さを含む。分割証明は内部タスクと依存判定を親から一度実行する。 |
 | `--example 名前` | 指定例へ絞る。複数回指定できる。親と子を同時に指定した場合は親から一度実行する。 |
 | `--profile smoke\|nightly` | 対応する例へ渡す。専用プロファイルがないフォーマル・STAは既定の全タスク・構成を実行する。 |
 
@@ -36,7 +36,7 @@ python3 tools/run_regression.py --suite formal --list
 
 全例にはPython 3.13以上を使います。[環境の一括準備・診断](ENVIRONMENT.md)の`full`プロファイルで、専用venv・固定パッケージ・公式UVMを準備できます。既存環境を使う場合も`check_environment.py`で版と実行を診断できます。以下は個別に用意する場合の手順です。
 
-Icarus Verilog、Verilator 5.052、C++20コンパイラー、Cコンパイラー、make、OpenSTAを各環境へ用意します。フォーマルは[固定版環境](../examples/local-formal-common/README.md)、UVMは[ライブラリの準備](../examples/local-uvm/README.md#ライブラリの準備)、OpenSTAは[構築手順](../examples/local-sta/README.md)を参照してください。ランナー自身はツールをインストールしません。
+Icarus Verilog、Verilator 5.052、C++20コンパイラー、Cコンパイラー、make、OpenSTAを各環境へ用意します。フォーマルは[固定版環境](../examples/local-formal-common/README.md)、UVMは[ライブラリの準備](../examples/local-uvm/README.md#ライブラリの準備)、OpenSTAは[構築手順](../examples/local-sta/README.md)を参照してください。MCYと期限なしの進行証明には[固定版OSS CAD Suite](ENVIRONMENT.md#oss-cad-suiteの固定版)も準備します。ランナー自身はツールをインストールしません。
 
 シミュレーション側のPython依存は、専用環境へ次のように準備できます。固定するのは記載した3パッケージの版であり、OS・コンパイラー・全推移依存まで同一にする環境イメージではありません。
 
@@ -55,6 +55,7 @@ python3 tools/run_regression.py --profile nightly --jobs 2 \
   --rdl-python artifacts/toolchains/sim-venv/bin/python \
   --cocotb-python artifacts/toolchains/sim-venv/bin/python \
   --uvm-home /tmp/lsi-uvm-library/1800.2-2020.3.2 \
+  --oss-home artifacts/toolchains/oss/oss-cad-suite \
   --tool-bin artifacts/toolchains/opensta-build \
   --command-timeout 60 --formal-timeout 1800 --child-timeout 7200 \
   --build-timeout 600 --out artifacts/repository-nightly
@@ -110,6 +111,8 @@ JUnitは`testsuite`または`testsuites`をルートとし、`testcase`が`tests
 
 ## 5. 検証例を追加する
 
+新しい例の実行入力と依存関係は[変更影響の台帳](AFFECTED.md#結果の意味と台帳更新)にも登録し、全例への切替えを保守します。
+
 新しい`examples/*/run.py`は、`regressions.json`へ入口、方式、必要なツール、引数、構成行列を登録します。集約の場合は子と出力先の対応も記録します。登録漏れ、存在しない入口、親子関係の循環、重複構成はエラーです。
 
 ```sh
@@ -124,4 +127,6 @@ python3 -m unittest discover -s tools/tests -v
 
 ## 6. 変更時と定期実行
 
-[QualityとNightlyのCI](CI.md)を用意しています。文書検査・セルフテストは別ステップで行い、EDA例の登録表や要求件数へ加えません。全例の定期実行は上記と同じnightly計画を使います。
+[Quality・Affected・NightlyのCI](CI.md)を用意しています。文書検査・セルフテストは別ステップで行い、EDA例の登録表や要求件数へ加えません。全例の定期実行は上記と同じnightly計画を使います。
+
+変更時に関係する例を実際に実行する入口は[変更影響による選択](AFFECTED.md)です。共通入力や未知の依存変更は全例へ戻します。外部OSS CAD Suiteが必要な例では、`oss-source.json`と固定インストール内容の一致も終了時・履歴監査時に確認します。

@@ -12,6 +12,7 @@ import threading
 import time
 from types import SimpleNamespace
 import unittest
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 S=importlib.util.spec_from_file_location('campaign',Path(__file__).resolve().parents[1]/'run_regression.py');R=importlib.util.module_from_spec(S);S.loader.exec_module(R)
 class CampaignTests(unittest.TestCase):
     def setUp(self):
@@ -131,6 +132,12 @@ class CampaignTests(unittest.TestCase):
                 R.inspect_output(directory,entry,{},self.root,'nightly')
         (directory/'uvm-source.json').write_text(json.dumps(dict(root=str(self.root),source_sha256={'rtl.sv':R.hashlib.sha256((self.root/'rtl.sv').read_bytes()).hexdigest()})))
         self.assertEqual(R.inspect_output(directory,entry,{},self.root,'nightly')['junit'],1)
+    def test_oss_toolchain_snapshot_is_required_and_content_checked(self):
+        directory,entry=self.output();entry['options']=['oss-home']
+        with self.assertRaisesRegex(ValueError,'missing OSS CAD'):R.inspect_output(directory,entry,{},self.root,'nightly')
+        import oss_cad
+        (directory/'oss-source.json').write_text(json.dumps(dict(root=str(self.root),platform=oss_cad.platform_key(),release='claimed',archive_sha256='claimed',tree_sha256='claimed',files=1)))
+        with self.assertRaisesRegex(ValueError,'pinned installation'):R.inspect_output(directory,entry,{},self.root,'nightly')
     def test_partial_campaign_junit_contains_an_integrity_failure(self):
         directory=self.root/'campaign';directory.mkdir();jobs=[dict(id='one'),dict(id='two')]
         results=[dict(id='one',success=True,message='ok')]

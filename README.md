@@ -25,6 +25,10 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | lintの指摘や失敗を解析する | [警告の扱い](docs/method/lint-and-waivers.md)／[失敗解析](docs/method/failure-analysis.md)／[不具合票](docs/templates/verification-issue.md) |
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
+| 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
+| 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
+| 自動生成した誤実装でテストを評価する | [MCY・機能等価性・検出率](examples/local-auto-mutation/README.md) |
+| 期限のない最終完了を証明する | [公平性と無限待機の反例](examples/local-liveness/README.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
@@ -191,9 +195,11 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 
-2026-11-01の追加では、文書の自動検査、環境の一括準備・診断、lintの幅・符号の整理、変更時・毎晩のCIを整備しました。続く全体レビューでは、JUnitの形式と子ランナーの証跡の配置確認を補強しました。修正後に全92ルートジョブから全例nightly・全フォーマル・STA・lintを再確認し、セルフテスト113グループ・883件も成功しています。修正内容・残るlint指摘・確認範囲は[最新の全体レビュー記録](PROVENANCE.md#repository-review-20261101)にまとめています。
+2026-11-01の追加では、文書の自動検査、環境の一括準備・診断、lintの幅・符号の整理、変更時・毎晩のCIを整備しました。続く全体レビューでは、JUnitの形式と子ランナーの証跡の配置確認を補強しました。この時点では全92ルートジョブから全例nightly・全フォーマル・STA・lintを再確認しました。修正内容・残るlint指摘・確認範囲は[最新の全体レビュー記録](PROVENANCE.md#repository-review-20261101)にまとめています。
 
 用語集・FAQと実行範囲の案内は、[文書レビューの確認記録](PROVENANCE.md#documentation-refresh-20261101)に沿って更新しています。
+
+今回さらに、UVMの複数未完了・順不同応答、自動ミューテーションと等価性、公平性を前提とする期限のない進行証明、変更影響によるリグレッション選択を追加しました。実行環境・合格条件・制限は上の各入口にまとめています。全例の実行計画は95ルートジョブ、証明専用例は12例・23構成・175タスクです。最新の確認結果は[追加と再検証の記録](PROVENANCE.md#advanced-verification-20261101)を参照してください。
 
 ## 準備と実行
 

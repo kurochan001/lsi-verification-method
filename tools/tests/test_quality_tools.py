@@ -156,7 +156,7 @@ class EnvironmentTests(unittest.TestCase):
 class WorkflowTests(unittest.TestCase):
     def test_ci_runs_real_gates_and_keeps_failure_evidence(self):
         import yaml
-        for name in ('quality','nightly'):
+        for name in ('quality','nightly','affected'):
             workflow=yaml.load((ROOT/f'.github/workflows/{name}.yml').read_text(),Loader=yaml.BaseLoader)
             self.assertEqual(workflow['permissions'],{'contents':'read'})
             for job in workflow['jobs'].values():
@@ -174,5 +174,11 @@ class WorkflowTests(unittest.TestCase):
         full='\n'.join(s.get('run','') for s in nightly['jobs']['full']['steps'])
         self.assertIn('--profile nightly',full);self.assertIn('tools/run_selftests.py',full)
         self.assertNotIn('--check-tools',full)
+        affected=yaml.load((ROOT/'.github/workflows/affected.yml').read_text(),Loader=yaml.BaseLoader)
+        steps=affected['jobs']['affected']['steps'];commands='\n'.join(s.get('run','') for s in steps)
+        self.assertIn('--base "$CHANGE_BASE" --run --profile smoke',commands)
+        self.assertIn('tools/select_regression.py',commands)
+        self.assertEqual(next(s for s in steps if s.get('id')=='selection')['name'],'Select affected jobs')
+        self.assertIn("steps.selection.outputs.jobs != '0'",next(s for s in steps if s.get('name')=='Run and audit the selected jobs')['if'])
 
 if __name__=='__main__':unittest.main()

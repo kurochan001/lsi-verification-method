@@ -44,14 +44,28 @@ jobs:
       - name: Build fixed native sources
         if: steps.native.outputs.cache-hit != 'true'
         run: python tools/build_native.py --profile full --jobs 2 --out artifacts/ci-native
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        id: oss
+        with:
+          path: artifacts/ci-oss/oss-cad-suite
+          key: oss-cad-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/oss_cad.json') }}
+      - name: Install pinned OSS CAD Suite
+        if: steps.oss.outputs.cache-hit != 'true'
+        run: python tools/setup_oss_cad.py --out artifacts/ci-oss
       - name: Prepare and diagnose full environment
-        run: python tools/setup_environment.py --profile full --tool-bin "$PWD/artifacts/ci-native/install/bin" --out artifacts/ci-env
+        run: python tools/setup_environment.py --profile full --tool-bin "$PWD/artifacts/ci-native/install/bin" --oss-home "$PWD/artifacts/ci-oss/oss-cad-suite" --out artifacts/ci-env
       - name: Save diagnosed native tools before verification
         if: steps.native.outputs.cache-hit != 'true'
         uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: artifacts/ci-native
           key: ${{ steps.native.outputs.cache-primary-key }}
+      - name: Save diagnosed OSS CAD Suite
+        if: steps.oss.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: artifacts/ci-oss/oss-cad-suite
+          key: ${{ steps.oss.outputs.cache-primary-key }}
       - name: Check documents and diagrams
         run: artifacts/ci-env/python/bin/python tools/check_docs.py --out artifacts/ci/docs
       - name: All local selftests, without skips
@@ -70,6 +84,7 @@ jobs:
           --rdl-python "$PWD/artifacts/ci-env/python/bin/python"
           --cocotb-python "$PWD/artifacts/ci-env/python/bin/python"
           --uvm-home "$PWD/artifacts/ci-env/uvm/1800.2-2020.3.2"
+          --oss-home "$PWD/artifacts/ci-oss/oss-cad-suite"
           --tool-bin "$PWD/artifacts/ci-native/install/bin"
           --tool-bin "$PWD/artifacts/ci-env/formal/bin"
           --out artifacts/ci/nightly
@@ -104,6 +119,14 @@ jobs:
             artifacts/ci/**/coverage.dat
             artifacts/ci/**/tools.json
             artifacts/ci/**/uvm-source.json
+            artifacts/ci/**/oss-source.json
+            artifacts/ci/**/mutation-report.json
+            artifacts/ci/**/db.sqlite3
+            artifacts/ci/**/mutated.v
+            artifacts/ci/**/config.mcy
+            artifacts/ci/**/properties.json
+            artifacts/ci/**/state-graph.json
+            artifacts/ci/**/lasso.json
             artifacts/ci/**/vectors.txt
             artifacts/ci/**/trace*.vcd
             artifacts/ci/**/trace*.yw
@@ -113,3 +136,6 @@ jobs:
             artifacts/ci-env/diagnosis/**
             artifacts/ci-native/logs/**
             artifacts/ci-native/native-sources.json
+            artifacts/ci-oss/*.json
+            artifacts/ci-oss/*.xml
+            artifacts/ci-oss/*.log

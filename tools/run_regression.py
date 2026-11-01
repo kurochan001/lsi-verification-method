@@ -92,7 +92,7 @@ def make_plan(entries,args,root=ROOT):
             command=[interpreter,str(root/e['script']),'--out',str(target)]
             if e.get('profile'):command+=['--profile',args.profile,'--seed',str(args.seed)]
             for key,value in configuration.items():command+=['--'+key,str(value)]
-            bindings={'uvm-home':args.uvm_home,'python':args.python,'formal-python':args.formal_python,
+            bindings={'uvm-home':args.uvm_home,'oss-home':getattr(args,'oss_home',None),'python':args.python,'formal-python':args.formal_python,
                       'rdl-python':args.rdl_python,'cocotb-python':args.cocotb_python}
             if name=='local-system-regression':bindings['python']=args.formal_python
             if name=='local-cocotb':bindings['python']=args.cocotb_python
@@ -112,7 +112,13 @@ def plan_document(args,jobs):
     return dict(schema_version=1,profile=args.profile,suite=args.suite,seed=args.seed,jobs=jobs,
         options={k:([str(p) for p in v] if k=='tool_bin' else str(v) if isinstance(v,Path) else v) for k,v in vars(args).items()},
         source_sha256={str(p.relative_to(ROOT) if p.is_relative_to(ROOT) else p):hashlib.sha256(p.read_bytes()).hexdigest()
-                       for p in [Path(__file__),args.registry,ROOT/'examples/local-irq-cdc/run.py']})
+                       for p in plan_inputs(args,jobs)})
+
+
+def plan_inputs(args,jobs,root=ROOT):
+    paths=[root/'tools/run_regression.py',args.registry,root/'examples/local-irq-cdc/run.py']
+    if any('--oss-home' in j['command'] for j in jobs):paths += [root/'tools/oss_cad.py',root/'tools/oss_cad.json']
+    return paths
 
 
 def environment(args):
@@ -126,12 +132,18 @@ def environment(args):
 def preflight(jobs,entries,args,env):
     required=set();packages={};errors=[];tools={}
     closure=set().union(*({j['example']}|descendants(j['example'],entries) for j in jobs))
+    oss_required=any('oss-home' in entries[n]['options'] for n in closure);oss_home=getattr(args,'oss_home',None)
+    if oss_required and (oss_home is None or not (oss_home/'bin/yosys').is_file()):errors.append('verified OSS CAD Suite required: --oss-home')
     for name in closure:
         entry=entries[name];required.update(entry['tools'])
         for interpreter,modules in entry.get('packages',{}).items():packages.setdefault(interpreter,set()).update(modules)
         if 'uvm-home' in entry['options'] and (args.uvm_home is None or not (args.uvm_home/'src/uvm_pkg.sv').is_file()):errors.append('UVM library required: '+name)
     for command in sorted(required):
-        resolved=shutil.which(command,path=env['PATH']);tools[command]=resolved
+        if oss_required and command in ('yosys','sby','mcy','yosys-abc'):
+            candidate=oss_home/'bin'/command if oss_home else None
+            resolved=str(candidate) if candidate is not None and candidate.is_file() and os.access(candidate,os.X_OK) else None
+        else:resolved=shutil.which(command,path=env['PATH'])
+        tools[command]=resolved
         if not resolved:errors.append('missing executable: '+command)
     for binding,modules in packages.items():
         interpreter=getattr(args,binding.replace('-','_'));code='import importlib; '+ '; '.join('importlib.import_module('+repr(m)+')' for m in sorted(modules))
@@ -214,6 +226,13 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
         for name,expected in hashes.items():
             path=Path(record['root'])/name
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=expected:raise ValueError('stale UVM source: '+str(path))
+    oss_snapshots=list(directory.rglob('oss-source.json'))
+    if 'oss-home' in entry.get('options',[]) and not oss_snapshots:raise ValueError('missing OSS CAD Suite source snapshot')
+    if oss_snapshots:
+        spec=importlib.util.spec_from_file_location('regression_oss',Path(__file__).resolve().parent/'oss_cad.py');oss=importlib.util.module_from_spec(spec);spec.loader.exec_module(oss)
+        for snapshot in oss_snapshots:
+            record=json.loads(snapshot.read_text());observed=oss.verify(Path(record['root']),record['platform'])
+            if any(record.get(k)!=observed[k] for k in ('platform','release','archive_sha256','tree_sha256','files')):raise ValueError('OSS CAD Suite snapshot differs')
     if count==0:raise ValueError('missing source manifest')
     return dict(junit=len(cases),source_hashes=count)
 
@@ -341,7 +360,7 @@ def main():
     p.add_argument('--jobs',type=int,default=1);p.add_argument('--job-timeout',type=float,default=10800)
     for name in ('command-timeout','formal-timeout','child-timeout','build-timeout'):p.add_argument('--'+name,type=float)
     for name in ('python','formal-python','rdl-python','cocotb-python'):p.add_argument('--'+name,default=sys.executable)
-    p.add_argument('--tool-bin',type=Path,action='append',default=[]);p.add_argument('--uvm-home',type=Path)
+    p.add_argument('--tool-bin',type=Path,action='append',default=[]);p.add_argument('--uvm-home',type=Path);p.add_argument('--oss-home',type=Path)
     p.add_argument('--out',type=Path,default=ROOT/'artifacts'/datetime.now(timezone.utc).strftime('regression-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
     args.registry=args.registry.resolve()
@@ -352,6 +371,7 @@ def main():
         if found is None:p.error('Python executable missing: '+getattr(args,name))
         setattr(args,name,os.path.abspath(found))
     if args.uvm_home is not None:args.uvm_home=args.uvm_home.resolve()
+    if args.oss_home is not None:args.oss_home=args.oss_home.resolve()
     try:
         entries=load_registry(args.registry);jobs=make_plan(entries,args)
         if args.list:
