@@ -26,7 +26,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
-| 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
+| 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[PASS後の保持と実行頻度](docs/method/random-search-management.md#過去のpassを恒久除外の理由にしない)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
 | C++参照モデルでRTLを照合する | [検証手順](docs/method/cpp-reference-verification.md)／[ストリーミングFIR](examples/local-cpp-reference/README.md) |
 | SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md) |
 | VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[SoCLibのCABA RAM](examples/local-vci-soclib/README.md) |
