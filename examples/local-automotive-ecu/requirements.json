@@ -1,0 +1,7 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"ECU-COMMAND","goals":["state/arm","state/disarm","command/applied","command/zero","command/max","frame/discard"]},
+ {"id":"ECU-WINDOW","goals":["watchdog/min-service","watchdog/max-service","fault/early","fault/late"]},
+ {"id":"ECU-FRESH","goals":["fault/stale","fresh/deadline-command","fresh/reject-no-refresh"]},
+ {"id":"ECU-CONTAIN","goals":["fault/range","fault/external","fault/multiple","fault/cancel-pending","fault/over-commit"]},
+ {"id":"ECU-RECOVER","goals":["irq/ack-hold","recovery/deny","recovery/separate-arm","reset/pending"]}
+]}

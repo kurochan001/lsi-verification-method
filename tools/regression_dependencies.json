@@ -69,6 +69,13 @@
     "examples/local-auto-mutation/tb.sv",
     "examples/local-auto-mutation/tests/test_mutation.py",
     "examples/local-auto-mutation/vectors.py",
+    "examples/local-automotive-ecu/cases.py",
+    "examples/local-automotive-ecu/model.py",
+    "examples/local-automotive-ecu/requirements.json",
+    "examples/local-automotive-ecu/rtl/automotive_ecu.sv",
+    "examples/local-automotive-ecu/run.py",
+    "examples/local-automotive-ecu/tb/automotive_ecu_tb.sv",
+    "examples/local-automotive-ecu/tests/test_automotive_ecu.py",
     "examples/local-axi-reorder/requirements.json",
     "examples/local-axi-reorder/rtl/reorder.sv",
     "examples/local-axi-reorder/run.py",
@@ -236,6 +243,13 @@
     "examples/local-dsp/run.py",
     "examples/local-dsp/tb/dsp_tb.sv",
     "examples/local-dsp/tests/test_system.py",
+    "examples/local-e2e-guard/cases.py",
+    "examples/local-e2e-guard/model.py",
+    "examples/local-e2e-guard/requirements.json",
+    "examples/local-e2e-guard/rtl/e2e_guard.sv",
+    "examples/local-e2e-guard/run.py",
+    "examples/local-e2e-guard/tb/e2e_guard_tb.sv",
+    "examples/local-e2e-guard/tests/test_e2e_guard.py",
     "examples/local-ecc-memory/requirements.json",
     "examples/local-ecc-memory/rtl/ecc_memory.sv",
     "examples/local-ecc-memory/run.py",
@@ -800,6 +814,7 @@
       "local-arbiter",
       "local-async-fifo",
       "local-auto-mutation",
+      "local-automotive-ecu",
       "local-axi",
       "local-axi-reorder",
       "local-axi4",
@@ -824,6 +839,7 @@
       "local-dma-ownership",
       "local-dram",
       "local-dsp",
+      "local-e2e-guard",
       "local-ecc",
       "local-ecc-memory",
       "local-equivalence",
@@ -946,6 +962,10 @@
     "local-auto-mutation": [
       "local-exploration-common",
       "local-formal-common"
+    ],
+    "local-automotive-ecu": [
+      "local-e2e-guard",
+      "local-motion-io"
     ],
     "local-axi": [
       "local-common"
@@ -1078,6 +1098,9 @@
     ],
     "local-dsp": [
       "local-common"
+    ],
+    "local-e2e-guard": [
+      "local-motion-io"
     ],
     "local-ecc": [
       "local-common"

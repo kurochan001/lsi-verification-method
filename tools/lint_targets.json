@@ -14,6 +14,7 @@
     "examples/local-arbiter/rtl/rr_arbiter.sv",
     "examples/local-async-fifo/rtl/async_fifo.sv",
     "examples/local-auto-mutation/rtl/irq_regs.sv",
+    "examples/local-automotive-ecu/rtl/automotive_ecu.sv",
     "examples/local-axi-reorder/rtl/reorder.sv",
     "examples/local-axi/rtl/axi_lite_regs.sv",
     "examples/local-axi4/rtl/axi4_ram.sv",
@@ -39,6 +40,7 @@
     "examples/local-dma/rtl/apb_dma.sv",
     "examples/local-dram/rtl/dram_controller.sv",
     "examples/local-dsp/rtl/fir2.sv",
+    "examples/local-e2e-guard/rtl/e2e_guard.sv",
     "examples/local-ecc-memory/rtl/ecc_memory.sv",
     "examples/local-ecc/rtl/secded.sv",
     "examples/local-equivalence/rtl/fifo_pair.sv",
@@ -3753,7 +3755,11 @@
       "parameters": {
         "ADC_BITS": 10
       }
-    }
+    },
+    {"id": "local-e2e-guard/e2e_guard/default", "file": "examples/local-e2e-guard/rtl/e2e_guard.sv", "top": "e2e_guard", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv"], "parameters": {}},
+    {"id": "local-e2e-guard/e2e_guard/DATA_ID=13769", "file": "examples/local-e2e-guard/rtl/e2e_guard.sv", "top": "e2e_guard", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv"], "parameters": {"DATA_ID": 13769}},
+    {"id": "local-automotive-ecu/automotive_ecu/default", "file": "examples/local-automotive-ecu/rtl/automotive_ecu.sv", "top": "automotive_ecu", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv", "examples/local-automotive-ecu/rtl/automotive_ecu.sv"], "parameters": {}},
+    {"id": "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5", "file": "examples/local-automotive-ecu/rtl/automotive_ecu.sv", "top": "automotive_ecu", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv", "examples/local-automotive-ecu/rtl/automotive_ecu.sv"], "parameters": {"DATA_ID": 13769, "WINDOW_MIN": 5, "WINDOW_MAX": 13, "FRESH_MAX": 19}}
   ],
   "examples": {
     "local-access-control": {
@@ -5407,7 +5413,9 @@
         "local-spice-cosim/rc_hysteresis/ADC_BITS=10"
       ],
       "reason": "ngspice RC回路を駆動するヒステリシス制御RTLのADC幅構成を静的検査"
-    }
+    },
+    "local-e2e-guard": {"scope": "dut", "targets": ["local-e2e-guard/e2e_guard/default", "local-e2e-guard/e2e_guard/DATA_ID=13769"], "reason": "車載向け通信保護と窓・通信期限監視の教材構成を静的検査"},
+    "local-automotive-ecu": {"scope": "dut", "targets": ["local-automotive-ecu/automotive_ecu/default", "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5"], "reason": "車載向け通信保護と窓・通信期限監視の教材構成を静的検査"}
   },
   "blackbox_sources": {
     "examples/local-connectivity/ip_blackbox.sv": "接続性だけを証明する例の正式なIPポート宣言。内部動作を検査したとは扱わない。別例の同名UARTを誤って結合しない。"

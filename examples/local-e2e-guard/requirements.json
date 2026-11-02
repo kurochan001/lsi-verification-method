@@ -1,0 +1,6 @@
+{"schema_version":1,"revision":1,"requirements":[
+ {"id":"E2E-FRAME","goals":["frame/accepted","frame/crc-reject","frame/id-reject","frame/error-priority","payload/zero","payload/max"]},
+ {"id":"E2E-SEQUENCE","goals":["frame/sequence-reject","frame/repeat","frame/gap","frame/wrap"]},
+ {"id":"E2E-FLOW","goals":["flow/input-stall","flow/output-stall","flow/replace"]},
+ {"id":"E2E-RESET","goals":["reset/pending","flush/pending","reset/restart"]}
+]}

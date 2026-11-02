@@ -40,6 +40,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | ネットワークIPからCPU付きNICへ進む | [ネットワークの検証手順](docs/method/network-verification.md)／[ARP・UDPエコーIP](examples/local-network-echo/README.md)／[ネットワークSoC](examples/local-network-soc/README.md) |
 | 航空宇宙・高信頼の故障反応を学ぶ | [検証手順](docs/method/aerospace-verification.md)／[TMRレジスタ](examples/local-tmr/README.md)／[FDIRサブシステム](examples/local-fdir/README.md) |
 | ロボティクスの計測・制御・駆動を学ぶ | [検証手順](docs/method/robotics-verification.md)／[PWM・エンコーダ](examples/local-motion-io/README.md)／[1軸の閉ループ](examples/local-motion-control/README.md) |
+| オートモーティブの通信保護・故障反応を学ぶ | [検証手順](docs/method/automotive-verification.md)／[E2Eガード](examples/local-e2e-guard/README.md)／[小規模ECU](examples/local-automotive-ecu/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
 | 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
@@ -205,6 +206,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
 | <a id="航空宇宙高信頼システム"></a>[航空宇宙・高信頼システム](examples/README.md#航空宇宙高信頼システム) | TMR、ECC・スクラブ、故障注入、FDIR、期限監視、保守と復帰 |
 | <a id="ロボティクスモーション制御"></a>[ロボティクス・モーション制御](examples/README.md#ロボティクスモーション制御) | PWM、直交エンコーダ、固定小数点PI、閉ループ、期限・進捗監視 |
+| <a id="オートモーティブ"></a>[オートモーティブ](examples/README.md#オートモーティブ) | E2E通信保護、窓付きウォッチドッグ、指令の更新期限、出力抑止、故障保持と復帰 |
 | <a id="アナログデジタル協調"></a>[アナログ・デジタル協調](examples/README.md#アナログデジタル協調) | ngspiceの実RC回路、理想ADC／DAC、RTL電圧制御、時刻同期、解析解との比較 |
 | <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
@@ -229,6 +231,8 @@ macOSのnightly全103ジョブ（既存の全12フォーマル例・23構成・1
 モーション制御2例は、Verilatorでも34ケース（通常25・変異9）を照合しました。新12構成のlintは警告0件で、既存の指摘487件は増減なしです。
 
 ロボティクス・モーション制御分野には、相補PWM・直交エンコーダの単体例と、実際のPWM出力で簡易プラントを動かす1軸の閉ループ例を追加しました。固定小数点PI、追従窓、負荷変動、停止・再開、期限超過を自動確認します。正規化モデルと実機の評価範囲は[検証手順](docs/method/robotics-verification.md)、実行条件は[追加記録](PROVENANCE.md#robotics-20261101)を参照してください。
+
+オートモーティブ分野には、CRC・Data ID・シーケンス番号による通信保護と、窓付きウォッチドッグ・通信期限を組み合わせる小規模ECUを追加しました。不正データの破棄、故障と反映の競合、未完了指令の取消、復帰の許可を自動検査します。[検証手順](docs/method/automotive-verification.md)と[追加記録](PROVENANCE.md#automotive-20261103)に、教材の仕様と車載規格との対応範囲を記載しています。
 
 最終レビューでは、セルフテスト中の入力変更と、文書の解析後・入力記録前の保存し直しを見逃す問題を修正しました。集計案内と分野別の点検表を更新し、ランダム検証も目的・学習項目から直接選べるようにしています。[今回の追加修正](PROVENANCE.md#final-review-followup-20261102)と[前回の確認記録](PROVENANCE.md#final-review-20261102)に、再現試験・入力の版・実行範囲を記録しています。
 

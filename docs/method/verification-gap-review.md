@@ -67,7 +67,7 @@
 | SCOPE-PROTOCOL-DATA / SECURITY | [SHA-256](../../examples/local-sha256/README.md) | 0〜119バイトのパディングとブロック連鎖、hashlibとのダイジェスト照合。HMAC・鍵管理・物理的な漏えい・暗号認証は対象外 |
 | SCOPE-PROTOCOL-DATA / PERFORMANCE | [パケットスイッチ](../../examples/local-packet-switch/README.md) | ヘッダーによる経路保持、パケット単位の仲裁と占有、入力の空白・出力待ち。ネットワーク全体のデッドロック回避は対象外 |
 
-分野別の例では、IP単体の判定を、接続・ソフトウェア・故障反応まで追跡する検証へつなげます。[画像処理](image-processing-verification.md)、[ネットワーク](network-verification.md)、[航空宇宙](aerospace-verification.md)、[ロボティクス](robotics-verification.md)の手順も併せて参照してください。
+分野別の例では、IP単体の判定を、接続・ソフトウェア・故障反応まで追跡する検証へつなげます。[画像処理](image-processing-verification.md)、[ネットワーク](network-verification.md)、[航空宇宙](aerospace-verification.md)、[ロボティクス](robotics-verification.md)、[オートモーティブ](automotive-verification.md)の手順も併せて参照してください。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |
 | --- | --- | --- |
@@ -80,7 +80,10 @@
 | SCOPE-PROTOCOL-DATA / PERFORMANCE | [PWM・直交エンコーダ](../../examples/local-motion-io/README.md) | 相補出力、デッドタイム、設定反映、ノイズ・不正遷移・位置折返し |
 | SCOPE-PERFORMANCE / FAULT-RECOVERY | [1軸の閉ループ制御](../../examples/local-motion-control/README.md) | PI・実PWMで動くプラント、追従窓、負荷、演算期限、停止・再開。正規化モデルであり、実機の制動評価は対象外 |
 
-これらの実行例を加えても、実プロセス・配線後のSTA、物理的なCDC/RDC成立性、DFTの実装制約、DRC/LVS、AMS、シリコン評価を確認済みにはしません。対象製品の要求があれば、以下の計画と製品側の証跡へ展開します。
+| SCOPE-PROTOCOL-DATA / FAULT-RECOVERY | [E2E通信保護](../../examples/local-e2e-guard/README.md) | CRC・Data ID・順序・待ち・初期化。CANコントローラーやAUTOSARプロファイルへの適合は対象外 |
+| SCOPE-FAULT-RECOVERY / PERFORMANCE | [小規模ECU](../../examples/local-automotive-ecu/README.md) | 窓付きウォッチドッグ、指令の更新期限、不正フレームによる延長の禁止、取消・出力抑止、許可付き復帰 |
+
+これらの実行例を加えても、実プロセス・配線後のSTA、物理的なCDC/RDC成立性、DFTの実装制約、DRC/LVS、実デバイスを使うAMS、シリコン評価を確認済みにはしません。対象製品の要求があれば、以下の計画と製品側の証跡へ展開します。
 
 ## 2. 静的検査と構成ごとの読み込み
 

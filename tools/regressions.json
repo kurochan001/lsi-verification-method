@@ -1972,6 +1972,32 @@
         "verilator",
         "lsi-ngspice-config"
       ]
+    },
+    {
+      "id": "local-e2e-guard",
+      "script": "examples/local-e2e-guard/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-automotive-ecu",
+      "script": "examples/local-automotive-ecu/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
     }
   ]
 }
