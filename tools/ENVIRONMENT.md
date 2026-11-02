@@ -90,7 +90,7 @@ python3 tools/setup_oss_cad.py --check artifacts/toolchains/oss/oss-cad-suite
 
 ## SystemCとSoCLibの例
 
-[VCIの実SoCLib例](../examples/local-vci-soclib/README.md)は、Accellera公式の[SystemC 2.3.4](https://github.com/accellera-official/systemc/tree/5fc1469339775b54b1fcc2020ac744a58be5b50e)を使います。`build_native.py --profile full`は固定コミットからC++17・POSIXスレッド・静的ライブラリーとして構築し、`install/include/`、`install/lib/libsystemc.a`、`install/bin/lsi-systemc-config`へ配置します。`--tool-bin .../install/bin`を診断・全例実行へ渡してください。`smoke`環境の構築には含めません。
+[SoCLibを使うVCI例](../examples/local-vci-soclib/README.md)は、Accellera公式の[SystemC 2.3.4](https://github.com/accellera-official/systemc/tree/5fc1469339775b54b1fcc2020ac744a58be5b50e)を使います。`build_native.py --profile full`は固定コミットからC++17・POSIXスレッド・静的ライブラリーとして構築し、`install/include/`、`install/lib/libsystemc.a`、`install/bin/lsi-systemc-config`へ配置します。`--tool-bin .../install/bin`を診断・全例実行へ渡してください。`smoke`環境の構築には含めません。
 
 SoCLibコード中のGNU拡張に合わせ、例は`-std=gnu++17`でコンパイルします。SystemC側のC++規格も17でそろえています。`lsi-systemc-config --prefix`は配置先、`--version`は構築対象の版を返します。full診断ではこの表示に加え、実ライブラリーをリンクしたSystemCプログラムの起動と版も確認します。
 

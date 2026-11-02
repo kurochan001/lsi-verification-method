@@ -1565,9 +1565,9 @@ Qualityの保存成果物`documents-41351097625-1`（artifact ID `13100673100`�
 
 
 <a id="vci-soclib-20261102"></a>
-## VCIバスと実SoCLib CABAモデル（2026-11-02）
+## VCIバスとSoCLibのCABAモデル（2026-11-02）
 
-`examples/local-vci-soclib/`に、実SoCLibの`VciRam`・`VciTargetFsm`・`VciSignals`を直接使うSystemC例を追加しました。32／64ビット、2つの256バイトRAM領域、連続1／2／4セル、部分書込み、ID、コマンド／応答の保持、未割当エラー、途中リセットを検査します。受付済みの未完了パケットは1件です。CPU・インターコネクトを含むSoC全体や合成可能RTL、VCI規格全体の適合性を確認する例ではありません。
+`examples/local-vci-soclib/`に、SoCLibの`VciRam`・`VciTargetFsm`・`VciSignals`を直接使うSystemC例を追加しました。32／64ビット、2つの256バイトRAM領域、連続1／2／4セル、部分書込み、ID、コマンド／応答の保持、未割当エラー、途中リセットを検査します。受付済みの未完了パケットは1件です。CPU・インターコネクトを含むSoC全体や合成可能RTL、VCI規格全体の適合性を確認する例ではありません。
 
 収録元は[公式SoCLib SVN revision 2672](https://www.soclib.fr/svn/!svn/bc/2672/trunk/soclib/)です。`upstream/`には必要な36ソースファイルと`COPYING.lgpl`を収録しました。全対象はLGPL-2.1-onlyで、元の著作権・ライセンス表示を保持します。原版と収録版のSHA-256、変更内容は[upstream.json](examples/local-vci-soclib/upstream.json)にあります。`soclib_endian.h`は同じ公式SVNの通常URLから取得し、取得先を個別に記録しています。モデルの粒度とVCI規則は[公式CABA規則](https://www.soclib.fr/trac/dev/wiki/WritingRules/Caba)・[公式VCI説明](https://www.soclib.fr/trac/dev/wiki/VciProtocol)を参照しました。
 
@@ -1575,4 +1575,13 @@ Qualityの保存成果物`documents-41351097625-1`（artifact ID `13100673100`�
 
 教材独自のPythonバイト単位モデル・SystemCドライバー／チェッカー・ランナー・要求・文書・テストはApache-2.0 WITH LLVM-exceptionです。外部の[SystemC 2.3.4](https://github.com/accellera-official/systemc/tree/5fc1469339775b54b1fcc2020ac744a58be5b50e)はApache-2.0で、固定コミットから出力先へ静的ビルドします。SoCLibのLGPLコードへルートのライセンスを付け替えていません。生成物はGit管理に含めません。
 
-nightlyの計画は23判定で、幅ごとの13到達目標、固定試験、128操作×3 seed、バイトイネーブル無視・SRCID破壊の検出、64ビット原版の反例を含みます。SystemCの実ライブラリーとヘッダーのハッシュも保存・再照合します。検証実績は以下へ追記します。
+nightlyの計画は23判定で、幅ごとの13到達目標、固定試験、128操作×3 seed、バイトイネーブル無視・SRCID破壊の検出、64ビット原版の反例を含みます。SystemCの実ライブラリーとヘッダーのハッシュも保存・再照合します。実行コードは`85be465998fb48ae14f539be781eb75e6282c772`です。
+
+macOS arm64では全104ジョブのnightlyを新規実行し、同じ現行計画に対する証跡集約も合格しました。フォーマル12例の175タスクは、通常の証明・到達性・意図した反例を含め、予定結果との一致を確認しています。VCIは23判定、通常14試験、意図した不具合5試験の検出が合格し、32／64ビットそれぞれ13目標を達成しました。全セルフテストは125グループ・1,039テスト、文書は211文書・727表・196図・212用語・95 FAQ・412判定が合格しています。Verilator lintは314対象が合格し、既存の487警告の分類は変更していません。SystemCの実コンパイル・起動を含むfull環境診断も35判定が合格しました。
+
+[Quality 41459926821](https://github.com/kurochan001/lsi-verification-method/actions/runs/41459926821)は文書・ツール122テスト・既定smokeが合格しました。保存されたZIPのダイジェスト、211文書の読込みハッシュ、リポジトリ入力1,051ファイルのハッシュを実際の内容と照合しました。ローカルの完全な証跡は`artifacts/vci-soclib-20261102/`です。
+
+
+[Affected verification 41459926818](https://github.com/kurochan001/lsi-verification-method/actions/runs/41459926818)では、Ubuntu 24.04上で固定ソースからSystemCを含むネイティブ環境を新規構築し、full環境診断・全104ジョブsmoke・証跡集約が合格しました。保存ZIPのダイジェストと651ソース・延べ1,530ハッシュを照合しています。VCIの19判定、通常10試験と意図した不具合5試験の検出、幅ごとの13目標、原版の64ビット反例を確認しました。SystemCの全8ビルド段階とC++17・静的リンクの構築条件、実ライブラリー・ヘッダー等230ファイルのハッシュ記録が保存され、集約対象にも含まれることを確認しています。
+
+最終の追記は用語・待ち時間・Loaderの寿命・判定件数の説明と確認実績です。RTL・SystemC・Pythonの検証コードは実行コードから変更していません。回路検証の再実行結果と、その後の文書更新を分けて記録しています。

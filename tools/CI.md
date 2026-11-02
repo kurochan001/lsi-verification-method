@@ -43,4 +43,4 @@ gh run list --workflow nightly.yml --limit 5
 
 全例の確認にはNightlyの完了を待ちます。Qualityだけの成功は、全例・全フォーマルの成功を意味しません。マージ時に必須にするチェック、PRの承認、Draft、ブランチ保護はGitHub側の運用設定です。このワークフローを置くだけでは設定されません。初回の実行結果とローカルの確認記録は[由来](../PROVENANCE.md#quality-automation-20261101)へ残します。
 
-SoCLibの例では`systemc-source.json`も保存し、実際にリンクした静的ライブラリー・使用ヘッダー・設定コマンドのハッシュを全体集約時に再照合します。実SoCLib CABAモデルの検証結果と、SystemVerilog RTLのlint・コードカバレッジは別に扱います。
+SoCLibの例では`systemc-source.json`も保存し、実際にリンクした静的ライブラリー・使用ヘッダー・設定コマンドのハッシュを全体集約時に再照合します。SoCLibのCABAモデルの検証結果と、SystemVerilog RTLのlint・コードカバレッジは別に扱います。

@@ -1,4 +1,4 @@
-# VCIバスと実SoCLib CABAモデル
+# VCIバスとSoCLibのCABAモデル
 
 SoCLibの`VciRam`と`VciSignals`を実際にSystemCで動かし、VCIの読書き・パケット・待ち・エラー・リセットを検証する例です。外部部品を取り込む際の版固定、不具合の再現、修正後の確認も扱います。[検証の考え方](../../docs/method/vci-soclib-verification.md)、[バス例一覧](../README.md#バスレジスタアドレス)も参照してください。
 
@@ -7,11 +7,11 @@ SoCLibの`VciRam`と`VciSignals`を実際にSystemCで動かし、VCIの読書�
 ```mermaid
 flowchart LR
   accTitle: SoCLib VCI RAMの検証構成
-  accDescr: Pythonで生成した操作と期待値をSystemCテストベンチが読み、実SoCLibの信号線とRAMを駆動して照合する。
+  accDescr: Pythonで生成した操作と期待値をSystemCテストベンチが読み、SoCLibの信号線とRAMを駆動して照合する。
   P["Pythonのバイト単位RAMモデル"] --> V["操作列・期待値・件数"]
   V --> T["SystemCドライバー／チェッカー"]
-  T <-->|"VCIコマンド・応答"| S["実SoCLib VciSignals"]
-  S <--> R["実SoCLib VciRam／VciTargetFsm"]
+  T <-->|"VCIコマンド・応答"| S["SoCLib VciSignals"]
+  S <--> R["SoCLib VciRam／VciTargetFsm"]
   T --> E["判定ログ・VCD・JUnit・ハッシュ"]
 ```
 
@@ -22,9 +22,11 @@ flowchart LR
 | 転送 | 1／2／4セルの連続パケット。読出しは1コマンドから複数応答、書込みは複数コマンドから1応答 |
 | バイトイネーブル | 単一セル書込みの各バイト。読出しと複数セル転送は全バイト有効 |
 | ID | SRCID 4ビット、TRDID 3ビット、PKTID 2ビット。応答での一致を検査 |
-| 待ち | 書込みセル間の空白0〜4サイクル、各応答の受付待ち0〜5サイクル |
+| 待ち | 書込みセル間の空白0〜4サイクル、各応答を観測した後の追加待ち0〜5サイクル |
 | エラー | 未割当`0x3000`への単一セル読書きでエラー応答 |
 | リセット | RAMをゼロ初期化し、受付途中の書込み／応答待ちの読出しを中断。復帰後の残留応答も検査 |
+
+応答を待つ間は`rspack=0`とし、`rspval`を観測してから指定した追加待ちを入れて受け付けます。
 
 受付済みの未完了パケットは1件です。読出し応答を待つ間に次コマンドを提示し、ターゲットが受け付けるまでコマンドが保持されることを検査します。複数IDの並行受付や順序入替えは扱いません。
 
@@ -60,7 +62,9 @@ python3 tools/run_regression.py --example local-vci-soclib --profile nightly \
 - [5要求・13目標](requirements.json)を**幅ごとに全達成**する必要があります。手続き型の到達記録であり、SystemVerilogの`covergroup`やRTLコードカバレッジの測定値ではありません。
 - バイトイネーブル無視とSRCID破壊の変異を各幅で検出します。64ビットでは元のSoCLibの不具合も再現します。ビルド失敗・タイムアウト・別の検査での失敗は、期待した不具合の検出として数えません。
 
-smokeは19、nightlyは23の予定判定を完了して合格します。これは転送数・要求数とは別の集計です。
+smokeは19、nightlyは23の予定判定を完了して合格します。これは転送数・要求数とは別の集計です。各試験の`checks`はリセットを含む操作列の行数であり、実クロック数や信号単位の比較回数ではありません。
+
+初期化に使う`Loader`は`VciRam`が参照を保持します。テストベンチではRAMより先に生成し、RAMの破棄後まで存続するようにしています。
 
 ## 元のSoCLibで見つかった64ビット部分書込みの問題
 

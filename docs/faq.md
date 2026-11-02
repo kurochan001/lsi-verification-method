@@ -533,7 +533,7 @@ RTLで指定した反転箇所・時刻・個数に対する、論理的な反�
 
 ### Q93. SoCLibの例は、CPUを含むSoCを起動しますか
 
-今回の[VCI例](../examples/local-vci-soclib/README.md)は実SoCLibのCABA RAMとVCI信号を使う最小構成です。SystemCだけで起動でき、CPU・VCIインターコネクト・クロスコンパイラーは含みません。CPU付き構成へ進むときの追加観点は[検証手順](method/vci-soclib-verification.md)に記載しています。
+今回の[VCI例](../examples/local-vci-soclib/README.md)はSoCLibのCABA RAMとVCI信号を使う最小構成です。SystemCだけで起動でき、CPU・VCIインターコネクト・クロスコンパイラーは含みません。CPU付き構成へ進むときの追加観点は[検証手順](method/vci-soclib-verification.md)に記載しています。
 
 ### Q94. VCIでもバックプレッシャーを確認できますか
 
