@@ -46,7 +46,10 @@ flowchart TD
 - [ネットワークとパケット](#16-ネットワークとパケット)
 - [航空宇宙・高信頼システム](#17-航空宇宙高信頼システム)
 - [ロボティクス・モーション制御](#18-ロボティクスモーション制御)
-- [オートモーティブ](#19-オートモーティブ)
+- [VCI・SoCLib・SystemC](#19-vcisoclibsystemc)
+- [C++参照モデル・SPICE協調](#20-c参照モデルspice協調)
+- [オートモーティブ](#21-オートモーティブ)
+- [外部のDV環境](#22-外部のdv環境)
 - [表記の参考資料](#表記の参考資料)
 
 ## 1. 基本用語
@@ -415,7 +418,9 @@ flowchart TD
 
 参照：[C++モデルの検証手順](method/cpp-reference-verification.md)、[SPICE協調の検証手順](method/spice-cosimulation.md)。
 
-## 19. オートモーティブ
+<a id="19-オートモーティブ"></a>
+
+## 21. オートモーティブ
 
 | 用語 | 意味・この資料での使い方 |
 | --- | --- |
@@ -441,6 +446,19 @@ flowchart TD
 | FTTI（Fault Tolerant Time Interval） | 安全機構が作用しない条件で、故障の発生から危険事象に至り得るまでの最短の時間間隔。検出時間だけでなく、必要な故障反応の時間を考える際の基準 |
 
 [車載向けの検証手順](method/automotive-verification.md)と[ISO 26262の概要](https://www.iso.org/publication/PUB200262.html)、[故障と時間関係の解説](https://documentation.infineon.com/aurixtc3xx/docs/owq1745576218449)を参照してください。SecOCの暗号的なフレッシュネス値と、この教材の指令更新期限は同一の実装ではありません。
+
+## 22. 外部のDV環境
+
+| 用語 | 意味・検証で確認すること |
+| --- | --- |
+| ISS（Instruction Set Simulator） | 命令セットの動作をモデル化するシミュレーター。RTLとの比較ではISA・XLEN・CSR・例外・割り込み・メモリーの前提と、モデルの版・forkをそろえる |
+| RVFI（RISC-V Formal Interface） | 退役した命令やレジスター・メモリーの更新情報等を出力する検証インターフェース。フォーマルに加え、シミュレーションでのISS比較にも使われる。実装ごとの拡張・比較順序も確認する |
+| RISCV-DV | RISC-Vの命令列を生成する検証基盤。SVによる生成器とPythonの実行制御を含む。CPUのRTLを動かすツールと、選んだ生成器の実行条件を分けて確認する |
+| タンデム検証（Tandem Verification） | RTLの命令退役情報等を参照モデルの実行と対応付けて比較する方式。比較する状態・例外・割り込みの同期条件を定め、実装のサイクル一致とは区別する |
+| DVSim | OpenTitan等で使うEDAフローの実行・結果集計ツール。実行設定からテスト・seed・ツールを選ぶ。計画メタデータだけを照会するTestplantoolとは役割が異なる |
+| testpoint（検証計画の項目） | OpenTitanのHjson計画で、機能・確認内容と対応テスト等を記述する単位。SVのcoverpointや実行済み試験数とは異なり、記載や抽出だけでは要求達成を示さない |
+
+参照：[Ibex DV・CVA6・OpenTitanの読み方](method/open-source-dv-environments.md)、[RVFIの仕様](https://yosyshq.readthedocs.io/projects/riscv-formal/en/latest/rvfi.html)。固定版の実コードから、構成による比較の有効化・TLM接続・依存する参照モデルまで追います。
 
 ## 表記の参考資料
 

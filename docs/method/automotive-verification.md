@@ -123,7 +123,7 @@ sequenceDiagram
 
 ## 5. 製品の保証活動へつなぐ
 
-[ISO 26262の概要](https://www.iso.org/publication/PUB200262.html)を入口に、車両側の危険事象と要求、ハードウェアとソフトウェアの責務、採用する安全機構、分析・検証の証跡を対応付けます。HARA・ASIL・FMEDA・FTTIは[用語集](../glossary.md#19-オートモーティブ)へまとめています。
+[ISO 26262の概要](https://www.iso.org/publication/PUB200262.html)を入口に、車両側の危険事象と要求、ハードウェアとソフトウェアの責務、採用する安全機構、分析・検証の証跡を対応付けます。HARA・ASIL・FMEDA・FTTIは[用語集](../glossary.md#21-オートモーティブ)へまとめています。
 
 | 計画に残すもの | 教材から製品へ追加する確認 |
 | --- | --- |

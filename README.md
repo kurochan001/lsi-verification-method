@@ -7,7 +7,7 @@
 
 # LSI検証手法
 
-LSIの仕様から検証を計画し、刺激・観測・期待値の比較・カバレッジ・証跡を対応付けて、検証の完了を判断するためのリポジトリです。検証手順書、ローカルで動くRTLと検証環境、記録の雛形、手法の適用事例を収録しています。
+LSIの仕様から検証を計画し、刺激・観測・期待値の比較・カバレッジ・証跡を対応付けて、検証の完了を判断するためのリポジトリです。検証手順書、ローカルで動くRTLと検証環境、記録の雛形、手法の適用事例、実プロジェクトのDV環境を読む参照例を収録しています。
 
 例えば、FIFOなら「空や満杯で同時に読書きを要求したらどうなるか」、割り込み回路なら「イベントとクリアが重なったらどちらを優先するか」を仕様から読み取り、入力・期待結果・確認条件へ落とし込みます。実行例では、正常な動作の確認に加え、意図的な誤実装を検出できるか、必要な条件を試せているかも確認します。
 
@@ -35,6 +35,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 期限のない最終完了を証明する | [公平性と無限待機の反例](examples/local-liveness/README.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
+| 実プロジェクトのDV環境を読む | [Ibex DV・CVA6・OpenTitanの案内](docs/method/open-source-dv-environments.md)／[参照例の一覧](examples/README.md#外部のオープンソースdv環境参照例) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
 | 画像処理IPからCPU付きSoCへ進む | [画像処理の検証手順](docs/method/image-processing-verification.md)／[Sobel単体IP](examples/local-image-sobel/README.md)／[ROM起動SoC](examples/local-image-soc/README.md) |
 | ネットワークIPからCPU付きNICへ進む | [ネットワークの検証手順](docs/method/network-verification.md)／[ARP・UDPエコーIP](examples/local-network-echo/README.md)／[ネットワークSoC](examples/local-network-soc/README.md) |
@@ -175,6 +176,7 @@ flowchart TD
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
 | ランダム検証を学ぶ | [計画と完了判定](docs/method/constrained-random-verification.md)／[PythonのFIFO例](examples/local-fifo/README.md)／[SV・UVMの実行例](examples/local-uvm-random/README.md) | 固定ケースとの併用、制約の合法性、seedと入力列の再現、独立比較、未達への刺激調整と失敗列の縮小 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
+| 実際のCPU・IPのDVへ進む | [3環境の読み方](docs/method/open-source-dv-environments.md)／[Ibex DV](examples/reference-ibex-dv/README.md)／[CVA6](examples/reference-cva6-dv/README.md)／[OpenTitan](examples/reference-opentitan-dv/README.md) | 計画・設定・agent・RVFI・ISS比較を追う。参照例とフルDVの実行確認を区別する |
 | 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
 | 複数agentを協調させる | [APB設定＋GAINデータパス](examples/local-uvm-coordination/README.md) | virtual sequence、同時設定と入力の期待値、観測順序、待ち・取消、native bin |
 | UVMの子環境を上位で再利用する | [二つのIPと階層RAL](examples/local-uvm-hierarchy/README.md) | 共通driver・子のpassive観測、submap、配置変更、上位virtual sequence |

@@ -12,6 +12,8 @@
 
 全例の準備には`full`を使います。Pythonパッケージの版とネイティブツールのソース版は[`environment.json`](environment.json)、インストール対象は[文書用](docs-requirements.txt)・[シミュレーション用](simulation-requirements.txt)・[フォーマル用](../examples/local-fifo-formal/tools-requirements.txt)に固定しています。OS・コンパイラー・すべての推移依存まで固定したコンテナではありません。
 
+[Ibex DV・CVA6・OpenTitanの参照例](../docs/method/open-source-dv-environments.md)は、上流を読むための案内です。`full`プロファイルには、そのフルDVのシミュレーター・ISS・全依存の準備を含めません。[OpenTitanの計画ツール演習](../examples/reference-opentitan-dv/README.md#商用ツールを使わない小演習)は、別の専用venvと固定依存を使う手動手順です。
+
 ## 2. OS側の依存を用意する
 
 文書だけならPython・Git・Node.js・npmを用意し、次節へ進めます。全例ではC/C++コンパイラー、make、LLVMとネイティブEDAツールも必要です。CIはUbuntu 24.04を基準に、次の開発用パッケージからソースビルドします。

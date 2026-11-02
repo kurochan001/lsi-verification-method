@@ -1644,3 +1644,20 @@ READMEと全例一覧、車載2例からの導線を更新し、用語10項目�
 変更はMarkdown文書だけで、RTL・モデル・要求・構成・検証コードは変更していません。証跡はGit管理外の`artifacts/automotive-reliability-20261103/`へ保存します。文書検査・ツールのセルフテストと、前節のnightly全108ジョブの保存結果を現行入力に対して再照合し、回路の再実行と文書更新の確認を区別します。
 
 文書220件・745表・206 Mermaid図・242用語・109 FAQの431判定と、ツール125テストが合格しました。全108ジョブの保存結果の再照合も合格しています。最終記録の追記後の文書・ツール入力は、`docs-final/`・`tools-final/`で再確認します。
+
+<a id="upstream-dv-20261103"></a>
+## Ibex DV・CVA6・OpenTitanの参照例（2026-11-03）
+
+起点は`ac7f01112f279445f327969e4473d73dbcb0593c`です。[3環境の案内](docs/method/open-source-dv-environments.md)と、[Ibex DV](examples/reference-ibex-dv/README.md)・[CVA6](examples/reference-cva6-dv/README.md)・[OpenTitan](examples/reference-opentitan-dv/README.md)の読解例を追加しました。計画・設定・agent・RVFI・参照モデル・比較の有効化条件を追う順序と、小規模教材からの対応を記載しています。ソース公開と各経路のツール条件、Verilatorのソフトウェア実行とフルUVM、SV命令生成とCPUのRTL実行を分けて説明しました。
+
+実際に取得した読解対象は、lowRISC/ibexの`f4515520c0045bb8ef1e72d46ed82499a6ac5f18`、openhwfoundation/cva6の`742dc82a0c706e0a3bfb98b709fd3ee06d50d12a`、lowRISC/opentitanの`0f8469f729ce8e84993c9987f90af3589172c79d`です。CVA6は旧openhwgroup URLからの移転を確認し、取得できたmasterを固定しています。この版のREADMEが案内する移行先を実行確認した結果ではありません。OpenTitanは固定版の`pyproject.toml`にあるDVSim 1.52.0の指定と、別の`util/testplantool/`の配置を確認しました。
+
+商用ツールを使わない手動演習として、OpenTitanの実TestplantoolをPython 3.13.15・macOS arm64で起動しました。click 8.4.2・hjson 3.1.0・Mako 1.3.12・MarkupSafe 3.0.3を専用venvへ導入し、取得物のSHA-256も上流`uv.lock`へ照合しました。独自のトップ計画と子計画の3 testpointからCSVを出力し、V1かつDEVの2点の名前・選択フィールドを照合しています。RTL・UVM・ISS・チップは実行せず、計画の点数を試験合格数やカバレッジへ加算していません。
+
+確認版では`query --fields si_stage`が`stage`も返す不具合を再現しました。文字列をそのままリスト用APIへ渡すことが原因で、比較用コピーでリストへ分割する修正を適用し、出力を再照合しました。CLIのSHA-256は原版`10f93df5d698778e86f529ca34ddad34f7dc56c37852b744d2c716136fee51d6`、修正版`c25904043ed05275c458a52ddb1e471b7c5e6c1350f86490fb9794bdd0c07079`です。原版のGitチェックアウトは変更せず、コピーへ著作権表示とApache-2.0のLICENSE・NOTICEを保持しました。上流への修正送付・反映は行っていません。
+
+証跡はGit管理外の`artifacts/upstream-dv-20261103/`です。`exercise/summary.json`はhelp・CSV・条件照会・修正前後・空白付き選択・全フィールドを含む7回のCLI実行、`readme-replay/summary.json`はREADMEの3つのシェルブロックをそのまま抽出した5回のCLI実行の結果です。固定版の取得、3点の出力、条件選択、不具合再現、修正後の結果、原版と修正版のハッシュの一致を確認しました。
+
+README・全例一覧・環境準備・リグレッションからの導線と、用語6項目・FAQ 5問を追加しました。用語集の重複していた章番号と、用語集・FAQの目次に不足していた既存分野の入口も修正しています。変更はMarkdownだけで、上流ソースの複製や新しいHDLランナーはGit管理へ追加しません。参照例3件は130登録項目・108ルートジョブへ加算せず、文書検査・ツールのセルフテスト・前節までの全108ジョブの保存結果の監査で確認します。
+
+`source-reference-audit.json`で固定版3件のクリーンな取得と、案内する30のGitオブジェクトを照合しました。文書検査は224文書・754表・207 Mermaid図・248用語・114 FAQの436判定、ツールのセルフテストは125テストが合格しています。`audit-carried/`では、既存nightly全108ジョブの保存結果を現行計画・入力に照合して合格しました。回路を新しく再実行した結果とは区別します。追加図も描画し、改行と接続を確認しました。最終追記・図調整後も、同じ出力先の文書・ツール検査で入力と読取り版のハッシュを記録し、再照合しています。
