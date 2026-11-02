@@ -63,3 +63,5 @@ vvp artifacts/failure-reduction/axis-m0.vvp \
 ```
 
 バイナリを再利用する場合も、元のソース・ツール版のマニフェストを合わせて保管します。新しい版への恒久リグレッションは`reproducer.json`からベクトルを生成し直し、その版でビルドして確認します。
+
+保存した縮小列をケース集へ移し、現在のソースからビルドして再生する手順は、[固定入力の再生演習](../../docs/method/random-search-management-walkthrough.md#2-axi4-streamの失敗を保存し固定入力として再生する)を参照してください。[探索管理の解説](../../docs/method/random-search-management.md)では、重複の定義、元の失敗と全試行の保全、恒久回帰へ登録する条件を説明しています。

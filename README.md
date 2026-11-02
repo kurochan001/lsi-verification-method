@@ -26,6 +26,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
+| 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
 | C++参照モデルでRTLを照合する | [検証手順](docs/method/cpp-reference-verification.md)／[ストリーミングFIR](examples/local-cpp-reference/README.md) |
 | SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md) |
 | VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[SoCLibのCABA RAM](examples/local-vci-soclib/README.md) |
@@ -175,6 +176,7 @@ flowchart TD
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |
 | ランダム検証を学ぶ | [計画と完了判定](docs/method/constrained-random-verification.md)／[PythonのFIFO例](examples/local-fifo/README.md)／[SV・UVMの実行例](examples/local-uvm-random/README.md) | 固定ケースとの併用、制約の合法性、seedと入力列の再現、独立比較、未達への刺激調整と失敗列の縮小 |
+| ランダム探索の成果を次の検証へ残す | [重複・再現・回帰化の手順](docs/method/random-search-management.md)／[実行する演習](docs/method/random-search-management-walkthrough.md) | seed・入力・bin集合の違い、全試行の保存、失敗入力の縮小と固定、新規ビルドでの再生 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
 | 実際のCPU・IPのDVへ進む | [3環境の読み方](docs/method/open-source-dv-environments.md)／[Ibex DV](examples/reference-ibex-dv/README.md)／[CVA6](examples/reference-cva6-dv/README.md)／[OpenTitan](examples/reference-opentitan-dv/README.md) | 計画・設定・agent・RVFI・ISS比較を追う。参照例とフルDVの実行確認を区別する |
 | 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
