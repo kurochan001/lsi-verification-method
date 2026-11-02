@@ -11,10 +11,11 @@ import shutil
 import sys
 import quality_common as Q
 import oss_cad as O
+import ngspice as N
 HERE=Path(__file__).resolve().parent
 DOC_TOOLS={'git':['--version'],'node':['--version'],'npm':['--version']}
 SIM_TOOLS={'iverilog':['-V'],'vvp':['-V'],'verilator':['--version'],'verilator_coverage':['--version'],'c++':['--version'],'cc':['--version'],'make':['--version']}
-FORMAL_TOOLS={'yowasp-yosys':['--version'],'yowasp-sby':['--version'],'yowasp-yosys-smtbmc':['--help'],'yowasp-yosys-witness':['--help'],'z3':['--version'],'sta':['-version'],'llvm-mc':['--version'],'llvm-objcopy':['--version'],'lsi-systemc-config':['--version']}
+FORMAL_TOOLS={'yowasp-yosys':['--version'],'yowasp-sby':['--version'],'yowasp-yosys-smtbmc':['--help'],'yowasp-yosys-witness':['--help'],'z3':['--version'],'sta':['-version'],'llvm-mc':['--version'],'llvm-objcopy':['--version'],'lsi-systemc-config':['--version'],'lsi-ngspice-config':['--version']}
 def tool_plan(profile):return {**(DOC_TOOLS if profile in ('docs','full') else {}),**(SIM_TOOLS if profile in ('smoke','full') else {}),**(FORMAL_TOOLS if profile=='full' else {})}
 def version_ok(name,output):
     if name=='node':return bool((m:=re.fullmatch(r'v(\d+)\.\d+\.\d+\s*',output)) and int(m[1])>=22)
@@ -24,12 +25,14 @@ def version_ok(name,output):
     if name=='yowasp-yosys':return bool(re.search(r'Yosys 0\.70\b',output))
     if name=='z3':return bool(re.search(r'Z3 version 4\.15\.3\b',output))
     if name=='lsi-systemc-config':return output.strip()=='SystemC 2.3.4'
+    if name=='lsi-ngspice-config':return output.strip()=='ngspice 47'
     return bool(output.strip())
 def package_command(python,requirements):
     code='import importlib,importlib.metadata,json,sys; names=json.loads(sys.argv[1]); [importlib.import_module(v["import"]) for v in names.values()]; print(json.dumps({"python":list(sys.version_info[:3]),"executable":sys.executable,"packages":{n:importlib.metadata.version(n) for n in names}}))'
     return [python,'-c',code,json.dumps(requirements)]
 def guidance(name):
     if name=='lsi-systemc-config':return 'tools/build_native.py --profile fullでSystemC 2.3.4を準備し、install/binを--tool-binに指定。'
+    if name=='lsi-ngspice-config':return 'tools/setup_ngspice.pyで固定版共有ライブラリーを準備し、install/binを--tool-binへ指定。'
     if name in DOC_TOOLS:return 'Node.js 22以上・npm・Gitを準備し、npm ci --prefix tools/docs --ignore-scriptsを実行。'
     if name in SIM_TOOLS:return 'tools/ENVIRONMENT.mdのOS別ネイティブ依存と固定版Icarus/Verilatorを準備。'
     return '固定版のformal環境とOpenSTAを準備し、--formal-pythonと--tool-binの指定を確認。'
@@ -40,16 +43,16 @@ def uvm_snapshot(home,expected):
     return good,observed
 def run(a):
     O.prepare_environment()
-    config=json.loads((HERE/'environment.json').read_text());tools=tool_plan(a.profile)
+    config=json.loads((HERE/'environment.json').read_text());tools=tool_plan(a.profile);ngspice_snapshot={}
     roles={'docs':(a.python,config['packages']['docs'])} if a.profile in ('docs','full') else {}
     if a.profile=='full':
         roles.update(simulation=(a.python,{'z3-solver':config['packages']['simulation']['z3-solver']}),rdl=(a.rdl_python,{'systemrdl-compiler':config['packages']['simulation']['systemrdl-compiler']}),cocotb=(a.cocotb_python,{'cocotb':config['packages']['simulation']['cocotb']}),formal=(a.formal_python,config['packages']['formal']))
     ids=['python',*['tool/'+n for n in tools],*['packages/'+r for r in roles]]
     if a.profile in ('docs','full'):ids+=['docs-runtime']
     if a.profile in ('smoke','full'):ids+=['cxx20','c11']
-    if a.profile=='full':ids+=['systemc','uvm','oss-cad','oss/yosys','oss/sby','oss/mcy']
+    if a.profile=='full':ids+=['systemc','ngspice','uvm','oss-cad','oss/yosys','oss/sby','oss/mcy']
     ids+=['source-freshness']
-    report=Q.Report('environment',a.out,[Path(__file__),Path(O.__file__),O.CONFIG,HERE/'environment.json',HERE/'uvm-source-sha256.json',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs',HERE/'docs-requirements.txt',HERE/'simulation-requirements.txt',Q.ROOT/'examples/local-fifo-formal/tools-requirements.txt'],ids,dict(profile=a.profile,python=a.python,formal_python=a.formal_python,oss_home=str(getattr(a,'oss_home',None)),tool_bin=[str(p) for p in a.tool_bin]))
+    report=Q.Report('environment',a.out,[Path(__file__),Path(O.__file__),O.CONFIG,Path(N.__file__),N.CONFIG,Q.ROOT/N.spec()['patch']['file'],HERE/'environment.json',HERE/'uvm-source-sha256.json',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs',HERE/'docs-requirements.txt',HERE/'simulation-requirements.txt',Q.ROOT/'examples/local-fifo-formal/tools-requirements.txt'],ids,dict(profile=a.profile,python=a.python,formal_python=a.formal_python,oss_home=str(getattr(a,'oss_home',None)),tool_bin=[str(p) for p in a.tool_bin]))
     env_path=os.pathsep.join([*[str(p.absolute()) for p in a.tool_bin],str(Path(a.formal_python).absolute().parent),os.environ.get('PATH','')]);os.environ['PATH']=env_path
     r=Q.P.execute([a.python,'-c','import json,sys;print(json.dumps(list(sys.version_info[:3])))'],report.out/'python.log',a.timeout,report.out)
     try:py=json.loads((report.out/'python.log').read_text());ok=not r['error'] and r['returncode']==0 and isinstance(py,list) and tuple(py)>=tuple(config['python_minimum'][a.profile])
@@ -86,6 +89,13 @@ def run(a):
             if not r['error'] and r['returncode']==0:
                 r=Q.P.execute([str(report.out/'probe-systemc')],report.out/'systemc-run.log',a.timeout,report.out);good=not r['error'] and r['returncode']==0 and 'SystemC 2.3.4' in (report.out/'systemc-run.log').read_text()
         report.check('systemc',good,r)
+        try:
+            r=Q.P.execute([shutil.which('lsi-ngspice-config') or 'lsi-ngspice-config','--prefix'],report.out/'ngspice-prefix.log',a.timeout,report.out)
+            if r['error'] or r['returncode']!=0:raise ValueError('ngspice prefix unavailable')
+            ngspice_home=Path((report.out/'ngspice-prefix.log').read_text().strip());ngspice_snapshot=N.snapshot(ngspice_home)
+            result=N.probe(ngspice_home);good=result['success']
+        except (OSError,ValueError,KeyError,TypeError,AttributeError) as err:result=dict(error=str(err));good=False
+        report.check('ngspice',good,result);Q.write(report.out/'ngspice-source.json',ngspice_snapshot)
         home=a.uvm_home.absolute();expected=json.loads((HERE/'uvm-source-sha256.json').read_text())['sha256']
         good,observed_uvm=uvm_snapshot(home,expected)
         report.check('uvm',good,dict(root=str(home),files=len(observed_uvm),guidance='examples/local-uvm/setup_uvm.pyで固定SHA-256の公式アーカイブを準備。'))
@@ -96,7 +106,11 @@ def run(a):
         for name,flags in [('yosys',['-V']),('sby',['--version']),('mcy',['--help'])]:
             r=Q.P.execute([str(a.oss_home/'bin'/name),*flags],report.out/('oss-'+name+'.log'),a.timeout,report.out) if good else dict(returncode=None,error='toolchain not verified')
             report.check('oss/'+name,not r['error'] and r['returncode']==0,r)
-    Q.write(report.out/'tools.json',observed);changed=report.fresh();report.check('source-freshness',not changed,changed);return report.finish()
+    Q.write(report.out/'tools.json',observed);changed=report.fresh()
+    if ngspice_snapshot:
+        try:N.verify(ngspice_snapshot)
+        except (OSError,ValueError,KeyError,TypeError) as err:changed.append(str(err))
+    report.check('source-freshness',not changed,changed);return report.finish()
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--profile',choices=('docs','smoke','full'),default='full');p.add_argument('--python',default=sys.executable);p.add_argument('--formal-python');p.add_argument('--rdl-python');p.add_argument('--cocotb-python');p.add_argument('--uvm-home',type=Path,default=Q.ROOT/'artifacts/toolchains/quality/uvm/1800.2-2020.3.2');p.add_argument('--tool-bin',type=Path,action='append',default=[]);p.add_argument('--timeout',type=float,default=60);p.add_argument('--out',type=Path,default=Q.ROOT/'artifacts'/datetime.now(timezone.utc).strftime('environment-%Y%m%dT%H%M%S%fZ'))
     p.add_argument('--oss-home',type=Path,default=Q.ROOT/'artifacts/toolchains/oss/oss-cad-suite')

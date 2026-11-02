@@ -1943,6 +1943,35 @@
         "c++",
         "lsi-systemc-config"
       ]
+    },
+    {
+      "id": "local-cpp-reference",
+      "script": "examples/local-cpp-reference/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "c++",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-spice-cosim",
+      "script": "examples/local-spice-cosim/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "c++",
+        "verilator",
+        "lsi-ngspice-config"
+      ]
     }
   ]
 }

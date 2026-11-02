@@ -61,7 +61,7 @@ python3 tools/run_regression.py --profile nightly --jobs 2 \
   --build-timeout 600 --out artifacts/repository-nightly
 ```
 
-SystemCの構築先が別なら、その`install/bin`も`--tool-bin`へ追加します。
+SystemCの構築先が別なら、その`install/bin`も`--tool-bin`へ追加します。[ngspice共有ライブラリー](ENVIRONMENT.md#ngspiceとspice協調例)の`install/bin`も、全例実行では追加してください。
 
 `--tool-bin`はPATHへ追加するディレクトリで、繰り返し指定できます。上例はOpenSTAを既存手順の配置先へ構築した場合です。`sta`が既にPATH上にあるなら、その指定は不要です。選択したPythonのbinもPATHへ追加し、仮想環境のシンボリックリンクを保持します。cocotbへ使うPythonは子にも明示します。
 

@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | `docs` | 3.10以上 | Markdown・PyYAML、Git、Node.js 22以上・npm、固定版Mermaidの構文解析 |
 | `smoke` | 3.10以上 | 標準ライブラリ用venv、Icarus 14系、Verilator 5.052、C++20・C11、make |
-| `full` | 3.13以上 | 上記全部、SystemRDL・cocotb・Z3、専用フォーマルvenv、公式UVM、固定版OSS CAD Suite、OpenSTA 3.1.0、LLVM、SystemC 2.3.4 |
+| `full` | 3.13以上 | 上記全部、SystemRDL・cocotb・Z3、専用フォーマルvenv、公式UVM、固定版OSS CAD Suite、OpenSTA 3.1.0、LLVM、SystemC 2.3.4、ngspice 47共有ライブラリー |
 
 全例の準備には`full`を使います。Pythonパッケージの版とネイティブツールのソース版は[`environment.json`](environment.json)、インストール対象は[文書用](docs-requirements.txt)・[シミュレーション用](simulation-requirements.txt)・[フォーマル用](../examples/local-fifo-formal/tools-requirements.txt)に固定しています。OS・コンパイラー・すべての推移依存まで固定したコンテナではありません。
 
@@ -38,12 +38,18 @@ macOSではXcode Command Line ToolsとGit・Python・Node.jsを準備し、Icaru
 python3 tools/setup_environment.py --profile docs --out artifacts/toolchains/docs
 artifacts/toolchains/docs/python/bin/python tools/check_docs.py --out artifacts/docs-check
 
+# SPICE協調用の共有ライブラリーを別途準備する
+python3 tools/setup_ngspice.py --out artifacts/toolchains/ngspice
+
 # 全例：事前にネイティブツールを用意した場合
 python3.13 tools/setup_environment.py --profile full \
-  --tool-bin artifacts/toolchains/native/install/bin --out artifacts/toolchains/full
+  --tool-bin artifacts/toolchains/native/install/bin \
+  --ngspice-home artifacts/toolchains/ngspice/install --out artifacts/toolchains/full
 ```
 
 `--python`でvenv作成元のPythonを選べます。`--tool-bin`は繰り返し指定でき、診断する子プロセスのPATHへ追加します。既存のOpenSTAなど、別のインストール先のbinも指定できます。macOSのLLVMは配布先の`bin`も追加します。
+
+`--ngspice-home`で導入済みの固定版を再利用します。省略時は新しい出力先の`ngspice/install/`へ構築し、診断のPATHへ追加します。全例実行の際は、その`bin`も`--tool-bin`へ渡してください。
 
 `full`の出力は、`python/`がシミュレーション・文書用、`formal/`がフォーマル用、`uvm/1800.2-2020.3.2/`が公式UVMです。UVMは既存の[準備ツール](../examples/local-uvm/setup_uvm.py)でアーカイブのSHA-256を確認し、診断時にも[`uvm-source-sha256.json`](uvm-source-sha256.json)で全ソース・LICENSE・NOTICEを照合します。変更・欠落・追加されたソースは失敗です。
 
@@ -56,7 +62,8 @@ artifacts/toolchains/full/python/bin/python tools/check_environment.py --profile
   --formal-python artifacts/toolchains/full/formal/bin/python \
   --uvm-home artifacts/toolchains/full/uvm/1800.2-2020.3.2 \
   --oss-home artifacts/toolchains/full/oss/oss-cad-suite \
-  --tool-bin artifacts/toolchains/native/install/bin --out artifacts/environment-recheck
+  --tool-bin artifacts/toolchains/native/install/bin \
+  --tool-bin artifacts/toolchains/ngspice/install/bin --out artifacts/environment-recheck
 ```
 
 診断では、名前がPATH上にあるだけでなく、版の実行、Pythonパッケージの読み込みと版、C++20・C11の構文コンパイル、Mermaid図の構文解析を確認します。Icarus 14系・Verilator 5.052等の対応範囲は診断コードに明示しています。CIでのソース版はさらにコミットで固定します。Verilatorの配布元ごとに異なるビルド識別文字列もログへ保持します。
@@ -76,7 +83,8 @@ python3 tools/setup_oss_cad.py --out artifacts/toolchains/oss
 # 導入済みの固定版を再利用してfull環境を作る
 python3.13 tools/setup_environment.py --profile full \
   --oss-home artifacts/toolchains/oss/oss-cad-suite \
-  --tool-bin artifacts/toolchains/native/install/bin --out artifacts/toolchains/full
+  --tool-bin artifacts/toolchains/native/install/bin \
+  --ngspice-home artifacts/toolchains/ngspice/install --out artifacts/toolchains/full
 
 # 既存インストールの内容だけを再確認する
 python3 tools/setup_oss_cad.py --check artifacts/toolchains/oss/oss-cad-suite
@@ -95,3 +103,28 @@ python3 tools/setup_oss_cad.py --check artifacts/toolchains/oss/oss-cad-suite
 SoCLibコード中のGNU拡張に合わせ、例は`-std=gnu++17`でコンパイルします。SystemC側のC++規格も17でそろえています。`lsi-systemc-config --prefix`は配置先、`--version`は構築対象の版を返します。full診断ではこの表示に加え、実ライブラリーをリンクしたSystemCプログラムの起動と版も確認します。
 
 SoCLibのCABA部品は必要なソースをリポジトリへ収録しており、旧Python版のSoCLibツールやCPU用クロスコンパイラーは使いません。収録部品のLGPLと、外部ビルドするSystemCのApache-2.0を区別します。例の実行では、使用したSystemCヘッダー・ライブラリー・設定コマンドの全対象ハッシュを保存し、変更・欠落・追加を再照合します。
+
+## ngspiceとSPICE協調例
+
+[SPICEとRTLの例](../examples/local-spice-cosim/README.md)は、[公式Git](https://git.code.sf.net/p/ngspice/ngspice)のngspice 47を共有ライブラリーとして構築します。版とフラグは[ngspice.json](ngspice.json)、初期化互換修正は[パッチの説明](patches/README.md)に固定しています。既存のIcarus・Verilator・SystemCのビルドとは別の出力・キャッシュを使います。
+
+Linuxでは上記のAutoconf・Automake・Libtool・Bison・Flex・Cコンパイラー・makeを使います。macOSではCommand Line ToolsとHomebrew版を準備し、古いOS標準Bisonより先にPATHへ置きます。
+
+```sh
+brew install autoconf automake libtool bison flex
+export PATH="$(brew --prefix bison)/bin:$(brew --prefix flex)/bin:$PATH"
+
+python3 tools/setup_ngspice.py --jobs 2 --timeout 1800 --out artifacts/toolchains/ngspice
+python3 tools/setup_ngspice.py --check artifacts/toolchains/ngspice/install \
+  --out artifacts/ngspice-recheck
+```
+
+上の`brew`行はmacOS用です。LinuxではOS依存の準備を済ませて`setup_ngspice.py`を実行します。`--tool-bin`も繰り返し指定でき、指定したBison・Flex等をビルド用のPATHへ追加できます。ソース取得にはネットワークが必要です。
+
+ソースコミット、差分、適用前後の内容を照合し、GUI・readline・CIDER・OpenMPを使わない共有ライブラリーを構築します。XSPICEは有効な構成ですが、この教材の回路はR・Cと独立電圧源です。実行時にPDKやユーザーの`.spiceinit`を読み込む必要はありません。
+
+`install/bin/lsi-ngspice-config --prefix`で配置先、`--version`で構築対象を確認できます。診断では表示だけでなく、実際のAPI初期化、設定ファイル抑止、RC過渡解析と解析解の一致を確認します。`install/share/lsi-ngspice/build.json`が版・パッチ・ファイルハッシュの記録です。欠落・変更・対象ライブラリーの追加は検査失敗になります。
+
+full環境へ組み込む際は`setup_environment.py --profile full --ngspice-home .../install`を指定できます。`check_environment.py`と`run_regression.py`へは`--tool-bin .../install/bin`を追加します。例単独なら`--ngspice-config .../install/bin/lsi-ngspice-config`でも指定できます。
+
+ngspice本体と各ライセンスは外部の出力先へ保持し、バイナリーをGit管理には含めません。元コードを含む互換差分のModified BSD表示は[ngspice-47-LICENSE](patches/ngspice-47-LICENSE)へ保持しています。

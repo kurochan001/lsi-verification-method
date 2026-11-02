@@ -1,0 +1,22 @@
+{
+  "release": "47",
+  "repository": "https://git.code.sf.net/p/ngspice/ngspice",
+  "commit": "a80f6e3e95d51534905b1f23410a951802666656",
+  "configure": [
+    "--with-ngshared",
+    "--without-x",
+    "--with-readline=no",
+    "--enable-xspice",
+    "--disable-cider",
+    "--disable-openmp",
+    "--disable-debug",
+    "CFLAGS=-O2"
+  ],
+  "patch": {
+    "file": "tools/patches/ngspice-47-init.patch",
+    "sha256": "3be72a383916784934305f5acc619af63611993cc1da9ba7f9efef1920bf9440",
+    "target": "src/sharedspice.c",
+    "original_sha256": "84379c4bd536738f1c0f83889ecaf668f10309d42b41fdc8c6731f442c60da4c",
+    "patched_sha256": "a2b0feb76101a6ef1e9f50a8a4540c8a97923c5302b48851fb4261621067bea0"
+  }
+}

@@ -16,6 +16,7 @@
 - [ネットワーク・パケット処理](#ネットワークパケット処理)
 - [航空宇宙・高信頼システム](#航空宇宙高信頼システム)
 - [ロボティクス・モーション制御](#ロボティクスモーション制御)
+- [アナログ・デジタル協調](#アナログデジタル協調)
 - [画像処理](#画像処理)
 - [プロセッサ](#プロセッサ)
 - [静的タイミング解析](#静的タイミング解析)
@@ -96,6 +97,7 @@
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
+| [C++参照モデルとFIR](local-cpp-reference/README.md) | 3タップFIR、8／12ビット、丸め・飽和、入力受付、提示時刻、待ち・リセット、参照モデルへの故障注入 | Verilator＋C++17 |
 | [固定小数点DSP](local-dsp/README.md) | 2タップFIRの符号、丸め、上下限、飽和、履歴 | Icarus |
 | [ECCの故障注入](local-ecc/README.md) | SECDEDの誤りなし・1ビット誤り・2ビット誤りの全数検査、訂正・検出、保証範囲外の診断 | Icarus |
 | [ECC付きメモリ](local-ecc-memory/README.md) | 読出し修復、スクラビング、通常書込みとの競合 | Icarus |
@@ -157,9 +159,16 @@
 | --- | --- | --- |
 | [PWM・直交エンコーダ](local-motion-io/README.md) | 相補出力、デッドタイム、周期境界の原子更新、Gray復号、フィルター、不正遷移、位置の折返し | Icarus |
 | [1軸の閉ループ制御](local-motion-control/README.md) | 固定小数点PI、アンチワインドアップ、実PWMで駆動する簡易プラント、追従・逆転・負荷、期限・停止・再開 | Icarus |
+| [C++参照モデルとFIR](local-cpp-reference/README.md) | 3タップFIR、8／12ビット、丸め・飽和、入力受付、提示時刻、待ち・リセット、参照モデルへの故障注入 | Verilator＋C++17 |
 | [固定小数点DSP](local-dsp/README.md) | 符号、丸め、飽和、履歴 | Icarus |
 | [SPI](local-spi/README.md)／[I²C](local-i2c/README.md) | センサー等の通信のモード、応答、異常 | Icarus |
 | [画像処理](#画像処理)／[FDIR](local-fdir/README.md) | 計測値の処理、監視、取消、復帰へ発展 | Icarus |
+
+## アナログ・デジタル協調
+
+| 検証例 | 主な検証内容 | 主なツール |
+| --- | --- | --- |
+| [RC電圧制御とSPICE](local-spice-cosim/README.md) | 実RC回路とRTLの閉ループ、ADC／DAC接続、時刻同期、解析解、回路定数・接続・制御の故障注入 | Verilator＋C++17＋ngspice共有ライブラリー |
 
 ## 画像処理
 

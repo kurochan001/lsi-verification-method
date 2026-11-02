@@ -189,6 +189,13 @@
     "examples/local-counter-snapshot/tests/test_example.py",
     "examples/local-coverage-feedback/run.py",
     "examples/local-coverage-feedback/tests/test_feedback.py",
+    "examples/local-cpp-reference/harness.cpp",
+    "examples/local-cpp-reference/model/reference.cpp",
+    "examples/local-cpp-reference/model/reference.hpp",
+    "examples/local-cpp-reference/requirements.json",
+    "examples/local-cpp-reference/rtl/saturating_fir.sv",
+    "examples/local-cpp-reference/run.py",
+    "examples/local-cpp-reference/tests/test_reference.py",
     "examples/local-credit-link/requirements.json",
     "examples/local-credit-link/rtl/credit_link.sv",
     "examples/local-credit-link/run.py",
@@ -475,6 +482,8 @@
     "examples/local-mxfp4/upstream/tb/uvm/mxfp4_uvm_pkg.sv",
     "examples/local-mxfp4/vectors.py",
     "examples/local-mxfp4/vectors_mp.py",
+    "examples/local-native-common/runner.py",
+    "examples/local-native-common/tests/test_runner.py",
     "examples/local-network-echo/model.py",
     "examples/local-network-echo/requirements.json",
     "examples/local-network-echo/rtl/network_echo.sv",
@@ -609,6 +618,13 @@
     "examples/local-spi/run.py",
     "examples/local-spi/tb/spi_tb.sv",
     "examples/local-spi/tests/test_spi.py",
+    "examples/local-spice-cosim/harness.cpp",
+    "examples/local-spice-cosim/model.hpp",
+    "examples/local-spice-cosim/plant.cir.in",
+    "examples/local-spice-cosim/requirements.json",
+    "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
+    "examples/local-spice-cosim/run.py",
+    "examples/local-spice-cosim/tests/test_model.py",
     "examples/local-sta/check.tcl",
     "examples/local-sta/contract.json",
     "examples/local-sta/design/constraints.tcl",
@@ -800,6 +816,7 @@
       "local-constant-time",
       "local-conv-window",
       "local-counter-snapshot",
+      "local-cpp-reference",
       "local-credit-link",
       "local-descriptor-dma",
       "local-divider",
@@ -844,6 +861,7 @@
       "local-secure-lifecycle",
       "local-sha256",
       "local-spi",
+      "local-spice-cosim",
       "local-store-buffer",
       "local-stream",
       "local-stream-dma",
@@ -1024,6 +1042,9 @@
     "local-coverage-feedback": [
       "local-axis",
       "local-exploration-common"
+    ],
+    "local-cpp-reference": [
+      "local-native-common"
     ],
     "local-credit-link": [
       "local-common"
@@ -1268,6 +1289,9 @@
     "local-mxfp4": [
       "local-exploration-common"
     ],
+    "local-native-common": [
+      "local-exploration-common"
+    ],
     "local-network-echo": [
       "local-exploration-common"
     ],
@@ -1368,6 +1392,9 @@
     ],
     "local-spi": [
       "local-common"
+    ],
+    "local-spice-cosim": [
+      "local-native-common"
     ],
     "local-sta": [
       "local-irq-cdc"

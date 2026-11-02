@@ -31,6 +31,7 @@
     "examples/local-constant-time/rtl/constant_time_compare.sv",
     "examples/local-conv-window/rtl/conv_window.sv",
     "examples/local-counter-snapshot/rtl/counter.sv",
+    "examples/local-cpp-reference/rtl/saturating_fir.sv",
     "examples/local-credit-link/rtl/credit_link.sv",
     "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
     "examples/local-divider/rtl/divider.sv",
@@ -109,6 +110,7 @@
     "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
     "examples/local-sha256/rtl/sha256_engine.sv",
     "examples/local-spi/rtl/spi_master.sv",
+    "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
     "examples/local-store-buffer/rtl/store_buffer.sv",
     "examples/local-stream-dma/rtl/stream_dma.sv",
     "examples/local-stream/rtl/stream_buffer.sv",
@@ -3710,6 +3712,47 @@
         "LATENCY": 5,
         "SPEED_LIMIT": 8
       }
+    },
+    {
+      "id": "local-cpp-reference/saturating_fir/default",
+      "file": "examples/local-cpp-reference/rtl/saturating_fir.sv",
+      "top": "saturating_fir",
+      "sources": [
+        "examples/local-cpp-reference/rtl/saturating_fir.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cpp-reference/saturating_fir/LATENCY=3/WIDTH=12",
+      "file": "examples/local-cpp-reference/rtl/saturating_fir.sv",
+      "top": "saturating_fir",
+      "sources": [
+        "examples/local-cpp-reference/rtl/saturating_fir.sv"
+      ],
+      "parameters": {
+        "WIDTH": 12,
+        "LATENCY": 3
+      }
+    },
+    {
+      "id": "local-spice-cosim/rc_hysteresis/default",
+      "file": "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
+      "top": "rc_hysteresis",
+      "sources": [
+        "examples/local-spice-cosim/rtl/rc_hysteresis.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-spice-cosim/rc_hysteresis/ADC_BITS=10",
+      "file": "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
+      "top": "rc_hysteresis",
+      "sources": [
+        "examples/local-spice-cosim/rtl/rc_hysteresis.sv"
+      ],
+      "parameters": {
+        "ADC_BITS": 10
+      }
     }
   ],
   "examples": {
@@ -5348,6 +5391,22 @@
       "scope": "workflow",
       "targets": [],
       "reason": "実SoCLibのCABA/SystemCモデルをC++で検証する例。SystemVerilog RTLを含まず、Verilator lintの対象外。"
+    },
+    "local-cpp-reference": {
+      "scope": "dut",
+      "targets": [
+        "local-cpp-reference/saturating_fir/default",
+        "local-cpp-reference/saturating_fir/LATENCY=3/WIDTH=12"
+      ],
+      "reason": "C++参照モデルで照合するストリーミングFIRの幅・遅延構成を静的検査"
+    },
+    "local-spice-cosim": {
+      "scope": "dut",
+      "targets": [
+        "local-spice-cosim/rc_hysteresis/default",
+        "local-spice-cosim/rc_hysteresis/ADC_BITS=10"
+      ],
+      "reason": "ngspice RC回路を駆動するヒステリシス制御RTLのADC幅構成を静的検査"
     }
   },
   "blackbox_sources": {

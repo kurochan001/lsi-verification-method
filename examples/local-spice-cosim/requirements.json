@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id":"SPICE-ANALOG","goals":["analog/rc-match","analog/range","analog/charge","analog/discharge"]},
+    {"id":"SPICE-CONTROL","goals":["control/drive-on","control/drive-off","control/hold-on","control/hold-off"]},
+    {"id":"SPICE-INPUT","goals":["input/enable-off","input/setpoint-step","input/supply-step"]},
+    {"id":"SPICE-RESET","goals":["reset/digital-clear","reset/plant-memory","reset/restart"]},
+    {"id":"SPICE-TIME","goals":["time/clock-boundary"]}
+  ]
+}

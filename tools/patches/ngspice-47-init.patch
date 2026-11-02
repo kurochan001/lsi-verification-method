@@ -1,0 +1,66 @@
+--- a/src/sharedspice.c
++++ b/src/sharedspice.c
+@@ -800,13 +800,20 @@
+ }
+ #endif
+ 
++/* Local compatibility fix 2026-11-03: defer flags until SIMinit and honor
++ * the user-init flag on Unix as well as Windows. */
++static bool pending_no_spinit = FALSE;
++static bool pending_no_spiceinit = FALSE;
++
+ /* Set variable no_spinit, if reading 'spinit' is not wanted. */
+ IMPEXP
+ int
+ ngSpice_nospinit(void)
+ {
+     bool t = TRUE;
+-    cp_vset("no_spinit", CP_BOOL, &t);
++    pending_no_spinit = TRUE;
++    if (ft_sim)
++        cp_vset("no_spinit", CP_BOOL, &t);
+     return 0;
+ }
+ 
+@@ -816,7 +823,9 @@
+ ngSpice_nospiceinit(void)
+ {
+     bool t = TRUE;
+-    cp_vset("no_spiceinit", CP_BOOL, &t);
++    pending_no_spiceinit = TRUE;
++    if (ft_sim)
++        cp_vset("no_spiceinit", CP_BOOL, &t);
+     return 0;
+ }
+ 
+@@ -925,6 +934,14 @@
+ 
+     /*IFsimulator struct initilised*/
+     SIMinit(&nutmeginfo, &ft_sim);
++    if (pending_no_spinit) {
++        bool t = TRUE;
++        cp_vset("no_spinit", CP_BOOL, &t);
++    }
++    if (pending_no_spiceinit) {
++        bool t = TRUE;
++        cp_vset("no_spiceinit", CP_BOOL, &t);
++    }
+ 
+     /* program name*/
+     cp_program = ft_sim->simulator;
+@@ -959,6 +976,7 @@
+     /* Read the user config files */
+ #ifdef HAVE_PWD_H
+     /* Try to source either .spiceinit or ~/.spiceinit. */
++    if (!cp_getvar("no_spiceinit", CP_BOOL, NULL, 0)) {
+     if (access(".spiceinit", 0) == 0) {
+         inp_source(".spiceinit");
+     } else {
+@@ -975,6 +993,7 @@
+ 
+             tfree(s);
+         }
++    }
+     }
+ #else /* ~ HAVE_PWD_H */
+     /* load user's initialisation file

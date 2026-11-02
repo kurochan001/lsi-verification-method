@@ -26,6 +26,8 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
+| C++参照モデルでRTLを照合する | [検証手順](docs/method/cpp-reference-verification.md)／[ストリーミングFIR](examples/local-cpp-reference/README.md) |
+| SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md) |
 | VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[SoCLibのCABA RAM](examples/local-vci-soclib/README.md) |
 | 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
 | 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
@@ -203,6 +205,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
 | <a id="航空宇宙高信頼システム"></a>[航空宇宙・高信頼システム](examples/README.md#航空宇宙高信頼システム) | TMR、ECC・スクラブ、故障注入、FDIR、期限監視、保守と復帰 |
 | <a id="ロボティクスモーション制御"></a>[ロボティクス・モーション制御](examples/README.md#ロボティクスモーション制御) | PWM、直交エンコーダ、固定小数点PI、閉ループ、期限・進捗監視 |
+| <a id="アナログデジタル協調"></a>[アナログ・デジタル協調](examples/README.md#アナログデジタル協調) | ngspiceの実RC回路、理想ADC／DAC、RTL電圧制御、時刻同期、解析解との比較 |
 | <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
@@ -307,6 +310,7 @@ FIFO例は既定で`artifacts/fifo-local-日時/`へ結果を保存します。�
 | --- | --- |
 | フォーマル検証 | [Yosys・SBY・Z3の固定版環境](examples/local-formal-common/README.md) |
 | UVM・RAL・制約付きランダム化 | [UVMの準備](examples/local-uvm/README.md)／[UVMランダム化の準備](examples/local-uvm-random/README.md) |
+| C++参照モデル・SPICE協調 | [FIRとC++モデル](examples/local-cpp-reference/README.md)／[ngspiceの導入](tools/ENVIRONMENT.md#ngspiceとspice協調例)／[SPICEとRTL](examples/local-spice-cosim/README.md) |
 | VCI・SoCLib CABA／SystemC | [固定版SystemCの構築](tools/ENVIRONMENT.md#systemcとsoclibの例)／[SoCLibを使う例](examples/local-vci-soclib/README.md) |
 | SystemRDL・cocotb・C連携 | [仕様生成](examples/local-register-spec/README.md)／[cocotb](examples/local-cocotb/README.md)／[ホスト連携の共通処理](examples/local-host-common/README.md) |
 | 探索・縮小・UVMの証跡管理 | [固定計画と実行記録の共通処理](examples/local-exploration-common/README.md) |
@@ -377,5 +381,7 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 本リポジトリで新規作成した資料・コード、およびkirimasim-testsから複製・改訂した資料・ツールには、Apache License 2.0 with LLVM Exceptions（`Apache-2.0 WITH LLVM-exception`）を適用します（[LICENSE](LICENSE)）。複製元と改訂の記録は[PROVENANCE.md](PROVENANCE.md)を参照してください。
 
 [SoCLibの収録ソース](examples/local-vci-soclib/upstream/)にはLGPL-2.1-onlyを適用し、元の著作権表示とライセンス本文を保持しています。詳細は[取り込みの記録](PROVENANCE.md#vci-soclib-20261102)を参照してください。
+
+[ngspiceの初期化互換パッチ](tools/patches/README.md)の元コードと修正にはModified BSD（BSD-3-Clause）を適用し、著作権表示と利用条件を保持しています。ngspice本体は外部ビルドで、その各構成要素の条件は取得ソースの`COPYING`を参照してください。
 
 参照先のIEEE規格、外部の文書・ソフトウェアには、それぞれの権利者の利用条件が適用されます。本リポジトリのライセンスは、それらの転載・再配布の許諾を与えるものではありません。

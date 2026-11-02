@@ -1,0 +1,8 @@
+RTL-controlled ideal DAC and RC plant
+* Vdrive is supplied by the ngspice shared-library callback.
+Vdrive dac 0 dc 0 external
+Rplant dac filtered @R@
+Cplant filtered 0 @C@ ic=0
+.options reltol=1e-7 abstol=1e-12 method=gear maxord=2
+.save v(filtered) v(dac)
+.end
