@@ -2,7 +2,7 @@
 
 このリポジトリの資料とツールの基礎は、[kirimasim-tests](https://github.com/kurochan001/kirimasim-tests)から複製したものです。最初の複製はコミット`c88b0c3`（2026-10-24）からで、その後に元で更新された資料は、表に示すコミットから複製し直しています。
 複製時には、Markdownの相対リンクを書き換えました。コピー先にある資料へのリンクは、新しい場所への相対リンクにしました。コピー先に無い資料へのリンクは、元のリポジトリの同じコミットへの固定リンクにしました。
-`README.md`、`docs/case-study-ieee1800/README.md`、`tools/README.md`、`PROVENANCE.md`、`.gitignore`、`docs/templates/`、`examples/`、`.gitlab-ci.yml`（2026-10-31に削除）は、このリポジトリで新しく書いたものです。一般化した手順書には、以下の追記・改訂があります。
+`README.md`、`docs/case-study-ieee1800/README.md`、`tools/README.md`、`PROVENANCE.md`、`.gitignore`、`docs/templates/`、`examples/`、`.gitlab-ci.yml`（2026-10-31に削除）は、このリポジトリで新しく書いたものです（後から収録したSoCLibの外部ソースを除きます）。一般化した手順書には、以下の追記・改訂があります。
 
 ## 由来と現在の証跡を分ける
 
@@ -1562,3 +1562,17 @@ Ubuntu 24.04では、修正版に対する[Quality](https://github.com/kurochan0
 Qualityの保存成果物`documents-41351097625-1`（artifact ID `13100673100`）でも、209文書の読取りハッシュが、マニフェスト・現行ファイルの両方と一致することを確認しました。ツールの119テストが成功し、セルフテストが記録したリポジトリ入力1,004ファイルのハッシュも一致しています。ZIPのdigest照合とこれらの再照合は`ci-document-read-evidence.json`へ、取得元は`ci-quality-artifact.json`へ保存しました。
 
 最終の文書検査は`docs-final/`、その文書を入力に含む全セルフテストは`selftests-final/`へ保存します。文書の更新後にも`audit-final/`でnightlyの保存結果を再監査します。これらの後続変更は文書だけで、検査器・テスト・RTL・モデル・要求・構成は修正コミットから変更していません。
+
+
+<a id="vci-soclib-20261102"></a>
+## VCIバスと実SoCLib CABAモデル（2026-11-02）
+
+`examples/local-vci-soclib/`に、実SoCLibの`VciRam`・`VciTargetFsm`・`VciSignals`を直接使うSystemC例を追加しました。32／64ビット、2つの256バイトRAM領域、連続1／2／4セル、部分書込み、ID、コマンド／応答の保持、未割当エラー、途中リセットを検査します。受付済みの未完了パケットは1件です。CPU・インターコネクトを含むSoC全体や合成可能RTL、VCI規格全体の適合性を確認する例ではありません。
+
+収録元は[公式SoCLib SVN revision 2672](https://www.soclib.fr/svn/!svn/bc/2672/trunk/soclib/)です。`upstream/`には必要な36ソースファイルと`COPYING.lgpl`を収録しました。全対象はLGPL-2.1-onlyで、元の著作権・ライセンス表示を保持します。原版と収録版のSHA-256、変更内容は[upstream.json](examples/local-vci-soclib/upstream.json)にあります。`soclib_endian.h`は同じ公式SVNの通常URLから取得し、取得先を個別に記録しています。モデルの粒度とVCI規則は[公式CABA規則](https://www.soclib.fr/trac/dev/wiki/WritingRules/Caba)・[公式VCI説明](https://www.soclib.fr/trac/dev/wiki/VciProtocol)を参照しました。
+
+ローカル修正は`VciRam::on_write`の一時変数を`unsigned int`からセル型の`ram_t`へ変更したものです。64ビットの部分書込みで上位32ビットが失われる問題を修正し、変更日と理由をソースに記載しました。収録版から変更を戻した実行でも`VCI_DATA`の反例を再現することで、原版の不具合と修正版の正常動作を区別します。上流への修正送付は行っていません。
+
+教材独自のPythonバイト単位モデル・SystemCドライバー／チェッカー・ランナー・要求・文書・テストはApache-2.0 WITH LLVM-exceptionです。外部の[SystemC 2.3.4](https://github.com/accellera-official/systemc/tree/5fc1469339775b54b1fcc2020ac744a58be5b50e)はApache-2.0で、固定コミットから出力先へ静的ビルドします。SoCLibのLGPLコードへルートのライセンスを付け替えていません。生成物はGit管理に含めません。
+
+nightlyの計画は23判定で、幅ごとの13到達目標、固定試験、128操作×3 seed、バイトイネーブル無視・SRCID破壊の検出、64ビット原版の反例を含みます。SystemCの実ライブラリーとヘッダーのハッシュも保存・再照合します。検証実績は以下へ追記します。

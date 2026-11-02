@@ -1929,6 +1929,20 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-vci-soclib",
+      "script": "examples/local-vci-soclib/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "c++",
+        "lsi-systemc-config"
+      ]
     }
   ]
 }

@@ -8,8 +8,12 @@ from pathlib import Path
 import sys
 import quality_common as Q
 HERE=Path(__file__).resolve().parent
+def systemc_config(prefix,release):
+    path=prefix/'bin/lsi-systemc-config';path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text('#!/usr/bin/env python3\nfrom pathlib import Path\nimport sys\nroot=Path(__file__).resolve().parents[1]\nif sys.argv[1:]==["--prefix"]:print(root)\nelif sys.argv[1:]==["--version"]:print("SystemC '+release+'")\nelse:raise SystemExit("use --prefix or --version")\n')
+    path.chmod(0o755)
 def run(a):
-    config=json.loads((HERE/'environment.json').read_text());names=['iverilog','verilator']+(['cudd','opensta'] if a.profile=='full' else [])
+    config=json.loads((HERE/'environment.json').read_text());names=['iverilog','verilator']+(['cudd','opensta','systemc'] if a.profile=='full' else [])
     phases=['clone','fetch','checkout','revision','generate','configure','build','install'];ids=[n+'/'+p for n in names for p in phases]+['source-freshness']
     report=Q.Report('native-build',a.out,[Path(__file__),HERE/'environment.json'],ids,dict(profile=a.profile,jobs=a.jobs,timeout=a.timeout,native_sources={n:config['native_sources'][n] for n in names}))
     prefix=report.out/'install';records={}
@@ -27,13 +31,15 @@ def run(a):
         execute('fetch',['git','-C',str(src),'fetch','--depth=1','origin',spec['commit']])
         execute('checkout',['git','-C',str(src),'checkout','--detach',spec['commit']])
         execute('revision',['git','-C',str(src),'rev-parse','HEAD'])
-        if name=='opensta':
-            # OpenSTA's own CMake project has no generated configure script.
+        if name in ('opensta','systemc'):
+            # These CMake projects have no generated configure script.
             execute('generate',['cmake','--version'])
-            build=report.out/'opensta-build'
-            execute('configure',['cmake','-S',str(src),'-B',str(build),'-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DCMAKE_INSTALL_PREFIX='+str(prefix),'-DCUDD_DIR='+str(prefix/'cudd'),'-DUSE_TCL_READLINE=OFF'])
+            build=report.out/(name+'-build')
+            flags=['-DCUDD_DIR='+str(prefix/'cudd'),'-DUSE_TCL_READLINE=OFF'] if name=='opensta' else ['-DCMAKE_POLICY_VERSION_MINIMUM=3.5','-DCMAKE_CXX_STANDARD=17','-DENABLE_PTHREADS=ON','-DBUILD_SHARED_LIBS=OFF','-DCMAKE_INSTALL_LIBDIR=lib']
+            execute('configure',['cmake','-S',str(src),'-B',str(build),'-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DCMAKE_INSTALL_PREFIX='+str(prefix),*flags])
             execute('build',['cmake','--build',str(build),'--parallel',str(a.jobs)])
             execute('install',['cmake','--install',str(build)])
+            if name=='systemc' and good:systemc_config(prefix,spec['release'])
         else:
             # CUDD's checked-in Makefile.in names Automake 1.14. Regenerate the
             # complete Autotools chain with the installed version before make.

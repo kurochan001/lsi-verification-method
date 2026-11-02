@@ -119,6 +119,7 @@ def plan_inputs(args,jobs,root=ROOT):
     paths=[root/'tools/run_regression.py',args.registry,root/'examples/local-irq-cdc/run.py']
     if any('--uvm-home' in j['command'] for j in jobs):paths.append(root/'tools/uvm-source-sha256.json')
     if any('--oss-home' in j['command'] for j in jobs):paths += [root/'tools/oss_cad.py',root/'tools/oss_cad.json']
+    if any(j.get('example')=='local-vci-soclib' for j in jobs):paths += [root/'tools/systemc.py',root/'tools/environment.json']
     return paths
 
 
@@ -248,6 +249,11 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None):
         for snapshot in oss_snapshots:
             record=json.loads(snapshot.read_text());observed=oss.verify(Path(record['root']),record['platform'])
             if any(record.get(k)!=observed[k] for k in ('platform','release','archive_sha256','tree_sha256','files')):raise ValueError('OSS CAD Suite snapshot differs')
+    systemc_snapshots=list(directory.rglob('systemc-source.json'))
+    if 'lsi-systemc-config' in entry.get('tools',[]) and not systemc_snapshots:raise ValueError('missing SystemC source snapshot')
+    if systemc_snapshots:
+        spec=importlib.util.spec_from_file_location('regression_systemc',Path(__file__).resolve().parent/'systemc.py');systemc=importlib.util.module_from_spec(spec);spec.loader.exec_module(systemc)
+        for snapshot in systemc_snapshots:systemc.verify(json.loads(snapshot.read_text()))
     if count==0:raise ValueError('missing source manifest')
     return dict(junit=len(cases),source_hashes=count)
 

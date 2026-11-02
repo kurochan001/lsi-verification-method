@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "VCI-DATA",
+      "goals": [
+        "data/read",
+        "data/write",
+        "data/byte-enable",
+        "data/second-segment"
+      ]
+    },
+    {
+      "id": "VCI-PACKET",
+      "goals": [
+        "packet/two-cells",
+        "packet/four-cells",
+        "response/ids"
+      ]
+    },
+    {
+      "id": "VCI-FLOW",
+      "goals": [
+        "handshake/command-hold",
+        "handshake/response-hold"
+      ]
+    },
+    {
+      "id": "VCI-ERROR",
+      "goals": [
+        "response/unmapped"
+      ]
+    },
+    {
+      "id": "VCI-RESET",
+      "goals": [
+        "reset/command-cancel",
+        "reset/response-cancel",
+        "reset/clean-restart"
+      ]
+    }
+  ]
+}

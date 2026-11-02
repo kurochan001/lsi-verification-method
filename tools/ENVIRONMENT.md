@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | `docs` | 3.10以上 | Markdown・PyYAML、Git、Node.js 22以上・npm、固定版Mermaidの構文解析 |
 | `smoke` | 3.10以上 | 標準ライブラリ用venv、Icarus 14系、Verilator 5.052、C++20・C11、make |
-| `full` | 3.13以上 | 上記全部、SystemRDL・cocotb・Z3、専用フォーマルvenv、公式UVM、固定版OSS CAD Suite、OpenSTA 3.1.0、LLVM |
+| `full` | 3.13以上 | 上記全部、SystemRDL・cocotb・Z3、専用フォーマルvenv、公式UVM、固定版OSS CAD Suite、OpenSTA 3.1.0、LLVM、SystemC 2.3.4 |
 
 全例の準備には`full`を使います。Pythonパッケージの版とネイティブツールのソース版は[`environment.json`](environment.json)、インストール対象は[文書用](docs-requirements.txt)・[シミュレーション用](simulation-requirements.txt)・[フォーマル用](../examples/local-fifo-formal/tools-requirements.txt)に固定しています。OS・コンパイラー・すべての推移依存まで固定したコンテナではありません。
 
@@ -23,7 +23,7 @@ sudo apt-get install -y autoconf automake bison cmake flex g++ gcc gperf \
 python3 tools/build_native.py --profile full --jobs 2 --out artifacts/toolchains/native
 ```
 
-[`build_native.py`](build_native.py)はIcarus・Verilator・CUDD・OpenSTAの登録済みGitコミットをチェックアウトし、`--out`配下でビルドして`install/`へインストールします。各段階のコマンド・時間上限・ログ・実際のコミットを残し、版不一致やビルド失敗を拒否します。`smoke`ならIcarusとVerilatorだけを構築します。ソース取得にはネットワークが必要です。外部ツールのソース・ライセンスはこの出力先へ保存され、リポジトリには取り込みません。
+[`build_native.py`](build_native.py)はIcarus・Verilator・CUDD・OpenSTA・SystemCの登録済みGitコミットをチェックアウトし、`--out`配下でビルドして`install/`へインストールします。各段階のコマンド・時間上限・ログ・実際のコミットを残し、版不一致やビルド失敗を拒否します。`smoke`ならIcarusとVerilatorだけを構築します。ソース取得にはネットワークが必要です。外部ツールのソース・ライセンスはこの出力先へ保存され、リポジトリには取り込みません。
 
 CUDDは古いAutomakeの版を参照する生成済みファイルを含むため、`autoreconf -fi`で現在のAutoconf・Automake・Libtoolに合わせて再生成します。
 
@@ -87,3 +87,11 @@ python3 tools/setup_oss_cad.py --check artifacts/toolchains/oss/oss-cad-suite
 アーカイブのSHA-256に加え、展開後の全ファイルのハッシュ・シンボリックリンク先・実行ビットから作るハッシュを照合します。追加・欠落・変更も失敗です。ツール起動時は`PYTHONDONTWRITEBYTECODE=1`を設定し、同梱Pythonがインストール先のキャッシュを書き換えないようにします。変更を見逃すための除外設定にはしません。
 
 例と全体ランナーには`--oss-home`を渡します。このbinを通常のPATHの先頭へ追加すると、既存例に必要なIcarus・Verilatorの版を置き換えるため避けてください。ツール本体と各ライセンスは出力先だけに保存し、リポジトリへ再配布しません。macOS arm64版には`live`用のsuproveがないため、本例は[正確な有限状態変換とPDR](../examples/local-liveness/README.md#証明方式)を使います。
+
+## SystemCとSoCLibの例
+
+[VCIの実SoCLib例](../examples/local-vci-soclib/README.md)は、Accellera公式の[SystemC 2.3.4](https://github.com/accellera-official/systemc/tree/5fc1469339775b54b1fcc2020ac744a58be5b50e)を使います。`build_native.py --profile full`は固定コミットからC++17・POSIXスレッド・静的ライブラリーとして構築し、`install/include/`、`install/lib/libsystemc.a`、`install/bin/lsi-systemc-config`へ配置します。`--tool-bin .../install/bin`を診断・全例実行へ渡してください。`smoke`環境の構築には含めません。
+
+SoCLibコード中のGNU拡張に合わせ、例は`-std=gnu++17`でコンパイルします。SystemC側のC++規格も17でそろえています。`lsi-systemc-config --prefix`は配置先、`--version`は構築対象の版を返します。full診断ではこの表示に加え、実ライブラリーをリンクしたSystemCプログラムの起動と版も確認します。
+
+SoCLibのCABA部品は必要なソースをリポジトリへ収録しており、旧Python版のSoCLibツールやCPU用クロスコンパイラーは使いません。収録部品のLGPLと、外部ビルドするSystemCのApache-2.0を区別します。例の実行では、使用したSystemCヘッダー・ライブラリー・設定コマンドの全対象ハッシュを保存し、変更・欠落・追加を再照合します。

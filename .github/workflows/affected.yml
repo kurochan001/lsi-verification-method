@@ -125,6 +125,7 @@ jobs:
             artifacts/ci/**/tools.json
             artifacts/ci/**/uvm-source.json
             artifacts/ci/**/oss-source.json
+            artifacts/ci/**/systemc-source.json
             artifacts/ci/**/mutation-report.json
             artifacts/ci/**/db.sqlite3
             artifacts/ci/**/mutated.v

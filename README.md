@@ -26,6 +26,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
+| VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[実SoCLib CABA RAM](examples/local-vci-soclib/README.md) |
 | 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
 | 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
 | 自動生成した誤実装でテストを評価する | [MCY・機能等価性・検出率](examples/local-auto-mutation/README.md) |
@@ -192,7 +193,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 | 分野 | 主な題材 |
 | --- | --- |
-| <a id="バスレジスタアドレス"></a>[バス・レジスタ・アドレス](examples/README.md#バスレジスタアドレス) | APB・AHB・AXI、幅変換、アドレスマップ |
+| <a id="バスレジスタアドレス"></a>[バス・レジスタ・アドレス](examples/README.md#バスレジスタアドレス) | APB・AHB・AXI・VCI、幅変換、アドレスマップ、実SoCLibモデル |
 | <a id="fifo通信仲裁"></a>[FIFO・通信・仲裁](examples/README.md#fifo通信仲裁) | FIFO、ready/valid、UART・SPI・I²C、再送・パケットスイッチ |
 | <a id="割り込みタイマー周辺機能の結合"></a>[割り込み・タイマー・周辺機能の結合](examples/README.md#割り込みタイマー周辺機能の結合) | 割り込み、タイマー、ウォッチドッグ、周辺回路の接続 |
 | <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序 |
@@ -306,6 +307,7 @@ FIFO例は既定で`artifacts/fifo-local-日時/`へ結果を保存します。�
 | --- | --- |
 | フォーマル検証 | [Yosys・SBY・Z3の固定版環境](examples/local-formal-common/README.md) |
 | UVM・RAL・制約付きランダム化 | [UVMの準備](examples/local-uvm/README.md)／[UVMランダム化の準備](examples/local-uvm-random/README.md) |
+| VCI・SoCLib CABA／SystemC | [固定版SystemCの構築](tools/ENVIRONMENT.md#systemcとsoclibの例)／[実SoCLibを使う例](examples/local-vci-soclib/README.md) |
 | SystemRDL・cocotb・C連携 | [仕様生成](examples/local-register-spec/README.md)／[cocotb](examples/local-cocotb/README.md)／[ホスト連携の共通処理](examples/local-host-common/README.md) |
 | 探索・縮小・UVMの証跡管理 | [固定計画と実行記録の共通処理](examples/local-exploration-common/README.md) |
 
@@ -373,5 +375,7 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 ## ライセンス
 
 本リポジトリで新規作成した資料・コード、およびkirimasim-testsから複製・改訂した資料・ツールには、Apache License 2.0 with LLVM Exceptions（`Apache-2.0 WITH LLVM-exception`）を適用します（[LICENSE](LICENSE)）。複製元と改訂の記録は[PROVENANCE.md](PROVENANCE.md)を参照してください。
+
+[SoCLibの収録ソース](examples/local-vci-soclib/upstream/)にはLGPL-2.1-onlyを適用し、元の著作権表示とライセンス本文を保持しています。詳細は[取り込みの記録](PROVENANCE.md#vci-soclib-20261102)を参照してください。
 
 参照先のIEEE規格、外部の文書・ソフトウェアには、それぞれの権利者の利用条件が適用されます。本リポジトリのライセンスは、それらの転載・再配布の許諾を与えるものではありません。

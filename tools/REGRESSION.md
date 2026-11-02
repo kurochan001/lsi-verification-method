@@ -36,7 +36,7 @@ python3 tools/run_regression.py --suite formal --list
 
 全例にはPython 3.13以上を使います。[環境の一括準備・診断](ENVIRONMENT.md)の`full`プロファイルで、専用venv・固定パッケージ・公式UVMを準備できます。既存環境を使う場合も`check_environment.py`で版と実行を診断できます。以下は個別に用意する場合の手順です。
 
-Icarus Verilog、Verilator 5.052、C++20コンパイラー、Cコンパイラー、make、OpenSTAを各環境へ用意します。フォーマルは[固定版環境](../examples/local-formal-common/README.md)、UVMは[ライブラリの準備](../examples/local-uvm/README.md#ライブラリの準備)、OpenSTAは[構築手順](../examples/local-sta/README.md)を参照してください。MCYと期限なしの進行証明には[固定版OSS CAD Suite](ENVIRONMENT.md#oss-cad-suiteの固定版)も準備します。ランナー自身はツールをインストールしません。
+Icarus Verilog、Verilator 5.052、C++20コンパイラー、Cコンパイラー、make、OpenSTA、[SystemC 2.3.4](ENVIRONMENT.md#systemcとsoclibの例)を各環境へ用意します。フォーマルは[固定版環境](../examples/local-formal-common/README.md)、UVMは[ライブラリの準備](../examples/local-uvm/README.md#ライブラリの準備)、OpenSTAは[構築手順](../examples/local-sta/README.md)を参照してください。MCYと期限なしの進行証明には[固定版OSS CAD Suite](ENVIRONMENT.md#oss-cad-suiteの固定版)も準備します。ランナー自身はツールをインストールしません。
 
 シミュレーション側のPython依存は、専用環境へ次のように準備できます。固定するのは記載した3パッケージの版であり、OS・コンパイラー・全推移依存まで同一にする環境イメージではありません。
 
@@ -60,6 +60,8 @@ python3 tools/run_regression.py --profile nightly --jobs 2 \
   --command-timeout 60 --formal-timeout 1800 --child-timeout 7200 \
   --build-timeout 600 --out artifacts/repository-nightly
 ```
+
+SystemCの構築先が別なら、その`install/bin`も`--tool-bin`へ追加します。
 
 `--tool-bin`はPATHへ追加するディレクトリで、繰り返し指定できます。上例はOpenSTAを既存手順の配置先へ構築した場合です。`sta`が既にPATH上にあるなら、その指定は不要です。選択したPythonのbinもPATHへ追加し、仮想環境のシンボリックリンクを保持します。cocotbへ使うPythonは子にも明示します。
 

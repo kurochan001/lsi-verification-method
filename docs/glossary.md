@@ -383,6 +383,20 @@ flowchart TD
 
 参照：[ロボティクスの検証手順](method/robotics-verification.md)、[PWM／エンコーダ](../examples/local-motion-io/README.md)、[1軸閉ループ](../examples/local-motion-control/README.md)。
 
+## 19. VCI・SoCLib・SystemC
+
+| 用語 | 意味・検証で確認すること |
+| --- | --- |
+| VCI（Virtual Component Interface） | コマンドと応答を別チャネルで扱うインターフェース。本例ではSoCLibの実装規則に従い、受付・パケット末尾・返却IDを検査する |
+| CABA（Cycle Accurate / Bit Accurate） | クロック単位・ビット単位のモデル。信号の受付と更新を追えるが、RTL合成や実装遅延の確認と同一ではない |
+| SystemC | C++による並行処理・信号・時刻を扱うシミュレーション環境。モデルとライブラリーのC++規格・版・ビルド条件をそろえる |
+| SoCLib | SystemCによるSoCモデルのライブラリー。本例では実CABA RAMとVCI信号を収録し、取得版・修正・外部ライセンスを記録する |
+| コマンドセル／応答セル | 各チャネルで1回受け付けるデータ単位。読出しと書込みでは、1パケット内の両者の件数が異なる場合がある |
+| eop／reop | コマンド／応答パケットの末尾を示す信号。受付済みの末尾で完了を判定し、待ち中の保持も確認する |
+| SRCID・TRDID・PKTID | 要求と応答を対応付けるVCIのID。本例では各返却IDの一致を検査するが、複数未完了パケットの並べ替えは扱わない |
+
+参照：[VCIの検証手順](method/vci-soclib-verification.md)、[実SoCLib例](../examples/local-vci-soclib/README.md)。
+
 ## 表記の参考資料
 
 本資料では、バス操作は「トランザクション」、変更後の再検証は「リグレッション」と表記します。用語表記の参考として、Cadenceの[トランザクションと性能検証に関する日本語解説](https://www.cadence.com/ja_JP/home/for-testing-only/newsoc/2021/may/volume34/issue2.html)、Cadenceの[検証環境とリグレッションに関する日本語解説](https://www.cadence.com/ja_JP/home/soc/2020/oct/volume33/issue1.html)と、Synopsysの[検証・デバッグ・カバレッジに関する日本語資料](https://www.synopsys.com/ja-jp/verification/debug.html)も参照しています。

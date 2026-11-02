@@ -1,0 +1,158 @@
+{
+  "revision": 2672,
+  "source": "https://www.soclib.fr/svn/trunk/soclib/",
+  "immutable_source": "https://www.soclib.fr/svn/!svn/bc/2672/trunk/soclib/",
+  "license": "LGPL-2.1-only",
+  "files": {
+    "soclib/communication/vci/caba/source/include/vci_buffers.h": {
+      "original_sha256": "9714dd3a5f2208694484ee857dbd846b6c891338c2d43563203e583ab4f6f4e8",
+      "sha256": "9714dd3a5f2208694484ee857dbd846b6c891338c2d43563203e583ab4f6f4e8"
+    },
+    "soclib/communication/vci/caba/source/include/vci_initiator.h": {
+      "original_sha256": "7876d74a4718aa1de9078a2613a354ae8a402563a88bd4e58b4617ad6482981a",
+      "sha256": "7876d74a4718aa1de9078a2613a354ae8a402563a88bd4e58b4617ad6482981a"
+    },
+    "soclib/communication/vci/caba/source/include/vci_monitor.h": {
+      "original_sha256": "bdb241f17bd269890196b2d863163ffa51f30019c22476ef08a5ca5a8ee3e664",
+      "sha256": "bdb241f17bd269890196b2d863163ffa51f30019c22476ef08a5ca5a8ee3e664"
+    },
+    "soclib/communication/vci/caba/source/include/vci_param.h": {
+      "original_sha256": "74fa7121b1bd575bb97f730a5c31d52830aef0af6de1882f2d8c2b435672c3ef",
+      "sha256": "74fa7121b1bd575bb97f730a5c31d52830aef0af6de1882f2d8c2b435672c3ef"
+    },
+    "soclib/communication/vci/caba/source/include/vci_signals.h": {
+      "original_sha256": "d0382825bb1de38d3dd41d2535ea946c79c6c5c15145418169c52eb3d4d111fc",
+      "sha256": "d0382825bb1de38d3dd41d2535ea946c79c6c5c15145418169c52eb3d4d111fc"
+    },
+    "soclib/communication/vci/caba/source/include/vci_target.h": {
+      "original_sha256": "df91b8847597ac67daded21904ef89f06d1c3ec25cc69b3e5ea6ac9acf5627b3",
+      "sha256": "df91b8847597ac67daded21904ef89f06d1c3ec25cc69b3e5ea6ac9acf5627b3"
+    },
+    "soclib/lib/address_decoding_table/include/address_decoding_table.h": {
+      "original_sha256": "4719cad0aea4c71c9a98d980318fc0d9ba6cbfd15e2f5cafce6fbcbe7a7b2ca3",
+      "sha256": "4719cad0aea4c71c9a98d980318fc0d9ba6cbfd15e2f5cafce6fbcbe7a7b2ca3"
+    },
+    "soclib/lib/address_decoding_table/src/address_decoding_table.cpp": {
+      "original_sha256": "fd5e1501dd2b21bf95659721e21030d77a3d459e1e757a60d2329bd03df5db6f",
+      "sha256": "fd5e1501dd2b21bf95659721e21030d77a3d459e1e757a60d2329bd03df5db6f"
+    },
+    "soclib/lib/address_masking_table/include/address_masking_table.h": {
+      "original_sha256": "435c626268d7854c6797a2d6b9f1e6f55a5bf37a2832c412ff678f35834d1ed4",
+      "sha256": "435c626268d7854c6797a2d6b9f1e6f55a5bf37a2832c412ff678f35834d1ed4"
+    },
+    "soclib/lib/address_masking_table/src/address_masking_table.cpp": {
+      "original_sha256": "f6f249a597a86a3574a846051315fce03d37a940aa3eec25dce2b5f99cfaee00",
+      "sha256": "f6f249a597a86a3574a846051315fce03d37a940aa3eec25dce2b5f99cfaee00"
+    },
+    "soclib/lib/base_module/include/base_module.h": {
+      "original_sha256": "0268b4a1ccd613b5a6b34a8fcd6ea7172e2423195eb5e2fc6f549d546f9f88aa",
+      "sha256": "0268b4a1ccd613b5a6b34a8fcd6ea7172e2423195eb5e2fc6f549d546f9f88aa"
+    },
+    "soclib/lib/base_module/include/caba/caba_base_module.h": {
+      "original_sha256": "7d7880d32a9b3e0307fb83ec7885937017fd13b5e3e2120e0833f1a1a3577c10",
+      "sha256": "7d7880d32a9b3e0307fb83ec7885937017fd13b5e3e2120e0833f1a1a3577c10"
+    },
+    "soclib/lib/base_module/src/caba/caba_base_module.cpp": {
+      "original_sha256": "a6f15bb26fef3c336091401b6bd461e56536e048327d2cda88ab220407d7ffa5",
+      "sha256": "a6f15bb26fef3c336091401b6bd461e56536e048327d2cda88ab220407d7ffa5"
+    },
+    "soclib/lib/exception/include/exception.h": {
+      "original_sha256": "7291320e94b2b8b7b59553ff6d73fdb351b89a6150346f6c84f86f9547bf5e98",
+      "sha256": "7291320e94b2b8b7b59553ff6d73fdb351b89a6150346f6c84f86f9547bf5e98"
+    },
+    "soclib/lib/include/arithmetics.h": {
+      "original_sha256": "fe261fb2f0a1c55bd4f9dd2cac3d3d929a6b46d60ba7dc1fd6dce2a4ca79d119",
+      "sha256": "fe261fb2f0a1c55bd4f9dd2cac3d3d929a6b46d60ba7dc1fd6dce2a4ca79d119"
+    },
+    "soclib/lib/include/register.h": {
+      "original_sha256": "ac7db44883bde8a661b4458dd207096106ab5aba768c6acf14e687df7ed99447",
+      "sha256": "ac7db44883bde8a661b4458dd207096106ab5aba768c6acf14e687df7ed99447"
+    },
+    "soclib/lib/include/soclib_endian.h": {
+      "original_sha256": "39db75d4e12271f0bb03b36b45a4b2cb8d7fa670588f7b1cd33322ec53ee9f4b",
+      "sha256": "39db75d4e12271f0bb03b36b45a4b2cb8d7fa670588f7b1cd33322ec53ee9f4b",
+      "retrieved_from": "https://www.soclib.fr/svn/trunk/soclib/soclib/lib/include/soclib_endian.h"
+    },
+    "soclib/lib/include/static_assert.h": {
+      "original_sha256": "0e56443a0e35a4d8330dac6af9f38a8f1a36cc55681dbf75c9da89a903a50dfc",
+      "sha256": "0e56443a0e35a4d8330dac6af9f38a8f1a36cc55681dbf75c9da89a903a50dfc"
+    },
+    "soclib/lib/include/static_fast_int.h": {
+      "original_sha256": "7338e74521c107f8a03d98bb1656c6fc5db06e081e13f82992b32247ce49b479",
+      "sha256": "7338e74521c107f8a03d98bb1656c6fc5db06e081e13f82992b32247ce49b479"
+    },
+    "soclib/lib/linked_access_buffer/include/linked_access_buffer.h": {
+      "original_sha256": "20e4611de6b3e5b3345fc992b3bfd3b28c8d5a85363b2de93cbe8a7ef20ae523",
+      "sha256": "20e4611de6b3e5b3345fc992b3bfd3b28c8d5a85363b2de93cbe8a7ef20ae523"
+    },
+    "soclib/lib/linked_access_buffer/src/linked_access_buffer.cpp": {
+      "original_sha256": "853e552659f64e16925075499a51a83598afbfb462ec953a5201e1cfedd86499",
+      "sha256": "853e552659f64e16925075499a51a83598afbfb462ec953a5201e1cfedd86499"
+    },
+    "soclib/lib/loader/include/binary_file_section.h": {
+      "original_sha256": "29e477adbf3f2f7182d5f7a52b1a9e4850b60e753d93f13026e1fda1096cd04a",
+      "sha256": "29e477adbf3f2f7182d5f7a52b1a9e4850b60e753d93f13026e1fda1096cd04a"
+    },
+    "soclib/lib/loader/include/binary_file_symbol.h": {
+      "original_sha256": "4b7c80a142a58f5dbba69b6964fb52aea40e18d17908d03300dfb88c6f1accfc",
+      "sha256": "4b7c80a142a58f5dbba69b6964fb52aea40e18d17908d03300dfb88c6f1accfc"
+    },
+    "soclib/lib/loader/include/loader.h": {
+      "original_sha256": "c7a416cabf180e387037d40ebd8bd23d251f3b1182b609f532d425607bd37def",
+      "sha256": "c7a416cabf180e387037d40ebd8bd23d251f3b1182b609f532d425607bd37def"
+    },
+    "soclib/lib/loader/src/binary_file_section.cpp": {
+      "original_sha256": "77016561d303656bf9848a7a6c0ec63ed49731cd8b0af3208d7ef29347ffe5df",
+      "sha256": "77016561d303656bf9848a7a6c0ec63ed49731cd8b0af3208d7ef29347ffe5df"
+    },
+    "soclib/lib/loader/src/binary_file_symbol.cpp": {
+      "original_sha256": "8eb49ebaafa101f5d56967e2b25184523c1be7f05dfd5a0770b4f5ec403e6316",
+      "sha256": "8eb49ebaafa101f5d56967e2b25184523c1be7f05dfd5a0770b4f5ec403e6316"
+    },
+    "soclib/lib/loader/src/loader.cpp": {
+      "original_sha256": "cd8f7d10cd14e9134f59d0f4c8626ef91197af4a4d17c79951a1bd27e921e4a2",
+      "sha256": "cd8f7d10cd14e9134f59d0f4c8626ef91197af4a4d17c79951a1bd27e921e4a2"
+    },
+    "soclib/lib/mapping_table/include/int_tab.h": {
+      "original_sha256": "5f585534b1ce2dfa172c80f026127fe8a006a86e1ff2f2a5bb58a968b449312d",
+      "sha256": "5f585534b1ce2dfa172c80f026127fe8a006a86e1ff2f2a5bb58a968b449312d"
+    },
+    "soclib/lib/mapping_table/include/mapping_table.h": {
+      "original_sha256": "15774c487a96bf6a46ced6be6a3b99351c7d1dd2d1a3cc0561fd029ad3b1168e",
+      "sha256": "15774c487a96bf6a46ced6be6a3b99351c7d1dd2d1a3cc0561fd029ad3b1168e"
+    },
+    "soclib/lib/mapping_table/src/mapping_table.cpp": {
+      "original_sha256": "472e72b57bf913e7bfc129650cf82504b3cc33e8af00d9bf98f9cc3146d03660",
+      "sha256": "472e72b57bf913e7bfc129650cf82504b3cc33e8af00d9bf98f9cc3146d03660"
+    },
+    "soclib/lib/segment/include/segment.h": {
+      "original_sha256": "79e066b7b6b5e8506b58bab07165df8deba861e8efa247cccde8e44bfdcc3c1d",
+      "sha256": "79e066b7b6b5e8506b58bab07165df8deba861e8efa247cccde8e44bfdcc3c1d"
+    },
+    "soclib/lib/segment/src/segment.cpp": {
+      "original_sha256": "e7a887b5a71751c26d6c4e20805f7f05626f2701da8f0ef5f36314da507c7037",
+      "sha256": "e7a887b5a71751c26d6c4e20805f7f05626f2701da8f0ef5f36314da507c7037"
+    },
+    "soclib/lib/vci_target_fsm/include/caba/vci/vci_target_fsm.h": {
+      "original_sha256": "a21fa5d4801e980cf8bc1b84468cb6b0e63f682ca06b6bc3560fe643fd76975b",
+      "sha256": "a21fa5d4801e980cf8bc1b84468cb6b0e63f682ca06b6bc3560fe643fd76975b"
+    },
+    "soclib/lib/vci_target_fsm/src/caba/vci/vci_target_fsm.cpp": {
+      "original_sha256": "8eb850ba92e255fbe704f2cebc4510761fc47225ac257c2490d8b779ebbbb96f",
+      "sha256": "8eb850ba92e255fbe704f2cebc4510761fc47225ac257c2490d8b779ebbbb96f"
+    },
+    "soclib/module/internal_component/vci_ram/caba/source/include/vci_ram.h": {
+      "original_sha256": "bcda14cb13a2f43f069df5e724854a5c5214d8cf70d716c3359a30b83dcc3bcb",
+      "sha256": "bcda14cb13a2f43f069df5e724854a5c5214d8cf70d716c3359a30b83dcc3bcb"
+    },
+    "soclib/module/internal_component/vci_ram/caba/source/src/vci_ram.cpp": {
+      "original_sha256": "a4018a3bb0bc39161611cf2c198702425c83ac264659004da2bd8fe7fd233b43",
+      "sha256": "44ff020ef1f5ac2eaa705d249c6502491899663e50bccd574703a42b9d4c41dc",
+      "modification": "Preserve the upper bytes of an existing 64-bit RAM word during partial writes."
+    },
+    "COPYING.lgpl": {
+      "original_sha256": "5df07007198989c622f5d41de8d703e7bef3d0e79d62e24332ee739a452af62a",
+      "sha256": "5df07007198989c622f5d41de8d703e7bef3d0e79d62e24332ee739a452af62a"
+    }
+  }
+}

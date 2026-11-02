@@ -12,7 +12,7 @@ GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と�
 
 ## 実行環境
 
-Ubuntu 24.04、Python 3.13、Node.js 24を使います。[環境の準備と診断](ENVIRONMENT.md)でPython・Mermaid・UVM・フォーマルの依存パッケージを導入し、Icarus・Verilator・OpenSTA・CUDDは[`environment.json`](environment.json)のコミットから構築します。MCY・ネイティブYosys・SBY・ABCは[固定版OSS CAD Suite](ENVIRONMENT.md#oss-cad-suiteの固定版)を別キャッシュで準備し、配布アーカイブと展開内容のハッシュを照合します。Actionsの参照も完全なコミットSHAに固定しています。ネイティブツールのキャッシュは、OS・CPUと構築コード・版台帳のハッシュをキーにします。キャッシュがあっても、環境診断と実際の検証は毎回行います。
+Ubuntu 24.04、Python 3.13、Node.js 24を使います。[環境の準備と診断](ENVIRONMENT.md)でPython・Mermaid・UVM・フォーマルの依存パッケージを導入し、Icarus・Verilator・OpenSTA・CUDD・SystemCは[`environment.json`](environment.json)のコミットから構築します。MCY・ネイティブYosys・SBY・ABCは[固定版OSS CAD Suite](ENVIRONMENT.md#oss-cad-suiteの固定版)を別キャッシュで準備し、配布アーカイブと展開内容のハッシュを照合します。Actionsの参照も完全なコミットSHAに固定しています。ネイティブツールのキャッシュは、OS・CPUと構築コード・版台帳のハッシュをキーにします。キャッシュがあっても、環境診断と実際の検証は毎回行います。
 
 ツール取得にはネットワークを使います。OSイメージや全推移依存まで固定する構成ではないため、更新時の診断失敗はログの版と取得先から切り分けます。キャッシュは検証結果の代用ではありません。
 
@@ -42,3 +42,5 @@ gh run list --workflow nightly.yml --limit 5
 ```
 
 全例の確認にはNightlyの完了を待ちます。Qualityだけの成功は、全例・全フォーマルの成功を意味しません。マージ時に必須にするチェック、PRの承認、Draft、ブランチ保護はGitHub側の運用設定です。このワークフローを置くだけでは設定されません。初回の実行結果とローカルの確認記録は[由来](../PROVENANCE.md#quality-automation-20261101)へ残します。
+
+SoCLibの例では`systemc-source.json`も保存し、実際にリンクした静的ライブラリー・使用ヘッダー・設定コマンドのハッシュを全体集約時に再照合します。実SoCLib CABAモデルの検証結果と、SystemVerilog RTLのlint・コードカバレッジは別に扱います。

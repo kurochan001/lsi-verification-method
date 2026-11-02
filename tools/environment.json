@@ -21,6 +21,7 @@
     "iverilog": {"repository": "https://github.com/steveicarus/iverilog.git", "commit": "ca6b8d376ab60758d1affce3188ec4dcaf485d16"},
     "verilator": {"repository": "https://github.com/verilator/verilator.git", "commit": "ea338be98e1e838d3518809ce8899f85a009963c", "release": "5.052"},
     "cudd": {"repository": "https://github.com/cuddorg/cudd.git", "commit": "f54f533303640afd5dbe47a05ebeabb3066f2a25"},
-    "opensta": {"repository": "https://github.com/parallaxsw/OpenSTA.git", "commit": "cc365d0914ddd11b61575c4a06cde3ecceeb0d01", "release": "3.1.0"}
+    "opensta": {"repository": "https://github.com/parallaxsw/OpenSTA.git", "commit": "cc365d0914ddd11b61575c4a06cde3ecceeb0d01", "release": "3.1.0"},
+    "systemc": {"repository": "https://github.com/accellera-official/systemc.git", "commit": "5fc1469339775b54b1fcc2020ac744a58be5b50e", "release": "2.3.4"}
   }
 }

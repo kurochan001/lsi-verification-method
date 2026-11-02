@@ -5343,6 +5343,11 @@
         "local-motion-control/motion_axis/DEAD=3/FILTER=3/LATENCY=5/PERIOD=24/SAMPLE=96/SPEED_LIMIT=8"
       ],
       "reason": "固定小数点PI・PWM・エンコーダと周期・異常停止・再開を全通常構成で静的検査"
+    },
+    "local-vci-soclib": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "実SoCLibのCABA/SystemCモデルをC++で検証する例。SystemVerilog RTLを含まず、Verilator lintの対象外。"
     }
   },
   "blackbox_sources": {

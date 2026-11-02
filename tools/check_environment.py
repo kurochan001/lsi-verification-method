@@ -14,7 +14,7 @@ import oss_cad as O
 HERE=Path(__file__).resolve().parent
 DOC_TOOLS={'git':['--version'],'node':['--version'],'npm':['--version']}
 SIM_TOOLS={'iverilog':['-V'],'vvp':['-V'],'verilator':['--version'],'verilator_coverage':['--version'],'c++':['--version'],'cc':['--version'],'make':['--version']}
-FORMAL_TOOLS={'yowasp-yosys':['--version'],'yowasp-sby':['--version'],'yowasp-yosys-smtbmc':['--help'],'yowasp-yosys-witness':['--help'],'z3':['--version'],'sta':['-version'],'llvm-mc':['--version'],'llvm-objcopy':['--version']}
+FORMAL_TOOLS={'yowasp-yosys':['--version'],'yowasp-sby':['--version'],'yowasp-yosys-smtbmc':['--help'],'yowasp-yosys-witness':['--help'],'z3':['--version'],'sta':['-version'],'llvm-mc':['--version'],'llvm-objcopy':['--version'],'lsi-systemc-config':['--version']}
 def tool_plan(profile):return {**(DOC_TOOLS if profile in ('docs','full') else {}),**(SIM_TOOLS if profile in ('smoke','full') else {}),**(FORMAL_TOOLS if profile=='full' else {})}
 def version_ok(name,output):
     if name=='node':return bool((m:=re.fullmatch(r'v(\d+)\.\d+\.\d+\s*',output)) and int(m[1])>=22)
@@ -23,11 +23,13 @@ def version_ok(name,output):
     if name=='sta':return bool(re.match(r'3\.1\.0\b',output.strip()))
     if name=='yowasp-yosys':return bool(re.search(r'Yosys 0\.70\b',output))
     if name=='z3':return bool(re.search(r'Z3 version 4\.15\.3\b',output))
+    if name=='lsi-systemc-config':return output.strip()=='SystemC 2.3.4'
     return bool(output.strip())
 def package_command(python,requirements):
     code='import importlib,importlib.metadata,json,sys; names=json.loads(sys.argv[1]); [importlib.import_module(v["import"]) for v in names.values()]; print(json.dumps({"python":list(sys.version_info[:3]),"executable":sys.executable,"packages":{n:importlib.metadata.version(n) for n in names}}))'
     return [python,'-c',code,json.dumps(requirements)]
 def guidance(name):
+    if name=='lsi-systemc-config':return 'tools/build_native.py --profile fullでSystemC 2.3.4を準備し、install/binを--tool-binに指定。'
     if name in DOC_TOOLS:return 'Node.js 22以上・npm・Gitを準備し、npm ci --prefix tools/docs --ignore-scriptsを実行。'
     if name in SIM_TOOLS:return 'tools/ENVIRONMENT.mdのOS別ネイティブ依存と固定版Icarus/Verilatorを準備。'
     return '固定版のformal環境とOpenSTAを準備し、--formal-pythonと--tool-binの指定を確認。'
@@ -45,7 +47,7 @@ def run(a):
     ids=['python',*['tool/'+n for n in tools],*['packages/'+r for r in roles]]
     if a.profile in ('docs','full'):ids+=['docs-runtime']
     if a.profile in ('smoke','full'):ids+=['cxx20','c11']
-    if a.profile=='full':ids+=['uvm','oss-cad','oss/yosys','oss/sby','oss/mcy']
+    if a.profile=='full':ids+=['systemc','uvm','oss-cad','oss/yosys','oss/sby','oss/mcy']
     ids+=['source-freshness']
     report=Q.Report('environment',a.out,[Path(__file__),Path(O.__file__),O.CONFIG,HERE/'environment.json',HERE/'uvm-source-sha256.json',HERE/'docs/package.json',HERE/'docs/package-lock.json',HERE/'docs/check_mermaid.mjs',HERE/'docs-requirements.txt',HERE/'simulation-requirements.txt',Q.ROOT/'examples/local-fifo-formal/tools-requirements.txt'],ids,dict(profile=a.profile,python=a.python,formal_python=a.formal_python,oss_home=str(getattr(a,'oss_home',None)),tool_bin=[str(p) for p in a.tool_bin]))
     env_path=os.pathsep.join([*[str(p.absolute()) for p in a.tool_bin],str(Path(a.formal_python).absolute().parent),os.environ.get('PATH','')]);os.environ['PATH']=env_path
@@ -76,6 +78,14 @@ def run(a):
             r=Q.P.execute([shutil.which(compiler) or compiler,'-std='+standard,'-fsyntax-only',str(path)],report.out/(label+'.log'),a.timeout,report.out)
             report.check(label,not r['error'] and r['returncode']==0,r)
     if a.profile=='full':
+        probe=report.out/'probe-systemc.cpp';probe.write_text('#include <systemc>\n#include <iostream>\nint sc_main(int,char**){std::cout<<sc_core::sc_version()<<"\\n";return 0;}\n')
+        r=Q.P.execute([shutil.which('lsi-systemc-config') or 'lsi-systemc-config','--prefix'],report.out/'systemc-prefix.log',a.timeout,report.out);good=False
+        if not r['error'] and r['returncode']==0:
+            prefix=Path((report.out/'systemc-prefix.log').read_text().strip())
+            r=Q.P.execute([shutil.which('c++') or 'c++','-std=gnu++17','-I'+str(prefix/'include'),str(probe),str(prefix/'lib/libsystemc.a'),'-pthread','-o',str(report.out/'probe-systemc')],report.out/'systemc-build.log',a.timeout,report.out)
+            if not r['error'] and r['returncode']==0:
+                r=Q.P.execute([str(report.out/'probe-systemc')],report.out/'systemc-run.log',a.timeout,report.out);good=not r['error'] and r['returncode']==0 and 'SystemC 2.3.4' in (report.out/'systemc-run.log').read_text()
+        report.check('systemc',good,r)
         home=a.uvm_home.absolute();expected=json.loads((HERE/'uvm-source-sha256.json').read_text())['sha256']
         good,observed_uvm=uvm_snapshot(home,expected)
         report.check('uvm',good,dict(root=str(home),files=len(observed_uvm),guidance='examples/local-uvm/setup_uvm.pyで固定SHA-256の公式アーカイブを準備。'))
