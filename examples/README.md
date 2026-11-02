@@ -36,7 +36,6 @@
 | [AXI4-Liteの幅変換](local-width-converter/README.md) | 64→32ビット、部分書込み、応答集約、途中リセット | Icarus |
 | [アドレスマップ](local-address-map/README.md) | RAM・タイマー・GPIOのデコード、別名、未割当、バイトストローブ、IRQ集約 | Icarus |
 | [AHB／AXIの方式別検査](local-bus-validation/README.md) | プロトコルチェッカー、SVA、クロス、X・リセット、性能、lint・コードカバレッジ | Icarus＋Verilator |
-
 | [VCIとSoCLibのCABA RAM](local-vci-soclib/README.md) | 32／64ビット、部分書込み、パケット、待ち中保持、ID、エラー、途中リセット、原版の不具合再現 | C++17＋SystemC 2.3.4 |
 
 ## FIFO・通信・仲裁
