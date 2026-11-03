@@ -9,6 +9,8 @@
 
 LSIの仕様から検証を計画し、刺激・観測・期待値の比較・カバレッジ・証跡を対応付けて、検証の完了を判断するためのリポジトリです。検証手順書、ローカルで動くRTLと検証環境、記録の雛形、手法の適用事例、実プロジェクトのDV環境を読む参照例を収録しています。
 
+**公開プロジェクトのDV環境を学ぶ参照例を8件収録しています。** [Ibex DV・CVA6・OpenTitan・CV32系・CVFPU／cvfpu-uvm・HPDcache・Mirafra mBits・PicoRV32の一覧](#公開プロジェクトの参照例8件)から、各資料へ進めます。
+
 例えば、FIFOなら「空や満杯で同時に読書きを要求したらどうなるか」、割り込み回路なら「イベントとクリアが重なったらどちらを優先するか」を仕様から読み取り、入力・期待結果・確認条件へ落とし込みます。実行例では、正常な動作の確認に加え、意図的な誤実装を検出できるか、必要な条件を試せているかも確認します。
 
 <a id="読む順序"></a>
@@ -36,7 +38,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 期限のない最終完了を証明する | [公平性と無限待機の反例](examples/local-liveness/README.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
-| 実プロジェクトのDV環境を読む | [CPU・FPU・キャッシュ・公開VIPの案内](docs/method/open-source-dv-environments.md)／[参照例の一覧](examples/README.md#外部のオープンソースdv環境参照例) |
+| 実プロジェクトのDV環境を読む | [公開プロジェクトの参照例8件](#公開プロジェクトの参照例8件)／[目的別の選び方・実行条件](docs/method/open-source-dv-environments.md) |
 | 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
 | 画像処理IPからCPU付きSoCへ進む | [画像処理の検証手順](docs/method/image-processing-verification.md)／[Sobel単体IP](examples/local-image-sobel/README.md)／[ROM起動SoC](examples/local-image-soc/README.md) |
 | ネットワークIPからCPU付きNICへ進む | [ネットワークの検証手順](docs/method/network-verification.md)／[ARP・UDPエコーIP](examples/local-network-echo/README.md)／[ネットワークSoC](examples/local-network-soc/README.md) |
@@ -178,7 +180,7 @@ flowchart TD
 | ランダム検証を学ぶ | [計画と完了判定](docs/method/constrained-random-verification.md)／[PythonのFIFO例](examples/local-fifo/README.md)／[SV・UVMの実行例](examples/local-uvm-random/README.md) | 固定ケースとの併用、制約の合法性、seedと入力列の再現、独立比較、未達への刺激調整と失敗列の縮小 |
 | ランダム探索の成果を次の検証へ残す | [重複・再現・回帰化の手順](docs/method/random-search-management.md)／[実行する演習](docs/method/random-search-management-walkthrough.md) | seed・入力・bin集合の違い、全試行の保存、失敗入力の縮小と固定、新規ビルドでの再生 |
 | UVMの仕組みと実践設計を学ぶ | [学習案内](docs/method/uvm-basics.md)／[実践設計](docs/method/uvm-practical-design.md) | item・phase・factory・設定、協調、RALの所有範囲、SVAと収束 |
-| 実際のCPU・IP・バスVIPのDVへ進む | [8件の目的別比較](docs/method/open-source-dv-environments.md)／[参照例の一覧](examples/README.md#外部のオープンソースdv環境参照例) | Ibex・CVA6・CV32系・PicoRV32、OpenTitan、CVFPU、HPDcache、Mirafra。計画・構成・比較と実行条件を追う |
+| 実際のCPU・IP・バスVIPのDVへ進む | [参照例8件の一覧](#公開プロジェクトの参照例8件)／[目的別の比較](docs/method/open-source-dv-environments.md) | 公開された検証計画・環境構成・比較経路と、実行に必要なツール・依存を追う |
 | 既存資産をUVMへ引き継ぐ | [移行ガイド](docs/method/uvm-migration-guide.md)／[passive・activeの同一入力再生](examples/local-uvm-migration/README.md) | 旧要求との対応、driver置換、14項目・20／21目標の維持、追加RAL検査 |
 | 複数agentを協調させる | [APB設定＋GAINデータパス](examples/local-uvm-coordination/README.md) | virtual sequence、同時設定と入力の期待値、観測順序、待ち・取消、native bin |
 | UVMの子環境を上位で再利用する | [二つのIPと階層RAL](examples/local-uvm-hierarchy/README.md) | 共通driver・子のpassive観測、submap、配置変更、上位virtual sequence |
@@ -195,6 +197,23 @@ flowchart TD
 | AIを使った検証を学ぶ | [使い方と依頼記録](docs/method/ai-verification-review.md)／[保存した提案を動かす演習](examples/local-ai-review/README.md)／[適用事例](docs/case-study-ieee1800/README.md) | 要求抽出・提案・独立レビュー、悪い期待値やSVAを見抜く、実行と検出力の確認 |
 
 AIは、要求の整理、テスト・アサーション案の作成、未達や失敗の分析を支援するために使います。提案は仕様と照合し、独立レビューと実際の実行結果で、妥当性と不具合の検出力を確認します。
+
+### 公開プロジェクトの参照例8件
+
+小規模な実行例から、実プロジェクトのCPU・IP・バスVIPの検証環境へ進むための読解資料です。各資料に、参照する固定版、読む順序、必要なツール、確認済みの範囲を記載しています。
+
+| 参照例 | 主に学べること | このリポジトリでの確認範囲 |
+| --- | --- | --- |
+| [Ibex DV](examples/reference-ibex-dv/README.md) | 命令生成、メモリー応答、割り込み、RVFI、Spikeとのコシミュレーション | 固定版のソース・設定を確認 |
+| [CVA6](examples/reference-cva6-dv/README.md) | CPU構成ごとの検証経路、Verilator／Spike、UVMの比較設定 | 固定版のソース・設定を確認 |
+| [OpenTitan](examples/reference-opentitan-dv/README.md) | UARTの検証計画・共通UVM環境・RAL・比較・カバレッジ | Pythonによる検証計画の抽出・照会・修正例を実行 |
+| [CV32系／CORE-V-VERIF](examples/reference-core-v-verif/README.md) | E40P・E40X・E40SのDV、OBI・IRQ・debug、RVFI／RVVI・ISS | 固定版のソース・設定を確認 |
+| [CVFPU／cvfpu-uvm](examples/reference-cvfpu-uvm/README.md) | 浮動小数点形式・丸め・例外フラグ、C++／MPFR参照モデル、ID・flush | 環境構成・比較経路を確認 |
+| [HPDcache](examples/reference-hpdcache/README.md) | SystemCの単体TBとUVMのサブシステム、ミス・置換・未完了要求 | 両環境のソースを確認 |
+| [Mirafra mBits](examples/reference-mirafra-vip/README.md) | APB／AXI4 VIP、BFM・比較、b2b・master・slaveの接続 | ソース・回帰リスト・設定を確認 |
+| [PicoRV32](examples/reference-picorv32/README.md) | CPUとメモリーの簡易TBに、値・順序・件数・タイムアウトの自動判定を追加 | Icarusで上流の簡易TBと、正常1件・負例2件を実行 |
+
+参照例8件は、登録済みのローカル実行例やnightlyジョブの件数には加算しません。上流のフルDV環境は未実行で、OpenTitanの計画操作とPicoRV32の限定したRTL演習の実績は、各資料に個別に記録しています。[目的別の比較・ツールとライセンスの条件](docs/method/open-source-dv-environments.md)も参照してください。
 
 ### 分野から選ぶ
 
