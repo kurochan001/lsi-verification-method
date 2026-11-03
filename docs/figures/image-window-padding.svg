@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception -->
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="740" viewBox="0 0 960 740" style="max-width:100%;height:auto" role="img" aria-labelledby="image-window-padding-title image-window-padding-desc">
+<title id="image-window-padding-title">3×3窓：画素の座標とゼロパディング</title>
+<desc id="image-window-padding-desc">幅5、高さ4の画像を行と列で表す。中心が行1列2の窓は行0から2、列1から3を含む。左上角の窓は画像外の5要素が0になる。</desc>
+<defs>
+<marker id="arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#243746"/></marker>
+<pattern id="outside" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#eef2f5"/><path d="M-2 2 L2 -2 M0 8 L8 0 M6 10 L10 6" stroke="#cbd5dc" stroke-width="1"/></pattern>
+</defs>
+<style>text{font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif} .mono{font-family:ui-monospace,"SFMono-Regular",Consolas,monospace} .wire{fill:none;stroke:#243746;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}</style>
+<rect x="0" y="0" width="960" height="740" fill="white"/>
+<text x="36" y="44" font-size="26" text-anchor="start" fill="#243746" font-weight="700">3×3窓：画素の座標とゼロパディング</text>
+<text x="36" y="78" font-size="19" text-anchor="start" fill="#243746" font-weight="400">座標は（行, 列）。左は入力画像の座標、右は取り出す窓。</text>
+<text x="70" y="126" font-size="21" text-anchor="start" fill="#243746" font-weight="600">入力画像：幅5 × 高さ4</text>
+<text x="104" y="148" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">列0</text>
+<text x="172" y="148" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">列1</text>
+<text x="240" y="148" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">列2</text>
+<text x="308" y="148" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">列3</text>
+<text x="376" y="148" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">列4</text>
+<text x="40" y="189" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">0</text>
+<rect x="70" y="160" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="104" y="194" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(0,0)</text>
+<rect x="138" y="160" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="172" y="194" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(0,1)</text>
+<rect x="206" y="160" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="240" y="194" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(0,2)</text>
+<rect x="274" y="160" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="308" y="194" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(0,3)</text>
+<rect x="342" y="160" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="376" y="194" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(0,4)</text>
+<text x="40" y="243" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">1</text>
+<rect x="70" y="214" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="104" y="248" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(1,0)</text>
+<rect x="138" y="214" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="172" y="248" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(1,1)</text>
+<rect x="206" y="214" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<rect x="208" y="216" width="64" height="50" fill="#087b75" rx="3"/>
+<text x="240" y="248" font-size="19" text-anchor="middle" fill="white" font-weight="600">(1,2)</text>
+<rect x="274" y="214" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="308" y="248" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(1,3)</text>
+<rect x="342" y="214" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="376" y="248" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(1,4)</text>
+<text x="40" y="297" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">2</text>
+<rect x="70" y="268" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="104" y="302" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(2,0)</text>
+<rect x="138" y="268" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="172" y="302" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(2,1)</text>
+<rect x="206" y="268" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="240" y="302" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(2,2)</text>
+<rect x="274" y="268" width="68" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="308" y="302" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(2,3)</text>
+<rect x="277" y="271" width="62" height="48" fill="none" stroke="#a4510b" stroke-width="3" rx="3"/>
+<rect x="342" y="268" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="376" y="302" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(2,4)</text>
+<text x="40" y="351" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">3</text>
+<rect x="70" y="322" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="104" y="356" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(3,0)</text>
+<rect x="138" y="322" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="172" y="356" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(3,1)</text>
+<rect x="206" y="322" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="240" y="356" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(3,2)</text>
+<rect x="274" y="322" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="308" y="356" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(3,3)</text>
+<rect x="342" y="322" width="68" height="54" fill="#f6f8fa" stroke="#aebcc7" stroke-width="1"/>
+<text x="376" y="356" font-size="19" text-anchor="middle" fill="#243746" font-weight="400">(3,4)</text>
+<line x1="430" y1="241" x2="496" y2="241" stroke="#087b75" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="462" y="221" font-size="18" text-anchor="middle" fill="#087b75" font-weight="400">9画素</text>
+<text x="515" y="135" font-size="21" text-anchor="start" fill="#243746" font-weight="600">3×3窓：中心 (1,2)</text>
+<g id="interior" data-center-row="1" data-center-col="2">
+<g id="interior-0-0" data-row="0" data-col="1" data-zero="0">
+<rect x="515" y="160" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="572.5" y="195" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(0,1)</text>
+</g>
+<g id="interior-0-1" data-row="0" data-col="2" data-zero="0">
+<rect x="630" y="160" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="687.5" y="195" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(0,2)</text>
+</g>
+<g id="interior-0-2" data-row="0" data-col="3" data-zero="0">
+<rect x="745" y="160" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="802.5" y="195" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(0,3)</text>
+</g>
+<g id="interior-1-0" data-row="1" data-col="1" data-zero="0">
+<rect x="515" y="214" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="572.5" y="249" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(1,1)</text>
+</g>
+<g id="interior-1-1" data-row="1" data-col="2" data-zero="0">
+<rect x="630" y="214" width="115" height="54" fill="#087b75" stroke="#aebcc7" stroke-width="1"/>
+<text x="687.5" y="249" font-size="22" text-anchor="middle" fill="white" font-weight="600">(1,2)</text>
+</g>
+<g id="interior-1-2" data-row="1" data-col="3" data-zero="0">
+<rect x="745" y="214" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="802.5" y="249" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(1,3)</text>
+</g>
+<g id="interior-2-0" data-row="2" data-col="1" data-zero="0">
+<rect x="515" y="268" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="572.5" y="303" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(2,1)</text>
+</g>
+<g id="interior-2-1" data-row="2" data-col="2" data-zero="0">
+<rect x="630" y="268" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="687.5" y="303" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(2,2)</text>
+</g>
+<g id="interior-2-2" data-row="2" data-col="3" data-zero="0">
+<rect x="745" y="268" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="802.5" y="303" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(2,3)</text>
+</g>
+</g>
+<rect x="70" y="420" width="340" height="205" fill="#f6f8fa" stroke="#d5dee5" rx="10"/>
+<text x="92" y="455" font-size="19" text-anchor="start" fill="#a4510b" font-weight="400">オレンジ枠：入力 (2,3)</text>
+<text x="92" y="495" font-size="19" text-anchor="start" fill="#243746" font-weight="400">ここまで受理すると</text>
+<text x="92" y="527" font-size="19" text-anchor="start" fill="#243746" font-weight="400">中心 (1,2) の9画素が揃う</text>
+<text x="92" y="575" font-size="19" text-anchor="start" fill="#243746" font-weight="400">必要な履歴は2行分と</text>
+<text x="92" y="607" font-size="19" text-anchor="start" fill="#243746" font-weight="400">直前の列の保持</text>
+<text x="515" y="438" font-size="21" text-anchor="start" fill="#243746" font-weight="600">左上角：中心 (0,0)</text>
+<g id="corner" data-center-row="0" data-center-col="0">
+<g id="corner-0-0" data-row="-1" data-col="-1" data-zero="1">
+<rect x="515" y="463" width="115" height="54" fill="url(#outside)" stroke="#aebcc7" stroke-width="1"/>
+<text x="572.5" y="498" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">0</text>
+</g>
+<g id="corner-0-1" data-row="-1" data-col="0" data-zero="1">
+<rect x="630" y="463" width="115" height="54" fill="url(#outside)" stroke="#aebcc7" stroke-width="1"/>
+<text x="687.5" y="498" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">0</text>
+</g>
+<g id="corner-0-2" data-row="-1" data-col="1" data-zero="1">
+<rect x="745" y="463" width="115" height="54" fill="url(#outside)" stroke="#aebcc7" stroke-width="1"/>
+<text x="802.5" y="498" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">0</text>
+</g>
+<g id="corner-1-0" data-row="0" data-col="-1" data-zero="1">
+<rect x="515" y="517" width="115" height="54" fill="url(#outside)" stroke="#aebcc7" stroke-width="1"/>
+<text x="572.5" y="552" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">0</text>
+</g>
+<g id="corner-1-1" data-row="0" data-col="0" data-zero="0">
+<rect x="630" y="517" width="115" height="54" fill="#087b75" stroke="#aebcc7" stroke-width="1"/>
+<text x="687.5" y="552" font-size="22" text-anchor="middle" fill="white" font-weight="600">(0,0)</text>
+</g>
+<g id="corner-1-2" data-row="0" data-col="1" data-zero="0">
+<rect x="745" y="517" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="802.5" y="552" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(0,1)</text>
+</g>
+<g id="corner-2-0" data-row="1" data-col="-1" data-zero="1">
+<rect x="515" y="571" width="115" height="54" fill="url(#outside)" stroke="#aebcc7" stroke-width="1"/>
+<text x="572.5" y="606" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">0</text>
+</g>
+<g id="corner-2-1" data-row="1" data-col="0" data-zero="0">
+<rect x="630" y="571" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="687.5" y="606" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(1,0)</text>
+</g>
+<g id="corner-2-2" data-row="1" data-col="1" data-zero="0">
+<rect x="745" y="571" width="115" height="54" fill="#dff2ee" stroke="#aebcc7" stroke-width="1"/>
+<text x="802.5" y="606" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">(1,1)</text>
+</g>
+</g>
+<text x="515" y="664" font-size="19" text-anchor="start" fill="#243746" font-weight="400">斜線セル：画像外なので0</text>
+<text x="36" y="705" font-size="18" text-anchor="start" fill="#243746" font-weight="400">座標の全体像を示した図。DUT内の配列配置や出力レイテンシーの図ではない。</text>
+</svg>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception -->
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="700" viewBox="0 0 960 700" style="max-width:100%;height:auto" role="img" aria-labelledby="observation-order-title observation-order-desc">
+<title id="observation-order-title">観測した時刻と通知の到着順を分ける</title>
+<desc id="observation-order-desc">受理済み要求が100nsで完了し、100.5nsでresetする説明例。完了通知は2ns遅れの102ns、reset通知は0.5ns遅れの101nsで到着する。観測時刻順に処理して完了済み要求を取消しへ数え直さない。</desc>
+<defs>
+<marker id="arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#243746"/></marker>
+<pattern id="outside" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#eef2f5"/><path d="M-2 2 L2 -2 M0 8 L8 0 M6 10 L10 6" stroke="#cbd5dc" stroke-width="1"/></pattern>
+</defs>
+<style>text{font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif} .mono{font-family:ui-monospace,"SFMono-Regular",Consolas,monospace} .wire{fill:none;stroke:#243746;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}</style>
+<rect x="0" y="0" width="960" height="700" fill="white"/>
+<text x="36" y="44" font-size="26" text-anchor="start" fill="#243746" font-weight="700">観測した時刻と通知の到着順を分ける</text>
+<text x="36" y="78" font-size="18" text-anchor="start" fill="#243746" font-weight="400">受理済み要求がある説明例。数値は保存したシミュレーション波形ではない。</text>
+<text x="35" y="202" font-size="21" text-anchor="start" fill="#243746" font-weight="600">観測時刻</text>
+<line x1="180" y1="196" x2="860" y2="196" stroke="#677785" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="220" y1="190" x2="220" y2="203" stroke="#677785" stroke-width="1.5"/>
+<text x="220" y="227" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">100</text>
+<line x1="360" y1="190" x2="360" y2="203" stroke="#677785" stroke-width="1.5"/>
+<text x="360" y="227" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">100.5</text>
+<line x1="500" y1="190" x2="500" y2="203" stroke="#677785" stroke-width="1.5"/>
+<text x="500" y="227" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">101</text>
+<line x1="640" y1="190" x2="640" y2="203" stroke="#677785" stroke-width="1.5"/>
+<text x="640" y="227" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">101.5</text>
+<line x1="780" y1="190" x2="780" y2="203" stroke="#677785" stroke-width="1.5"/>
+<text x="780" y="227" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">102</text>
+<text x="880" y="202" font-size="18" text-anchor="start" fill="#243746" font-weight="400">ns</text>
+<text x="35" y="360" font-size="21" text-anchor="start" fill="#243746" font-weight="600">通知の到着</text>
+<line x1="180" y1="354" x2="860" y2="354" stroke="#677785" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="220" y1="348" x2="220" y2="361" stroke="#677785" stroke-width="1.5"/>
+<text x="220" y="385" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">100</text>
+<line x1="360" y1="348" x2="360" y2="361" stroke="#677785" stroke-width="1.5"/>
+<text x="360" y="385" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">100.5</text>
+<line x1="500" y1="348" x2="500" y2="361" stroke="#677785" stroke-width="1.5"/>
+<text x="500" y="385" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">101</text>
+<line x1="640" y1="348" x2="640" y2="361" stroke="#677785" stroke-width="1.5"/>
+<text x="640" y="385" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">101.5</text>
+<line x1="780" y1="348" x2="780" y2="361" stroke="#677785" stroke-width="1.5"/>
+<text x="780" y="385" font-size="17" text-anchor="middle" fill="#677785" font-weight="400">102</text>
+<text x="880" y="360" font-size="18" text-anchor="start" fill="#243746" font-weight="400">ns</text>
+<g id="complete" data-observed-ns="100" data-delay-ns="2" data-arrival-ns="102">
+<circle cx="220" cy="196" r="7" fill="#175ca6"/>
+<text x="220" y="145" font-size="19" text-anchor="middle" fill="#175ca6" font-weight="600">完了 100 ns</text>
+<line x1="220" y1="207" x2="780" y2="343" stroke="#175ca6" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<circle cx="780" cy="354" r="7" fill="#175ca6"/>
+<text x="780" y="412" font-size="19" text-anchor="middle" fill="#175ca6" font-weight="600">完了通知 102 ns</text>
+</g>
+<g id="reset" data-observed-ns="100.5" data-delay-ns="0.5" data-arrival-ns="101.0">
+<circle cx="360" cy="196" r="7" fill="#a4510b"/>
+<text x="360" y="170" font-size="19" text-anchor="middle" fill="#a4510b" font-weight="600">reset 100.5 ns</text>
+<line x1="360" y1="207" x2="500" y2="343" stroke="#a4510b" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<circle cx="500" cy="354" r="7" fill="#a4510b"/>
+<text x="500" y="412" font-size="19" text-anchor="middle" fill="#a4510b" font-weight="600">reset通知 101 ns</text>
+</g>
+<rect x="525" y="248" width="158" height="31" fill="white" rx="4"/>
+<text x="604" y="270" font-size="18" text-anchor="middle" fill="#175ca6" font-weight="400">完了通知：＋2 ns</text>
+<rect x="365" y="291" width="184" height="31" fill="white" rx="4"/>
+<text x="457" y="313" font-size="18" text-anchor="middle" fill="#a4510b" font-weight="400">reset通知：＋0.5 ns</text>
+<rect x="60" y="452" width="840" height="180" fill="#f6f8fa" stroke="#d5dee5" rx="10"/>
+<text x="84" y="488" font-size="20" text-anchor="start" fill="#243746" font-weight="400">到着順：reset通知 → 完了通知</text>
+<text x="84" y="527" font-size="20" text-anchor="start" fill="#243746" font-weight="600">観測時刻順：100 nsで完了 → 100.5 nsでreset</text>
+<text x="84" y="565" font-size="20" text-anchor="start" fill="#243746" font-weight="400">完了済み要求を、resetによる取消しへ数え直さない。</text>
+<text x="84" y="605" font-size="20" text-anchor="start" fill="#243746" font-weight="400">本例は最大2 nsの通知遅延に対し、3 ns待って並べ替える。</text>
+<text x="36" y="674" font-size="18" text-anchor="start" fill="#243746" font-weight="400">時刻順の台帳管理の例。物理的なCDCやreset解除のタイミング解析は別に行う。</text>
+</svg>

@@ -18,6 +18,10 @@ flowchart LR
 
 [plant.cir.in](plant.cir.in)が回路テンプレートです。`drive`が1なら電圧源を指定電源電圧へ、0なら0Vへ接続し、抵抗を介してコンデンサーを充放電します。制御器はADCコードが下限以下ならON、上限以上ならOFF、中間なら前状態を保持します。リセットまたはenable=0でOFFです。
 
+![Vdrive・Rplant・CplantのRC回路と、filtered電圧をADCからRTLへ戻す接続](../../docs/figures/spice-rc-loop.svg)
+
+実線は`plant.cir.in`のノード接続、破線はC++接続部の観測・制御です。`filtered`の電圧を読む理想ADCは、負荷やサンプル窓を持つ実ADCの回路モデルではありません。R・Cの値は下表の構成ごとに与えます。
+
 | 構成 | ADC | R | C | 時定数 |
 | --- | --- | --- | --- | --- |
 | `adc8-rc100us` | 8ビット | 1kΩ | 100nF | 100µs |

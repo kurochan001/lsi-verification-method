@@ -46,7 +46,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | ロボティクスの計測・制御・駆動を学ぶ | [検証手順](docs/method/robotics-verification.md)／[PWM・エンコーダ](examples/local-motion-io/README.md)／[1軸の閉ループ](examples/local-motion-control/README.md) |
 | オートモーティブの通信保護・故障反応を学ぶ | [検証手順](docs/method/automotive-verification.md)／[E2Eガード](examples/local-e2e-guard/README.md)／[小規模ECU](examples/local-automotive-ecu/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
-| 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[変更時・毎晩のCI](tools/CI.md) |
+| 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[SVG図の一覧](docs/figures/README.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
 | 用語や結果の読み方を確認する | [用語集](docs/glossary.md)／[FAQの質問別案内](docs/faq.md#疑問に応じた確認の順序) |
 | 適用事例と由来を調べる | [IEEE 1800-2023のケーススタディ](docs/case-study-ieee1800/README.md)／[PROVENANCE.md](PROVENANCE.md) |

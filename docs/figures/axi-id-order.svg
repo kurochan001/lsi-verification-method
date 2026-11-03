@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception -->
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="665" viewBox="0 0 960 665" style="max-width:100%;height:auto" role="img" aria-labelledby="axi-id-order-title axi-id-order-desc">
+<title id="axi-id-order-title">AXI応答：IDごとの順序と、ID間の入れ替え</title>
+<desc id="axi-id-order-desc">要求受付順がA ID0、B ID1、C ID0、D ID1の例。各IDの先頭から受付順が新しい候補を選ぶ本教材の方針では、B、D、A、Cの順に返す。AからC、BからDの同一ID内の順序は保持する。</desc>
+<defs>
+<marker id="arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#243746"/></marker>
+<pattern id="outside" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#eef2f5"/><path d="M-2 2 L2 -2 M0 8 L8 0 M6 10 L10 6" stroke="#cbd5dc" stroke-width="1"/></pattern>
+</defs>
+<style>text{font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif} .mono{font-family:ui-monospace,"SFMono-Regular",Consolas,monospace} .wire{fill:none;stroke:#243746;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}</style>
+<rect x="0" y="0" width="960" height="665" fill="white"/>
+<text x="36" y="44" font-size="26" text-anchor="start" fill="#243746" font-weight="700">AXI応答：IDごとの順序と、ID間の入れ替え</text>
+<text x="36" y="79" font-size="18" text-anchor="start" fill="#243746" font-weight="400">本教材の方針：全応答を格納し、各IDの先頭から受付順が新しい候補を選ぶ。</text>
+<text x="36" y="109" font-size="18" text-anchor="start" fill="#243746" font-weight="400">同じIDの A→C と B→D は保持。異なるID間の順序は入れ替え可能。</text>
+<text x="36" y="149" font-size="21" text-anchor="start" fill="#243746" font-weight="600">要求受付順（左→右）</text>
+<g id="tx-A" data-id="0" data-accepted="1" data-returned="3">
+<rect x="130" y="168" width="130" height="72" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="195.0" y="198" font-size="27" text-anchor="middle" fill="#175ca6" font-weight="700">A</text>
+<text x="195.0" y="226" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">ID 0</text>
+</g>
+<g id="tx-B" data-id="1" data-accepted="2" data-returned="1">
+<rect x="320" y="168" width="130" height="72" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="385.0" y="198" font-size="27" text-anchor="middle" fill="#087b75" font-weight="700">B</text>
+<text x="385.0" y="226" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">ID 1</text>
+</g>
+<g id="tx-C" data-id="0" data-accepted="3" data-returned="4">
+<rect x="510" y="168" width="130" height="72" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="575.0" y="198" font-size="27" text-anchor="middle" fill="#175ca6" font-weight="700">C</text>
+<text x="575.0" y="226" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">ID 0</text>
+</g>
+<g id="tx-D" data-id="1" data-accepted="4" data-returned="2">
+<rect x="700" y="168" width="130" height="72" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="765.0" y="198" font-size="27" text-anchor="middle" fill="#087b75" font-weight="700">D</text>
+<text x="765.0" y="226" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">ID 1</text>
+</g>
+<text x="45" y="345" font-size="23" text-anchor="start" fill="#243746" font-weight="600">ID 0</text>
+<rect x="230" y="300" width="180" height="72" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="320.0" y="330" font-size="27" text-anchor="middle" fill="#175ca6" font-weight="700">A</text>
+<text x="320.0" y="358" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">返却 3 番目</text>
+<rect x="550" y="300" width="180" height="72" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="640.0" y="330" font-size="27" text-anchor="middle" fill="#175ca6" font-weight="700">C</text>
+<text x="640.0" y="358" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">返却 4 番目</text>
+<line x1="422" y1="336" x2="538" y2="336" stroke="#175ca6" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="480" y="290" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">同一ID内の順序</text>
+<text x="45" y="451" font-size="23" text-anchor="start" fill="#243746" font-weight="600">ID 1</text>
+<rect x="230" y="406" width="180" height="72" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="320.0" y="436" font-size="27" text-anchor="middle" fill="#087b75" font-weight="700">B</text>
+<text x="320.0" y="464" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">返却 1 番目</text>
+<rect x="550" y="406" width="180" height="72" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="640.0" y="436" font-size="27" text-anchor="middle" fill="#087b75" font-weight="700">D</text>
+<text x="640.0" y="464" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">返却 2 番目</text>
+<line x1="422" y1="442" x2="538" y2="442" stroke="#087b75" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="480" y="396" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">同一ID内の順序</text>
+<text x="36" y="524" font-size="21" text-anchor="start" fill="#243746" font-weight="600">返却順（BとRの各方向で独立に選択）</text>
+<rect x="130" y="545" width="130" height="72" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="195.0" y="575" font-size="27" text-anchor="middle" fill="#087b75" font-weight="700">B</text>
+<text x="195.0" y="603" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">1番目 / ID 1</text>
+<line x1="267" y1="581" x2="310" y2="581" stroke="#243746" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="320" y="545" width="130" height="72" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="385.0" y="575" font-size="27" text-anchor="middle" fill="#087b75" font-weight="700">D</text>
+<text x="385.0" y="603" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">2番目 / ID 1</text>
+<line x1="457" y1="581" x2="500" y2="581" stroke="#243746" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="510" y="545" width="130" height="72" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="575.0" y="575" font-size="27" text-anchor="middle" fill="#175ca6" font-weight="700">A</text>
+<text x="575.0" y="603" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">3番目 / ID 0</text>
+<line x1="647" y1="581" x2="690" y2="581" stroke="#243746" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="700" y="545" width="130" height="72" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="765.0" y="575" font-size="27" text-anchor="middle" fill="#175ca6" font-weight="700">C</text>
+<text x="765.0" y="603" font-size="18" text-anchor="middle" fill="#243746" font-weight="400">4番目 / ID 0</text>
+<text x="36" y="646" font-size="18" text-anchor="start" fill="#243746" font-weight="400">AXIの唯一の返却順ではない。R応答は選んだバーストのRLASTまで返す。</text>
+</svg>

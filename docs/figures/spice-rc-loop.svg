@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception -->
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="650" viewBox="0 0 960 650" style="max-width:100%;height:auto" role="img" aria-labelledby="spice-rc-loop-title spice-rc-loop-desc">
+<title id="spice-rc-loop-title">RTLとSPICE：RC回路の接続と制御の戻り道</title>
+<desc id="spice-rc-loop-desc">理想電圧源Vdriveはdacノードと接地間、抵抗Rplantはdacとfiltered間、コンデンサーCplantはfilteredと接地間に接続する。filteredの電圧を理想ADCでRTLへ渡し、driveを外部電圧源へ戻す。</desc>
+<defs>
+<marker id="arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#243746"/></marker>
+<pattern id="outside" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#eef2f5"/><path d="M-2 2 L2 -2 M0 8 L8 0 M6 10 L10 6" stroke="#cbd5dc" stroke-width="1"/></pattern>
+</defs>
+<style>text{font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif} .mono{font-family:ui-monospace,"SFMono-Regular",Consolas,monospace} .wire{fill:none;stroke:#243746;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}</style>
+<rect x="0" y="0" width="960" height="650" fill="white"/>
+<text x="36" y="44" font-size="26" text-anchor="start" fill="#243746" font-weight="700">RTLとSPICE：RC回路の接続と制御の戻り道</text>
+<text x="36" y="79" font-size="19" text-anchor="start" fill="#243746" font-weight="400">実線はRC回路の接続、破線はC++接続部を介した観測・制御。</text>
+<line x1="170" y1="160" x2="250" y2="160" stroke="#243746" stroke-width="2.5" fill="none"/>
+<path d="M250 160 L262 160 L274 146 L294 174 L314 146 L334 174 L354 146 L374 174 L394 146 L414 160 L438 160" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="438" y1="160" x2="510" y2="160" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="170" y1="160" x2="170" y2="206" stroke="#243746" stroke-width="2.5" fill="none"/>
+<circle cx="170" cy="250" r="44" stroke="#243746" stroke-width="2.5" fill="white"/>
+<text x="170" y="239" font-size="27" text-anchor="middle" fill="#243746" font-weight="400">+</text>
+<text x="170" y="280" font-size="27" text-anchor="middle" fill="#243746" font-weight="400">−</text>
+<text x="170" y="197" font-size="20" text-anchor="middle" fill="#243746" font-weight="400">Vdrive</text>
+<line x1="170" y1="294" x2="170" y2="424" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="510" y1="160" x2="510" y2="260" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="483" y1="260" x2="537" y2="260" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="483" y1="278" x2="537" y2="278" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="510" y1="278" x2="510" y2="424" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="149.0" y1="424" x2="191.0" y2="424" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="156.0" y1="435" x2="184.0" y2="435" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="163.0" y1="446" x2="177.0" y2="446" stroke="#243746" stroke-width="2.5" fill="none"/>
+<text x="200" y="441" font-size="18" text-anchor="start" fill="#243746" font-weight="400">0</text>
+<line x1="489.0" y1="424" x2="531.0" y2="424" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="496.0" y1="435" x2="524.0" y2="435" stroke="#243746" stroke-width="2.5" fill="none"/>
+<line x1="503.0" y1="446" x2="517.0" y2="446" stroke="#243746" stroke-width="2.5" fill="none"/>
+<text x="540" y="441" font-size="18" text-anchor="start" fill="#243746" font-weight="400">0</text>
+<circle cx="170" cy="160" r="4" fill="#243746"/>
+<circle cx="510" cy="160" r="4" fill="#243746"/>
+<text x="170" y="131" font-size="21" text-anchor="middle" fill="#243746" font-weight="400" class="mono">dac</text>
+<text x="344" y="121" font-size="21" text-anchor="middle" fill="#243746" font-weight="400" class="mono">Rplant</text>
+<text x="555" y="275" font-size="21" text-anchor="start" fill="#243746" font-weight="400" class="mono">Cplant</text>
+<text x="510" y="131" font-size="21" text-anchor="middle" fill="#243746" font-weight="400" class="mono">filtered</text>
+<line x1="519" y1="160" x2="698" y2="160" stroke="#175ca6" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<text x="606" y="140" font-size="20" text-anchor="middle" fill="#175ca6" font-weight="400">v(T)</text>
+<rect x="710" y="120" width="180" height="90" fill="#e8f2ff" stroke="#175ca6" stroke-width="2" rx="8"/>
+<text x="800" y="154" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">理想ADC</text>
+<text x="800" y="190" font-size="20" text-anchor="middle" fill="#243746" font-weight="400">電圧 → code</text>
+<line x1="800" y1="218" x2="800" y2="289" stroke="#175ca6" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<text x="838" y="263" font-size="18" text-anchor="start" fill="#175ca6" font-weight="400">code</text>
+<rect x="710" y="300" width="180" height="90" fill="#dff2ee" stroke="#087b75" stroke-width="2" rx="8"/>
+<text x="800" y="334" font-size="22" text-anchor="middle" fill="#243746" font-weight="600">RTL制御器</text>
+<text x="800" y="371" font-size="20" text-anchor="middle" fill="#243746" font-weight="400">ヒステリシス</text>
+<path d="M800 398 V490 H85 V250 H121" fill="none" stroke="#a4510b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+<text x="430" y="524" font-size="20" text-anchor="middle" fill="#a4510b" font-weight="400">drive → 0 V / VDD（理想DAC・外部電圧源）</text>
+<text x="36" y="584" font-size="19" text-anchor="start" fill="#243746" font-weight="400">境界T：v(T)を採用 → ADC化 → RTL更新 → 新driveをTより後へ反映</text>
+<text x="36" y="625" font-size="19" text-anchor="start" fill="#243746" font-weight="400">デジタルresetでも、Cplantの電圧状態は過渡解析内で継続する。</text>
+</svg>
