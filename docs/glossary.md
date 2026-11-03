@@ -463,8 +463,13 @@ flowchart TD
 | タンデム検証（Tandem Verification） | RTLの命令退役情報等を参照モデルの実行と対応付けて比較する方式。比較する状態・例外・割り込みの同期条件を定め、実装のサイクル一致とは区別する |
 | DVSim | OpenTitan等で使うEDAフローの実行・結果集計ツール。実行設定からテスト・seed・ツールを選ぶ。計画メタデータだけを照会するTestplantoolとは役割が異なる |
 | testpoint（検証計画の項目） | OpenTitanのHjson計画で、機能・確認内容と対応テスト等を記述する単位。SVのcoverpointや実行済み試験数とは異なり、記載や抽出だけでは要求達成を示さない |
+| RVVI | RISC-Vの命令・状態を参照モデル等へ接続する検証インターフェース。RVFIからの信号変換、API・ライブラリー、モデルと比較の有効化条件を別々に確認する |
+| MPFR | 精度と丸めを指定して浮動小数点計算を行うライブラリー。参照モデルで使う場合も、対象形式のビット列・特殊値・例外フラグへ正しく対応するかを検算する |
+| MSHR | キャッシュミスの未完了情報を管理する機構。要求のID・宛先・応答・取消を追い、エントリーの再利用や競合時に欠落・誤対応がないか確認する |
+| AVIP（Accelerated VIP） | Mirafra等で使う名称。HDL側のBFMとHVL側のクラスを分ける構造を読み、対応モード・DUTとの役割・実行条件と、加速性能の実測を区別する |
+| PCPI（Pico Co-Processor Interface） | PicoRV32のコプロセッサー接続。選択構成、要求・待機・結果・完了等を確認する。ネイティブメモリーだけの試験からPCPIの合格を推定しない |
 
-参照：[Ibex DV・CVA6・OpenTitanの読み方](method/open-source-dv-environments.md)、[RVFIの仕様](https://yosyshq.readthedocs.io/projects/riscv-formal/en/latest/rvfi.html)。固定版の実コードから、構成による比較の有効化・TLM接続・依存する参照モデルまで追います。
+参照：[公開CPU・IP・VIPの読み方](method/open-source-dv-environments.md)、[RVFIの仕様](https://yosyshq.readthedocs.io/projects/riscv-formal/en/latest/rvfi.html)。固定版の実コードから、構成による比較の有効化・TLM接続・依存する参照モデルまで追います。
 
 ## 表記の参考資料
 

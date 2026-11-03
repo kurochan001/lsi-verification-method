@@ -1,6 +1,6 @@
 # 実プロジェクトのオープンソースDV環境を読む
 
-小さな回路で刺激・観測・比較・カバレッジを学んだ後に、実際のCPU・IPのDV環境へ進むための案内です。Ibex DV、CVA6、OpenTitanの3件を、上流の固定コミットを読む**参照例**として紹介します。これらのフルDVは、本リポジトリの統合nightlyの実行数には含めません。
+小さな回路で刺激・観測・比較・カバレッジを学んだ後に、実際のCPU・演算IP・キャッシュ・バスVIPのDV環境へ進むための案内です。Ibex DV、CVA6、OpenTitan、CV32系、CVFPU／cvfpu-uvm、HPDcache、Mirafra mBits、PicoRV32の**参照例8件**を紹介します。上流の版を固定して読み、手動演習とフルDVの実行範囲を分けます。これらの参照例は統合nightlyの登録数へ加算しません。
 
 ## 1. 何を学ぶかで選ぶ
 
@@ -9,17 +9,22 @@
 | [Ibex DV](../../examples/reference-ibex-dv/README.md) | CPU単体のSV/UVM環境 | 命令生成、命令・データメモリー応答、IRQ、RVFI、Spikeとのコシミュレーション | testlist→環境クラス→cosimスコアボード |
 | [CVA6](../../examples/reference-cva6-dv/README.md) | 構成可能なCPUの検証 | XLEN・ISAの構成、Verilator／Spikeの経路、UVM環境、比較を有効にする設定 | 実行設定→UVM構成→RVFIの接続 |
 | [OpenTitan](../../examples/reference-opentitan-dv/README.md) | 共通基盤を使うIP・SoCのDV | Hjson計画、共通環境、エージェント、RAL、スコアボード、カバレッジ、DVSim | UARTの計画→実行設定→環境・比較 |
+| [CV32系／CORE-V-VERIF](../../examples/reference-core-v-verif/README.md) | CV32E40Pと、専用DVを持つE40X・E40S | コア別の仕様・構成、OBI、IRQ・debug、RVFI／RVVI、ISS有効化 | E40Pのテスト→依存設定→環境・TBトップ |
+| [CVFPU／cvfpu-uvm](../../examples/reference-cvfpu-uvm/README.md) | 浮動小数点IPとC++モデルを使うUVM | 形式・丸め・例外フラグ、ID、flush、独立した数値比較と完了 | IPの構成→ラッパー→スコアボード・参照モデル |
+| [HPDcache](../../examples/reference-hpdcache/README.md) | キャッシュ単体のSystemC・UVM環境 | miss・置換・部分書込み、メモリー応答、未完了要求、待ち・順序 | SystemCの単体TBとUVMのサブシステムを読み分ける |
+| [Mirafra mBits](../../examples/reference-mirafra-vip/README.md) | APB・AXI4の公開AVIP | HDL／HVL分離、BFM、master／slave、b2bとDUTへの適用、独立比較 | APBの1テスト→AXI4のMODEと比較経路 |
+| [PicoRV32](../../examples/reference-picorv32/README.md) | 小さなCPUとメモリー応答 | 簡易TBの表示から受付・値・件数・時間上限の自動判定へ進む | 外部ツールチェーン不要のIcarus演習 |
 
 ```mermaid
 flowchart TD
   accTitle: 小規模教材から実プロジェクトのDVへ
-  accDescr: ローカルの実行例で基本の責務を確認し、CPUの命令比較とIPの共通検証基盤を別々に読み、実行条件と確認範囲を記録する。
-  L["小規模なローカル実行例"] --> I["Ibex DV<br/>刺激・観測・ISS比較"]
-  L --> C["CVA6<br/>構成・比較モード"]
-  L --> O["OpenTitan<br/>IP共通基盤・検証計画"]
-  I --> E["要求・刺激・比較<br/>到達・版を対応付ける"]
-  C --> E
-  O --> E
+  accDescr: 小規模教材からCPU、演算IP、キャッシュやバスとIPの環境へ進み、要求・比較・到達・版を対応付ける。各参照例の実行条件と確認範囲も記録する。
+  L["小規模なローカル実行例"] --> C["CPU<br/>PicoRV32・Ibex<br/>CV32系・CVA6"]
+  L --> F["演算IP<br/>CVFPU・cvfpu-uvm"]
+  L --> I["キャッシュ・バス・IP<br/>HPDcache・Mirafra<br/>OpenTitan"]
+  C --> E["要求・刺激・比較<br/>到達・版を対応付ける"]
+  F --> E
+  I --> E
 ```
 
 CPUの入口は[小規模RISC-Vの検証例](../../examples/local-riscv-iss/README.md)、UVMの入口は[移行ガイド](uvm-migration-guide.md)と[実践設計](uvm-practical-design.md)です。大きな環境でも、どの入力を受け付け、何を観測し、何を期待値と比較するかを先に特定します。
@@ -36,6 +41,12 @@ DV環境のソースが公開されていても、その全経路をオープン
 | OpenTitanのIP UVM DV | 上流のDV手順に沿うシミュレーター、DVSim、生成器、共通ライブラリー、IPごとの設定 | UARTの計画・コード・設定を確認。IP／SoCのUVMは未実行 |
 | OpenTitanのVerilatorによるソフトウェア実行 | 別のシミュレーション対象・ビルド・ソフトウェア・ツールチェーン | 上流の案内を参照。UVM DVの実行結果へ読み替えない |
 | OpenTitanの計画メタデータ操作 | Pythonと少数のPythonパッケージ。HDLシミュレーターは使わない | 実際の上流TestplantoolでCSV出力・照会・出力照合を実行 |
+| CV32系のUVM・ISS経路 | コア別のUVMシミュレーター、RISC-Vツールチェーン、生成器・ISS等。E40Pの固定版にはImperasDVへの接続がある | P・X・SのDV配置・設定・ソースを確認。RTL／ISS・フルUVMは未実行 |
+| CVFPU／cvfpu-uvm | Questa・Xcelium・VCS向け設定、C++・GMP・MPFR・Bender等。IPとTBが解決する版を別に確認 | 構成と比較・ID・flushの経路を確認。モデル構築・フルUVMは未実行 |
+| HPDcacheのSystemC経路 | Verilator・SystemCに加えSCVとPerl等。CPU未接続の単体TB | オープンソースの実行経路と前提を確認。構築・実行は未確認 |
+| HPDcacheのUVM経路 | 上流のQuesta等の案内、構成・メモリーモデル・外部依存と既知の制限 | ソース・設定を確認。フルUVMは未実行 |
+| MirafraのAPB・AXI4 AVIP | 商用シミュレーター向けMakefile等。VIP同士のb2bと、DUT接続時の役割・機能比較を区別 | ソース・回帰リスト・構成を確認。UVM・Verilator・加速は未実行 |
+| PicoRV32の簡易TBと自動判定演習 | Icarus・make・Git・Python。RISC-VコンパイラーやISSを使わない | 上流の簡易TBと、受付・値・件数・終了を検査する正常1件・負例2件を実行 |
 
 [OpenTitanの導入案内](https://opentitan.org/book/doc/getting_started/index.html)も、Verilatorでのソフトウェア実行とDVの経路を分けています。本リポジトリの小規模UVMがVerilatorで動いた結果は、上流の大規模環境をそのまま実行できる根拠とは別に扱います。
 
@@ -50,10 +61,22 @@ RISCV-DVでは、Pythonの実行制御と、SVによる命令生成を区別し�
 | lowRISC/ibex | [`f4515520c0045bb8ef1e72d46ed82499a6ac5f18`](https://github.com/lowRISC/ibex/tree/f4515520c0045bb8ef1e72d46ed82499a6ac5f18) | `dv/uvm/core_ibex/`を読む |
 | openhwfoundation/cva6 | [`742dc82a0c706e0a3bfb98b709fd3ee06d50d12a`](https://github.com/openhwfoundation/cva6/tree/742dc82a0c706e0a3bfb98b709fd3ee06d50d12a) | 旧openhwgroup URLから移転。取得できたmasterの固定版で、READMEはmasterのread-only化と移行を案内 |
 | lowRISC/opentitan | [`0f8469f729ce8e84993c9987f90af3589172c79d`](https://github.com/lowRISC/opentitan/tree/0f8469f729ce8e84993c9987f90af3589172c79d) | DVSimは`pyproject.toml`で1.52.0を指定。計画操作CLIは`util/testplantool/` |
+| openhwfoundation/core-v-verif | [`33917ee5db9ede3779cc658a5004d672320f164c`](https://github.com/openhwfoundation/core-v-verif/tree/33917ee5db9ede3779cc658a5004d672320f164c) | CV32E40Pの`cv32e40p_v1.8.3`タグを読む |
+| openhwfoundation/cv32e40x-dv | [`93ce70f1ae2ab2e66716e0c5648d27e67e161c2f`](https://github.com/openhwfoundation/cv32e40x-dv/tree/93ce70f1ae2ab2e66716e0c5648d27e67e161c2f) | E40Xの専用DV |
+| openhwfoundation/cv32e40s-dv | [`8b27b963ef08badfa350b4207a45e2c2cadb3001`](https://github.com/openhwfoundation/cv32e40s-dv/tree/8b27b963ef08badfa350b4207a45e2c2cadb3001) | E40Sの専用DV |
+| openhwfoundation/cvfpu | [`7093289d00ec842c94ca973e2d5ba9301fb11363`](https://github.com/openhwfoundation/cvfpu/tree/7093289d00ec842c94ca973e2d5ba9301fb11363) | 演算IPの読解版 |
+| openhwfoundation/cvfpu-uvm | [`2f787402256b76d00e397d72a00b57120db455cf`](https://github.com/openhwfoundation/cvfpu-uvm/tree/2f787402256b76d00e397d72a00b57120db455cf) | TB側のDUT・依存の解決結果も記録する |
+| openhwfoundation/cv-hpdcache | [`9b065ccb7c61c37c0bc36b7bed7eab653bff00b8`](https://github.com/openhwfoundation/cv-hpdcache/tree/9b065ccb7c61c37c0bc36b7bed7eab653bff00b8) | RTL・SystemC単体TB |
+| openhwfoundation/cv-hpdcache-verif | [`f46150dd0b68f300255c8dddcec73e0c2c4f961e`](https://github.com/openhwfoundation/cv-hpdcache-verif/tree/f46150dd0b68f300255c8dddcec73e0c2c4f961e) | UVM・prefetcher等と既知の制限を読む |
+| mbits-mirafra/apb_avip | [`b9e0f885b85d7425d665fe544afa2f75b07a728d`](https://github.com/mbits-mirafra/apb_avip/tree/b9e0f885b85d7425d665fe544afa2f75b07a728d) | APBの公開VIP |
+| mbits-mirafra/axi4_avip | [`86b46171c534dfa5521ecfe9329184d7b0d72898`](https://github.com/mbits-mirafra/axi4_avip/tree/86b46171c534dfa5521ecfe9329184d7b0d72898) | AXI4のb2b・master・slaveモード |
+| YosysHQ/picorv32 | [`ef203c2b0a3fb793280f5114941416c425c5b461`](https://github.com/YosysHQ/picorv32/tree/ef203c2b0a3fb793280f5114941416c425c5b461) | 確認時点でarchived。固定版の小演習に使う |
 
 固定版OpenTitanでは、従来の`util/dvsim/dvsim.py`を前提にせず、[依存の指定](https://github.com/lowRISC/opentitan/blob/0f8469f729ce8e84993c9987f90af3589172c79d/pyproject.toml)を確認します。DVSimによるEDAフローの実行・結果集計と、Testplantoolによる計画の抽出・照会は別の役割です。後者の正常終了は、RTLの試験成功を意味しません。
 
 上流のソースはGit管理下へ取り込まず、リンクと手動演習で参照します。取得したソースのLICENSE・NOTICE・個別ファイルのSPDXを保持してください。特にCVA6はrootのLICENSEと各ファイルの条件が一様ではありません。本リポジトリのLLVM例外を上流ファイルへ追加する扱いにはしません。
+
+IPの読解版と、別のTBの読解版を並べたことは、互換性を確認した組という意味ではありません。submoduleのgitlinkに加え、Bender等が取得する実際のコミットを保存します。上流のsetupに`--remote`や可変のブランチ名がある場合も、実行時の解決結果を再現記録へ残します。
 
 ## 4. 大きな環境を読む順序
 
@@ -82,10 +105,14 @@ ISSとの比較では、ISA・XLEN・特権・CSR・例外・割り込み・メ�
 
 ## 6. 実行確認の範囲
 
-3件とも、固定コミットの取得と、案内するソース・設定の存在を確認しています。実行した小演習は[OpenTitanの計画ツール](../../examples/reference-opentitan-dv/README.md#商用ツールを使わない小演習)です。独自の3 testpointからCSVを出力し、条件に合う2点を照会して内容を照合しました。
+8件は、案内する固定ソース・設定を確認した参照例です。[OpenTitanの計画ツール](../../examples/reference-opentitan-dv/README.md#商用ツールを使わない小演習)では、独自の3 testpointからCSVを出力し、条件に合う2点を照会して内容を照合しました。
 
 その過程で、確認版のCLIの`--fields si_stage`が`stage`まで返す不具合を再現しました。引数の文字列をリストへ分割してからライブラリーへ渡す修正例と、修正前後の出力照合も記載しています。上流へ修正を送付・反映したという意味ではありません。
 
-上流のフルUVM、CPUのRTL／ISS実行、OpenTitanのチップシミュレーション、実際のカバレッジ収束・サインオフは、今回の実行確認に含めていません。参照例3件は統合ランナーの130登録項目・108ルートジョブへ加算せず、ローカル実行例と実プロジェクトの読解・手動演習を分けます。
+[PicoRV32の演習](../../examples/reference-picorv32/README.md#小演習表示を自動判定へつなぐ)では、上流の簡易TBを実行し、コピーへ自動判定と時間上限を加えました。正常な8 store・7 loadと、+2のプログラム・メモリー応答停止の負例を照合しています。負例は検査の対照で、未知のCPU不具合やRTL変異の検出として数えません。
+
+上流のフルUVM、CPUのISS比較、HPDcacheのTB構築・実行、OpenTitanのチップシミュレーション、カバレッジ収束・サインオフは未確認です。参照例8件は統合ランナーの130登録項目・108ルートジョブへ加算せず、ローカル実行例と実プロジェクトの読解・手動演習を分けます。
 
 固定版の取得・演習・文書検査・既存リグレッションの監査は、[実行記録](../../PROVENANCE.md#upstream-dv-20261103)へまとめています。
+
+CV32系・CVFPU・HPDcache・Mirafra・PicoRV32の追加分は、[拡張の記録](../../PROVENANCE.md#upstream-dv-expansion-20261103)を参照してください。

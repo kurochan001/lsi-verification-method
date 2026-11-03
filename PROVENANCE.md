@@ -1687,3 +1687,18 @@ AXI4-Streamは各回、25操作から1操作へ縮小する9回のRTL実行と�
 証跡はGit管理外の`artifacts/regression-retention-20261103/`です。変更はMarkdownの説明だけで、RTL・生成器・チェッカー・登録表・掲載シェルブロック・図は変更していません。前節で新規実行した演習を今回再実行したとは扱わず、掲載ブロック・保存入力・実行時ソースのハッシュを再照合します。文書・ツール検査と、既存nightly全108ジョブの現行入力に対する保存結果の監査で確認します。
 
 文書226件・764表・208 Mermaid図・254用語・121 FAQの439判定と、`audit-carried/`の全108ジョブの監査が合格しました。`walkthrough-carried.json`でも掲載3ブロック・保存入力・実行時ソースの一致を確認しています。既存nightlyの定期起動・全登録項目を選ぶ設定は維持し、テストの削除や実行頻度の自動変更は行っていません。最終追記後の文書・ツール検査は`docs-final/`・`tools-final/`へ入力ハッシュとともに保存します。
+
+<a id="upstream-dv-expansion-20261103"></a>
+## CV32系・CVFPU・HPDcache・Mirafra・PicoRV32の参照例（2026-11-03）
+
+起点は`d6f844573104d39905f66dc5c8f6f53b10ab8e9c`です。[外部DVの案内](docs/method/open-source-dv-environments.md)へ、[CV32系](examples/reference-core-v-verif/README.md)、[CVFPU／cvfpu-uvm](examples/reference-cvfpu-uvm/README.md)、[HPDcache](examples/reference-hpdcache/README.md)、[Mirafra mBits](examples/reference-mirafra-vip/README.md)、[PicoRV32](examples/reference-picorv32/README.md)を追加し、参照例を8件としました。CV32E40P・E40X・E40SはDVの配置と対象を分け、E40Pは`cv32e40p_v1.8.3`タグを読みます。各参照例に固定SHAと実ファイルへのリンク、比較・依存・実行条件・未確認の範囲を記載しています。
+
+新規取得の対象は10リポジトリです。CV32系のDVが3件、CVFPUとTBが2件、HPDcacheとTBが2件、MirafraのAPB・AXI4が2件、PicoRV32が1件です。`artifacts/upstream-dv-expansion-20261103/pins.json`に取得した版を記録し、上流ソースとライセンスはGit管理外へ保持します。CVFPUのTBではREADME・`.gitmodules`・Benderの実際の配置を読み分け、可変ブランチや`--remote`の解決結果を保存する必要を説明しました。HPDcacheのSystemC経路にはSCV等も必要なこと、UVM READMEの制限、Mirafraのb2bと製品DUTへの適用の違いも明記しています。
+
+PicoRV32はGitHub上でarchivedの状態を確認し、固定版の学習例として扱います。Python 3.13.15・macOS arm64・Icarus Verilog 14系で上流の`test_ez`を実行し、TBのコピーに独立した値・順序・件数の監視と失敗する時間上限を追加しました。正常系は8 store・7 loadで成功し、加算を+2へ変えるプログラムは`PICOTOUR_DATA`、メモリー応答停止は`PICOTOUR_TIMEOUT`と非0終了・成功表示なしで検出しました。後者2件は判定を調べる対照で、CPUのRTL変異や未知の不具合の検出として数えません。
+
+PicoRV32のREADMEの3シェルブロックも、そのまま抽出して新しい出力先の`readme-replay/`へ再実行しました。`native-ez.log`は元の表示例、`checked/`は正常1件・負例2件の新規ビルド・実行、`pico-summary.json`はSHA・コマンド・結果の記録です。試作の同じ3判定と、掲載コマンドの3判定を分け、元のGitチェックアウトのクリーンさも確認しました。CPUの全ISA・ISS比較・IRQ・PCPI・別バス・フォーマルは未実行です。
+
+変更はMarkdownだけで、上流ソースやバイナリーをGit管理へ取り込みません。README・全例一覧・UVM学習案内・環境準備・統合実行の導線と、用語5項目・FAQ 5問を更新しました。既存の130登録項目・108ルートジョブは維持します。新しいPicoRV32の手動実行、先行するOpenTitanのメタデータ演習、未実行のフルUVM・HPDcacheのTBを区別し、文書・ツール検査と既存nightlyの保存結果の監査で確認します。
+
+`source-reference-audit.json`では既存分を含む13リポジトリの固定SHA・クリーンな取得・ライセンスと、リンクする78のGitオブジェクトを照合しました。文書231件・773表・208 Mermaid図・259用語・126 FAQの444判定、ツール125テストが合格し、`audit-carried/`の既存nightly全108ジョブの再照合も合格しています。変更した比較図は描画・改行・接続を確認しました。最終追記・整形後の文書・ツール入力は`docs-ready/`・`tools-ready/`で再確認します。

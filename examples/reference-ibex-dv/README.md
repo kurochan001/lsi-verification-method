@@ -1,6 +1,6 @@
 # Ibex DVの参照例
 
-IbexのSV/UVM検証環境を、刺激・モニター・ISS比較・計画の順で読む例です。[3環境の比較と読み方](../../docs/method/open-source-dv-environments.md)から進めます。ここは**上流コードの読解例**で、本リポジトリのnightlyでIbexのフルDVを実行するランナーではありません。
+IbexのSV/UVM検証環境を、刺激・モニター・ISS比較・計画の順で読む例です。[外部環境の比較と読み方](../../docs/method/open-source-dv-environments.md)から進めます。ここは**上流コードの読解例**で、本リポジトリのnightlyでIbexのフルDVを実行するランナーではありません。
 
 ## 参照する版
 

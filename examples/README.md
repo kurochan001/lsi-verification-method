@@ -281,8 +281,13 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [Ibex DV](reference-ibex-dv/README.md) | 命令生成、メモリー応答、IRQ、RVFI、Spikeのコシミュレーション | 固定版のソース・設定を確認。フルUVMは未実行で、上流の手順には商用シミュレーター等が必要 |
 | [CVA6](reference-cva6-dv/README.md) | 構成別の経路、Verilator／Spike、生成器とRTL側の設定、UVMの比較有効化 | 固定版のソース・設定を確認。RTL／ISS・フルUVMは未実行。選択する経路ごとに依存を確認 |
 | [OpenTitan](reference-opentitan-dv/README.md) | UARTの計画・共通UVM環境・RAL・比較・カバレッジ。Pythonの計画操作ツールを使う手動演習 | 計画メタデータの抽出・照会・不具合再現と修正例を実行。IP／SoCのUVMは未実行 |
+| [CV32系／CORE-V-VERIF](reference-core-v-verif/README.md) | E40Pを入口に、E40X・E40Sの専用DV、OBI・IRQ・debug・RVFI／RVVI・ISSの設定を読む | 固定ソース・設定を確認。CPUのRTL／ISS・フルUVMは未実行。対象コアとモデル・ツール条件を対で確認 |
+| [CVFPU／cvfpu-uvm](reference-cvfpu-uvm/README.md) | 形式・丸め・例外フラグ、C++・MPFRモデル、ID・flush、比較・終了条件 | 構成・比較経路を確認。モデル構築・フルUVM・数値検算は未実行 |
+| [HPDcache](reference-hpdcache/README.md) | SystemCの単体TBとUVMのサブシステム、メモリー応答・置換・未完了要求・待ち | 両経路のソースを確認。SystemC側にはSCV等も必要。構築・実行は未確認 |
+| [Mirafra mBitsのVIP](reference-mirafra-vip/README.md) | APB／AXI4のBFM・比較、b2b・master・slave、DUTへ接続する責務 | ソース・回帰リスト・設定を確認。UVM・Verilator・加速の実行は未確認 |
+| [PicoRV32](reference-picorv32/README.md) | 小さなCPUとメモリーの簡易TBに、値・順序・件数・時間上限の自動判定を追加する演習 | Icarusで上流の簡易TB、正常1件・負例2件を実行。全ISA・ISS・UVM・フォーマルの確認とは別 |
 
-3件は上流を読む参照例で、下記の130登録項目・108ルートジョブへ加算しません。OpenTitanの小演習はHDLシミュレーターを使わず、抽出したtestpoint数も試験合格数やカバレッジとは別に扱います。
+8件は上流を読む参照例で、下記の130登録項目・108ルートジョブへ加算しません。OpenTitanの小演習は計画メタデータを扱い、PicoRV32の小演習は限定したプログラムのRTL実行を扱います。どちらも上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 

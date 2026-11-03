@@ -1,6 +1,6 @@
 # OpenTitanのDV環境の参照例
 
-UART IPを入口に、検証計画、共通環境、RAL、比較、カバレッジ、実行設定を読む例です。[3環境の比較](../../docs/method/open-source-dv-environments.md)も参照してください。ここは**読解と手動演習の参照例**で、統合nightlyでOpenTitanのIP／SoCをシミュレーションするランナーではありません。
+UART IPを入口に、検証計画、共通環境、RAL、比較、カバレッジ、実行設定を読む例です。[外部環境の比較](../../docs/method/open-source-dv-environments.md)も参照してください。ここは**読解と手動演習の参照例**で、統合nightlyでOpenTitanのIP／SoCをシミュレーションするランナーではありません。
 
 ## 参照する版
 

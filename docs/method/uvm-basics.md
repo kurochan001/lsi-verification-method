@@ -98,7 +98,7 @@ analysis portの`write()`は、同じ観測を複数の接続先へ渡すfunctio
 | 7 | [複数クロックと個別reset](../../examples/local-uvm-multiclock/README.md) | 観測時刻と通知順序、リセット世代、取消・古い応答・復帰、解除順序。 |
 | 8 | [複数未完了・順不同応答](../../examples/local-uvm-outstanding/README.md) | ID・tokenによる対応付け、再利用、reset取消し、独立台帳、SVAの実DBとの照合。 |
 | 9 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
-| 10 | [Ibex DV・CVA6・OpenTitanの参照例](open-source-dv-environments.md) | 実プロジェクトの計画・環境・比較を読む。上流の固定版・ツール条件を確認し、読解とフルDVの実行確認を分ける。 |
+| 10 | [公開CPU・IP・VIPの参照例](open-source-dv-environments.md) | Ibex・CVA6・CV32系・OpenTitan、CVFPU・HPDcache・Mirafra等の計画・環境・比較を読む。固定版・ツール条件と実行確認の範囲を記録する。 |
 
 設定・データ・readyの協調、複数IPのRALサブマップ、複数クロック・個別resetは、それぞれの実行例で確認できます。複数クロック例は固定した2種類のクロック条件と通知順序の範囲です。任意のクロック停止や物理CDC/RDCの安全性まで確認した結果には広げません。[実行済みの範囲と設計案](uvm-practical-design.md#7-実行済みの範囲と設計案を区別する)も参照してください。
 
