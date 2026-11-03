@@ -25,6 +25,21 @@
 
 演算値の一致に加え、受付・ID・重複・欠落、flush・resetで取り消す要求、終了時の未照合も調べます。[C++参照モデル](../local-cpp-reference/README.md)と[順不同応答のUVM](../local-uvm-outstanding/README.md)から進むと、計算と通信の検査の責務を対応付けやすくなります。
 
+```mermaid
+flowchart TD
+  accTitle: CVFPUの要求IDと数値比較の経路
+  accDescr: 受理要求をIDで保持し、応答IDに対応する要求から参照結果を計算する。応答の値と例外フラグを照合し、flushやresetによる取消しも管理する。
+  Q["要求の観測"] --> H["要求をIDごとに保持"]
+  H --> M["応答IDに対応する<br/>要求を参照"]
+  R["応答の観測"] --> M
+  M --> F["C++／MPFR参照計算<br/>形式・演算・丸め"]
+  F -- "期待結果・フラグ" --> C["結果ビット列と<br/>例外フラグを比較"]
+  R -- "実測結果・フラグ" --> C
+  X["flush・reset"] -. "取消し対象を処理" .-> H
+```
+
+図は`fpu_sb`の比較の流れを要約したものです。値が一致しても、対応する要求がない応答や、取り消したIDの扱いまで正しいとは限らないため、数値比較とID管理の両方を追います。固定版の読解図で、フルUVMの実行結果を示すものではありません。
+
 ## 依存の固定と実行条件
 
 固定版READMEにはCVA6依存の説明がありますが、実際には`Bender.yml`がCVFPU・CORE-V-VERIFを参照し、ラッパーを`modules/cva6-cvfpu/`から選びます。READMEの名称だけで導入せず、[.gitmodules](https://github.com/openhwfoundation/cvfpu-uvm/blob/2f787402256b76d00e397d72a00b57120db455cf/.gitmodules)、Gitのgitlink、Benderの解決結果を照合します。`master`・`develop`や`submodule update --remote`を使った後は、実際のコミットも保存してください。

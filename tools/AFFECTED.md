@@ -48,6 +48,15 @@ artifacts/toolchains/full/python/bin/python tools/select_regression.py \
 
 `selection.json`の`status`、`changed`、`reasons`、`full_reasons`、`selected_jobs`、`executed_jobs`を確認します。`executed_jobs`は、統合ランナーが実際に起動したルートジョブの数です。起動前の依存不足を数えず、起動後の失敗・時間切れ・中断は起動済みとして記録します。シミュレーションや子タスクの件数とは区別します。`hardware_verified`は、全選択ジョブの実行・監査・終了時の入力照合が成功した場合だけtrueです。計画のみ・文書のみ・差分なしはfalseです。選択自体の成功を、全例の合格と読み替えません。実行途中の入力の変更・追加・削除も失敗にし、`hardware_verified`をfalseにします。
 
+| 状態 | `selected_jobs`の件数 | `executed_jobs` | `hardware_verified` |
+| --- | --- | --- | --- |
+| 文書のみ・差分なし | 0 | 0 | false |
+| 選択計画のみ | n（1以上） | 0 | false |
+| 起動前の不足・実行失敗・監査不合格 | n（1以上） | 0〜n | false |
+| 全選択ジョブの実行・監査・終了時照合が成功 | n（1以上） | n | true |
+
+同じ`executed_jobs=n`でも、起動したジョブが失敗すれば検証済みにはなりません。表のnは選択したルートジョブ数で、全例の件数や子のテスト件数ではありません。
+
 例や依存を追加したら、次で候補を生成し、差分をレビューします。台帳だけを更新して影響するテストを省略する判断には使いません。
 
 ```sh

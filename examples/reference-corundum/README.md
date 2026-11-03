@@ -17,6 +17,20 @@ FPGA NICの小さなパケット処理ブロックから、PCIe・DMA・キュ�
 
 `rx_hash`では、同じフレームからソフトウェアで期待hashを計算し、出力値と種別をそれぞれ比較します。NIC全体では、送ったペイロードの一致だけでなく、受信キューやチェックサム等も別の観測点になります。各assertがどの試験区間で有効か、無効化された比較がないかをコードから追います。
 
+```mermaid
+flowchart TD
+  accTitle: Corundum rx_hashの独立した期待値比較
+  accDescr: Scapyで生成したフレームをRTLへ送り、同じフレームのアドレスとポートからPythonで期待hashと種別を求める。共通のhash keyを使い、実測した値と種別をそれぞれ比較する。
+  F["Scapyのフレーム生成"] --> D["rx_hash RTL"]
+  F --> P["tuple_pack・hash_toep<br/>Pythonで期待値を計算"]
+  K["同じhash key"] --> D
+  K --> P
+  D -- "実測hash・種別" --> C["cocotbの比較"]
+  P -- "期待hash・種別" --> C
+```
+
+この図は`rx_hash`単体の比較経路です。PCIe・DMA・キューを含むNIC全体のTBは、表の次の段階で読みます。パケット種別・入力休止・データ幅の行列は、この経路に与える条件として確認します。
+
 ## 読解演習
 
 1. `rx_hash`で1つのUDPフレームを選び、フレーム生成→入力→期待hash→出力比較を線で結ぶ。

@@ -4,6 +4,19 @@
 
 リポジトリのルートから同じシェルで順に実行します。Python 3.10以上を使い、演習2にはIcarusの`iverilog`と`vvp`をPATHへ用意します。Pythonの追加パッケージは不要です。掲載手順はPython 3.13.15・macOS arm64・Icarus Verilog 14系で確認しています。
 
+```mermaid
+flowchart TD
+  accTitle: ランダム探索演習の2つの経路と保存物
+  accDescr: 演習1はFIFOの入力生成だけを行い、重複を分類してJSONへ保存する。演習2はAXI4-StreamをRTL実行して失敗を縮小し、固定入力を保存して新規ビルドへ再生する。
+  S["手動演習"] --> F["演習1：FIFOの<br/>入力を5回生成"]
+  F --> J["input-records.json等<br/>生成条件・入力の<br/>重複を分類"]
+  S --> A["演習2：AXI4-Stream<br/>RTLで再現・縮小<br/>discoveryに全試行を保持"]
+  A --> C["25操作を1操作へ縮小<br/>corpusへ入力と由来を保存"]
+  C --> R["fixed-replayで新規ビルド<br/>正常RTLと変異ID 3を照合"]
+```
+
+2本の枝は別々の題材です。FIFOは入力生成の分類、AXI4-StreamはRTL実行と固定入力の再生を確認します。変異ID 3は1種類の誤実装で、正常RTLとの2判定を行います。下の手順と、末尾の保存物一覧を対応付けてください。
+
 ## 1. FIFOの入力生成で重複を分類する
 
 既存の[`random_vectors()`](../../examples/local-fifo/run.py)から入力を生成します。この節は入力の分類だけで、RTLシミュレーションやカバレッジ計測は行いません。

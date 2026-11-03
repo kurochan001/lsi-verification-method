@@ -17,6 +17,20 @@ Root of Trustを構成する暗号・鍵管理IPを題材に、既知の期待�
 
 生成されたpredictorの雛形コメントだけを見て、実装の有無を判断しません。この版には期待ファイルを選び、期待値トランザクションを生成・送信する処理があります。`SHA512_environment`は期待値と実測値を`uvmf_in_order_scoreboard`へ接続します。比較順序、残件、期待ファイルの欠落、モードと試験番号の範囲を、試験の完了条件まで追ってください。
 
+```mermaid
+flowchart TD
+  accTitle: Caliptra SHA-512の期待値と実測値の接続
+  accDescr: DUT入力の観測がpredictorへ渡り、試験番号とモードで選んだ期待ベクトルから期待値を作る。出力の観測とともにin-order scoreboardへ渡して比較する。
+  D["SHA-512 DUT"] -- "入力の観測" --> I["入力モニター"]
+  I --> P["SHA512_predictor<br/>モード・試験番号で選択"]
+  V[".rsp期待ベクトル"] --> P
+  P -- "期待値" --> S["in-order scoreboard"]
+  D -- "出力の観測" --> O["出力モニター"]
+  O -- "実測値" --> S
+```
+
+固定版の`connect_phase()`を読むための図です。期待値側の`expected_analysis_export`と実測値側の`actual_analysis_export`を取り違えず、同じ順序のトランザクションが揃う条件を確認します。カバレッジの計測経路は、この比較経路とは別に読みます。
+
 ## セキュリティIPとして読むポイント
 
 | 観点 | 検証項目へ展開する問い |
