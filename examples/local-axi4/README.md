@@ -75,6 +75,8 @@ python3 -m unittest discover -s examples/local-axi4/tests -v
 
 これはシミュレーション例です。[既存のフォーマル例](../local-bus-formal/README.md)の証明対象はAHB-LiteとAXI4-Liteで、本AXI4回路を証明した結果ではありません。バス全体のVIP、合成・タイミング・CDCの検査、無限時間の活性証明も含めません。
 
+2026-11-03の[kirimasimでの互換性確認](../../docs/case-study-kirimasim/README.md)では、ファイル名を保持するpacked配列から`string`型への暗黙変換が拒否されました。ファイル名の宣言を`string`へ変更し、kirimasim・Icarusの両方でsmoke／nightly、全26目標、4種類の変異を再確認しました。回路と比較内容は変更していません。
+
 バースト、IDと順序、4KiB境界、チャネルの独立性は[Arm AXI IHI 0022E](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)を参照しています。短いバーストへの制限、メモリ構成、エラー方針、応答間隔は本教材の仕様です。規格本文や外部RTLの転載はしていません。
 
 ## 制御証明・データBMCを追加で実行する

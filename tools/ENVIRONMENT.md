@@ -12,6 +12,8 @@
 
 全例の準備には`full`を使います。Pythonパッケージの版とネイティブツールのソース版は[`environment.json`](environment.json)、インストール対象は[文書用](docs-requirements.txt)・[シミュレーション用](simulation-requirements.txt)・[フォーマル用](../examples/local-fifo-formal/tools-requirements.txt)に固定しています。OS・コンパイラー・すべての推移依存まで固定したコンテナではありません。
 
+[kirimasimを使った実行](../docs/case-study-kirimasim/README.md)には、別途用意したkirimasimバイナリーを指定します。上記プロファイルはkirimasimの導入・構築・診断を含みません。実測した版と対応範囲は実行記録を参照してください。
+
 [公開CPU・IP・VIPの参照例](../docs/method/open-source-dv-environments.md)は、上流を読むための案内です。`full`プロファイルには、そのフルDVのシミュレーター・ISS・全依存の準備を含めません。HPDcacheのSystemC経路には、本リポジトリが準備するSystemCに加えてSCV等も必要です。[OpenTitanの計画ツール](../examples/reference-opentitan-dv/README.md#商用ツールを使わない小演習)、[PicoRV32のIcarus演習](../examples/reference-picorv32/README.md#小演習表示を自動判定へつなぐ)、[LiteDRAMのPython／Migen演習](../examples/reference-litedram/README.md#外部hdlシミュレーターを使わない小演習)は、それぞれの手動手順を参照してください。Corundumは固定版の古いcocotb等、CaliptraのUVM経路は商用VIP等の条件もあるため、共通環境で一括実行できるとは扱いません。
 
 ## 2. OS側の依存を用意する

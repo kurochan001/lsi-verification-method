@@ -17,7 +17,7 @@ module axi4_tb;
  reg bs=0,rs=0;reg [3:0] oldb;reg [36:0] oldr;
  reg sav_aw,sav_w,sav_b,sav_ar,sav_r,sav_last;
  reg [1:0] sav_bid,sav_bp,sav_rid,sav_rp;reg [31:0] sav_data;
- reg [2047:0] vectors,wave;
+ string vectors,wave;
  task automatic fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"AXI4 mismatch at batch %0d cycle %0d",checks,cycles);end endtask
  always @(posedge clk or negedge rst_n) begin
    if(!rst_n) begin wc=0;rc=0;wl=0;bs=0;rs=0;end

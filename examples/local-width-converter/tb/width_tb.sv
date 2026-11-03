@@ -29,7 +29,9 @@ module width_tb;
  expected_half=expected_half+1;seen_sub=seen_sub+1;
  end endtask
  always @(posedge clk)begin
- ticks=ticks+1;
+ // Keep ready stable while the DUT and slave sample the same clock edge.
+ // A blocking update races with the combinational ready assignments above.
+ ticks<=ticks+1;
  if(!rst_n)begin lo_awfull<=0;lo_wfull<=0;m_bvalid<=0;m_rvalid<=0;lo_read_pending<=0;lo_b_pending<=0;lo_delay<=0;b_held<=0;r_held<=0;end
  else begin
  if(b_held && (!s_bvalid || s_bresp!==held_b))fail("WIDTH_HOLD");

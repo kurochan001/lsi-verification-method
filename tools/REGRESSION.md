@@ -4,6 +4,8 @@
 
 [外部DV環境の参照例13件](../examples/README.md#外部のオープンソースdv環境参照例)は、上流ソースの読解と手動演習です。統合ランナーの対象には含めず、`--suite all`の成功を上流各環境のフルDVの成功へ読み替えません。
 
+Icarus向けの例をkirimasimで動かす場合は、別入口の[`run_kirimasim_examples.py`](run_kirimasim_examples.py)を使います。[80例・107構成の実測記録](../docs/case-study-kirimasim/README.md)に、版、変換方法、修正前後の結果、対象外の工程を記載しています。通常の統合実行の既定ツールや登録表を切り替えるものではありません。
+
 ## 1. 実行範囲を選ぶ
 
 リポジトリのルートで、Python 3.10以上とPOSIX環境を使います。

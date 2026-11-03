@@ -10,6 +10,7 @@
 | [`run_selftests.py`](run_selftests.py) | [グループ別セルフテスト](QUALITY.md#セルフテスト)。未実行・空・skip・失敗を拒否し、JSON・JUnitを保存する。 |
 | [`verification_plan.py`](verification_plan.py) | [検証項目表と実行証跡の照合](../docs/method/verification-plan-automation.md)。出典・要求・項目・構成・実績・版を確認する。 |
 | [`run_regression.py`](run_regression.py) | [全検証例の統合実行](REGRESSION.md)。構成行列、依存確認、並列数、時間上限、JUnitとソースの照合を管理する。 |
+| [`run_kirimasim_examples.py`](run_kirimasim_examples.py) | [kirimasimでの実行と実測記録](../docs/case-study-kirimasim/README.md)。Icarus向けの既存計画・判定を使い、80例を選択して実行する。実コマンド・版・ハッシュ・異常終了を記録する。 |
 | [`regression_report.py`](regression_report.py) | [履歴と採用結果の照合](REPORTING.md)。初回失敗を保持し、現在の計画に対する最後の試行を判定する。 |
 | [`regressions.json`](regressions.json) | 全体実行の入口・構成・依存・親子関係の登録表。未登録の例を自動的に省略しない。 |
 | [`run_lint.py`](run_lint.py) | [共通DUT lint](../docs/method/lint-and-waivers.md)。[`lint_targets.json`](lint_targets.json)の構成を読み、[`lint_baseline.json`](lint_baseline.json)からの新規・解消・版変更を拒否する。既知の未解決指摘は警告0件と区別する。 |
