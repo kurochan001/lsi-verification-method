@@ -289,10 +289,10 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [PULP AXI](reference-pulp-axi/README.md) | SVのランダムmaster／slave、クロスバーの比較、ID・待ち・未完了要求、構成とseedの回帰 | 固定ソース・比較の有効化・Questa等の条件を確認。上流TBは未実行 |
 | [LiteDRAM](reference-litedram/README.md) | リフレッシュ・ECC、AXIフロントエンド、Python／Migenのシミュレーションとunittest | リフレッシュ・ECCの6テストを実行。全テスト・生成RTL・PHY・実機は未確認 |
 | [Corundum](reference-corundum/README.md) | cocotbのパケット期待値、NIC・PCIe・DMA・キューの結合、構成行列とCI分割 | 固定ソース・比較・PythonとIcarusのCI条件を確認。RTL・実機は未実行 |
-| [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`のソース・比較経路を確認。v2のUVMと区別し、RTL・Cモデルは未実行 |
+| [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`を読解し、I/O修正をC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | [Caliptra](reference-caliptra/README.md) | 暗号・鍵管理IP、SHA-512の期待ベクトル・予測器・比較器、zeroizeと機能カバレッジ | 固定ソース・接続・商用VIPを含む依存を確認。RTL・UVM・セキュリティ評価は未実施 |
 
-13件は上流を読む参照例で、下記の130登録項目・108ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。上流フルDVの成功やカバレッジ収束へ読み替えません。
+13件は上流を読む参照例で、下記の130登録項目・108ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 

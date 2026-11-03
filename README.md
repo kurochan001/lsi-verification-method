@@ -217,10 +217,10 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | [PULP AXI](examples/reference-pulp-axi/README.md) | AXIのランダムmaster／slave、クロスバーの比較、ID・未完了要求・待ち、構成とseedの回帰 | 固定版のソース・比較の有効化・CI条件を確認 |
 | [LiteDRAM](examples/reference-litedram/README.md) | DRAMのリフレッシュ、AXIフロントエンド、ECCの訂正・検出、Python／Migenの自動判定 | リフレッシュ・ECCの6テストをMigenで実行 |
 | [Corundum](examples/reference-corundum/README.md) | cocotbによるNIC・PCIe・DMAの検証、パケットの期待値、キュー・完了、構成行列 | 固定版のソース・比較・CI条件を確認 |
-| [NVDLA](examples/reference-nvdla/README.md) | AIアクセラレーターの入力・重み・設定・割り込み、トレース再生と出力メモリー比較 | `nvdlav1`の固定ソース・トレース・比較経路を確認 |
+| [NVDLA](examples/reference-nvdla/README.md) | AIアクセラレーターの入力・重み・設定・割り込み、トレース再生と出力メモリー比較 | 固定版を読解し、I/O修正をC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | [Caliptra](examples/reference-caliptra/README.md) | 暗号・鍵管理IP、期待ベクトル、UVM予測器・比較器、zeroize、機能カバレッジ | SHA-512を入口に、固定ソース・接続・ツール条件を確認 |
 
-参照例13件は、登録済みのローカル実行例やnightlyジョブの件数には加算しません。上流のフルDV環境は未実行で、OpenTitanの計画操作、PicoRV32の限定したRTL演習、LiteDRAMの6テストの実績は、各資料に個別に記録しています。[目的別の比較・ツールとライセンスの条件](docs/method/open-source-dv-environments.md)も参照してください。
+参照例13件は、登録済みのローカル実行例やnightlyジョブの件数には加算しません。上流のフルDV環境は未実行で、OpenTitanの計画操作、PicoRV32の限定したRTL演習、LiteDRAMの6テスト、NVDLAのI/O修正のC++単体確認は、各資料に個別に記録しています。[目的別の比較・ツールとライセンスの条件](docs/method/open-source-dv-environments.md)も参照してください。
 
 ### 分野から選ぶ
 

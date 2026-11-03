@@ -57,7 +57,7 @@ DV環境のソースが公開されていても、その全経路をオープン
 | PULP AXIのSVクラス・TB | Benderと依存ライブラリー、Questa等。固定版のVerilatorスクリプトはlintの経路 | ソース・比較の有効化・CI行列を確認。TBの構築・シミュレーションは未実行 |
 | LiteDRAMのPython／Migen単体試験 | Python・Migen・LiteX等。生成Verilog・PHY・全体試験は別の依存を確認 | 固定版3ソースを使い、リフレッシュ・ECCの6テストを実行 |
 | Corundumのcocotb経路 | 固定版CIはPython 3.10・Icarus・cocotb 1.7.2等。AXI・PCIe・Ethernetのモデル | ソース・比較・構成を確認。RTL実行・FPGA・実機は未確認 |
-| NVDLA `nvdlav1`のトレース経路 | 生成RTL・Verilator・C++・Perl・make等。別世代のUVM手順と混在させない | トレース・出力比較・終了を確認。RTL・Cモデルは未実行 |
+| NVDLA `nvdlav1`のトレース経路 | 生成RTL・Verilator・C++・Perl・make等。別世代のUVM手順と混在させない | 固定版を読解し、I/O修正を代替バスモデルのC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | Caliptraの暗号IP・上位DV | UVM・UVMF・QVIP・Avery等の商用VIPを含む経路と、別のVerilator経路 | SHA-512の期待値・TLM接続・covergroup等を確認。RTL・UVM・セキュリティ評価は未実施 |
 
 [OpenTitanの導入案内](https://opentitan.org/book/doc/getting_started/index.html)も、Verilatorでのソフトウェア実行とDVの経路を分けています。本リポジトリの小規模UVMがVerilatorで動いた結果は、上流の大規模環境をそのまま実行できる根拠とは別に扱います。
@@ -93,7 +93,7 @@ RISCV-DVでは、Pythonの実行制御と、SVによる命令生成を区別し�
 
 固定版OpenTitanでは、従来の`util/dvsim/dvsim.py`を前提にせず、[依存の指定](https://github.com/lowRISC/opentitan/blob/0f8469f729ce8e84993c9987f90af3589172c79d/pyproject.toml)を確認します。DVSimによるEDAフローの実行・結果集計と、Testplantoolによる計画の抽出・照会は別の役割です。後者の正常終了は、RTLの試験成功を意味しません。
 
-上流のソースはGit管理下へ取り込まず、リンクと手動演習で参照します。取得したソースのLICENSE・NOTICE・個別ファイルのSPDXを保持してください。特にCVA6はrootのLICENSEと各ファイルの条件が一様ではありません。本リポジトリのLLVM例外を上流ファイルへ追加する扱いにはしません。
+上流ソース全体をGit管理下へ複製せず、リンク・手動演習・必要な修正差分で参照します。取得したソースのLICENSE・NOTICE・個別ファイルのSPDXを保持してください。特にCVA6はrootのLICENSEと各ファイルの条件が一様ではありません。本リポジトリのLLVM例外を上流ファイルへ追加する扱いにはしません。
 
 IPの読解版と、別のTBの読解版を並べたことは、互換性を確認した組という意味ではありません。submoduleのgitlinkに加え、Bender等が取得する実際のコミットを保存します。上流のsetupに`--remote`や可変のブランチ名がある場合も、実行時の解決結果を再現記録へ残します。
 
@@ -130,7 +130,9 @@ ISSとの比較では、ISA・XLEN・特権・CSR・例外・割り込み・メ�
 
 [PicoRV32の演習](../../examples/reference-picorv32/README.md#小演習表示を自動判定へつなぐ)では、上流の簡易TBを実行し、コピーへ自動判定と時間上限を加えました。正常な8 store・7 loadと、+2のプログラム・メモリー応答停止の負例を照合しています。負例は検査の対照で、未知のCPU不具合やRTL変異の検出として数えません。
 
-[LiteDRAMの演習](../../examples/reference-litedram/README.md#外部hdlシミュレーターを使わない小演習)では、リフレッシュ3テストと、ECCの正常・1 bit訂正・2 bit誤り検出の3テストを実行しました。Migenシミュレーションの6件で、全テスト・生成Verilog・PHY・実DRAM・実機の評価は含みません。PULP AXI・Corundum・NVDLA・Caliptraは固定ソース・比較経路・条件の読解です。
+[LiteDRAMの演習](../../examples/reference-litedram/README.md#外部hdlシミュレーターを使わない小演習)では、リフレッシュ3テストと、ECCの正常・1 bit訂正・2 bit誤り検出の3テストを実行しました。Migenシミュレーションの6件で、全テスト・生成Verilog・PHY・実DRAM・実機の評価は含みません。PULP AXI・Corundum・Caliptraは固定ソース・比較経路・条件の読解です。
+
+[NVDLAのI/O修正例](../../examples/reference-nvdla/README.md#出力ファイル処理の不具合と修正例)では、C++ハーネスの出力ファイル処理による比較の見逃しと、I/O失敗を見逃す問題を再現しました。メソッドを抽出し、代替バス応答とI/O失敗の注入を使う8条件が修正後に成功しました。RTL・演算Cモデルや上流全体のビルド・実行ではなく、修正差分と単体確認の範囲を記録しています。
 
 上流のフルUVM、CPUのISS比較、HPDcacheのTB構築・実行、OpenTitanのチップシミュレーション、カバレッジ収束・サインオフは未確認です。参照例13件は統合ランナーの130登録項目・108ルートジョブへ加算せず、ローカル実行例と実プロジェクトの読解・手動演習を分けます。
 
