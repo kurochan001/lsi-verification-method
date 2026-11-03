@@ -54,16 +54,21 @@ import shutil
 import subprocess
 import sys
 
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
 base = Path(sys.argv[1]).resolve()
 repo = base / 'picorv32'
 out = base / 'checked'
 out.mkdir()
 pin = 'ef203c2b0a3fb793280f5114941416c425c5b461'
-assert subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip() == pin
+require(subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip() == pin,
+        'upstream commit differs')
 iverilog, vvp = shutil.which('iverilog'), shutil.which('vvp')
-assert iverilog and vvp
+require(iverilog and vvp, 'Icarus tools not found')
 original = (repo / 'testbench_ez.v').read_text()
-assert original.count('$finish;') == 1
+require(original.count('$finish;') == 1, 'unexpected TB finish pattern')
 checked = original.replace('$finish;', '$fatal(1, "PICOTOUR_TIMEOUT");')
 monitor = '''`timescale 1ns/1ps
 module tutorial_checks;
@@ -90,8 +95,8 @@ module tutorial_checks;
   end
 endmodule
 '''
-assert checked.count("32'h 00110113") == 1
-assert checked.count('mem_ready <= 1;') == 1
+require(checked.count("32'h 00110113") == 1, 'unexpected increment instruction')
+require(checked.count('mem_ready <= 1;') == 1, 'unexpected memory response pattern')
 variants = [
     ('normal', checked, 0, 'PICOTOUR_PASS stores=8 loads=7'),
     ('wrong-program', checked.replace("32'h 00110113", "32'h 00210113"), 1, 'PICOTOUR_DATA'),
@@ -109,17 +114,19 @@ for name, tb, expected_failure, label in variants:
     compiled = subprocess.run(build, cwd=d, text=True, stdout=subprocess.PIPE,
                               stderr=subprocess.STDOUT, timeout=30)
     (d / 'build.log').write_text(compiled.stdout)
-    assert compiled.returncode == 0, (name, compiled.stdout)
+    require(compiled.returncode == 0, f'{name}: build failed: {compiled.stdout}')
     command = [vvp, '-N', str(d / 'sim.vvp')]
     run = subprocess.run(command, cwd=d, text=True, stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT, timeout=30)
     (d / 'simulation.log').write_text(run.stdout)
-    assert label in run.stdout, (name, run.stdout)
-    assert (run.returncode != 0) == bool(expected_failure), (name, run.returncode)
+    require(label in run.stdout, f'{name}: missing expected label {label}')
+    require((run.returncode != 0) == bool(expected_failure),
+            f'{name}: unexpected simulation returncode {run.returncode}')
     if expected_failure:
-        assert 'PICOTOUR_PASS' not in run.stdout
+        require('PICOTOUR_PASS' not in run.stdout, f'{name}: false success in negative control')
     else:
-        assert run.stdout.count(label) == 1 and 'FATAL' not in run.stdout
+        require(run.stdout.count(label) == 1 and 'FATAL' not in run.stdout,
+                f'{name}: invalid normal completion')
     results.append(dict(case=name, expected_label=label, returncode=run.returncode,
                         build_command=build, command=command))
 def sha(p):
@@ -129,8 +136,9 @@ for tool in [iverilog, vvp]:
     version = subprocess.run([tool, '-V'], text=True, stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, timeout=10)
     (out / (Path(tool).name + '-version.log')).write_text(version.stdout)
-assert (repo / 'testbench_ez.v').read_text() == original
-assert not subprocess.check_output(['git', '-C', str(repo), 'status', '--porcelain'], text=True)
+require((repo / 'testbench_ez.v').read_text() == original, 'upstream TB changed')
+require(not subprocess.check_output(['git', '-C', str(repo), 'status', '--porcelain'], text=True),
+        'upstream worktree changed')
 summary = dict(success=True, upstream_commit=pin, python=sys.version,
                source_sha256=source_hashes, stores=8, loads=7, checked_cases=results,
                scope='Native-bus increment program only; no full ISA, ISS, UVM or formal proof')
@@ -145,6 +153,8 @@ PY
 - **no-response**：メモリー応答を止め、`PICOTOUR_TIMEOUT`・非0終了・成功表示なしを要求します。環境の応答停止をCPUの機能不具合と断定するものではありません。
 
 ビルド不能やPython側の時間切れは、予定した負例の成功へ変えません。各ケースのビルド・実行ログ、コマンド、ツール版、上流ファイルのSHA-256、固定コミットと3判定を保存します。既存の出力先を上書きせず、元のGitチェックアウトのクリーンさも確認します。
+
+Python側の合否は明示的な条件分岐で検査します。Pythonの`assert`文は`-O`や`PYTHONOPTIMIZE`で無効になるため、ビルド失敗や結果欠落を拒否する運用上の判定には使いません。
 
 ## 確認範囲と次に進む例
 

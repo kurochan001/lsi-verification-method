@@ -44,7 +44,7 @@ dv_tour_dir="${DV_TOUR_DIR:-$PWD/artifacts/opentitan-testplan-tour}"
 dv_tour_python="${DV_TOUR_PYTHON:-python3.13}"
 test ! -e "$dv_tour_dir"
 mkdir -p "$dv_tour_dir"
-"$dv_tour_python" -c 'import sys; assert (3, 11) <= sys.version_info[:2] < (3, 14)'
+"$dv_tour_python" -c 'import sys; sys.exit(0 if (3, 11) <= sys.version_info[:2] < (3, 14) else "Python 3.11-3.13 required")'
 git clone --depth 1 --filter=blob:none --sparse https://github.com/lowRISC/opentitan.git "$dv_tour_dir/opentitan"
 git -C "$dv_tour_dir/opentitan" fetch --depth 1 origin 0f8469f729ce8e84993c9987f90af3589172c79d
 git -C "$dv_tour_dir/opentitan" checkout --detach 0f8469f729ce8e84993c9987f90af3589172c79d
@@ -112,8 +112,8 @@ text = p.read_text()
 needle = '    tp = Testplan.from_top(Path(input_file))\n    tp = tp.filter_testpoints('
 replacement = ('    selected_fields = None if fields is None else [f.strip() for f in fields.split(",")]\n'
                + needle)
-assert text.count(needle) == 1
-assert text.count('    ).filter_fields(fields)') == 1
+if text.count(needle) != 1 or text.count('    ).filter_fields(fields)') != 1:
+    raise RuntimeError('upstream patch context differs')
 text = text.replace(needle, replacement, 1)
 text = text.replace('    ).filter_fields(fields)', '    ).filter_fields(selected_fields)')
 p.write_text(text)
@@ -129,36 +129,49 @@ import sys
 import tomllib
 from pathlib import Path
 import hjson
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
 b = Path(sys.argv[1])
 with (b / 'plan.csv').open() as f:
     rows = list(csv.DictReader(f))
-assert len(rows) == 3 and {r['name'] for r in rows} == {'reset', 'irq', 'bus_error'}
-assert {r['ip'] for r in rows} == {'tutorial_top', 'tutorial_ip'}
+require(len(rows) == 3 and {r['name'] for r in rows} == {'reset', 'irq', 'bus_error'},
+        'CSV testpoints differ')
+require({r['ip'] for r in rows} == {'tutorial_top', 'tutorial_ip'}, 'CSV import origins differ')
 selected = hjson.loads((b / 'selected.hjson').read_text())
-assert {r['name'] for r in selected} == {'reset', 'bus_error'}
-assert all(set(r) == {'name', 'bazel'} for r in selected)
+require(len(selected) == 2 and {r['name'] for r in selected} == {'reset', 'bus_error'},
+        'query count or names differ')
+require(all(set(r) == {'name', 'bazel'} for r in selected), 'query fields differ')
 before = hjson.loads((b / 'field-before.hjson').read_text())
 after = hjson.loads((b / 'field-after.hjson').read_text())
-assert before == [dict(stage='V2', si_stage='SV2')]
-assert after == [dict(si_stage='SV2')]
+require(before == [dict(stage='V2', si_stage='SV2')], 'field bug was not reproduced')
+require(after == [dict(si_stage='SV2')], 'field fix differs')
 repo = b / 'opentitan'
 commit = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
-assert commit == '0f8469f729ce8e84993c9987f90af3589172c79d'
+require(commit == '0f8469f729ce8e84993c9987f90af3589172c79d', 'upstream commit differs')
 lock = tomllib.loads((repo / 'uv.lock').read_text())
 packages = {p['name']: p for p in lock['package'] if 'version' in p}
 install = json.loads((b / 'python-install.json').read_text())
+expected = {'click': '8.4.2', 'hjson': '3.1.0', 'mako': '1.3.12', 'markupsafe': '3.0.3'}
+require(len(install['install']) == len(expected) and
+        {r['metadata']['name'].lower() for r in install['install']} == set(expected),
+        'installed package inventory differs')
 for row in install['install']:
     p = packages[row['metadata']['name'].lower()]
-    assert p['version'] == row['metadata']['version']
+    require(p['version'] == row['metadata']['version'] == expected[p['name']],
+            'installed package version differs')
     allowed = {w['hash'] for w in p.get('wheels', [])}
     if 'sdist' in p:
         allowed.add(p['sdist']['hash'])
-    assert 'sha256:' + row['download_info']['archive_info']['hashes']['sha256'] in allowed
+    require('sha256:' + row['download_info']['archive_info']['hashes']['sha256'] in allowed,
+            'download hash differs from upstream lock')
 paths = ['opentitan/util/testplantool/cli.py', 'testplantool-fixed/cli.py']
 hashes = {p: hashlib.sha256((b / p).read_bytes()).hexdigest() for p in paths}
-assert hashes[paths[0]] == '10f93df5d698778e86f529ca34ddad34f7dc56c37852b744d2c716136fee51d6'
-assert hashes[paths[1]] == 'c25904043ed05275c458a52ddb1e471b7c5e6c1350f86490fb9794bdd0c07079'
-summary = dict(success=True, upstream_commit=commit, csv_rows=3, selected_rows=2,
+require(hashes[paths[0]] == '10f93df5d698778e86f529ca34ddad34f7dc56c37852b744d2c716136fee51d6',
+        'original CLI hash differs')
+require(hashes[paths[1]] == 'c25904043ed05275c458a52ddb1e471b7c5e6c1350f86490fb9794bdd0c07079',
+        'fixed CLI hash differs')
+summary = dict(success=True, upstream_commit=commit, csv_rows=len(rows), selected_rows=len(selected),
                field_bug_reproduced=True, field_fix_verified=True, source_sha256=hashes,
                scope='Metadata CLI only; no RTL, UVM, ISS or chip simulation')
 (b / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
@@ -167,6 +180,8 @@ PY
 ```
 
 最後の照合は、点数だけでなく名前・import元・選択フィールド、修正前後の結果、取得版、CLIのハッシュ、依存パッケージと上流`uv.lock`のダウンロードハッシュを確認します。
+
+照会結果の重複や、依存記録の空・欠落・重複も拒否します。合否判定は、Pythonの最適化で無効になる`assert`文へ依存しません。
 
 コピーには上流の著作権表示とLICENSE・NOTICEを保持します。上流由来の修正例の対象はApache-2.0で、本リポジトリのLLVM例外を追加するものではありません。修正を上流へ送付・反映した結果ではありません。
 

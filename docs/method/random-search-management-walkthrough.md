@@ -23,6 +23,10 @@ import json
 import sys
 from pathlib import Path
 
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
 def digest(value):
     encoded = json.dumps(value, sort_keys=True, separators=(',', ':'),
                          ensure_ascii=True, allow_nan=False).encode('utf-8')
@@ -53,13 +57,13 @@ for attempt, seed, depth, cycles in requests:
                         duplicate_of=seen.get(key), input=payload))
     seen.setdefault(key, attempt)
 
-assert len(records) == 5
-assert len({r['generation']['seed'] for r in records}) == 2
-assert len({r['generation_key'] for r in records}) == 4
-assert len({r['input_key'] for r in records}) == 4
-assert records[1]['duplicate_of'] == 'A1'
-assert records[0]['input'] == records[1]['input']
-assert all(r['duplicate_of'] is None for r in records[2:])
+require(len(records) == 5, 'attempt count differs')
+require(len({r['generation']['seed'] for r in records}) == 2, 'seed count differs')
+require(len({r['generation_key'] for r in records}) == 4, 'generation uniqueness differs')
+require(len({r['input_key'] for r in records}) == 4, 'input uniqueness differs')
+require(records[1]['duplicate_of'] == 'A1', 'duplicate origin differs')
+require(records[0]['input'] == records[1]['input'], 'same request generated different inputs')
+require(all(r['duplicate_of'] is None for r in records[2:]), 'unexpected duplicate')
 summary = dict(success=True, attempts=5, seed_values=2,
                generation_conditions=4, inputs=4, rtl_executed=False)
 (out / 'input-records.json').write_text(json.dumps(records, indent=2) + '\n')
@@ -109,11 +113,15 @@ import shutil
 import sys
 from pathlib import Path
 
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
 base = Path(sys.argv[1]).resolve()
 discovery = base / 'discovery'
 original_summary = json.loads((discovery / 'summary.json').read_text())
-assert original_summary['success'] and original_summary['complete']
-assert original_summary['planned'] == 6
+require(original_summary['success'] and original_summary['complete'], 'discovery did not succeed')
+require(original_summary['planned'] == 6, 'discovery plan differs')
 corpus = base / 'corpus'
 corpus.mkdir()
 fixture = corpus / 'AXIS-DATA-001.json'
@@ -129,9 +137,9 @@ meta = dict(schema='axis-fixed-case-v1', case_id='AXIS-DATA-001',
             normal_expected='pass', mutation3_expected='detected')
 metadata = corpus / 'case.json'
 metadata.write_text(json.dumps(meta, indent=2) + '\n')
-assert sha(fixture) == json.loads(metadata.read_text())['fixture_sha256']
+require(sha(fixture) == json.loads(metadata.read_text())['fixture_sha256'], 'fixture hash differs')
 actions = json.loads(fixture.read_text())
-assert actions
+require(actions, 'empty saved actions')
 
 source = Path('examples/local-failure-reduction/run.py').resolve()
 spec = importlib.util.spec_from_file_location('fixed_axis_tour', source)
@@ -179,3 +187,5 @@ PY
 `discovery/`のログ・入力に加え、対応するソース・ツール・外部依存も保持してください。`case.json`やハッシュ一覧だけで、元の実行を復元できるわけではありません。[管理上の集計と保持方針](random-search-management.md#6-集計とケース集を維持する)へ戻り、探索の試行数、原因の分かった不具合数、実際にCI登録した固定ケース数を分けて報告します。
 
 掲載手順の別プロセスでの再現、入力ハッシュ、新規RTL実行と文書・ツール検査の結果は、[2026-11-03の実行記録](../../PROVENANCE.md#random-search-20261103)を参照してください。
+
+記録の合否は、最適化で無効になるPythonの`assert`文に依存させず、明示的な条件分岐で不一致を拒否します。

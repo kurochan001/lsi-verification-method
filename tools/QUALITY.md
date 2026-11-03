@@ -49,4 +49,6 @@ artifacts/toolchains/full/python/bin/python tools/run_selftests.py \
 
 ツールのテストには、切れたリンク、不正な図、偽の空のパース結果、誤ったツール版、準備の失敗、異なるコミットのチェックアウト、予定やJUnitの欠落・構造不正、親の外や親自身を参照する子証跡、古いソース、中断時の子プロセス停止などの負例があります。ケーススタディ由来の[参照ツール](README.md#case-study-reference-tools)は元の構成が必要なため、この一覧には含めません。
 
+[`test_documented_recipes.py`](tests/test_documented_recipes.py)は、PicoRV32・OpenTitan・ランダム探索演習に掲載したPythonブロックを抽出し、通常・`-O`・`-OO`・`PYTHONOPTIMIZE=1`で実行します。ビルド失敗、非再現な入力、照会の重複、空の依存記録を成功にしないことと、予定した結果を受け入れる経路を確認します。外部ツール・パーサー・Git等はテスト用の代替を使い、上流のフルDVや実CPUを動かした結果とは区別します。
+
 変更時の[Quality CI](CI.md)は文書・ツール・代表RTLを、毎晩のCIは全セルフテストと[全例のnightly](REGRESSION.md)を実行します。

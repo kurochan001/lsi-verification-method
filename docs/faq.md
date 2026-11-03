@@ -684,3 +684,7 @@ CVFPUは演算IP、cvfpu-uvmはラッパー・刺激・参照モデル・比較�
 ### Q126. PicoRV32の小演習が成功したら、ISA全体やAXI4-Liteも検証済みですか
 
 今回実行したのは[ネイティブバスの小さな増分プログラム](../examples/reference-picorv32/README.md)です。8 store・7 loadの値・順序・完了と、判定処理の負例を確認しました。全ISA、IRQ、PCPI、AXI4-Lite／Wishbone、ISS比較やフォーマル証明は別に計画・実行する必要があります。
+
+### Q127. Pythonランナーの終了コードや件数を、assert文だけで検査してよいですか
+
+運用上の合否判定には、明示的な条件分岐と例外・非0終了を使います。Pythonの`assert`文は[`-O`や`PYTHONOPTIMIZE`](https://docs.python.org/3.13/using/cmdline.html#envvar-PYTHONOPTIMIZE)で無効になります。PicoRV32の演習では、最適化有効時にコンパイル失敗を成功記録へ変えてしまう問題を再現し、修正しました。検査を無効にしないことに加え、ビルド失敗・不正な出力・件数の欠落や重複も負例で確かめます。これはPythonランナーの制御の話で、SystemVerilogのアサーションの実行条件とは分けて確認します。
