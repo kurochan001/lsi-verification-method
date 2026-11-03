@@ -274,7 +274,7 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 
 ## 外部のオープンソースDV環境（参照例）
 
-小規模な実行例から、実プロジェクトのCPU・IPのDV環境へ進むための参照例です。[読み方・依存・版の比較](../docs/method/open-source-dv-environments.md)では、公開された検証ソースと、実行に必要なツールを分けて説明します。
+小規模な実行例から、実プロジェクトのCPU・演算IP・メモリー・バス・NIC・セキュリティIPのDV環境へ進むための参照例13件です。[読み方・依存・版の比較](../docs/method/open-source-dv-environments.md)では、公開された検証ソースと、実行に必要なツールを分けて説明します。
 
 | 参照例 | 読む内容・小演習 | 実行条件と確認範囲 |
 | --- | --- | --- |
@@ -286,8 +286,13 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [HPDcache](reference-hpdcache/README.md) | SystemCの単体TBとUVMのサブシステム、メモリー応答・置換・未完了要求・待ち | 両経路のソースを確認。SystemC側にはSCV等も必要。構築・実行は未確認 |
 | [Mirafra mBitsのVIP](reference-mirafra-vip/README.md) | APB／AXI4のBFM・比較、b2b・master・slave、DUTへ接続する責務 | ソース・回帰リスト・設定を確認。UVM・Verilator・加速の実行は未確認 |
 | [PicoRV32](reference-picorv32/README.md) | 小さなCPUとメモリーの簡易TBに、値・順序・件数・時間上限の自動判定を追加する演習 | Icarusで上流の簡易TB、正常1件・負例2件を実行。全ISA・ISS・UVM・フォーマルの確認とは別 |
+| [PULP AXI](reference-pulp-axi/README.md) | SVのランダムmaster／slave、クロスバーの比較、ID・待ち・未完了要求、構成とseedの回帰 | 固定ソース・比較の有効化・Questa等の条件を確認。上流TBは未実行 |
+| [LiteDRAM](reference-litedram/README.md) | リフレッシュ・ECC、AXIフロントエンド、Python／Migenのシミュレーションとunittest | リフレッシュ・ECCの6テストを実行。全テスト・生成RTL・PHY・実機は未確認 |
+| [Corundum](reference-corundum/README.md) | cocotbのパケット期待値、NIC・PCIe・DMA・キューの結合、構成行列とCI分割 | 固定ソース・比較・PythonとIcarusのCI条件を確認。RTL・実機は未実行 |
+| [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`のソース・比較経路を確認。v2のUVMと区別し、RTL・Cモデルは未実行 |
+| [Caliptra](reference-caliptra/README.md) | 暗号・鍵管理IP、SHA-512の期待ベクトル・予測器・比較器、zeroizeと機能カバレッジ | 固定ソース・接続・商用VIPを含む依存を確認。RTL・UVM・セキュリティ評価は未実施 |
 
-8件は上流を読む参照例で、下記の130登録項目・108ルートジョブへ加算しません。OpenTitanの小演習は計画メタデータを扱い、PicoRV32の小演習は限定したプログラムのRTL実行を扱います。どちらも上流フルDVの成功やカバレッジ収束へ読み替えません。
+13件は上流を読む参照例で、下記の130登録項目・108ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 

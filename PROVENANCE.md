@@ -1717,3 +1717,20 @@ PicoRV32、OpenTitanのメタデータ操作、ランダム探索の掲載コー
 回路・生成器・既存チェッカー・登録表・図・上流の固定SHAは変更していません。既存nightlyの全108ジョブは現行入力への保存結果の監査と、新規実行を分けて記録します。ツールのテスト追加は変更影響選択で全例へ戻るため、変更時CIでも全108ジョブのsmokeを対象にします。文書とツールの最終入力・合否、手動演習の通常／最適化の証跡を個別に保存します。
 
 `manual-recipe-audit.json`で、掲載9シェルブロックと実行スクリプトの一致、各演習の合否、PicoRV32の8 store・7 loadと3判定、OpenTitanの3点・選択2点、ランダム探索の全入力の再現と各回8判定を再照合しました。文書231件・773表・208図・259用語・127 FAQの444判定、ツール130テストが合格しています。`audit-carried/`の既存nightly全108ジョブの監査も合格しました。最終追記後の文書・ツール入力は`docs-ready/`・`tools-ready/`で再確認します。
+
+<a id="noncpu-dv-20261103"></a>
+## CPU以外の公開DV環境5件を追加（2026-11-03）
+
+起点は`6128571b64179526673ae963da5b6af1136bcb25`です。[PULP AXI](examples/reference-pulp-axi/README.md)、[LiteDRAM](examples/reference-litedram/README.md)、[Corundum](examples/reference-corundum/README.md)、[NVDLA](examples/reference-nvdla/README.md)、[Caliptra](examples/reference-caliptra/README.md)を追加し、参照例を13件としました。上流ソースを固定版で取得し、検証部品・刺激・比較・終了・依存を読みました。ソースをGit管理下へ複製せず、個々のREADMEに固定SHA・実ファイルへのリンク・読解演習・実行条件・確認範囲を記載しています。
+
+PULP AXIでは、汎用scoreboardの初期状態と有効化、クロスバー専用モニター、構成・seed・CI分割を分けています。Corundumはパケットの期待値計算からNIC・PCIe・DMAへ進み、固定版のcocotb等の条件を明記しました。NVDLAは`nvdlav1`のトレースと出力比較を対象に、v2のUVM手順、C++ハーネスと演算Cモデルを混同しません。CaliptraはSHA-512の期待ベクトル・予測器・TLM接続・covergroupを追い、商用VIPとVerilator経路の条件を記録しました。
+
+LiteDRAMはMigen・LiteXも固定版で取得し、Python 3.13.15・macOS arm64の専用venvで、リフレッシュ3テストとECCの正常・1 bit訂正・2 bit誤り検出の3テストを実行しました。テスト内部のパラメーターや注入回数は独立テスト件数へ加算しません。生成Verilogの実行、全テスト、PHY・実DRAM・FPGAの確認とは区別します。Pythonパッケージの解決結果はpipのreportとfreezeへ保存し、全推移依存を固定した環境とは扱いません。
+
+README・全例一覧・公開DVの比較・UVM学習案内・環境準備・リグレッションの導線も更新しました。READMEの従来の8件への見出しリンクは明示アンカーで保持しています。変更は文書のみで、RTL・生成器・チェッカー・登録表は変更せず、参照例13件と手動演習を130登録項目・108ルートジョブへ加算しません。
+
+証跡はGit管理外の`artifacts/noncpu-dv-20261103/`です。固定版のソース照合、掲載シェルブロックの再実行、文書検査、ツールのセルフテストを個別に保存します。PULP AXI・Corundum・NVDLA・CaliptraのRTL／モデルのビルド・シミュレーション、上流フルUVM、カバレッジ収束・セキュリティ評価は未実施です。
+
+`source-reference-audit.json`で、7リポジトリのHEAD・追跡ソースの一致・LICENSE、掲載リンク先の41のGitオブジェクトを照合しました。LiteDRAMの掲載2シェルブロックを`readme-replay.sh`へそのまま抽出し、新しい取得先・venvで再実行しました。`readme-replay.log`の全6テストが成功し、3ソースの固定版・追跡ファイル・インストール記録も照合しています。事前の6テストの成功は別ログで、12種類の試験として合算しません。
+
+文書236件・782表・208図・259用語・127 FAQの449判定、ツール130テストが合格しました。変更影響選択は文書のみ・0ジョブで、今回、既存108ジョブのRTLを再実行した結果ではありません。更新した図とREADMEの13行の表も描画し、文字の重なり・はみ出しがないことを確認しました。最終追記後の文書・ツール入力は`docs-ready/`・`tools-ready/`で再確認します。
