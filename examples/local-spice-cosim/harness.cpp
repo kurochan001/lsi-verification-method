@@ -109,7 +109,7 @@ struct Test {
             if(bool(dut.drive)!=wanted)fail("SPICE_CONTROL");
             if(!row.resetn){resets++;cover("reset/digital-clear");if(voltage>0.05)cover("reset/plant-memory");}
             if(!row.enable){disabled++;cover("input/enable-off");}
-            if(row.resetn && !previous_reset)cover("reset/restart");
+            if(row.resetn && !previous_reset && samples>2)cover("reset/restart");  // row 1 is the startup reset, not a restart
             cover(wanted?"control/drive-on":"control/drive-off");
             if(row.resetn && row.enable && adc>row.low && adc<row.high)cover(old?"control/hold-on":"control/hold-off");
             if(samples && (row.low!=rows[samples-1].low || row.high!=rows[samples-1].high))cover("input/setpoint-step");
