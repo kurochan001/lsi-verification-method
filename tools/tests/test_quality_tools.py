@@ -247,7 +247,7 @@ class EnvironmentTests(unittest.TestCase):
 class WorkflowTests(unittest.TestCase):
     def test_ci_runs_real_gates_and_keeps_failure_evidence(self):
         import yaml
-        for name in ('quality','nightly','affected'):
+        for name in ('quality','nightly','affected','kirimasim'):
             workflow=yaml.load((ROOT/f'.github/workflows/{name}.yml').read_text(),Loader=yaml.BaseLoader)
             self.assertEqual(workflow['permissions'],{'contents':'read','actions':'read'} if name=='affected' else {'contents':'read'})
             for job in workflow['jobs'].values():
@@ -303,5 +303,52 @@ class WorkflowTests(unittest.TestCase):
         users=[s for s in steps if 'CHANGE_BASE' in s.get('env',{})];self.assertEqual([s['name'] for s in users],['Select affected jobs','Run and audit the selected jobs'])
         self.assertTrue(all(s['env']['CHANGE_BASE']=='${{ steps.base.outputs.value }}' for s in users))
         self.assertLess([s.get('id') for s in steps].index('base'),[s.get('id') for s in steps].index('selection'))
+    def kirimasim_steps(self):
+        import yaml
+        return yaml.load((ROOT/'.github/workflows/kirimasim.yml').read_text(),Loader=yaml.BaseLoader)['jobs']['smoke']['steps']
+    def test_kirimasim_workflow_runs_one_decided_commit_on_a_schedule(self):
+        import yaml
+        workflow=yaml.load((ROOT/'.github/workflows/kirimasim.yml').read_text(),Loader=yaml.BaseLoader)
+        for trigger in ('schedule','push','workflow_dispatch'):self.assertIn(trigger,workflow['on'])
+        self.assertEqual(workflow['concurrency']['cancel-in-progress'],'false')
+        steps=self.kirimasim_steps();ids=[s.get('id') for s in steps];names=[s.get('name') for s in steps]
+        commit='${{ steps.kirimasim.outputs.commit }}'
+        self.assertIn(commit,next(s for s in steps if s.get('id')=='binary')['with']['key'])
+        source=next(s for s in steps if s.get('with',{}).get('repository')=='kurochan001/kirimasim');self.assertEqual(source['with']['ref'],commit)
+        run=next(s['run'] for s in steps if s.get('name')=='Run the pure-Icarus examples on kirimasim')
+        for flag in ('tools/run_kirimasim_examples.py','--profile smoke','--seed 17'):self.assertIn(flag,run)
+        # A binary is identified, then cached, then trusted with a verdict.
+        self.assertLess(ids.index('kirimasim'),ids.index('binary'))
+        self.assertLess(names.index('Build kirimasim'),ids.index('identity'))
+        self.assertLess(ids.index('identity'),names.index('Save the confirmed binary before verification'))
+        self.assertLess(names.index('Save the confirmed binary before verification'),names.index('Run the pure-Icarus examples on kirimasim'))
+    def test_kirimasim_commit_is_a_full_hash_from_the_request_or_the_latest_main(self):
+        script=next(s for s in self.kirimasim_steps() if s.get('id')=='kirimasim')['run']
+        latest,requested='a'*40,'b'*40
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'bin').mkdir();git=root/'bin/git'
+            git.write_text('#!/bin/sh\necho "$@" >> "$FAKE_CALLS"\nif [ -n "$FAKE_REMOTE" ]; then printf \'%s\\trefs/heads/main\\n\' "$FAKE_REMOTE"; fi\n');git.chmod(0o755)
+            def decide(request='',remote=latest):
+                output,calls=root/'output',root/'calls';output.write_text('');calls.write_text('')
+                env=dict(os.environ,REQUESTED_COMMIT=request,FAKE_REMOTE=remote,FAKE_CALLS=str(calls),GITHUB_OUTPUT=str(output),PATH=str(root/'bin')+os.pathsep+os.environ['PATH'])
+                r=subprocess.run(['bash','-e','-c',script],cwd=root,env=env,capture_output=True,text=True)
+                return r.returncode,output.read_text().strip(),calls.read_text()
+            code,output,calls=decide();self.assertEqual((code,output),(0,'commit='+latest));self.assertIn('refs/heads/main',calls)
+            self.assertEqual(decide(requested)[:2],(0,'commit='+requested));self.assertEqual(decide(requested)[2],'')
+            for label,kwargs in [('remote unreachable',dict(remote='')),('branch name',dict(request='main')),('short hash',dict(request='a'*12)),('injection',dict(request=latest+'; touch hacked'))]:
+                with self.subTest(label):
+                    code,output,_=decide(**kwargs);self.assertNotEqual(code,0);self.assertEqual(output,'')
+            self.assertFalse((root/'hacked').exists())
+    def test_kirimasim_binary_must_report_the_decided_commit(self):
+        script=next(s for s in self.kirimasim_steps() if s.get('id')=='identity')['run']
+        commit='0123456789ab'+'c'*28
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);binary=root/'artifacts/kirimasim-tool/kirimasim';binary.parent.mkdir(parents=True)
+            def identity(text):
+                binary.write_text(f'#!/bin/sh\necho "{text}"\n');binary.chmod(0o755)
+                return subprocess.run(['bash','-e','-c',script],cwd=root,env=dict(os.environ,KIRIMASIM_COMMIT=commit),capture_output=True,text=True).returncode
+            self.assertEqual(identity('kirimasim 0.0.0 (commit 0123456789ab), built with GNU 13.3.0'),0)
+            for text in ('kirimasim 0.0.0 (commit 111111111111), built with GNU 13.3.0','kirimasim 0.0.0'):
+                with self.subTest(text):self.assertNotEqual(identity(text),0)
 
 if __name__=='__main__':unittest.main()

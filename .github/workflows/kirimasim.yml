@@ -1,0 +1,134 @@
+name: Kirimasim latest
+on:
+  schedule:
+    - cron: '7 19 * * *' # UTC 19:07 / JST 翌04:07
+  push:
+    branches: [main]
+    paths:
+      - 'examples/**'
+      - '!examples/**/*.md'
+      - 'tools/run_kirimasim_examples.py'
+      - 'tools/run_regression.py'
+      - 'tools/regressions.json'
+      - '.github/workflows/kirimasim.yml'
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'kirimasim commit (40 hex digits). Empty runs the latest main.'
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: kirimasim-latest
+  cancel-in-progress: false
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Decide kirimasim commit
+        id: kirimasim
+        env:
+          REQUESTED_COMMIT: ${{ inputs.commit }}
+        run: |
+          # Resolved once, so the build, the cache key and the record name one commit
+          # even if kirimasim moves during this run.
+          commit="$REQUESTED_COMMIT"
+          if [[ -z "$commit" ]]; then
+            commit="$(git ls-remote https://github.com/kurochan001/kirimasim.git refs/heads/main | cut -f1)"
+          fi
+          if [[ ! "$commit" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Not a full kirimasim commit: '$commit'"
+            exit 1
+          fi
+          echo "kirimasim commit: $commit"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        id: binary
+        with:
+          path: artifacts/kirimasim-tool
+          key: kirimasim-dev-${{ runner.os }}-${{ runner.arch }}-${{ steps.kirimasim.outputs.commit }}
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        if: steps.binary.outputs.cache-hit != 'true'
+        with:
+          repository: kurochan001/kirimasim
+          ref: ${{ steps.kirimasim.outputs.commit }}
+          path: artifacts/kirimasim-source
+          persist-credentials: false
+      - name: Build prerequisites
+        if: steps.binary.outputs.cache-hit != 'true'
+        timeout-minutes: 10
+        run: |
+          if [[ -f /etc/apt/apt-mirrors.txt && "$(dpkg --print-architecture)" == amd64 ]]; then
+            echo 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt
+          fi
+          lsi_apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30)
+          sudo apt-get "${lsi_apt_options[@]}" update --error-on=any
+          sudo apt-get "${lsi_apt_options[@]}" install -y cmake g++ libbz2-dev ninja-build zlib1g-dev
+      - name: Build kirimasim
+        if: steps.binary.outputs.cache-hit != 'true'
+        timeout-minutes: 60
+        working-directory: artifacts/kirimasim-source
+        run: |
+          cmake --preset dev
+          cmake --build --preset dev --target kirimasim
+          mkdir -p ../kirimasim-tool
+          cp build/dev/src/driver/kirimasim ../kirimasim-tool/kirimasim
+      - name: Confirm the binary is that commit
+        id: identity
+        env:
+          KIRIMASIM_COMMIT: ${{ steps.kirimasim.outputs.commit }}
+        run: |
+          version="$(artifacts/kirimasim-tool/kirimasim --version)"
+          echo "$version"
+          if [[ "$version" != *"(commit ${KIRIMASIM_COMMIT:0:12})"* ]]; then
+            echo "::error::Expected kirimasim commit $KIRIMASIM_COMMIT"
+            exit 1
+          fi
+      - name: Save the confirmed binary before verification
+        if: steps.binary.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: artifacts/kirimasim-tool
+          key: ${{ steps.binary.outputs.cache-primary-key }}
+      - name: Run the pure-Icarus examples on kirimasim
+        run: >-
+          python tools/run_kirimasim_examples.py
+          --kirimasim artifacts/kirimasim-tool/kirimasim
+          --profile smoke --seed 17 --jobs 2
+          --command-timeout 60 --job-timeout 900
+          --out artifacts/ci/kirimasim
+      - name: Summarize the result
+        if: ${{ always() && hashFiles('artifacts/ci/kirimasim/summary.json') != '' }}
+        env:
+          KIRIMASIM_COMMIT: ${{ steps.kirimasim.outputs.commit }}
+        run: |
+          {
+            echo "kirimasim [\`${KIRIMASIM_COMMIT:0:12}\`](https://github.com/kurochan001/kirimasim/commit/$KIRIMASIM_COMMIT)"
+            echo
+            jq -r '"\(.passed) / \(.planned) jobs; lowering \(.native.lowering), simulations \(.native.simulations), abnormal \(.native.abnormal); exit codes \(.returncodes | tostring)"' artifacts/ci/kirimasim/summary.json
+            echo
+            jq -r '.results[] | select(.success | not) | "- `\(.id)`: \(.message)"' artifacts/ci/kirimasim/summary.json
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve results, including failures
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: kirimasim-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            artifacts/ci/kirimasim/summary.json
+            artifacts/ci/kirimasim/manifest.json
+            artifacts/ci/kirimasim/adapter.json
+            artifacts/ci/kirimasim/events/**
+            artifacts/ci/kirimasim/campaign/**/manifest.json
+            artifacts/ci/kirimasim/campaign/**/summary.json
+            artifacts/ci/kirimasim/campaign/**/result.json
+            artifacts/ci/kirimasim/campaign/**/*.xml
+            artifacts/ci/kirimasim/campaign/**/*.log

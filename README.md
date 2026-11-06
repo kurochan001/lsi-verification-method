@@ -306,7 +306,7 @@ python3 examples/local-fifo/run.py --depth 3 --width 8 --profile nightly --seed 
 
 同じ環境で、[AHB-Lite](examples/local-ahb/README.md)や[AXI4-Lite](examples/local-axi/README.md)なども実行できます。オプション、カバレッジ・JUnit・証跡の形式は[Icarus共通手順](examples/local-common/README.md)を参照してください。
 
-[kirimasimでの実行記録と手順](docs/case-study-kirimasim/README.md)も用意しました。2026-11-03に、テストベンチ2件の修正後、Icarus向け80例・107構成のsmokeがkirimasim・Icarusの両方でPASSしました。FIFO・AXI4・幅変換のnightly計8構成も確認しています。実行ツール、全対象の一覧、修正前の失敗、SVA・UVMの追加確認と未確認範囲は同資料を参照してください。
+[kirimasimでの実行記録と手順](docs/case-study-kirimasim/README.md)も用意しました。2026-11-03に、テストベンチ2件の修正後、Icarus向け80例・107構成のsmokeがkirimasim・Icarusの両方でPASSしました。FIFO・AXI4・幅変換のnightly計8構成も確認しています。実行ツール、全対象の一覧、修正前の失敗、SVA・UVMの追加確認と未確認範囲は同資料を参照してください。GitHub Actionsでは、[kirimasimの最新版](tools/CI.md#kirimasimの最新版)でも同じsmokeを毎日実行します。
 
 ### アサーションとカバレッジを実測する
 

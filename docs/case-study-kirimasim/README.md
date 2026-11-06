@@ -216,6 +216,10 @@ python3 tools/run_regression.py \
 
 既存ランナーがPASSでも、対応するkirimasimの実行記録が無い場合や、未実装・クラッシュ・タイムアウトがある場合は最上位でPASSにしません。異常終了を拒否するテスト、パラメータ変換、不明なオプションの拒否、保存後のソース・バイナリー変更の検出は[ツールのセルフテスト](../../tools/tests/test_kirimasim_examples.py)で確認します。
 
+### GitHub Actionsで最新版を実行する
+
+[Kirimasim latest](../../.github/workflows/kirimasim.yml)は、kirimasimの`main`の最新コミットをビルドし、同じ80例・107構成のsmokeを毎日実行します。[起動条件と失敗の切り分け](../../tools/CI.md#kirimasimの最新版)はCIの説明にあります。この節の上にある記録は`d73d8922dfa2`の実測のままで、Actionsの結果では更新しません。各実行の結果はSummaryと14日間保存される証跡で確認します。
+
 ## 6. 確認範囲の外側
 
 残る50登録行は、Verilatorや外部モデル等を使うシミュレーション27行、`formal`タグ13行、集約9行、STA 1行です。必要ツールが異なるため、今回の80例の実行へ混ぜていません。集約の子として同じ回路を使う場合もありますが、親側の全工程を実行したとは扱いません。[公開DV環境の参照例13件](../method/open-source-dv-environments.md)も、このローカル実行範囲とは別です。
