@@ -12,7 +12,10 @@ RTL=[HERE/'rtl/saturating_fir.sv'];CPP=[HERE/'harness.cpp',HERE/'model/reference
 
 def samples(name,width,seed,count):
     hi=(1<<(width-1))-1;lo=-(1<<(width-1))
-    fixed=[0,0,0,1,0,0,-1,0,0,2,-2,0,hi,lo,hi,lo,hi,lo,0,0,0]
+    half=1<<(width-2)
+    # Oldest first, so each triple ends on exact rounded values of max+1, max, min-1 and min.
+    boundary=[0,0,1,-half-1,hi,0,0,-3,-half-1,hi,0,0,0,half+2,lo,0,0,0,half,lo,0,0,0]
+    fixed=[0,0,0,1,0,0,-1,0,0,2,-2,0,hi,lo,hi,lo,hi,lo,0,0,0,*boundary]
     if name=='random':
         rng=random.Random(seed)
         return fixed+[rng.randrange(lo,hi+1) for _ in range(count)]
@@ -35,7 +38,7 @@ def run(a):
             path=e.out/'vectors'/cfg/name/'vectors.txt';path.parent.mkdir(parents=True);path.write_text(''.join(str(v)+'\n' for v in data))
             build=sim.build(cfg,parameters,mutation,flags=['-I'+str(HERE/'model')])
             label='CPP_HOLD' if mutation==3 else 'CPP_DATA' if name.startswith('detect-') else None
-            cancel=int(scenario=='reset')
+            cancel=2*int(scenario=='reset')
             result=sim.execute(cfg+'/'+name,build,[scenario,seed,len(data),int(name=='detect-model'),path],dict(accepted=len(data)+cancel,retired=len(data),cancelled=cancel,resets=1+cancel),len(data),label,credited=label is None)
             hits.update(result['coverage'])
         coverage[cfg]=dict(required=sorted(goals),hit=sorted(hits),missing=sorted(goals-hits))

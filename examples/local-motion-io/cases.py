@@ -3,7 +3,7 @@ from pathlib import Path
 import random
 spec=importlib.util.spec_from_file_location('motion_io_cases_model',Path(__file__).with_name('model.py'));M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 FIELDS='rst enable stop load duty raw origin_en origin'.split()
-NAMES=('pwm-boundaries','encoder','noise-invalid','wrap','reset-active')
+NAMES=('pwm-boundaries','encoder','noise-invalid','wrap','reset-active','origin-collision')
 class Campaign:
     def __init__(self,p):
         self.p=p;self.pwm=M.PWM(p['PERIOD'],p['DEAD']);self.q=M.Encoder(p['FILTER']);self.rows=[];self.expected=[];self.old_rst=0
@@ -39,6 +39,12 @@ def make(name,p,seed=17,random_count=32):
         c.tick(origin_en=1,origin=32767);c.hold(wait,raw=1);c.tick(origin_en=1,origin=-32768,raw=1);c.hold(wait,raw=0)
     elif name=='reset-active':
         c.hold(2*period,enable=1,raw=1);c.tick(rst=0,enable=1,load=1,duty=period,raw=3,origin_en=1,origin=123);c.hold(2*period,enable=1)
+    elif name=='origin-collision':
+        # Sweep the origin write across the edge where the filter adopts the next Gray state.
+        c.hold(wait)
+        for delay in range(wait):
+            raw=M.GRAY[(M.GRAY.index(c.q.filtered)+1)%4]
+            c.hold(delay,raw=raw);c.tick(raw=raw,origin_en=1,origin=1000+delay);c.hold(wait,raw=raw)
     elif name=='random':
         rng=random.Random(seed);raw=0
         for _ in range(random_count):

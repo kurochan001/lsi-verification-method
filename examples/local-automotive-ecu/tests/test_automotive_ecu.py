@@ -21,6 +21,10 @@ class EcuTests(unittest.TestCase):
         for p in PARS:
             c=C.Campaign(p);c.start();c.send(payload=700);e=c.tick(external=1)
             self.assertEqual(e[1:8],[0,1,0,1,1,0,1]);self.assertEqual(c.counts['validated'],1);self.assertEqual(c.counts['cancelled'],1);self.assertEqual(c.counts['applied'],0)
+    def test_external_fault_latches_while_off_and_beats_arm(self):
+        c=C.Campaign(PARS[0]);c.tick(rst=0);e=c.tick(external=1);self.assertEqual((e[1],e[2],e[4],e[5]),(0,1,1,1))
+        e=c.tick(recover=1,permit=1);self.assertEqual((e[2],e[4]),(0,0))
+        e=c.tick(arm=1,external=1);self.assertEqual((e[1],e[2],e[4]),(0,1,1))
     def test_ack_does_not_clear_latched_fault(self):
         c=C.Campaign(PARS[0]);c.start();c.tick(external=1);e=c.tick(ack=1)
         self.assertEqual((e[1],e[2],e[4],e[5]),(0,1,1,0))

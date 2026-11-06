@@ -24,6 +24,8 @@ else:
     tag("WEAK_COVERED" if w=="FAIL" else "WEAK_UNCOVERED")
     tag("STRONG_COVERED" if s=="FAIL" else "STRONG_UNCOVERED")
 '''
+# MCY always adds one unchanged design. It checks the three evaluations; it is not a candidate.
+NO_OP='mutate -mode none'
 
 def configuration(size,seed,python):
     result=f'[options]\nsize {size}\nseed {seed}\n[script]\nread_verilog -sv irq_regs.sv\nprep -top irq_regs\n[files]\nirq_regs.sv\n[logic]\n'+LOGIC+'\n[report]\nprint("AUTOMUTATION_COMPLETE total=%d" % tags())\n'
@@ -47,7 +49,7 @@ def audit(project,size):
     if len(mutations)!=size or len({m for _,m in mutations})!=size or len(tests)!=3*size or queued:raise ValueError('mutation/task inventory incomplete')
     by_test={(i,t):s for i,t,s in tests}
     if len(by_test)!=len(tests):raise ValueError('duplicate test result')
-    rows=[];counts={k:0 for k in ('EQUIVALENT','ORACLE_CONFLICT','INCOMPLETE','WEAK_COVERED','WEAK_UNCOVERED','STRONG_COVERED','STRONG_UNCOVERED')}
+    rows=[];control=None;counts={k:0 for k in ('EQUIVALENT','ORACLE_CONFLICT','INCOMPLETE','WEAK_COVERED','WEAK_UNCOVERED','STRONG_COVERED','STRONG_UNCOVERED')}
     for identity,mutation in mutations:
         observed={t:by_test[(identity,t)] for t in ('weak','strong','equiv')};expected=tags_for(*[observed[t] for t in ('weak','strong','equiv')]);actual=[t for i,t in tags if i==identity]
         if len(actual)!=len(set(actual)) or set(actual)!=expected:raise ValueError('MCY tags differ from raw outcomes')
@@ -55,14 +57,18 @@ def audit(project,size):
             directory=project/'evidence'/str(identity)/t;record=json.loads((directory/'result.json').read_text());source=directory.parent/'mutated.v'
             if record['status']!=observed[t] or record['mutated_sha256']!=Q.digest(source):raise ValueError('task evidence differs from database or generated input')
             if observed[t] in ('PASS','FAIL') and t!='equiv' and record.get('checks',0)<=0:raise ValueError('simulation performed no comparisons')
+        if mutation==NO_OP:
+            if set(actual)!={'EQUIVALENT'}:raise ValueError('no-op control is not equivalent')
+            control=dict(id=identity,outcomes=observed,mutated_sha256=Q.digest(project/'evidence'/str(identity)/'mutated.v'));continue
         for tag in actual:counts[tag]+=1
         rows.append(dict(id=identity,mutation=mutation,outcomes=observed,tags=sorted(actual),mutated_sha256=Q.digest(project/'evidence'/str(identity)/'mutated.v')))
-    denominator=size-counts['EQUIVALENT']-counts['INCOMPLETE']-counts['ORACLE_CONFLICT']
-    return dict(total=size,counts=counts,changed_mutations=denominator,weak_score=counts['WEAK_COVERED']/denominator if denominator else None,strong_score=counts['STRONG_COVERED']/denominator if denominator else None,mutations=rows,note='functional equivalence observes pending and irq; debug_hint is unspecified; execution failures are not detections')
+    if control is None:raise ValueError('no-op control missing')
+    denominator=size-1-counts['EQUIVALENT']-counts['INCOMPLETE']-counts['ORACLE_CONFLICT']
+    return dict(total=size,candidates=size-1,no_op_control=control,counts=counts,changed_mutations=denominator,weak_score=counts['WEAK_COVERED']/denominator if denominator else None,strong_score=counts['STRONG_COVERED']/denominator if denominator else None,mutations=rows,note='functional equivalence observes pending and irq; debug_hint is unspecified; execution failures are not detections')
 
 def run(a):
     O.prepare_environment();size=32 if a.profile=='smoke' else 96
-    ids=['toolchain','baseline/weak','baseline/strong','mutation-init','mutation-run','classification','improvement','missing-compiler-control','source-freshness']
+    ids=['toolchain','baseline/weak','baseline/strong','mutation-init','mutation-run','classification','no-op-control','improvement','missing-compiler-control','source-freshness']
     sources=[Path(__file__),HERE/'task.py',HERE/'vectors.py',HERE/'rtl/irq_regs.sv',HERE/'tb.sv',HERE/'miter.sv',ROOT/'examples/local-formal-common/runner.py',Path(Q.__file__),Path(O.__file__),O.CONFIG]
     e=E.Evidence('local-auto-mutation',a,sources,dict(size=size,seed=a.seed,logic=LOGIC,observed_outputs=['pending','irq'],unobserved=['debug_hint']),ids)
     try:snapshot=O.verify(a.oss_home);ready=True
@@ -87,6 +93,7 @@ def run(a):
     except (OSError,ValueError,KeyError,TypeError,sqlite3.Error) as exc:problem=str(exc)
     E.P.write_json(e.out/'mutation-report.json',dict(result,success=problem is None,error=problem))
     e.check('classification',problem is None,problem or result['counts'])
+    e.check('no-op-control',problem is None and bool(result.get('no_op_control')),result.get('no_op_control',problem))
     improvement=problem is None and result['changed_mutations']>0 and result['counts']['EQUIVALENT']>0 and result['counts']['WEAK_UNCOVERED']>0 and result['counts']['STRONG_UNCOVERED']==0
     e.check('improvement',improvement,result.get('counts',problem))
     status=compare('strong',source,e.out/'missing-compiler',project,compiler=str(e.out/'missing-iverilog'))

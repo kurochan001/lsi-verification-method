@@ -24,7 +24,7 @@ def run(a):
     path=HERE/'proposals.json';catalog=json.loads(path.read_text());proposals=catalog['proposals']
     if catalog['schema_version']!=1 or set(catalog['requirements'])!=REQUIREMENTS or len(proposals)!=4 or {p['id'] for p in proposals}!=PROPOSALS:raise ValueError('proposal/requirement inventory differs')
     rows=S.vectors(a.seed,256 if a.profile=='nightly' else 32)
-    e=E.Evidence('local-ai-review',a,[Path(__file__),path,*S.inputs()],dict(rows=rows,proposals=proposals,requirements=sorted(REQUIREMENTS)),['build',*sorted(PROPOSALS),'corrected/normal',*[f'corrected/mutation{m}' for m in (1,2,3)]])
+    e=E.Evidence('local-ai-review',a,[Path(__file__),path,*S.inputs()],dict(rows=rows,proposals=proposals,requirements=sorted(REQUIREMENTS)),['build',*sorted(PROPOSALS),'corrected/normal',*[f'corrected/mutation{m}' for m in (1,2,3)],'corrected/sva-only'])
     sim=S.Simulator(e);decisions=[]
     for p in proposals:
         if set(p['flags'])-{'mutation','model','sva_mode','sva_off'} or len(p['requirements'])!=len(set(p['requirements'])):raise ValueError('invalid proposal settings')
@@ -38,6 +38,9 @@ def run(a):
     for m in (1,2,3):
         r,log=sim.execute(f'corrected/mutation{m}',rows,mutation=m)
         e.check(f'corrected/mutation{m}',S.detected(r,log,'TRIAGE_COMPARE') and bool(r['oracle'] and r['oracle']['rtl_mismatches']),r)
+    # With the comparator off, the corrected assertion has to catch the clear-priority RTL by itself.
+    r,log=sim.execute('corrected/sva-only',rows,mutation=1,model=2)
+    e.check('corrected/sva-only',S.detected(r,log,'SVA_EVENT') and bool(r['oracle'] and r['oracle']['rtl_mismatches']),r)
     E.P.write_json(e.out/'review-decisions.json',decisions);sim.save();return e.finish()
 def main():
     p=E.parser(__doc__,'local-ai-review');p.add_argument('--verilator',default='verilator');p.add_argument('--build-timeout',type=float,default=120)

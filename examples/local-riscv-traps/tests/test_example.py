@@ -69,8 +69,35 @@ class ExampleTests(SystemContract, unittest.TestCase):
             self.assertTrue(any(t >> (20 + i) & 1 for t in tags), name)
         t = ISS.execute(ISS.assemble(P.directed_program()), ISS.directed_data(), traps=True)
         interrupted = [r.insn for r in t if r.kind == 3 and r.addr >> 31]
-        self.assertEqual(interrupted, ISS.assemble([('addi', 12, 0, 2), ('addi', 15, 0, 5)]))
-        self.assertEqual(len(traps(t)), 12)
+        self.assertEqual(interrupted, ISS.assemble([('addi', 12, 0, 2), ('addi', 15, 0, 5), ('addi', 13, 0, 3), ('ecall',),
+                                                    ('addi', 23, 0, 0)]))
+        self.assertEqual(len(traps(t)), 18)
+
+    def test_enabled_by_csr_is_reached_through_mret_and_through_csr_writes(self):
+        t = ISS.execute(ISS.assemble(P.directed_program()), ISS.directed_data(), traps=True)
+        bit = 1 << (20 + P.TRAP_TAGS.index('trap/enabled-by-csr'))
+        before = [t[i - 1].insn for i, tag in enumerate(P.trap_tags(t)) if tag & bit]
+        self.assertIn(ISS.MRET, before)
+        self.assertEqual({x >> 20 for x in before if x != ISS.MRET}, {ISS.CSRS['mstatus'], ISS.CSRS['mie']})
+
+    def test_fixed_program_contains_each_enable_and_csr_situation(self):
+        t = ISS.execute(ISS.assemble(P.directed_program()), ISS.directed_data(), traps=True)
+        word = lambda *item: ISS.assemble([item])[0]
+        values = lambda *item: [r.wdata for r in t if r.insn == word(*item) and r.kind != 3]
+        self.assertEqual(values('csrrs', 16, 'mip', 0), [0x800, 0])  # line high with MIE 0, then low
+        i = next(i for i, r in enumerate(t) if r.insn == word('csrrw', 0, 'mie', 0))  # line high, MIE 1, MEIE 0: not taken
+        self.assertEqual([(r.insn, r.kind) for r in t[i + 1:i + 3]], [(word('csrrsi', 0, 'mstatus', 8), 0), (word('addi', 12, 0, 2), 0)])
+        self.assertEqual(t[i + 3].insn, word('csrrw', 0, 'mie', 2))  # enabling MEIE: taken at once
+        self.assertEqual((t[i + 4].insn, t[i + 4].kind, t[i + 4].addr), (word('addi', 13, 0, 3), 3, 0x8000000b))
+        self.assertEqual([r.addr for r in t if r.insn == ISS.ECALL], [11, 0x8000000b, 11, 11, 11])  # the interrupt goes first
+        self.assertEqual(values('csrrs', 14, 'mstatus', 0), [0x1880])  # MRET after a trap with MIE 0: MIE 0, MPIE 1
+        self.assertEqual(values('csrrs', 15, 'mcause', 0), [1])
+        self.assertEqual(values('csrrs', 17, 'mtval', 0), [1])
+        self.assertEqual(values('csrrs', 19, 'mstatus', 0), [0x1808])  # CSRRC cleared MPIE alone
+        self.assertEqual(values('csrrs', 19, 'mie', 0), [0])  # every other bit written, MEIE cleared
+        i = next(i for i, r in enumerate(t) if r.insn == word('addi', 23, 0, 0) and r.kind == 3)  # raised inside the handler
+        self.assertEqual((t[i - 1].insn, t[i].addr), (ISS.MRET, 0x8000000b))
+        self.assertEqual((t[i - 2].kind, t[i - 2].addr, t[i - 2].data), (2, P.IRQ_ADDRESS, 1))
 
     def test_random_events_never_read_an_unwritten_register_or_split_a_jump(self):
         for seed in (17, 18, 19):

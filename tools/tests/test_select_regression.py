@@ -2,13 +2,17 @@ import copy
 from contextlib import redirect_stdout
 import io
 import json
+import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+import xml.etree.ElementTree as ET
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import select_regression as S
 
@@ -79,30 +83,35 @@ class SelectionTests(unittest.TestCase):
     def test_docs_only_run_records_zero_execution(self):
         rc,selection,summary=self.run_fixture();self.assertEqual(rc,0)
         self.assertEqual(selection['executed_jobs'],0);self.assertFalse(selection['hardware_verified']);self.assertEqual(selection['selected_jobs'],[])
+        self.assertEqual(selection['execution_skipped'],'no affected hardware jobs; documentation gates remain separate')
+        self.assertEqual([r['id'] for r in summary['results']],['selection','source-freshness'])
     def test_new_input_during_selection_invalidates_even_zero_execution(self):
         rc,selection,summary=self.run_fixture(True);self.assertEqual(rc,1)
         self.assertEqual(next(r['status'] for r in summary['results'] if r['id']=='source-freshness'),'fail')
     def test_new_shared_input_during_selection_is_rejected(self):
         self.assertEqual(self.run_fixture('shared')[0],1)
-    def run_hardware_fixture(self,mode='pass',drift=False):
+    def run_hardware_fixture(self,mode='pass',drift=False,fault=None,run=True):
         for name in ('run_regression.py','regression_report.py'):(self.root/'tools'/name).write_text('# fixture')
         (self.root/'tools/regressions.json').write_text(json.dumps(dict(schema_version=1,examples=list(self.entries.values()))))
         config=self.root/'tools/regression_dependencies.json';config.write_text(json.dumps(S.dependency_inventory(self.root,self.entries)))
         self.git('add','.');self.git('commit','-qm','complete fixture')
         (self.root/'examples/local-a/run.py').write_text('# changed source')
-        a=SimpleNamespace(base='HEAD',head='HEAD',include_worktree=True,profile='smoke',seed=17,run=True,out=self.root/'out',runner_args=[],execution_timeout=5)
+        a=SimpleNamespace(base='HEAD',head='HEAD',include_worktree=True,profile='smoke',seed=17,run=run,out=self.root/'out',runner_args=[],execution_timeout=5)
         def execute(command,log,*unused):
-            Path(log).write_text('');campaign=a.out/'campaign';audit=a.out/'audit'
+            Path(log).write_text('');campaign=a.out/'campaign';audit=a.out/'audit';code=0 if mode=='pass' else 1
             if 'run_regression.py' in command[1]:
                 campaign.mkdir();jobs=S.R.make_plan(self.entries,S.plan_args(a,campaign,['local-a','local-b']),self.root)
-                rows=[dict(id=j['id'],started=mode=='pass' or mode=='partial' and i==0,success=mode=='pass',returncode=0 if mode=='pass' else None) for i,j in enumerate(jobs)]
-                (campaign/'summary.json').write_text(json.dumps(dict(success=mode=='pass',complete=mode=='pass',planned=len(jobs),results=rows)))
-                (campaign/'manifest.json').write_text(json.dumps(dict(jobs=jobs)))
+                rows=[dict(id=j['id'],started=(mode=='pass' or mode=='partial' and i==0) and fault!='unstarted',success=mode=='pass',returncode=0 if mode=='pass' else None) for i,j in enumerate(jobs)]
+                (campaign/'summary.json').write_text(json.dumps(dict(success=mode=='pass' and fault!='failed-summary',complete=mode=='pass' and fault!='incomplete',planned=len(jobs)+(fault=='planned'),results=rows)))
+                (campaign/'manifest.json').write_text(json.dumps(dict(jobs=jobs[::-1] if fault=='manifest' else jobs)))
             else:
-                audit.mkdir();(audit/'summary.json').write_text(json.dumps(dict(success=mode=='pass')))
+                audit.mkdir();(audit/'summary.json').write_text(json.dumps(dict(success=mode=='pass' and fault!='audit-summary')))
                 if drift:(self.root/'tools/new-helper.py').write_text('# added during execution')
-            return dict(returncode=0 if mode=='pass' else 1,error=None,command=command)
+                if fault=='audit-exit':code=1
+                if fault=='head-moved':self.git('commit','--allow-empty','-qm','moved during audit')
+            return dict(returncode=code,error=None,command=command)
         with patch.object(S.Q,'ROOT',self.root),patch.object(S,'DEPENDENCIES',config),patch.object(S.Q.P,'execute',execute),redirect_stdout(io.StringIO()):rc=S.run(a)
+        self.report_summary=json.loads((a.out/'summary.json').read_text());self.report_junit=[c.get('name') for c in ET.parse(a.out/'junit.xml').iter('testcase')]
         return rc,json.loads((a.out/'selection.json').read_text())
     def test_successful_execution_and_audit_set_verified(self):
         rc,selection=self.run_hardware_fixture();self.assertEqual(rc,0);self.assertTrue(selection['hardware_verified']);self.assertEqual(selection['executed_jobs'],2)
@@ -112,6 +121,36 @@ class SelectionTests(unittest.TestCase):
         rc,selection=self.run_hardware_fixture('preflight');self.assertEqual(rc,1);self.assertFalse(selection['hardware_verified']);self.assertEqual(selection['executed_jobs'],0)
     def test_partial_execution_counts_only_started_jobs(self):
         rc,selection=self.run_hardware_fixture('partial');self.assertEqual(rc,1);self.assertEqual(selection['executed_jobs'],1)
+    def test_each_campaign_or_audit_fault_alone_clears_verified(self):
+        for fault,check in [('audit-summary','audit'),('audit-exit','audit'),('failed-summary','execution'),('incomplete','execution'),('planned','execution'),('unstarted','execution'),('manifest','execution'),('head-moved','source-freshness')]:
+            with self.subTest(fault=fault):
+                self.setUp()
+                rc,selection=self.run_hardware_fixture(fault=fault);self.assertEqual(rc,1);self.assertFalse(selection['hardware_verified'])
+                self.assertEqual([r['id'] for r in self.report_summary['results'] if r['status']=='fail'],[check])
+    def test_plan_only_does_not_report_execution_or_audit_as_passing(self):
+        rc,selection=self.run_hardware_fixture(run=False);self.assertEqual(rc,0)
+        self.assertEqual(selection['selected_jobs'],['local-a','local-b']);self.assertEqual(selection['executed_jobs'],0);self.assertFalse(selection['hardware_verified']);self.assertEqual(selection['execution_skipped'],'plan only')
+        self.assertEqual([r['id'] for r in self.report_summary['results']],['selection','source-freshness']);self.assertEqual(self.report_junit,['selection','source-freshness'])
+    def test_sigterm_stops_the_campaign_and_its_detached_jobs(self):
+        pidfile=self.root/'job.pid';out=self.root/'out'
+        job='import os,subprocess,sys,time;d=subprocess.Popen([sys.executable,"-c","import time;time.sleep(60)"],start_new_session=True);open(sys.argv[1]+".tmp","w").write(f"{os.getpid()} {d.pid}");os.rename(sys.argv[1]+".tmp",sys.argv[1]);time.sleep(60)'
+        program='import sys;sys.path.insert(0,sys.argv[1]);import select_regression as S;job,pidfile,out=sys.argv[2:5];S.run=lambda a:S.Q.P.execute([sys.executable,"-c",job,pidfile],a.out.with_name("job.log"),60,a.out.parent);sys.argv=["select_regression.py","--base","HEAD","--out",out];sys.exit(S.main())'
+        process=subprocess.Popen([sys.executable,'-c',program,str(Path(S.__file__).parent),job,str(pidfile),str(out)],start_new_session=True)
+        pids=[]
+        def stop():
+            for pid in pids:
+                try:os.kill(pid,signal.SIGKILL)
+                except OSError:pass
+            if process.poll() is None:process.kill();process.wait()
+        self.addCleanup(stop)
+        deadline=time.monotonic()+10
+        while not pidfile.exists() and time.monotonic()<deadline:time.sleep(.02)
+        pids+=map(int,pidfile.read_text().split())
+        process.terminate();self.assertEqual(process.wait(timeout=10),128+signal.SIGTERM)
+        deadline=time.monotonic()+5
+        def live():return [p for p in pids if (state:=subprocess.run(['ps','-p',str(p),'-o','stat='],capture_output=True,text=True)).returncode==0 and not state.stdout.strip().startswith('Z')]
+        while live() and time.monotonic()<deadline:time.sleep(.05)
+        self.assertEqual(live(),[])
     def test_repository_catalog_matches_current_runtime_inventory(self):
         root=Path(S.__file__).resolve().parents[1];entries=S.R.load_registry(root/'tools/regressions.json',root)
         self.assertEqual(json.loads(S.DEPENDENCIES.read_text()),S.dependency_inventory(root,entries))

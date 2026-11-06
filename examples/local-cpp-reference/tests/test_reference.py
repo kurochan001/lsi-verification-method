@@ -43,6 +43,14 @@ int main(int argc,char** argv){try{if(argc!=2)return 2;FirReference m(std::stoul
         r=self.execute(8,[1,0,'R',-1,0])
         self.assertEqual([line.split(',')[0] for line in r.stdout.splitlines()],['1','-1','-1','1'])
 
+    def test_rounded_values_next_to_the_limits_are_saturated_exactly(self):
+        for width in (8,12):
+            limit=1<<(width-1);half=limit//2;hi=limit-1;lo=-limit
+            for values,expected,clip in (([1,-half-1,hi],hi,'1,0'),([-3,-half-1,hi],hi,'0,0'),([0,half+2,lo],lo,'0,1'),([0,half,lo],lo,'0,0')):
+                lines=self.execute(width,values).stdout.splitlines()
+                with self.subTest(width=width,values=values):
+                    self.assertEqual(int(lines[-1].split(',')[0]),expected);self.assertEqual(lines[-1].split(',',2)[2],clip)
+
     def test_invalid_width_and_out_of_range_inputs_fail(self):
         for width,values in [(4,[0]),(8,[128]),(8,[-129]),(12,[2048]),(12,[-2049])]:
             with self.subTest(width=width,values=values):self.assertNotEqual(self.execute(width,values).returncode,0)

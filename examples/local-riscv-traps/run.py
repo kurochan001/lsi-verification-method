@@ -23,12 +23,14 @@ LABELS = {13: 'ISS_DATA', 14: 'ISS_DATA', 15: 'ISS_DATA', 16: 'ISS_DATA'}
 IRQ_ADDRESS = 4 * ISS.IRQ_WORD
 ILLEGAL = [0x00000000, 0xffffffff, 0x02000033, 0x7c002073, 0x0000100f, 0x00004073]  # zero, ones, MUL, unknown CSR, FENCE.I, funct3 4
 # The handler sits at address 4. An exception returns past the faulting instruction; an
-# interrupt clears the line and returns to the interrupted one.
+# interrupt clears the line and returns to the interrupted one. Before returning from an
+# exception the handler writes x23 to the line: with x23 = 1 the line rises while MIE is 0, so
+# the interrupt is taken right after MRET. SETUP clears x23.
 HANDLER = [('jal', 0, 'main'), 'handler:',
            ('csrrs', 20, 'mcause', 0), ('csrrs', 21, 'mepc', 0), ('csrrs', 22, 'mtval', 0),
-           ('blt', 20, 0, 'interrupt'), ('addi', 21, 21, 4), ('csrrw', 0, 'mepc', 21), ('mret',),
+           ('blt', 20, 0, 'interrupt'), ('addi', 21, 21, 4), ('csrrw', 0, 'mepc', 21), ('sw', 23, IRQ_ADDRESS, 0), ('mret',),
            'interrupt:', ('sw', 0, IRQ_ADDRESS, 0), ('mret',), 'main:']
-SETUP = [('addi', 10, 0, ISS.BASE), ('addi', 1, 0, 4), ('csrrw', 0, 'mtvec', 1),
+SETUP = [('addi', 10, 0, ISS.BASE), ('addi', 1, 0, 4), ('csrrw', 0, 'mtvec', 1), ('addi', 23, 0, 0),
          ('lui', 2, 1), ('addi', 2, 2, -2048), ('csrrw', 0, 'mie', 2), ('csrrsi', 0, 'mstatus', 8)]
 
 
@@ -74,6 +76,15 @@ def directed_program():
         ('addi', 11, 0, 1), ('sw', 11, IRQ_ADDRESS, 0), ('addi', 12, 0, 2),  # interrupt before addi x12
         ('csrrci', 0, 'mstatus', 8), ('sw', 11, IRQ_ADDRESS, 0), ('addi', 13, 0, 3), ('addi', 14, 0, 4),
         ('csrrsi', 0, 'mstatus', 8), ('addi', 15, 0, 5),                 # enabling takes it before addi x15
+        ('csrrci', 0, 'mstatus', 8), ('sw', 11, IRQ_ADDRESS, 0), ('csrrs', 16, 'mip', 0),  # MIE 0: mip shows the line
+        ('csrrw', 0, 'mie', 0), ('csrrsi', 0, 'mstatus', 8), ('addi', 12, 0, 2),  # MIE 1, MEIE 0: still held
+        ('csrrw', 0, 'mie', 2), ('addi', 13, 0, 3),                      # enabling MEIE takes it before addi x13
+        ('sw', 11, IRQ_ADDRESS, 0), ('ecall',),                          # the interrupt goes before the ECALL's exception
+        ('csrrci', 0, 'mstatus', 8), ('ecall',), ('csrrs', 14, 'mstatus', 0), ('csrrsi', 0, 'mstatus', 8),  # MRET after a trap with MIE 0: MIE 0, MPIE 1
+        ('csrrw', 0, 'mcause', 11), ('csrrs', 15, 'mcause', 0), ('csrrw', 0, 'mtval', 11), ('csrrs', 17, 'mtval', 0),
+        ('addi', 18, 0, 0x80), ('csrrc', 0, 'mstatus', 18), ('csrrs', 19, 'mstatus', 0),  # only MPIE clears
+        ('lui', 18, 0xfffff), ('addi', 18, 18, 0x7ff), ('csrrw', 0, 'mie', 18), ('csrrs', 19, 'mie', 0), ('csrrw', 0, 'mie', 2),  # mie holds MEIE alone
+        ('addi', 23, 0, 1), ('ecall',), ('addi', 23, 0, 0),              # the handler raises the line: taken after MRET, before addi x23
         ('csrrs', 16, 'mip', 0), ('csrrs', 17, 'mcause', 0), ('add', 18, 17, 0),
         ('ebreak',)]
 

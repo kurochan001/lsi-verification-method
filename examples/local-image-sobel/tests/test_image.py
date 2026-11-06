@@ -22,6 +22,13 @@ class OracleTests(unittest.TestCase):
         expected=[255 if abs(x-2)<=1 and abs(y-2)<=1 and (x,y)!=(2,2) else 0 for y in range(5) for x in range(5)]
         self.assertEqual(S.MODEL.sobel(image,5,5),expected)
 
+    def test_impulses_straddle_the_saturation_boundary(self):
+        for value,neighbour in ((127,254),(128,255)):
+            image=[0]*25;image[12]=value
+            expected=[neighbour if abs(x-2)<=1 and abs(y-2)<=1 and (x,y)!=(2,2) else 0 for y in range(5) for x in range(5)]
+            self.assertEqual(S.MODEL.sobel(image,5,5),expected)
+        self.assertEqual([max(frame) for frame in S.MODEL.directed(5,4)[-2:]],[127,128])
+
     def test_invalid_shapes_and_samples_are_rejected(self):
         for values,w,h in (([0]*9,2,3),([0]*8,3,3),([256]*9,3,3),([-1]*9,3,3),([1.0]*9,3,3)):
             with self.subTest(w=w,h=h,values=values),self.assertRaises(ValueError):S.MODEL.sobel(values,w,h)

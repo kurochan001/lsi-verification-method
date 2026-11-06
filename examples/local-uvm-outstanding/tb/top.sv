@@ -4,8 +4,8 @@ module top;
  import uvm_pkg::*;import oo_pkg::*;
  bit clk=0;always #5000 clk=!clk;
  oo_if bus(clk);int mutation,sva_off;
- wire [4:0]s_ready,m_valid;wire [1:0]m_id[5];wire [15:0]m_token[5];wire [7:0]m_data[5];
- for(genvar m=0;m<5;m++)begin: variants
+ wire [8:0]s_ready,m_valid;wire [1:0]m_id[9];wire [15:0]m_token[9];wire [7:0]m_data[9];
+ for(genvar m=0;m<9;m++)begin: variants
   tagged_reorder #(.MUTATION(m)) dut(clk,bus.rst_n,bus.release_enable,bus.s_valid,bus.s_id,bus.s_token,bus.s_data,s_ready[m],m_valid[m],bus.m_ready,m_id[m],m_token[m],m_data[m]);
  end
  assign bus.s_ready=s_ready[mutation];assign bus.m_valid=m_valid[mutation];assign bus.m_id=m_id[mutation];assign bus.m_token=m_token[mutation];assign bus.m_data=m_data[mutation];
@@ -29,10 +29,13 @@ module top;
  cp_ooo:cover property(@(posedge clk) sva_off==0 && bus.rst_n && bus.m_valid && bus.m_ready && older)$display("OO_COVER cp_ooo");
  cp_reset:cover property(@(posedge clk) sva_off==0 && !bus.rst_n && queued!=0)$display("OO_COVER cp_reset");
  cp_recovery:cover property(@(posedge clk) sva_off==0 && bus.rst_n && bus.m_valid && bus.m_ready && reset_seen)$display("OO_COVER cp_recovery");
+ cp_busy:cover property(@(posedge clk) sva_off==0 && bus.rst_n && bus.s_valid && !bus.s_ready && queued[bus.s_id])$display("OO_COVER cp_busy");
+ cp_concurrent:cover property(@(posedge clk) sva_off==0 && bus.rst_n && bus.s_valid && bus.s_ready && bus.m_valid && bus.m_ready)$display("OO_COVER cp_concurrent");
+ cp_stall_accept:cover property(@(posedge clk) sva_off==0 && bus.rst_n && bus.s_valid && bus.s_ready && bus.m_valid && !bus.m_ready)$display("OO_COVER cp_stall_accept");
  initial begin
   string wave;fatal_to_exit catcher;
   void'($value$plusargs("MUTATION=%d",mutation));void'($value$plusargs("SVA_OFF=%d",sva_off));
-  if(mutation<0 || mutation>4 || !$value$plusargs("WAVE=%s",wave))$fatal(1,"invalid arguments");
+  if(mutation<0 || mutation>8 || !$value$plusargs("WAVE=%s",wave))$fatal(1,"invalid arguments");
   $dumpfile(wave);$dumpvars(0,top);catcher=new;uvm_report_cb::add(null,catcher);
   uvm_config_db#(virtual oo_if)::set(null,"uvm_test_top.env","vif",bus);run_test("oo_test");
  end

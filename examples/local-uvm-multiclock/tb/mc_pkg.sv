@@ -14,7 +14,7 @@ package mc_pkg;
   endclass
   class mc_item extends uvm_sequence_item;
     `uvm_object_utils(mc_item)
-    bit [7:0] data;bit [15:0] id;bit ready,src_reset_n,dst_reset_n,accepted;
+    bit [7:0] data;bit [15:0] id;bit ready,src_reset_n,dst_reset_n,accepted;int align;
     function new(string name="mc_item");super.new(name);endfunction
   endclass
   class mc_driver extends uvm_driver#(mc_item);
@@ -27,8 +27,7 @@ package mc_pkg;
         case(cfg.role)
           0:begin
             int cycles=0;
-            do begin @(negedge cfg.vif.src_clk);cycles++;if(cycles>1000)`uvm_fatal("MC_DRIVER","source did not become ready") end
-            while(!cfg.vif.src_rst_n || !cfg.vif.dst_rst_n || !cfg.vif.src_up || !cfg.vif.dst_up);
+            @(negedge cfg.vif.src_clk);
             cfg.vif.src_valid=1;cfg.vif.src_data=t.data;cfg.vif.src_id=t.id;
             forever begin
               @(posedge cfg.vif.src_clk);
@@ -45,7 +44,13 @@ package mc_pkg;
           2:begin
             // All clock edges are at integer nanoseconds; reset edges are half a
             // nanosecond later, so reset/clock scheduling races are excluded.
-            @(negedge cfg.vif.src_clk);#500;
+            // align places the reset right after the next destination or source handshake.
+            case(t.align)
+              1:do @(posedge cfg.vif.dst_clk);while(!(cfg.vif.dst_valid && cfg.vif.dst_ready));
+              2:do @(posedge cfg.vif.src_clk);while(!(cfg.vif.src_valid && cfg.vif.src_ready));
+              default:@(negedge cfg.vif.src_clk);
+            endcase
+            #500;
             cfg.vif.src_rst_n=t.src_reset_n;cfg.vif.dst_rst_n=t.dst_reset_n;#500;
           end
           default:`uvm_fatal("MC_CFG","unknown role")
@@ -84,7 +89,7 @@ package mc_pkg;
         t.stamp=$time;
         $display("MC_OBS kind=%0d t=%0d id=%0d data=%0d mask=%0d",t.kind,t.stamp,t.id,t.data,t.mask);
         if(cfg.role==2)#500;
-        else if((cfg.role==0 && order==0)||(cfg.role==1 && order==1))#1000;else #2000;
+        else if((cfg.role==0 && order==0)||(cfg.role==1 && order==1))#1500;else #2000;
         observed.write(t);
       end
     endtask
@@ -110,16 +115,20 @@ package mc_pkg;
     uvm_analysis_imp#(mc_sample,mc_scoreboard) observed;
     mc_bucket buckets[time];int expected[int],epoch_for[int];time accepted_at[int];bit seen[int];
     int epoch,accepted,produced,cancelled,last_mask=3,first_release;
-    bit both_active,source_reset_seen,destination_reset_seen,source_first_seen,destination_first_seen,recovered;
+    bit both_active,source_reset_seen,destination_reset_seen,source_first_seen,destination_first_seen,recovered,arrival_order;
     function new(string name,uvm_component parent);super.new(name,parent);observed=new("observed",this);endfunction
+    function void build_phase(uvm_phase phase);super.build_phase(phase);void'($value$plusargs("ARRIVAL_ORDER=%d",arrival_order));endfunction
     function void fail(string id,string reason);$display("CHECK_FAIL %s",id);`uvm_fatal(id,reason) endfunction
     function void write(mc_sample t);
+      $display("MC_ARRIVE kind=%0d t=%0d at=%0d",t.kind,t.stamp,$time);
       if(!buckets.exists(t.stamp))buckets[t.stamp]=new;
       case(t.kind)
         0:begin if(buckets[t.stamp].source!=null)fail("MC_DUPLICATE","duplicate source observation");buckets[t.stamp].source=t;end
         1:begin if(buckets[t.stamp].destination!=null)fail("MC_DUPLICATE","duplicate destination observation");buckets[t.stamp].destination=t;end
         2:begin if(buckets[t.stamp].reset!=null)fail("MC_DUPLICATE","duplicate reset observation");buckets[t.stamp].reset=t;end
       endcase
+      // Diagnostic: judging in arrival order instead of edge-time order must be detected.
+      if(arrival_order)drain($time);
     endfunction
     function void drain(time limit_time);
       time stamp;
@@ -127,6 +136,7 @@ package mc_pkg;
         mc_bucket b=buckets[stamp];
         if(b.reset!=null)begin
           int mask=b.reset.mask;
+          $display("MC_PROCESS kind=2 t=%0d id=0 data=0 mask=%0d",stamp,mask);
           if((mask & ~last_mask)!=0)begin
             epoch++;cancelled+=expected.num();expected.delete();epoch_for.delete();accepted_at.delete();
             if(mask==1)source_reset_seen=1;if(mask==2)destination_reset_seen=1;
@@ -142,12 +152,14 @@ package mc_pkg;
         end
         if(b.source!=null)begin
           int id=b.source.id;
+          $display("MC_PROCESS kind=0 t=%0d id=%0d data=%0d mask=0",stamp,id,b.source.data);
           if(seen.exists(id))fail("MC_DUPLICATE","transaction ID was reused across reset epochs");
           seen[id]=1;expected[id]=int'(b.source.data)^8'h3c;epoch_for[id]=epoch;accepted_at[id]=stamp;accepted++;
           if(expected.num()>1)fail("MC_COUNTS","a lost completion or reset observation left multiple requests");
         end
         if(b.destination!=null)begin
           int id=b.destination.id;
+          $display("MC_PROCESS kind=1 t=%0d id=%0d data=%0d mask=0",stamp,id,b.destination.data);
           if(!expected.exists(id) || epoch_for[id]!=epoch)fail("MC_STALE","unknown or cancelled-epoch response");
           if(stamp<=accepted_at[id] || int'(b.destination.data)!=expected[id])fail("MC_DATA","response differs from acceptance-time expectation");
           expected.delete(id);epoch_for.delete(id);accepted_at.delete(id);produced++;
@@ -205,23 +217,34 @@ package mc_pkg;
       $display("MC_ISSUED id=%0d data=%0d",s.item.id,s.item.data);s.start(env.agents[0].sequencer);
       if(!s.item.accepted)env.scoreboard.fail("MC_STIMULUS","normal request was not accepted");
     endtask
-    task reset_to(bit src_n,bit dst_n);
+    task reset_to(bit src_n,bit dst_n,int align=0);
       mc_single s=mc_single::type_id::create("reset");s.item=mc_item::type_id::create("reset_values");
-      s.item.src_reset_n=src_n;s.item.dst_reset_n=dst_n;s.start(env.agents[2].sequencer);
+      s.item.src_reset_n=src_n;s.item.dst_reset_n=dst_n;s.item.align=align;s.start(env.agents[2].sequencer);
     endtask
     task await_state(int wanted);
       for(int i=0;i<1000;i++)begin
         #1000;
         if(wanted==0 && env.scoreboard.expected.num()==0)return;
         if(wanted==1 && env.scoreboard.expected.num()==1 && env.vif.dst_valid)return;
-        if(wanted==2 && env.vif.src_ready)return;
       end
       env.scoreboard.fail("MC_DRAIN","expected acceptance, cancellation or drain did not complete");
     endtask
+    // A completion half a nanosecond before a reset: observed first, but its notification arrives second.
+    task guided_completion();
+      env.control.force_stall=1;send();await_state(1);repeat(3)@(posedge env.vif.dst_clk);
+      fork reset_to(0,1,1);begin #1000;env.control.force_stall=0;end join
+      repeat(3)@(negedge env.vif.src_clk);reset_to(1,1);send();await_state(0);
+    endtask
+    // An acceptance half a nanosecond before a reset: the reset must cancel it although it is notified first.
+    task guided_acceptance();
+      fork send();reset_to(1,0,2);join
+      repeat(3)@(negedge env.vif.src_clk);reset_to(1,1);send();await_state(0);
+    endtask
     task body();
+      int swap;
       mc_ready ready=mc_ready::type_id::create("ready_sequence");ready.control=env.control;ready.state=state^32'h89abcdef;
       fork ready.start(env.agents[1].sequencer);join_none
-      reset_to(0,0);repeat(3)@(negedge env.vif.src_clk);reset_to(1,0);repeat(3)@(negedge env.vif.src_clk);reset_to(1,1);await_state(2);
+      reset_to(0,0);repeat(3)@(negedge env.vif.src_clk);reset_to(1,0);repeat(3)@(negedge env.vif.src_clk);reset_to(1,1);
       repeat(4)send();await_state(0);
       for(int phase_id=0;phase_id<4;phase_id++)begin
         env.control.force_stall=1;send();await_state(1);repeat(3)@(posedge env.vif.dst_clk);
@@ -229,8 +252,11 @@ package mc_pkg;
         repeat(3)@(negedge env.vif.src_clk);
         if(phase_id==2)begin reset_to(1,0);repeat(3)@(negedge env.vif.src_clk);end
         if(phase_id==3)begin reset_to(0,1);repeat(3)@(negedge env.vif.dst_clk);end
-        reset_to(1,1);env.control.force_stall=0;await_state(2);repeat(2)send();await_state(0);
+        reset_to(1,1);env.control.force_stall=0;repeat(2)send();await_state(0);
       end
+      void'($value$plusargs("GUIDED_SWAP=%d",swap));
+      if(swap)begin guided_acceptance();guided_completion();end
+      else begin guided_completion();guided_acceptance();end
       repeat(iterations)send();await_state(0);
       env.control.force_stall=1;send();await_state(1);repeat(3)@(posedge env.vif.dst_clk);
       env.control.force_stall=0;await_state(0);env.control.stop_sink=1;wait fork;#6000;
@@ -251,7 +277,7 @@ package mc_pkg;
     endtask
     function void check_phase(uvm_phase phase);
       mc_scoreboard s=env.scoreboard;
-      if(!finished || s.expected.num()!=0 || s.buckets.num()!=0 || s.accepted!=17+iterations || s.produced!=13+iterations || s.cancelled!=4 || s.epoch!=4 ||
+      if(!finished || s.expected.num()!=0 || s.buckets.num()!=0 || s.accepted!=21+iterations || s.produced!=16+iterations || s.cancelled!=5 || s.epoch!=6 ||
          !s.source_reset_seen || !s.destination_reset_seen || !s.source_first_seen || !s.destination_first_seen || !s.recovered)
         s.fail("MC_COUNTS","missing data, reset epochs, release orders or observations");
     endfunction

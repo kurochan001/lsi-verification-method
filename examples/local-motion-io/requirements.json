@@ -1,6 +1,6 @@
 {"schema_version":1,"revision":1,"requirements":[
  {"id":"MIO-PWM","goals":["pwm/zero","pwm/full","pwm/half","pwm/stop","pwm/reject","pwm/deadtime"]},
  {"id":"MIO-UPDATE","goals":["pwm/update-deferred","pwm/update-boundary"]},
- {"id":"MIO-ENCODER","goals":["encoder/forward","encoder/reverse","encoder/invalid","encoder/wrap","encoder/origin","encoder/filter-delay"]},
+ {"id":"MIO-ENCODER","goals":["encoder/forward","encoder/reverse","encoder/invalid","encoder/wrap","encoder/origin","encoder/origin-priority","encoder/filter-delay"]},
  {"id":"MIO-RESET","goals":["reset/active"]}
 ]}

@@ -92,18 +92,20 @@ Python参照では有理数でPIの値と丸めを計算し、PWMは時刻、エ
 | estop-rearm | estopとARM／ackの競合、ack後の停止保持、明示再開と中立指令 |
 | encoder-invalid／encoder-stuck／mechanical-stall | 不正遷移、センサー停止、機械拘束。後2者は進捗なしとして検出し、原因を断定しない |
 | deadline／deadline-boundary | 演算停止での取消、期限に間に合った結果の更新 |
-| overspeed／position-wrap | 外力による速度超過、原点近くからの折返し検出 |
+| overspeed／overspeed-reverse／position-wrap | 正負両方向の外力による速度超過、原点近くからの折返し検出 |
+| arm-on-notice | 不正遷移・折返しの通知が見えるエッジのARMを拒否し、後のエッジで受理 |
+| saturation-boundary | 丸め結果がちょうどU+1／−U−1になる偏差で飽和を確認 |
 | reset-pending／origin-arm | 演算中resetの取消、原点とARMの同時更新、運転中の原点書込み抑止 |
 | random | 再現可能な目標値・負荷の列と、各区間の追従窓 |
 
-[要求カタログ](requirements.json)は5要求・22観測目標です。全制御ジョブの**サンプル数＝更新数＋取消数＋reset取消数**と、終了時に演算やPWM出力が残らないことも照合します。4変異は、アンチワインドアップ省略を`AXIS_PI`、PWM同時出力を`AXIS_PWM`、期限超過無視とestopよりARMを優先する誤りを`AXIS_STATE`で検出します。
+[要求カタログ](requirements.json)は5要求・27観測目標です。全制御ジョブの**サンプル数＝更新数＋取消数＋reset取消数**と、終了時に演算やPWM出力が残らないことも照合します。4変異は、アンチワインドアップ省略を`AXIS_PI`、PWM同時出力を`AXIS_PWM`、期限超過無視とestopよりARMを優先する誤りを`AXIS_STATE`で検出します。
 
 ```sh
 python3 examples/local-motion-control/run.py --profile smoke --out artifacts/motion-axis-smoke
 python3 examples/local-motion-control/run.py --profile nightly --out artifacts/motion-axis-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。2構成でJUnitはsmoke 42件／nightly 46件です。nightlyはランダムseedを1→3、各seedの目標・負荷区間を2→6へ増やします。入力と期待値は幅を検査し、符号付き値を32ビットへ符号拡張して比較します。
+Python 3・Icarus Verilog・vvpを使います。2構成でJUnitはsmoke 48件／nightly 52件です。nightlyはランダムseedを1→3、各seedの目標・負荷区間を2→6へ増やします。入力と期待値は幅を検査し、符号付き値を32ビットへ符号拡張して比較します。
 
 ソース・構成・seed、`vectors.txt`、全状態の`expected.hex`、VCD、ログ、比較行数・更新・取消・reset件数、構成別の観測目標を保存します。[全体実行](../../tools/REGRESSION.md)と[追加記録](../../PROVENANCE.md#robotics-20261101)から計画と証跡を確認できます。
 

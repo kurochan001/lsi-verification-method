@@ -69,22 +69,29 @@ RUNはリセットまで保持し、途中の停止は受け付けません。�
 | ケース | 確認内容 |
 | --- | --- |
 | arp-udp／boundaries | ARP・空／奇数／最大UDP、0xffffチェックサム、CPUによる応答生成と全バイト比較 |
-| reject／overflow | 不正フレームの破棄、受信停止なしの満杯、所有権を維持した連続処理 |
-| rx-error／tx-error | B／RへSLVERRを注入し、正常完了や部分的な送信を出さない |
-| bus-errors | 非整列・上限の桁あふれ・領域重複・所有前の返却・未定義レジスタを拒否し、元のポインターで正常処理 |
+| reject／overflow | 不正フレームの破棄、理由と破棄カウンターの全照合、IRQを許可していないDROPの保持とW1C、受信停止なしの満杯、所有権を維持した連続処理 |
+| rx-error／tx-error | 全B／全RへSLVERRを注入し、正常完了や部分的な送信を出さない。`-mid`・`-last`は途中または最後の1件だけのエラーで、同じ結果を要求する |
+| relocated | RX／TXの両バッファを既定以外へ置き、RAM上端までの配置で全処理を確認 |
+| w1c-race | DROPのW1Cを連続で書き、同じエッジのイベントを失わないことを確認 |
+| detect-rom-compare | ROMの期待値を1ビット壊し、CPUの比較ループが失敗署名を残すことを確認 |
+| bus-errors | 非整列・範囲外・領域重複のポインター、読出し専用と未定義のレジスタ（未定義は読書きとも）、RUN前後とRX／TX処理中の不正なTX_START・RX_RELEASE・停止、短すぎ／長すぎるTX長を拒否し、元の設定で正常処理。隣接と上端の配置は受理 |
 | reset-rx／reset-dma-tx／reset-wire-tx | RX DMA・TX DMA・送信待ち中に全体リセットし、入力を巻き戻してROMから再起動 |
 | random | 再現可能な長さ・ペイロード・ID・ポートと、バス／TXのランダムな待ち |
 
-[要求カタログ](requirements.json)は4要求・14観測目標です。通常成功ケースの観測だけで構成ごとの達成を確認します。4種類の変異は、RXの早過ぎる完了`NET_SOC_RX_ORDER`、誤DMAアドレス`NET_SOC_AXI`、W1Cでの誤返却`NET_SOC_OWNERSHIP`、送信前の完了`NET_SOC_TX_ORDER`で検出します。
+[要求カタログ](requirements.json)は4要求・20観測目標です。通常成功ケースの観測だけで構成ごとの達成を確認します。4種類の変異は、RXの早過ぎる完了`NET_SOC_RX_ORDER`、誤DMAアドレス`NET_SOC_AXI`、W1Cでの誤返却`NET_SOC_OWNERSHIP`、送信前の完了`NET_SOC_TX_ORDER`で検出します。
 
 ```sh
 python3 examples/local-network-soc/run.py --profile smoke --out artifacts/network-soc-smoke
 python3 examples/local-network-soc/run.py --profile nightly --out artifacts/network-soc-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 34件／nightly 38件です。nightlyはランダムseedを1→3へ増やします。
+Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 48件／nightly 52件です。nightlyはランダムseedを1→3へ増やします。
 
-送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致するリタイア命令列、CPUのRAM読出し、終了署名を照合します。生成入力・期待値・ROMのハッシュ、`ram-readback.hex`、`retirement.log`、VCD・ログ・要求別観測を保存します。リセットケースのRAMとリタイアログは再起動後の実行分で、reset数は別に残します。証跡を[全体ランナー](../../tools/REGRESSION.md)から監査できます。
+送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致するリタイア命令列、CPUの比較ループ、終了署名を照合します。RX DMAのデータとRAMは受信したフレームと比較し、DUT内部のコピーや長さを基準にしません。比較ループはそのPCで数え、全バイトとの完全一致を要求します。破棄したフレームの理由と3種類の破棄カウンターも別々に照合します。
+
+ファームウェアはRX_OK／TX_OKを期待値と比べ、RX_LENを読みます。テストベンチはそのAPB読出しの値を照合します。`bad_control`の`(!pwdata[0]) && (rx_busy||tx_busy||rx_owned)`とTX_STARTの`!run`、ポインター書込みの`config_busy`は、RUNを解除できず、RX所有にはRUNが必要なので、他の項に含まれて単独では効きません。これらの項だけを除く変異は動作が変わらず、検出できません。
+
+生成入力・期待値・ROMのハッシュ、`ram-readback.hex`、`retirement.log`、VCD・ログ・要求別観測を保存します。リセットケースのRAMとリタイアログは再起動後の実行分で、reset数は別に残します。証跡を[全体ランナー](../../tools/REGRESSION.md)から監査できます。
 
 ## 適用範囲
 

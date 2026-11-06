@@ -80,29 +80,30 @@ package oo_pkg;
  class oo_scoreboard extends uvm_scoreboard;
   `uvm_component_utils(oo_scoreboard)
   uvm_analysis_imp#(oo_sample,oo_scoreboard) observed;
-  int expected[int],tokens[int],orders[int],epochs[int];bit seen_token[int],seen_id[int];
+  int expected[int],tokens[int],orders[int],epochs[int],accepted_at[int],delays[int];bit seen_token[int],seen_id[int];
   int accepted,produced,cancelled,epoch,peak,overtakes,reused;
   function new(string n,uvm_component p);super.new(n,p);observed=new("observed",this);endfunction
   function void fail(string id,string text);$display("CHECK_FAIL %s",id);`uvm_fatal(id,text) endfunction
   function void write(oo_sample t);
    int id=int'(t.id);
    if(t.kind==2)begin
-    if(!t.rst_n)begin cancelled+=expected.num();epoch++;expected.delete();tokens.delete();orders.delete();epochs.delete();end
+    if(!t.rst_n)begin cancelled+=expected.num();epoch++;expected.delete();tokens.delete();orders.delete();epochs.delete();accepted_at.delete();delays.delete();end
    end else if(t.kind==0)begin
     if(expected.exists(id))fail("OO_BUSY","accepted an occupied ID");
     if(seen_token.exists(int'(t.token)))fail("OO_TOKEN","transaction token reused");
     if(seen_id.exists(id))reused++;
     seen_id[id]=1;seen_token[int'(t.token)]=1;
-    expected[id]=(int'(t.data)+int'(t.data)+int'(t.data)+id)&255;tokens[id]=int'(t.token);epochs[id]=epoch;orders[id]=accepted;accepted++;
+    expected[id]=(int'(t.data)+int'(t.data)+int'(t.data)+id)&255;tokens[id]=int'(t.token);epochs[id]=epoch;orders[id]=accepted;accepted_at[id]=t.cycle;delays[id]=int'(t.data[2:0]);accepted++;
     if(expected.num()>peak)peak=expected.num();if(peak>4)fail("OO_COUNTS","too many outstanding requests");
    end else if(t.kind==1)begin
     int oldest=32'h7fffffff;
     if(!expected.exists(id))fail("OO_UNKNOWN","unknown, duplicate or cancelled completion");
     if(tokens[id]!=int'(t.token) || epochs[id]!=epoch)fail("OO_TOKEN","completion belongs to another transaction");
     if(expected[id]!=int'(t.data))fail("OO_DATA","completion value differs");
+    if(t.cycle-accepted_at[id]<delays[id]+2)fail("OO_LATENCY","completion arrived before the request's internal delay");
     foreach(orders[k])if(orders[k]<oldest)oldest=orders[k];
     if(orders[id]!=oldest)overtakes++;
-    expected.delete(id);tokens.delete(id);orders.delete(id);epochs.delete(id);produced++;
+    expected.delete(id);tokens.delete(id);orders.delete(id);epochs.delete(id);accepted_at.delete(id);delays.delete(id);produced++;
    end else fail("OO_OBSERVER","unknown observation type");
    if(accepted!=produced+cancelled+expected.num())fail("OO_COUNTS","accept/complete/cancel ledger differs");
   endfunction
@@ -149,35 +150,58 @@ package oo_pkg;
  endclass
  class oo_virtual extends uvm_sequence#(uvm_sequence_item);
   `uvm_object_utils(oo_virtual)
-  oo_env env;int rounds,next_token=1;int unsigned state;
+  oo_env env;int rounds,next_token=1,cancelled_requests;int unsigned state;
+  int unsigned id_orders[4]='{32'h2031,32'h1302,32'h3210,32'h0312};
   function new(string n="oo_virtual");super.new(n);endfunction
   task clocks(int n);repeat(n)@(negedge env.vif.clk);endtask
   task configure(bit reset_n,bit release_en);
    oo_single s=oo_single::type_id::create("configuration");s.item=oo_item::type_id::create("values");s.item.rst_n=reset_n;s.item.release_enable=release_en;s.start(env.agents[2].sequencer);
   endtask
-  task batch();
-   for(int id=0;id<4;id++)begin
-    oo_single s=oo_single::type_id::create("send");s.item=oo_item::type_id::create("request");state=state*1664525+1013904223;
-    s.item.id=2'(id);s.item.token=16'(next_token++);s.item.data=state[23:16];
-    $display("OO_ISSUED id=%0d token=%0d data=%0d",s.item.id,s.item.token,s.item.data);s.start(env.agents[0].sequencer);
-   end
+  // id<0 draws the ID from the seed, so it may still be busy. delay>=0 replaces the delay bits of the data.
+  task issue(int id,int delay=-1);
+   oo_single s=oo_single::type_id::create("send");s.item=oo_item::type_id::create("request");state=state*1664525+1013904223;
+   s.item.id=id<0 ? state[25:24]:2'(id);s.item.token=16'(next_token++);s.item.data=state[23:16];
+   if(delay>=0)s.item.data[2:0]=3'(delay);
+   $display("OO_ISSUED id=%0d token=%0d data=%0d",s.item.id,s.item.token,s.item.data);s.start(env.agents[0].sequencer);
   endtask
-  task drain(int goal);
+  task batch(int r);
+   for(int k=0;k<4;k++)issue(int'((id_orders[r%4]>>(4*(3-k)))&3));
+  endtask
+  task await_response();
+   for(int i=0;i<100;i++)begin clocks(1);if(env.vif.m_valid)return;end
+   env.scoreboard.fail("OO_DRAIN","expected response was not presented");
+  endtask
+  task drain();
+   int goal=next_token-1-cancelled_requests;
    for(int i=0;i<1000;i++)begin clocks(1);if(env.monitor.completions>=goal && env.scoreboard.expected.num()==0 && !env.vif.m_valid)return;end
    env.scoreboard.fail("OO_DRAIN","end of test still has unmatched requests");
   endtask
+  task run_round(int r);
+   // Fill all four slots in a round-dependent ID order; a slot number no longer equals its ID.
+   env.control.stall=1;configure(1,0);batch(r);clocks(8);configure(1,1);clocks(8);env.control.stall=0;drain();
+   // Issue while earlier requests are outstanding: the shorter delay answers first, and seeded IDs may be busy.
+   issue(r%4,7);issue((r+1)%4,0);repeat(4)issue(-1);drain();
+   // Nothing else is pending: the first opportunity for this response is exactly its delay.
+   env.control.force_ready=1;issue(r%4,7);drain();env.control.force_ready=0;
+   // A later request matures in a higher slot during a stall; then the stalled ID is presented again.
+   env.control.stall=1;issue((r+1)%4,0);await_response();issue((r+2)%4,0);clocks(6);
+   fork issue((r+1)%4,0);begin clocks(6);env.control.stall=0;end join
+   drain();
+   // Accept and complete on the same edge.
+   env.control.stall=1;issue((r+3)%4,0);await_response();clocks(1);#1000;
+   env.control.stall=0;env.control.force_ready=1;issue(r%4,0);env.control.force_ready=0;drain();
+  endtask
   task body();
-   int off;void'($value$plusargs("CHECKER_OFF=%d",off));
    configure(0,0);clocks(3);configure(1,0);clocks(2);
    for(int r=0;r<rounds;r++)begin
-    env.control.stall=1;configure(1,0);batch();clocks(8);configure(1,1);clocks(8);env.control.stall=0;drain(4*(r+1));
+    run_round(r);
     if(r==rounds/2-1)begin
-     env.control.stall=1;configure(1,0);batch();clocks(8);configure(0,0);clocks(2);configure(1,1);
+     env.control.stall=1;configure(1,0);batch(r+1);clocks(8);configure(0,0);clocks(2);configure(1,1);cancelled_requests=4;
      env.control.stall=0;env.control.force_ready=1;clocks(12);env.control.force_ready=0;
     end
    end
-   drain(4*rounds);clocks(4);
-   if(off==2 || env.scoreboard.accepted!=4*rounds+4 || env.scoreboard.produced!=4*rounds || env.scoreboard.cancelled!=4 || env.scoreboard.epoch!=1 || env.scoreboard.peak!=4 || env.scoreboard.overtakes<3*rounds || env.scoreboard.reused!=4*rounds || env.scoreboard.expected.num()!=0)
+   drain();clocks(4);
+   if(env.scoreboard.accepted!=16*rounds+4 || env.scoreboard.produced!=16*rounds || env.scoreboard.cancelled!=4 || env.scoreboard.epoch!=1 || env.scoreboard.peak!=4 || env.scoreboard.overtakes<3*rounds || env.scoreboard.reused!=16*rounds || env.scoreboard.expected.num()!=0)
     env.scoreboard.fail("OO_COUNTS","completion, reuse, reorder or cancellation goals missing");
    $display("OO_COMPLETE accepted=%0d produced=%0d cancelled=4 epoch=1 peak=4 overtakes=%0d reused=%0d pending=0",env.scoreboard.accepted,env.scoreboard.produced,env.scoreboard.overtakes,env.scoreboard.reused);
    $display("RESULT PASS checks=%0d",env.scoreboard.accepted);

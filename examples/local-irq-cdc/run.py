@@ -153,23 +153,45 @@ def signal_process_group(group, signum):
             raise
 
 
+def process_tree(root):
+    """Return a process's descendants and their groups, including detached sessions."""
+    rows = subprocess.check_output(["ps", "-axo", "pid,ppid,pgid"], text=True).splitlines()[1:]
+    table = [tuple(map(int, row.split())) for row in rows]
+    owned = {root}
+    while True:
+        expanded = owned | {pid for pid, parent, _ in table if parent in owned}
+        if expanded == owned:
+            return owned, {group for pid, _, group in table if pid in owned and group > 1} - {os.getpgrp()}
+        owned = expanded
+
+
 def stop_process_group(proc):
-    """Try group cleanup, preserve failures as evidence and bound the final wait."""
+    """Stop the whole tree, preserve failures as evidence and bound the final wait."""
     if proc is None:
         return None
     error = None
+    groups = {proc.pid}
     try:
-        signal_process_group(proc.pid, signal.SIGKILL)
-    except (OSError, subprocess.SubprocessError) as exc:
-        # A denied group signal must not discard summary/JUnit output. Killing
-        # the direct child is a fallback, not evidence that descendants stopped.
-        error = f"process group termination failed: {exc}"
+        # A nested runner starts its tools in their own sessions. SIGKILL gives it no
+        # chance to stop them, so they must be found before the runner disappears.
+        groups |= process_tree(proc.pid)[1]
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        error = f"process tree inspection failed: {exc}"
+    for group in [proc.pid, *sorted(groups - {proc.pid})]:
         try:
-            proc.kill()
-        except ProcessLookupError:
-            pass
-        except OSError as child_error:
-            error += f"; direct child termination failed: {child_error}"
+            signal_process_group(group, signal.SIGKILL)
+        except (OSError, subprocess.SubprocessError) as exc:
+            # A denied group signal must not discard summary/JUnit output. Killing
+            # the direct child is a fallback, not evidence that descendants stopped.
+            error = (error + "; " if error else "") + f"process group termination failed: {exc}"
+            if group != proc.pid:
+                continue
+            try:
+                proc.kill()
+            except ProcessLookupError:
+                pass
+            except OSError as child_error:
+                error += f"; direct child termination failed: {child_error}"
     try:
         proc.wait(timeout=5)
     except (OSError, subprocess.TimeoutExpired) as exc:

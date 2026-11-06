@@ -48,6 +48,8 @@ def load_registry(path,root=ROOT):
         matrix=entry.get('matrix',{})
         if not isinstance(matrix,dict) or any(not re.fullmatch(r'[a-z][a-z0-9-]*',k) or not isinstance(v,list) or not v or
                 any(type(x) not in (int,str) or not re.fullmatch(r'[A-Za-z0-9_-]+',str(x)) for x in v) or len(v)!=len(set(map(str,v))) for k,v in matrix.items()):raise ValueError('invalid matrix: '+name)
+        evidence=entry.get('matrix_evidence',{})
+        if not isinstance(evidence,dict) or set(evidence)!=set(matrix) or any(not isinstance(v,str) or not v for v in evidence.values()):raise ValueError('every matrix value needs a manifest path: '+name)
         children=entry.get('children',{})
         if not isinstance(children,dict):raise ValueError('invalid child evidence mapping: '+name)
         locations=[child_relative(value) for value in children.values()]
@@ -180,11 +182,11 @@ def validate_summary(data,kind='planned'):
         if not isinstance(rows,dict) or rows.keys()!=REDUCTION_GATES or any(r.get('status')!='pass' for r in rows.values()):raise ValueError('reduction gates incomplete')
         return set(rows)
     rows=data.get('results');planned=data.get('planned')
-    if kind!='bus-validation' and (type(planned) is not int or planned<1):raise ValueError('missing/empty plan')
+    if type(planned) is not int or planned<1:raise ValueError('missing/empty plan')
     if type(rows) is int:
         if rows!=planned or data.get('complete') is not True:raise ValueError('completion count differs')
         return set()
-    if not isinstance(rows,list) or not rows or (kind!='bus-validation' and len(rows)!=planned):raise ValueError('result plan differs')
+    if not isinstance(rows,list) or not rows or len(rows)!=planned:raise ValueError('result plan differs')
     ids=[]
     for row in rows:
         if not isinstance(row,dict) or not isinstance(row.get('id'),str) or not row['id'].strip():raise ValueError('invalid result id')
@@ -195,10 +197,20 @@ def validate_summary(data,kind='planned'):
     return set(ids)
 
 
-def inspect_output(directory,entry,entries,root=ROOT,profile=None):
+def manifest_value(manifest,path):
+    for part in path.split('.'):
+        if not isinstance(manifest,dict) or part not in manifest:raise ValueError('missing configuration evidence: '+path)
+        manifest=manifest[part]
+    return manifest
+
+
+def inspect_output(directory,entry,entries,root=ROOT,profile=None,configuration=None):
     manifest=json.loads((directory/'manifest.json').read_text())
     if not isinstance(manifest.get('source_sha256'),dict) or not manifest['source_sha256']:raise ValueError('missing root source manifest')
     if profile is not None and entry.get('profile') and manifest.get('profile')!=profile:raise ValueError('execution profile differs from plan')
+    # A job ID names its matrix values; the runner's own record must agree with them.
+    for key,path in entry.get('matrix_evidence',{}).items() if configuration is not None else ():
+        if str(manifest_value(manifest,path))!=str(configuration[key]):raise ValueError('configuration differs from plan: '+key)
     data=json.loads((directory/'summary.json').read_text());ids=validate_summary(data,entry.get('summary','planned'))
     # Count-only summaries cannot identify a missing/replaced JUnit case. Use
     # the frozen manifest, and also prevent list summaries shrinking check_ids.
@@ -269,24 +281,25 @@ signal_group=P.signal_process_group
 
 def stop_tree(process):
     """Include detached child sessions created by the example runners."""
-    rows=subprocess.check_output(['ps','-axo','pid,ppid,pgid'],text=True).splitlines()[1:]
-    table=[tuple(map(int,row.split())) for row in rows]
-    owned={process.pid}
-    while True:
-        expanded=owned|{pid for pid,parent,_ in table if parent in owned}
-        if expanded==owned:break
-        owned=expanded
-    groups={group for pid,_,group in table if pid in owned and group>1}-{os.getpgrp()}
+    inspection=(OSError,ValueError,subprocess.SubprocessError)
+    try:owned,groups=P.process_tree(process.pid)
+    except inspection:
+        # Without an inventory only the root group can be stopped; the failure stays recorded.
+        signal_group(process.pid,signal.SIGKILL);process.wait(timeout=5);raise
     # Stop the root first, before it can launch another child.
     for group in [process.pid,*sorted(groups-{process.pid})]:
         signal_group(group,signal.SIGTERM)
     time.sleep(.2)
     process.poll()
-    rows=subprocess.check_output(['ps','-axo','pid,pgid,stat'],text=True).splitlines()[1:]
-    live_groups={int(row.split()[1]) for row in rows if int(row.split()[0]) in owned and not row.split()[2].startswith('Z')}
+    problem=None
+    try:
+        rows=subprocess.check_output(['ps','-axo','pid,pgid,stat'],text=True).splitlines()[1:]
+        live_groups={int(row.split()[1]) for row in rows if int(row.split()[0]) in owned and not row.split()[2].startswith('Z')}
+    except inspection as exc:problem=exc;live_groups=groups
     for group in groups & live_groups:
         signal_group(group,signal.SIGKILL)
     process.wait(timeout=5)
+    if problem:raise problem
 
 
 def save(out,jobs,results,complete,preflight_ok,integrity_error=None):
@@ -338,8 +351,8 @@ def run(args,entries,jobs):
                     except subprocess.TimeoutExpired:pass
                 code=process.returncode
             if code!=0:raise ValueError('runner exit '+str(code))
-            details=inspect_output(Path(job['out']),entries[job['example']],entries,profile=args.profile);ok=True;message='planned execution, JUnit and source hashes valid'
-        except (OSError,ValueError,KeyError,TypeError,ET.ParseError) as exc:message=str(exc)
+            details=inspect_output(Path(job['out']),entries[job['example']],entries,profile=args.profile,configuration=job.get('configuration'));ok=True;message='planned execution, JUnit, configuration and source hashes valid'
+        except (OSError,ValueError,KeyError,TypeError,ET.ParseError,subprocess.SubprocessError) as exc:message=str(exc)
         finally:
             with lock:active.discard(job['id'])
         return dict(id=job['id'],example=job['example'],success=ok,started=process is not None,message=message,returncode=code,seconds=round(time.monotonic()-started,3),**details)
@@ -378,7 +391,7 @@ def run(args,entries,jobs):
         for result in results:
             if not result['success']:continue
             job=by_id[result['id']]
-            try:inspect_output(Path(job['out']),entries[job['example']],entries,profile=args.profile)
+            try:inspect_output(Path(job['out']),entries[job['example']],entries,profile=args.profile,configuration=job.get('configuration'))
             except (OSError,ValueError,KeyError,TypeError,ET.ParseError) as exc:result.update(success=False,message='final audit: '+str(exc))
     except (OSError,ValueError,KeyError,TypeError) as exc:integrity_error=str(exc)
     ok=save(out,jobs,results,True,True,integrity_error);print('Artifacts:',out,'\nRepository regression:','PASS' if ok else 'FAIL');return 0 if ok else 1

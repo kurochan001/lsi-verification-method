@@ -61,7 +61,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--stage',choices=('all','simulation','formal'),default='all')
     p.add_argument('--profile',choices=('smoke','nightly'),default='smoke');p.add_argument('--seed',type=int,default=17)
     p.add_argument('--cocotb-python',default=sys.executable);p.add_argument('--formal-python',default=sys.executable)
-    p.add_argument('--python',default=sys.executable);p.add_argument('--timeout',type=float,default=1800);p.add_argument('--formal-timeout',type=float,default=300)
+    p.add_argument('--python',default=sys.executable);p.add_argument('--timeout','--child-timeout',dest='timeout',type=float,default=1800);p.add_argument('--formal-timeout',type=float,default=300)
     p.add_argument('--out',type=Path,default=Path('artifacts')/datetime.now(timezone.utc).strftime('advanced-regression-%Y%m%dT%H%M%S%fZ'))
     args=p.parse_args()
     P.resolve_tools(args)

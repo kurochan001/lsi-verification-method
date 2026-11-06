@@ -8,7 +8,7 @@ module e2e_guard_tb;
  e2e_guard #(.DATA_ID(DATA_ID),.MUTATION(MUTATION)) dut(.*);
  always #5 clk=~clk;
  reg [63:0] v[0:4],e[0:5];reg [31:0] obs[0:5];
- reg pre_ready,old_valid,old_rst=0,seen=0,restart=1;reg [7:0] last_counter;reg [15:0] old_data;
+ reg pre_ready,old_valid,old_rst=0,seen=0,restart=0,active=0;reg [7:0] last_counter;reg [15:0] old_data;
  integer fd,ef,cf,rc,checks,rows=0,inputs=0,validated=0,rejects=0,retired=0,cancels=0,resets=0;
  string vectors,expected,wave;
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"row=%0d",rows);end endtask
@@ -38,20 +38,20 @@ module e2e_guard_tb;
     $display("FIELD %0d actual=%h expected=%h",j,obs[j],e[j]);
     if(j==1)fail("E2E_STATE");else if(j==2)fail("E2E_DATA");else fail("E2E_STATUS");
    end
-   if(!rst_n||flush)begin seen=0;restart=1;end
+   if(!rst_n||flush)begin if(active)restart=1;seen=0;active=0;end
    if(accepted)begin
     validated=validated+1;$display("COVER frame/accepted");
     if(old_valid&&out_ready)$display("COVER flow/replace");
     if(in_frame[23:8]==0)$display("COVER payload/zero");if(in_frame[23:8]==16'hffff)$display("COVER payload/max");
     if(seen&&last_counter==255&&in_frame[31:24]==0)$display("COVER frame/wrap");
     if(restart&&in_frame[31:24]==0)begin $display("COVER reset/restart");restart=0;end
-    seen=1;last_counter=in_frame[31:24];
+    seen=1;active=1;last_counter=in_frame[31:24];
    end
    if(rejected)begin
     rejects=rejects+1;
     case(reject_code)
      1:begin $display("COVER frame/crc-reject");if(in_frame[47:32]!=16'(DATA_ID))$display("COVER frame/error-priority");end
-     2:$display("COVER frame/id-reject");
+     2:begin $display("COVER frame/id-reject");if(in_frame[31:24]!=(seen ? 8'(last_counter+8'd1):8'd0))$display("COVER frame/id-priority");end
      3:begin $display("COVER frame/sequence-reject");if(seen&&in_frame[31:24]==last_counter)$display("COVER frame/repeat");else $display("COVER frame/gap");end
      default:fail("E2E_STATUS");
     endcase

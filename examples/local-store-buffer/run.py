@@ -62,7 +62,9 @@ def vectors(seed,iterations,depth,boundary=False):
             p.cycle(rst=0,tag=2 if fenced else 1)
             for event in events:
                 if event[0]=='issue':_,core,op,address,data=event;p.transfer(core,op,address,data)
-                else:p.cycle(drain=event[1])
+                else:
+                    if fenced:p.cycle(valid=1,core=event[1],op=2) # the store is still buffered: FENCE must wait
+                    p.cycle(drain=event[1])
             p.cycle(tag=4 if fenced else 3)
     if not boundary:
         rng=random.Random(seed)

@@ -1,10 +1,16 @@
 {
-  "schema_version": 1,
-  "target": "integration",
+  "schema_version": 2,
+  "target": "consumer",
+  "cross_checks": ["integration"],
+  "environment_assumptions": ["as_initial_reset"],
   "nodes": [
     {"id": "producer", "task": "producer-guarantee", "requires": []},
-    {"id": "consumer", "task": "consumer-guarantee", "requires": []},
     {"id": "connection", "task": "connection-contract", "requires": ["producer"]},
-    {"id": "integration", "task": "integration-result", "requires": ["consumer", "connection"]}
+    {"id": "consumer", "task": "consumer-guarantee", "requires": ["connection"]},
+    {"id": "integration", "task": "integration-result", "requires": []}
+  ],
+  "contracts": [
+    {"assumption": "ag_source_hold", "assumed_by": "connection", "guaranteed_by": "producer"},
+    {"assumption": "ag_sink_hold", "assumed_by": "consumer", "guaranteed_by": "connection"}
   ]
 }

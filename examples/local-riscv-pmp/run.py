@@ -73,10 +73,13 @@ def vectors(seed,iterations,aw,boundary=False):
     p.cycle(address=0x300,kind=1,machine=1) # locked denies M
     p.cycle(pa=1,index=2,data=0x123);p.cycle(cfg=1,index=3,data=0)
     p.cycle(pa=1,index=3,data=0);p.cycle(address=0x300)
-    p.cycle(rst=0);p.entry(0,3,0,7,length=1<<aw)
+    p.cycle(rst=0);p.entry(0,3,0,7,length=2<<aw) # wider than the address space: only the wrap rule denies
     p.cycle(address=(1<<aw)-1,size=2);p.cycle(address=(1<<aw)-4,size=2)
     p.cycle(rst=0);p.entry(0,1,0x100,0,True);p.entry(1,1,0x80,7)
     p.cycle(address=0x120);p.cycle(cfg=1,index=2,data=2) # WARL reserved RW
+    p.cycle(rst=0);p.cycle(cfg=1,index=0,data=0xff);p.cycle(pa=1,index=1,data=0xffffffff) # reserved and unimplemented bits
+    p.cycle(rst=0);p.entry(0,0,0x100);p.entry(1,1,0x100) # lower bound equal to upper: only hi>lo stops a straddling access
+    p.cycle(address=0xfe,size=2);p.cycle(address=0xfe,size=2,machine=1)
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):

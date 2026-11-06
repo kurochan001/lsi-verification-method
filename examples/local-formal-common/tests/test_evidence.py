@@ -27,6 +27,15 @@ class EvidenceTest(unittest.TestCase):
         self.assertEqual(self.judge(status='UNKNOWN'),'error')
         self.assertEqual(self.judge(execution=dict(error='command timeout',returncode=None)),'error')
         self.assertEqual(self.judge(execution=dict(error=None,returncode=2)),'error')
+    def test_pass_status_with_an_assertion_violation_is_an_error(self):
+        self.assertEqual(self.judge(log='successful proof by k-induction\nAssert failed in equivalence_formal: ap_data'),'error')
+    def test_compiled_inventory_is_enforced_by_the_runner(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'out';sby=Path(tmp)/'fake-sby'
+            sby.write_text('#!/bin/sh\nmkdir -p task/model task/engine_0\necho PASS > task/status\necho "successful proof by k-induction" > task/logfile.txt\necho \'{"modules":{}}\' > task/model/inventory.json\n');sby.chmod(0o755)
+            p=subprocess.run([sys.executable,EQ.__file__,'--configuration','depth2','--task','equivalence-proof','--sby',str(sby),'--out',str(out)],capture_output=True,text=True,timeout=30)
+            self.assertEqual(p.returncode,1,p.stdout+p.stderr)
+            self.assertIn('invalid evidence',json.loads((out/'summary.json').read_text())['results'][0]['message'])
     def test_bmc_requires_engine_completion(self):
         case=dict(self.case,mode='bmc')
         self.assertEqual(self.judge(case=case),'error')

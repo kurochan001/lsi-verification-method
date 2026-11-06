@@ -37,6 +37,8 @@ module compare_formal #(parameter integer BYTES=2,MUTATION=0) (
             ap_timing: assert({ready0,busy0,valid0}=={ready1,busy1,valid1} &&
                               busy0==(remaining>0) && valid0==valid);
             ap_public: assert(status0==status1);
+            if(busy0)ap_match_quiet: assert(match0==0 && match1==0);
+            if(rst_n && $past(rst_n) && !busy0 && !valid0)ap_match_idle: assert($stable(match0) && $stable(match1));
             if(valid0)ap_result: assert(match0==expected0 && match1==expected1);
             if(rst_n && $past(rst_n && valid0 && !result_ready))
                 ap_hold: assert(valid0 && $stable(match0) && $stable(match1));

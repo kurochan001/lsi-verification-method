@@ -106,7 +106,7 @@ def build_report(plan,campaigns,root=ROOT):
                 if expected!=actual:raise ValueError('job inputs/configuration differ from current plan')
                 if problem:raise ValueError(problem)
                 if row.get('success') is not True or type(row.get('returncode')) is not int or row['returncode']!=0:raise ValueError(row.get('message','job not completed successfully'))
-                info=R.inspect_output(Path(job['out']),entries[job['example']],entries,root,plan['profile'])
+                info=R.inspect_output(Path(job['out']),entries[job['example']],entries,root,plan['profile'],job['configuration'])
                 record.update(success=True,reason='current plan, completion, JUnit and sources verified',**info)
                 for filename in ('manifest.json','summary.json','junit.xml','uvm-source.json','oss-source.json','systemc-source.json','ngspice-source.json'):
                     for path in Path(job['out']).rglob(filename):inputs[str(path)]=digest(path)
@@ -122,7 +122,7 @@ def build_report(plan,campaigns,root=ROOT):
     sources(plan,root,plan['source_sha256'].keys())
     for result in results:
         if result['selected']:
-            try:R.inspect_output(Path(result['selected']['out']),entries[result['example']],entries,root,plan['profile'])
+            try:R.inspect_output(Path(result['selected']['out']),entries[result['example']],entries,root,plan['profile'],result['configuration'])
             except (OSError,ValueError,KeyError,TypeError,ET.ParseError) as exc:result.update(status='fail',selected=None,reason='final audit: '+str(exc))
     return dict(schema_version=1,success=not errors and all(r['status']=='pass' for r in results),complete=all(r['history'] and r['history'][-1]['recorded'] for r in results),planned=len(jobs),results=results,campaigns=raw,errors=errors,input_sha256=inputs,plan_source_sha256=plan['source_sha256'],
         policy='Chronological order is explicit. The last declared attempt owns the job. Failed attempts remain visible; reports never execute jobs or approve signoff.')

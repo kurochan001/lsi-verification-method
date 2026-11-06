@@ -103,6 +103,12 @@ def vectors(seed,iterations,timeout,retries,boundary=False):
     p.cycle(ready=0);p.cycle(valid=1,data=0x83,ready=0);p.cycle(ready=0);p.cycle(ready=0)
     while not p.done:p.cycle()
     p.cycle();p.cycle()
+    # A new frame arrives in the very cycle the held output is taken: the buffer counts as free.
+    p.cycle(valid=1,data=0x84)
+    while not p.done:p.cycle(ready=0)
+    p.cycle(ready=0);p.cycle(valid=1,data=0x85,ready=0);p.cycle(ready=1)
+    while not p.done:p.cycle()
+    p.cycle();p.cycle()
     p.transfer(0x91,'lose-all');p.cycle(valid=1,data=0x92);p.cycle(rst=0)
     p.transfer(0x93,'ack-all');p.cycle(valid=1,data=0x94);p.cycle(rst=0)
     p.cycle(valid=1,data=0xb1);p.cycle(rst=0);p.transfer(0xb2)

@@ -22,10 +22,12 @@ def validate_case(directory,expected,counts,soc=False,ram_frames=None):
 
 class Simulator:
     def __init__(self,e,top,sources):self.e=e;self.top=top;self.sources=sources;self.builds={};self.records=[]
-    def execute(self,name,parameters,frames,replies,rows,seed,counts,mutation=0,expected_failure=None,scenario=0,firmware=None,ram_frames=None):
+    def execute(self,name,parameters,frames,replies,rows,seed,counts,mutation=0,expected_failure=None,scenario=0,firmware=None,ram_frames=None,drops=None,admitted=(),plusargs=None):
         d=self.e.out/name;d.mkdir(parents=True)
         vectors=d/'vectors.txt';vectors.write_text(''.join(' '.join(f'{v:x}' for v in row)+'\n' for row in rows))
-        for prefix,packets in (('input',frames),('expected',replies)):
+        drops=drops or dict(reasons=[],full=0,long=0)
+        (d/'reasons.hex').write_text(''.join(f'{v:x}\n' for v in drops['reasons']))
+        for prefix,packets in (('input',frames),('expected',replies),('admitted',admitted)):
             data=[bytes(f['data']) if isinstance(f,dict) else bytes(f) for f in packets]
             (d/(prefix+'.hex')).write_text(''.join(f'{v:02x}\n' for packet in data for v in packet))
             (d/(prefix+'-lengths.hex')).write_text(''.join(f'{len(packet):04x}\n' for packet in data))
@@ -44,7 +46,9 @@ class Simulator:
         command=[self.e.args.vvp,str(binary),'+VECTORS='+str(vectors),'+EXPECTED='+str(d/'expected.hex'),'+LENGTHS='+str(d/'expected-lengths.hex'),
                  '+ROM='+str(d/'rom.hex'),'+WAVE='+str(d/'trace.vcd'),'+TRACE='+str(d/'retirement.log'),'+RAMFILE='+str(d/'ram-readback.hex'),
                  f'+RX_FRAMES={counts["rx_frames"]}',f'+TX_FRAMES={counts["tx_frames"]}',f'+TX_BYTES={counts["tx_bytes"]}',f'+DROPS={counts["drops"]}',
-                 f'+SCENARIO={scenario}',f'+SEED={seed}',f'+CHECKS={checks}']
+                 f'+SCENARIO={scenario}',f'+SEED={seed}',f'+CHECKS={checks}',
+                 '+REASONS='+str(d/'reasons.hex'),f'+REJECTED={len(drops["reasons"])}',f'+FULL_DROPS={drops["full"]}',f'+LONG_DROPS={drops["long"]}',
+                 '+ADMITTED='+str(d/'admitted.hex'),'+ADMITTED_LENGTHS='+str(d/'admitted-lengths.hex'),f'+ADMITTED_FRAMES={len(admitted)}',*[f'+{k}={v}' for k,v in (plusargs or {}).items()]]
         if build['error'] or build['returncode']!=0:
             execution=dict(error='build failed: '+key+'-build.log',returncode=None,seconds=0);(d/'simulation.log').write_text(execution['error']+'\n')
         else:execution=E.P.execute(command,d/'simulation.log',self.e.args.timeout,d)

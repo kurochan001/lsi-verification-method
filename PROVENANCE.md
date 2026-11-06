@@ -1795,6 +1795,17 @@ SVG自体を編集可能な原本とし、`viewBox`・`title`・`desc`・代替�
 
 代表SVA例と公式UVM 2020.3.2を使う例は、追加でloweringまで試しました。前者は同時アサーションの未実装、後者はUVMソースの解析エラーで終了コード2となり、実行成功とは扱いません。残る50登録行の全工程、全80例のnightly、ネイティブ機能／コードカバレッジ、全フォーマル例の再証明、C++／DPI、cocotb／VPI、SystemC、SPICE協調、上流DV環境は今回の実行範囲に含めません。
 
-証跡はGit管理外の`artifacts/kirimasim-20261103/`です。`full-smoke/`と`full-smoke-timescale/`に修正前の失敗、`final-smoke/`・`icarus-final/`に最終smoke、`selected-nightly/`・`icarus-nightly/`に追加nightlyを保存し、過去の出力を上書きしていません。実行手順のJSON、実コマンド・終了コードのイベント、入力・ログ・波形、元ランナーのJUnit・カバレッジとハッシュを保存しました。`publish_results.py`は最終証跡と現行ソースを照合して公開用JSON・結果表を作成します。
+証跡はGit管理外の`artifacts/kirimasim-20261103/`です。`full-smoke/`と`full-smoke-timescale/`に修正前の失敗、`final-smoke/`・`icarus-final/`に最終smoke、`selected-nightly/`・`icarus-nightly/`に追加nightlyを保存し、過去の出力を上書きしていません。実行手順のJSON、実コマンド・終了コードのイベント、入力・ログ・波形、元ランナーのJUnit・カバレッジとハッシュを保存しました。同じGit管理外のディレクトリーにある`publish_results.py`は最終証跡と現行ソースを照合して公開用JSON・結果表を作成します。
 
 文書238件・794表・216 Mermaid図・259用語・127 FAQの459判定と、ツール134テストが合格しました。変更影響選択は保守的に全108ジョブを選びますが、その選択自体を未実行工程の合格とは扱いません。最終追記後の文書・ツール入力は`docs-publish/`・`tools-publish/`で再確認します。
+
+<a id="kirimasim-adapter-fixes-20261106"></a>
+## kirimasimアダプターの修正（2026-11-06）
+
+起点は`6e87b32f6513cc7fa1264bc3df435f39c6a2757f`です。コードレビューで見つかった`tools/run_kirimasim_examples.py`の問題を修正し、セルフテストを4件から7件へ増やしました。手順書どおりに`--command-timeout 60`を渡すと`--max-wall-time=60.0`となりkirimasimに拒否される問題、時間超過が実行イベントに残らない問題、中断時にジョブが残り最上位の`summary.json`が保存されない問題、ジョブに属さない異常終了が最上位の合否へ反映されない問題、シンボリックリンク経由の起動と空白を含むインタープリターパスで失敗する問題、`-g2012`の省略と重複ソースを受理する問題、実行ごとのバイナリーの二重ハッシュを修正しました。
+
+`--command-timeout`の値はkirimasimの上限として切り上げて使い、アダプターの監視は5秒、既存ランナー側の上限は10秒長くします。RTL、テストベンチ、期待値、登録表は変更していません。[実測記録のJSON](docs/case-study-kirimasim/results-20261103.json)は書き換えていないため、記録内のアダプターのハッシュは実測時の値です。
+
+2026-11-03と同じkirimasimバイナリーで、修正後のアダプターにより`--command-timeout 60`を明示した全107構成のsmokeを並列4・Python 3.14で1回実行し、107／107 PASS、lowering 936回、実シミュレーション2,314回、終了コード0が2,445回・1が805回で、ソース変更なしを確認しました。Icarusとの出力照合と追加nightlyは再実行していません。この実行の証跡は一時ディレクトリーに置き、リポジトリーの証跡には含めていません。
+
+文書の459判定と、ツール137テストが合格しました。

@@ -68,7 +68,7 @@ class RunnerTest(unittest.TestCase):
                                  log, 10, self.directory)
         self.assertIsNone(result['error'], result)
         self.assertEqual(result['returncode'], 0, log.read_text())
-        self.assertEqual(Path(log.read_text().strip()), home)
+        self.assertEqual(Path(log.read_text().strip()).resolve(), home.resolve())
 
     def test_failed_source_preparation_is_a_build_error(self):
         # build_sources and add_arguments: an absent synthesis tool fails only the netlist builds
@@ -117,6 +117,13 @@ class RunnerTest(unittest.TestCase):
         self.assert_rejected(self.run_cli('--vvp',self.filter_vvp(expression)))
         self.assertEqual(read_json(self.out/'summary.json')['mutations_detected'],4)
         self.assertEqual(read_json(self.out/'coverage.json')['width4']['hit'],0)
+
+    def test_surviving_mutation_fails_despite_complete_normal_coverage(self):
+        # Mutant builds run the unmodified design: functional results and coverage stay complete.
+        tool=self.wrapper(f'raise SystemExit(subprocess.call([{shutil.which("vvp")!r},*[re.sub(r"-m[1-4][.]vvp$","-m0.vvp",a) for a in sys.argv[1:]]]))')
+        self.assert_rejected(self.run_cli('--vvp',tool))
+        self.assertTrue(read_json(self.out/'coverage.json')['width4']['success'])
+        self.assertEqual(read_json(self.out/'summary.json')['mutations_detected'],0)
 
     def test_extra_required_goal_must_be_reached(self):
         catalog=read_json(EXAMPLES/'local-timer-watchdog/requirements.json')

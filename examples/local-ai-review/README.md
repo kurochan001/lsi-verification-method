@@ -7,7 +7,7 @@ python3 examples/local-ai-review/run.py --out artifacts/ai-review
 python3 examples/local-ai-review/run.py --profile nightly --out artifacts/ai-review-nightly
 ```
 
-Python 3.10以上、POSIX、Verilator 5.052、C++20コンパイラー、makeを使います。UVMは不要です。[失敗解析例](../local-failure-triage/README.md)のテストベンチと独立したPython仕様モデル、IRQ例のRTLを再利用します。ビルド1件、悪い提案4件の却下確認、修正版の通常実行1件と変異3件の検出で、JUnitは9判定です。
+Python 3.10以上、POSIX、Verilator 5.052、C++20コンパイラー、makeを使います。UVMは不要です。[失敗解析例](../local-failure-triage/README.md)のテストベンチと独立したPython仕様モデル、IRQ例のRTLを再利用します。ビルド1件、悪い提案4件の却下確認、修正版の通常実行1件、変異3件の検出、SVA単独の検出1件で、JUnitは10判定です。
 
 | 提案 | 実行とレビューで示す問題 |
 | --- | --- |
@@ -16,7 +16,7 @@ Python 3.10以上、POSIX、Verilator 5.052、C++20コンパイラー、makeを�
 | `vacuous-assertion` | 前件が`event && !event`で、比較器を止めた誤RTLが通る。前件cover 0と独立仕様値の不一致を記録 |
 | `correlated-model` | DUTと参照モデルを両方クリア優先にしSVAを止めると通る。独立仕様値との双方の不一致を記録 |
 
-修正版では、同時条件・マスク中の保持・pending中のリセットを必須入力に含め、仕様値との比較と正しいSVAを有効にします。正常実行は5つのネイティブcoverがすべて到達し、クリア優先、マスク中のイベント欠落、リセット漏れの3変異は指定比較器で失敗する必要があります。nightlyはランダム入力を32行から256行へ増やします。
+修正版では、同時条件・マスク中の保持・pending中のリセットを必須入力に含め、仕様値との比較と正しいSVAを有効にします。正常実行は5つのネイティブcoverがすべて到達し、クリア優先、マスク中のイベント欠落、リセット漏れの3変異は指定比較器で失敗する必要があります。比較器が先に止めるとSVAの検出力は分からないので、比較器を止めたクリア優先の回路も実行し、正しいSVAが`SVA_EVENT`で検出することを確認します。このSVAが見るのはイベント後の保留だけで、リセット漏れ等は比較器が担当します。nightlyはランダム入力を32行から256行へ増やします。
 
 `review-decisions.json`へ、提案、検出した問題、期待した問題一覧、採否と根拠の実行を保存します。生ログ・波形・入力・コマンド・ネイティブ`coverage.dat`・ハッシュ・JUnitも残します。悪い提案の終了コード0は、演習で示す見逃しの証跡です。正常RTLの合格証跡や到達率へ混ぜません。
 

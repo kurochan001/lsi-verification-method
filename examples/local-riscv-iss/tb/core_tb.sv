@@ -41,7 +41,7 @@ module core_tb;
             8: tag_name = "branch/forwarded-operand"; 9: tag_name = "branch/backward";
             10: tag_name = "x0/write-then-read";  11: tag_name = "halt/ebreak";
             12: tag_name = "mem/wait-forwarding"; 13: tag_name = "branch/loop-exit";
-            14: tag_name = "branch/shadowed-prediction"; 15: tag_name = "lsu/negative-subword-load";
+            14: tag_name = "branch/shadowed-predictable"; 15: tag_name = "lsu/negative-subword-load";
             16: tag_name = "lsu/subword-store-then-word-load"; 17: tag_name = "lsu/subword-load-use";
             18: tag_name = "lsu/odd-byte";         19: tag_name = "lsu/upper-half";
             20: tag_name = "trap/illegal";         21: tag_name = "trap/ecall";
@@ -78,7 +78,7 @@ module core_tb;
                     e_pc[expected] = v[1]; e_insn[expected] = v[2]; e_rd[expected] = v[3]; e_wdata[expected] = v[4];
                     e_kind[expected] = v[5]; e_addr[expected] = v[6]; e_data[expected] = v[7];
                     e_tags[expected] = v[8]; e_op[expected] = v[9];
-                    if (v[5] != 0) begin wait_of[accesses] = v[10]; accesses = accesses + 1; end
+                    if (v[5] == 1 || v[5] == 2) begin wait_of[accesses] = v[10]; accesses = accesses + 1; end
                     expected = expected + 1;
                 end
                 4: begin exp_ctrl = v[1]; exp_flush = v[2]; check_flush = v[3]; perf_rows = perf_rows + 1; end

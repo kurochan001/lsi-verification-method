@@ -21,6 +21,14 @@ class OracleTests(unittest.TestCase):
             with self.subTest(log=bad),self.assertRaises(ValueError):S.oracle(bad,ROWS)
     def test_unknown_value_is_not_ignored(self):
         with self.assertRaises(ValueError):S.oracle(RESET.replace('pend=0','pend=x'),ROWS)
+    def test_configuration_is_classified_from_covers_and_comparisons(self):
+        clean=dict(cycles=2,rtl_mismatches=[],model_mismatches=[]);hits=dict.fromkeys(S.COVERS,3)
+        base=dict(execution={'error':None},problems=[],status='pass',oracle=clean,sva_off=0,native=hits,compared=2,rows=2)
+        self.assertEqual(S.diagnose(base,''),'pass')
+        self.assertEqual(S.diagnose(dict(base,sva_off=1),''),'pass')
+        for changed in (dict(native=dict.fromkeys(S.COVERS,0)),dict(native=dict(hits,cp_collision=0)),dict(native=None),dict(compared=0),dict(compared=None)):
+            with self.subTest(changed=changed):
+                self.assertEqual(S.diagnose(dict(base,**changed),''),'verification-configuration');self.assertFalse(S.good(dict(base,**changed)))
     def test_unrelated_failure_is_unclassified(self):
         r=dict(execution={'error':None},problems=[],status='error',oracle=None,sva_off=0,native=None)
         self.assertEqual(S.diagnose(r,'unexpected crash'),'unclassified')

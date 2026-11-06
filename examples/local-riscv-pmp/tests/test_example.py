@@ -41,9 +41,14 @@ class PmpTests(SystemContract,unittest.TestCase):
         p.cycle(rst=0);p.entry(0,0,0x200);p.entry(1,1,0x100)
         self.assertEqual(list(p.region(1)),[])
         p.cycle(address=0x180)
+        p.cycle(rst=0);p.entry(0,0,0x100);p.entry(1,1,0x100) # equal bounds: a straddling access overlaps by interval arithmetic
+        self.assertEqual(p.check(0xfe,2,0,0),(0,4))
+        p.cycle(address=0xfe,size=2);p.cycle(address=0xfe,size=2,machine=1)
         p.cycle(address=0,size=3,machine=1);p.cycle(address=0,kind=3,machine=1)
         self.assertEqual([r[9] for r in p.rows[-2:]],[0,0])
         result=simulate_vectors(P,p.rows);self.assertEqual(result.returncode,0,result.stdout)
+        result=simulate_vectors(P,p.rows,replacements={'pmp.sv':[('hi>lo && ','')]})
+        self.assertNotEqual(result.returncode,0);self.assertIn('CHECK_FAIL PMP_DECISION',result.stdout)
 
     def test_checker_rejects_incorrect_permission_oracle(self):
         p=P.Plan(16);p.cycle(rst=0);p.cycle(machine=0)

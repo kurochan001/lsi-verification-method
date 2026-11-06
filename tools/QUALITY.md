@@ -36,8 +36,8 @@ Mermaidの構文検査はローカルのNode.jsで実行し、外部描画サー
 artifacts/toolchains/docs/python/bin/python tools/run_selftests.py \
   --scope tools --out artifacts/tool-selftests
 
-# 全例のtestsとtools/tests。full環境とネイティブツールが必要
-export PATH="$PWD/artifacts/toolchains/native/install/bin:$PWD/artifacts/toolchains/full/formal/bin:$PATH"
+# 全例のtestsとtools/tests。full環境、ネイティブツール、ngspiceが必要
+export PATH="$PWD/artifacts/toolchains/native/install/bin:$PWD/artifacts/toolchains/full/formal/bin:$PWD/artifacts/toolchains/ngspice/install/bin:$PATH"
 export COCOTB_PYTHON="$PWD/artifacts/toolchains/full/python/bin/python"
 artifacts/toolchains/full/python/bin/python tools/run_selftests.py \
   --jobs 2 --timeout 600 --out artifacts/all-selftests

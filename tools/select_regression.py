@@ -6,6 +6,7 @@ import json
 import math
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -110,11 +111,13 @@ def run(a):
     inventory=dependency_inventory(root,entries);tracked_inventory=tracked(root)
     records,resolved,uncertain=changes(root,a.base,a.head,a.include_worktree);selection=select(root,entries,records,catalog,uncertain)
     selected=selection['examples'];jobs=R.make_plan(entries,plan_args(a,a.out/'campaign',selected),root) if selected else []
-    selection.update(refs=resolved,profile=a.profile,seed=a.seed,selected_jobs=[j['id'] for j in jobs],executed_jobs=0,hardware_verified=False)
+    # A check that did not run must not appear as a passing case in summary.json or JUnit.
+    executing=a.run and bool(jobs)
+    selection.update(refs=resolved,profile=a.profile,seed=a.seed,selected_jobs=[j['id'] for j in jobs],executed_jobs=0,hardware_verified=False,execution_skipped=None if executing else 'plan only' if not a.run else 'no affected hardware jobs; documentation gates remain separate')
     inputs=[Path(__file__),DEPENDENCIES,root/'tools/run_regression.py',root/'tools/regression_report.py',root/'tools/regressions.json',root/'tools/lint_targets.json',*[root/n for n in tracked_inventory if (root/n).is_file() and not documentation(n)]]
-    report=Q.Report('affected-regression',a.out,inputs,['selection','execution','audit','source-freshness'],dict(base=a.base,head=a.head,include_worktree=a.include_worktree,run=a.run,refs=resolved))
+    report=Q.Report('affected-regression',a.out,inputs,['selection',*(['execution','audit'] if executing else []),'source-freshness'],dict(base=a.base,head=a.head,include_worktree=a.include_worktree,run=a.run,refs=resolved))
     Q.write(report.out/'selection.json',selection);report.check('selection',True,dict(status=selection['status'],jobs=len(jobs),full_reasons=selection['full_reasons']))
-    if a.run and jobs:
+    if executing:
         command=[sys.executable,str(root/'tools/run_regression.py'),'--profile',a.profile,'--seed',str(a.seed)]
         for name in selected:command+=['--example',name]
         command+=a.runner_args+['--out',str(report.out/'campaign')];Q.write(report.out/'command.json',command)
@@ -129,9 +132,6 @@ def run(a):
         try:audited=not r['error'] and r['returncode']==0 and json.loads((report.out/'audit/summary.json').read_text())['success'] is True
         except (OSError,ValueError,KeyError,TypeError):audited=False
         report.check('audit',audited,r);selection['hardware_verified']=good and audited
-    else:
-        detail=dict(executed=False,reason='plan only' if not a.run else 'no affected hardware jobs; documentation gates remain separate')
-        report.check('execution',True,detail);report.check('audit',True,detail)
     changed=report.fresh()
     if tracked(root)!=tracked_inventory:changed.append('repository input inventory changed')
     try:
@@ -149,6 +149,10 @@ def main():
     allowed={'--jobs','--job-timeout','--command-timeout','--formal-timeout','--child-timeout','--build-timeout','--python','--formal-python','--rdl-python','--cocotb-python','--tool-bin','--uvm-home','--oss-home'}
     if len(a.runner_args)%2 or any(k not in allowed for k in a.runner_args[::2]):p.error('only tool bindings and limits may follow --')
     if not math.isfinite(a.execution_timeout) or a.execution_timeout<=0 or not 0<=a.seed<=2**31-4 or a.out.exists():p.error('valid seed, finite timeout and fresh output required')
+    previous=signal.signal(signal.SIGTERM,Q.P.interrupted)
     try:return run(a)
+    except Q.P.RunInterrupted as exc:return 128+exc.signum
+    except KeyboardInterrupt:return 130
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as exc:print('SELECTION_ERROR',exc,file=sys.stderr);return 1
+    finally:signal.signal(signal.SIGTERM,previous)
 if __name__=='__main__':sys.exit(main())

@@ -94,7 +94,7 @@ def zero_result_packet():
 
 
 def invalid_frames(max_frame):
-    good=udp(b'odd');bad=bytearray(good);bad[-1]^=1
+    good=udp(b'odd');bad=bytearray(good);bad[-1]^=1;unsummed=udp(b'odd',zero_checksum=True);request=arp()
     return [dict(data=bytes(bad),reason=1),dict(data=with_fcs(b'\0'*10),reason=2),
             dict(data=good,link_error=True,reason=3),dict(data=edit(good,{0:0x04}),reason=4),
             dict(data=edit(good,{38:0,39:7}),reason=5),dict(data=edit(good,{24:good[24]^1}),reason=6),
@@ -102,12 +102,33 @@ def invalid_frames(max_frame):
             dict(data=edit(good,{20:0x20},True),reason=8),dict(data=edit(good,{22:0},True),reason=5),
             dict(data=udp(b'port',destination_port=PORT+1),reason=4),
             dict(data=arp(target_ip=bytes((192,0,2,9))),reason=4),
-            dict(data=with_fcs(bytes(max_frame)),reason=2)]
+            dict(data=with_fcs(bytes(max_frame)),reason=2),
+            # Each frame below passes every other check, so only the named term can reject it.
+            dict(data=good,link_error=True,link_at=0,reason=3),dict(data=good,link_error=True,link_at=-1,reason=3),
+            dict(data=udp(b'addr',destination_ip=bytes((192,0,2,9))),reason=4),
+            dict(data=edit(good,{i:255 for i in range(6)}),reason=4),
+            dict(data=edit(good,{12:0x86,13:0xdd}),reason=8),dict(data=edit(good,{23:6},True),reason=8),
+            dict(data=edit(unsummed,{38:0,39:9}),reason=5),dict(data=edit(unsummed,{16:0,17:50,38:0,39:30},True),reason=5),
+            dict(data=edit(good,{16:0,17:27,38:0,39:7},True),reason=5),
+            dict(data=edit(request,{15:2}),reason=8),dict(data=edit(request,{16:0x86,17:0xdd}),reason=8),
+            dict(data=edit(request,{18:8}),reason=8),dict(data=edit(request,{19:16}),reason=8),
+            dict(data=edit(request,{21:2}),reason=8),dict(data=edit(request,{22:4}),reason=5)]
+
+
+def expect_drops(frames,max_frame,admitted=None):
+    """Fate of each frame in arrival order: queue full, oversize, or the decoder's rejection reason."""
+    reasons=[];full=long=0
+    for index,frame in enumerate(frames):
+        data=frame['data'] if isinstance(frame,dict) else frame;link=frame.get('link_error',False) if isinstance(frame,dict) else False
+        if admitted is not None and index not in admitted:full+=1
+        elif len(data)>max_frame:long+=1
+        elif (reason:=decode(data,max_frame,link)[1]):reasons.append(reason)
+    return dict(reasons=reasons,full=full,long=long)
 
 
 def directed(max_frame):
     padding=bytearray(udp(b'p')[:-4]);padding[43:]=b'\x7e'*(len(padding)-43)
-    return [arp(),udp(b''),udp(b'odd'),udp(bytes(range(max_frame-46))),udp(b'zero',zero_checksum=True),
+    return [arp(),edit(arp(),{i:LOCAL_MAC[i] for i in range(6)}),udp(b''),udp(b'odd'),udp(bytes(range(max_frame-46))),udp(b'zero',zero_checksum=True),
             zero_result_packet(),with_fcs(padding)]
 
 
@@ -123,10 +144,17 @@ def rows(frames,seed=17,mode='sequential',reset=None):
     def idle(count,rst=1,ready=1):result.extend([[rst,0,0,0,0,ready] for _ in range(count)])
     def send(frame,ready=1,gaps=False):
         data=frame['data'] if isinstance(frame,dict) else frame;bad=frame.get('link_error',False) if isinstance(frame,dict) else False
+        at=frame.get('link_at',len(data)//2) if isinstance(frame,dict) else 0
         for i,value in enumerate(data):
             if gaps and rng.randrange(7)==0:idle(1,ready=ready)
-            result.append([1,1,value,int(i==len(data)-1),int(bad and i==len(data)//2),ready])
+            result.append([1,1,value,int(i==len(data)-1),int(bad and i==at%len(data)),ready])
     idle(3,rst=0,ready=0)
+    if mode in ('swap-exact','swap-early'):
+        # Three frames fill TX and both slots. Draining a 64-byte reply pops on the 65th ready row:
+        # the fourth frame starts on that row (slot reused) or on the row before it (still full).
+        for frame in frames[:3]:send(frame,ready=0)
+        idle(8,ready=0);idle(64 if mode=='swap-exact' else 63);send(frames[3]);idle(1500)
+        return result
     if reset=='receive':
         for value in bytes(frames[0])[:20]:result.append([1,1,value,0,0,0])
         idle(3,rst=0,ready=0)

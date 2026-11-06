@@ -25,7 +25,7 @@
 - [SVA・UVM・仕様生成・ソフトウェア連携・検証効率](#svauvm仕様生成ソフトウェア連携検証効率)
 - [外部のオープンソースDV環境（参照例）](#外部のオープンソースdv環境参照例)
 
-「主なツール」はPythonに加えて必要な環境です。IcarusはIcarus Verilog、フォーマルはYosys・SymbiYosys（SBY）・Z3、UVMはVerilator・C++20環境・外部のAccellera UVMを指します。Verilatorを使う例にはC++コンパイラとmakeも必要です。詳細な版・追加パッケージ・セットアップは各手順を参照してください。
+「主なツール」はPythonに加えて必要な環境です。IcarusはIcarus Verilog、フォーマルはYosys・SymbiYosys（SBY）・Z3、UVMはVerilator・C++20環境・外部のAccellera UVMを指します。Verilatorでビルド・実行する例にはC++コンパイラとmakeも必要です。lintだけの例では不要です。詳細な版・追加パッケージ・セットアップは各手順を参照してください。
 
 ## バス・レジスタ・アドレス
 
@@ -178,13 +178,13 @@
 | [小規模ECU](local-automotive-ecu/README.md) | 通信保護RTLの実接続、窓付きウォッチドッグ、指令の更新期限、範囲、取消・出力抑止、許可付き復帰 | Icarus |
 | [ロックステップ監視](local-lockstep-monitor/README.md)／[ECCメモリ](local-ecc-memory/README.md) | 不一致の封じ込め、再同期、訂正・検出、スクラブ | Icarus |
 | [モーションI/O](local-motion-io/README.md)／[閉ループ制御](local-motion-control/README.md) | センサー、固定小数点演算、PWM、停止・再開 | Icarus |
-| [SPICEとの協調](local-spice-cosim/README.md) | 理想RC回路とデジタル制御の時刻・変換・応答 | Verilator＋C++17＋ngspice |
+| [SPICEとの協調](local-spice-cosim/README.md) | ngspiceで解く線形RC回路とデジタル制御の時刻・変換・応答 | Verilator＋C++17＋ngspice |
 
 ## アナログ・デジタル協調
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
-| [RC電圧制御とSPICE](local-spice-cosim/README.md) | 実RC回路とRTLの閉ループ、ADC／DAC接続、時刻同期、解析解、回路定数・接続・制御の故障注入 | Verilator＋C++17＋ngspice共有ライブラリー |
+| [RC電圧制御とSPICE](local-spice-cosim/README.md) | ngspiceで解く線形RC回路とRTLの閉ループ、ADC／DAC接続、時刻同期、解析解、回路定数・接続・制御の故障注入 | Verilator＋C++17＋ngspice共有ライブラリー |
 
 ## 画像処理
 
@@ -250,7 +250,7 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [仕様変更の再検証](local-spec-change/README.md) | APB＋割り込みのr1／r2を同じ入力で比較、古い期待値・SVA・証跡の拒否、native SVAと行カバレッジ | Icarus＋Verilator |
 | [初回失敗と再実行のレポート](local-regression-report/README.md) | 実際のFIFO時間切れ、同じ計画の再実行、全履歴・最後の試行・未達の照合 | Icarus |
 | [全DUTの共通lintと警告管理](local-lint/README.md) | 明示した構成・共有ソース、指摘の追加・解消・除外の失効、幅・ラッチ・暗黙ネット等の負例 | Verilator |
-| [失敗解析と修正後の再実行](local-failure-triage/README.md) | RTL・期待値・SVA設定・ツール不足・時間切れの切分け、同じ入力での回帰確認、不具合票 | Verilator |
+| [失敗解析と修正後の再実行](local-failure-triage/README.md) | RTL・期待値・SVA設定・比較器の無効化・ツール不足・時間切れの切分け、同じ入力での回帰確認、不具合票 | Verilator |
 | [AIの悪い提案をレビューする](local-ai-review/README.md) | 要求抜け、誤った`$past`、空虚な成立、DUTと参照モデルの相関した誤り。APIキー不要 | Verilator |
 | [コードカバレッジの未達分析](local-code-coverage/README.md) | 行・分岐・式・toggle・FSM、追加試験、DB統合・注釈、カバレッジ達成時の機能不正 | Verilator |
 | [ネイティブ機能カバレッジ](local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
@@ -296,13 +296,13 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 
 ## 集計と実行記録
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は58例・124構成、各検証例が出力するJUnit件数の合計はsmoke 874件／nightly 1122件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は58例・124構成、各検証例が出力するJUnit件数の合計はsmoke 875件／nightly 1123件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-現在の統合計画は、130登録項目・108ルートジョブです。nightly対応の個別例に加え、集約8本、全12フォーマル例、固定計画の共通lint・STAを含みます。証明専用例の計画は23構成・175タスクです。MCYが各候補に対して実行する等価性証明は別集計です。画像処理の2例は独立したランナーで、単体IPのJUnitは18／22件、SoCは28／32件です。ネットワークの新2例も独立したランナーで、単体IPは26／30件、SoCは34／38件です。TMRとFDIRも独立したランナーで、JUnitはそれぞれ14／18件、44／48件です。モーションI/Oは26／30件、閉ループ制御は42／46件です。VCI・SoCLibは19／23件、C++参照モデルは22／26件、SPICE協調は25／29件です。E2E通信保護は24／28件、小規模ECUは28／32件です。いずれもsmoke／nightlyの順です。
+現在の統合計画は、130登録項目・108ルートジョブです。nightly対応の個別例に加え、集約7本、全12フォーマル例、固定計画の共通lint・STAを含みます。証明専用例の計画は23構成・175タスクです。MCYが各候補に対して実行する等価性証明は別集計です。画像処理の2例は独立したランナーで、単体IPのJUnitは18／22件、SoCは40／44件です。ネットワークの新2例も独立したランナーで、単体IPは30／34件、SoCは48／52件です。TMRとFDIRも独立したランナーで、JUnitはそれぞれ14／18件、56／60件です。モーションI/Oは28／32件、閉ループ制御は48／52件です。VCI・SoCLibは19／23件、C++参照モデルは22／26件、SPICE協調は25／29件です。E2E通信保護は24／28件、小規模ECUは30／34件です。いずれもsmoke／nightlyの順です。
 
 共通lintの対象は124 RTLファイル・125モジュール・322構成です。画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの9構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
 

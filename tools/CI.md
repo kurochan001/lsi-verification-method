@@ -5,7 +5,7 @@ GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と�
 | ワークフロー | 起動条件 | 実行する範囲 |
 | --- | --- | --- |
 | Quality | push、pull request、手動 | 全文書・Mermaid、toolsのセルフテスト、FIFO・APB・stream・ネイティブSVAのsmoke構成行列 |
-| Affected verification | push、pull request、手動 | [差分選択](AFFECTED.md)した例のsmokeと履歴監査。不明な依存・共通入力変更は全例へ戻す。文書のみは回路0件と記録 |
+| Affected verification | push、pull request、手動 | [差分選択](AFFECTED.md#ciの比較基準)した例のsmokeと履歴監査。pushは同じブランチで最後に成功した実行からの差分を見る。不明な依存・共通入力変更は全例へ戻す。文書のみは回路0件と記録 |
 | Nightly verification | 毎日UTC 18:23（日本時間翌03:23）、手動 | 全文書、skipなしの全セルフテスト、全例のnightly、全フォーマル・STA・lint、保存結果の履歴照合 |
 
 スケジュールはmainのワークフローを使います。GitHub側の混雑等で開始が遅れる場合があり、時刻どおりの開始を保証する仕組みではありません。`--profile nightly`というランナー引数自体には、定期起動の機能はありません。

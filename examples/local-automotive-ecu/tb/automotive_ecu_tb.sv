@@ -44,7 +44,7 @@ module automotive_ecu_tb;
     if(old_enabled&&enabled&&service)begin if(wd_elapsed+1==WINDOW_MIN)$display("COVER watchdog/min-service");if(wd_elapsed+1==WINDOW_MAX)$display("COVER watchdog/max-service");end
     if(!old_fault&&faulted)begin
      faults=faults+1;
-     if(cause[0])$display("COVER fault/external");if(cause[1])$display("COVER fault/early");if(cause[2])$display("COVER fault/late");if(cause[3])begin $display("COVER fault/stale");if(errors_since_apply>0)$display("COVER fresh/reject-no-refresh");end
+     if(cause[0])$display("COVER fault/external");if(cause[0]&&!old_enabled)$display("COVER fault/external-off");if(cause[1])$display("COVER fault/early");if(cause[2])$display("COVER fault/late");if(cause[3])begin $display("COVER fault/stale");if(errors_since_apply>0)$display("COVER fresh/reject-no-refresh");end
      if(cause[4])$display("COVER fault/range");if((cause&(cause-5'd1))!=0)$display("COVER fault/multiple");
      if(old_pending&&cancelled)$display("COVER fault/cancel-pending");
      if(old_pending&&cause[0]&&!applied&&drive_command==0)$display("COVER fault/over-commit");

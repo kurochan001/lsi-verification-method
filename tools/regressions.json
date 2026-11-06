@@ -46,6 +46,7 @@
       "kind": "aggregate",
       "profile": true,
       "options": [
+        "child-timeout",
         "cocotb-python",
         "formal-python",
         "formal-timeout",
@@ -136,6 +137,9 @@
           1,
           3
         ]
+      },
+      "matrix_evidence": {
+        "wait": "configuration.wait_cycles"
       }
     },
     {
@@ -156,6 +160,9 @@
           1,
           3
         ]
+      },
+      "matrix_evidence": {
+        "wait": "configuration.wait_cycles"
       }
     },
     {
@@ -207,6 +214,10 @@
           1,
           2
         ]
+      },
+      "matrix_evidence": {
+        "wait": "configuration.wait_cycles",
+        "parity": "configuration.parity"
       }
     },
     {
@@ -227,6 +238,9 @@
           3,
           4
         ]
+      },
+      "matrix_evidence": {
+        "ports": "configuration.ports"
       }
     },
     {
@@ -385,7 +399,6 @@
         "verilator",
         "vvp"
       ],
-      "summary": "bus-validation",
       "children": {
         "local-bus-bridge": "bridges",
         "local-axi4": "axi4"
@@ -868,6 +881,10 @@
           8,
           16
         ]
+      },
+      "matrix_evidence": {
+        "depth": "configuration.depth",
+        "width": "configuration.width"
       }
     },
     {
@@ -890,6 +907,9 @@
           1,
           3
         ]
+      },
+      "matrix_evidence": {
+        "depth": "depth"
       }
     },
     {
@@ -1553,6 +1573,10 @@
           8,
           16
         ]
+      },
+      "matrix_evidence": {
+        "depth": "configuration.depth",
+        "width": "configuration.width"
       }
     },
     {
@@ -1602,6 +1626,7 @@
       "kind": "aggregate",
       "profile": true,
       "options": [
+        "child-timeout",
         "formal-timeout",
         "python",
         "simulation-timeout",
@@ -1695,6 +1720,10 @@
           1,
           2
         ]
+      },
+      "matrix_evidence": {
+        "divisor": "configuration.divisor",
+        "parity": "configuration.parity"
       }
     },
     {
@@ -1767,6 +1796,9 @@
           "passive",
           "active"
         ]
+      },
+      "matrix_evidence": {
+        "mode": "plan.mode"
       }
     },
     {

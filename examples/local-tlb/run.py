@@ -107,6 +107,11 @@ def vectors(seed,iterations,entries,boundary=False):
     p.cycle(fence=(1,0,a,0),ready=0);p.cycle(fence=(1,0,a,0))
     p.cycle(request=q,fence=(1,0,a,0));p.transfer(m)
     p.fence();p.cycle(request=q);p.cycle();p.cycle(rst=0);p.transfer(m)
+    # Each permission on a hit: a supervisor page, a read-only page, an execute-only page.
+    h,r,x=0x10000000,0x10001000,0x10002000
+    mapping(m,h,0,0x100,flags=0xcf);p.transfer(m,va=h,user=0);p.transfer(m,va=h,user=1)
+    mapping(m,r,0,0x101,flags=0xd3);p.transfer(m,va=r);p.transfer(m,va=r,kind=1);p.transfer(m,va=r,kind=2)
+    mapping(m,x,0,0x102,flags=0xd9);p.transfer(m,va=x,kind=2);p.transfer(m,va=x);p.transfer(m,va=x,mxr=1)
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):

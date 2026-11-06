@@ -50,6 +50,29 @@ class CampaignTests(unittest.TestCase):
     def test_simultaneous_causes_are_retained(self):
         for p in PARS:
             rows,oracle,n=C.make('simultaneous',p);self.assertTrue(any(o[0]==2 and o[1]==5 and o[2]==1 for o in oracle));self.assertEqual(n['cancels'],1)
+    def test_deadline_at_the_commit_edge_keeps_a_pending_write_out_of_ram(self):
+        for p in PARS:
+            rows,oracle,n=C.make('write-expiry',p);fatal=next(i for i,o in enumerate(oracle) if o[5])
+            self.assertEqual(oracle[fatal][0],2);self.assertEqual(oracle[fatal][1]&4,4);self.assertEqual(oracle[fatal][21+1],0)
+            self.assertEqual(oracle[fatal][3],oracle[fatal-1][3]);self.assertEqual(oracle[-1][9],0)
+    def test_scrub_alone_can_enter_safe_with_the_ecc_cause(self):
+        for p in PARS:
+            rows,oracle,n=C.make('scrub-uncorrectable',p);entry=next(o for o in oracle if o[0]==2)
+            self.assertEqual(entry[1],2);self.assertEqual(n['cancels'],0);self.assertEqual(oracle[-1][9],55)
+    def test_tmr_upset_during_check_refuses_recovery_on_any_word(self):
+        for p in PARS:
+            rows,oracle,n=C.make('check-tmr-upset',p);self.assertEqual((n['failures'],n['recoveries']),(2,1))
+            refused=[o for o in oracle if o[7]];self.assertTrue(all(o[0]==2 and o[1]&1 for o in refused))
+    def test_opcode_two_and_a_forward_jump_are_both_rejected(self):
+        for p in PARS:
+            rows,oracle,n=C.make('opcode-sequence',p);self.assertEqual(n['rejected'],2);self.assertEqual(n['commits'],2);self.assertEqual(oracle[-1][3],2)
+    def test_maintenance_writes_are_ignored_outside_safe(self):
+        for p in PARS:
+            rows,oracle,n=C.make('maintenance-locked',p);self.assertEqual(oracle[-1][9],44)
+            word=p['DEPTH']-1;self.assertEqual(oracle[-1][21+word],M.encode(44))
+    def test_observable_expiry_blocks_admission(self):
+        for p in PARS:
+            rows,oracle,n=C.make('ready-blocked',p);valid=[r for r in rows if r[M.FIELDS.index('valid')]];self.assertEqual(n['accepted'],len(valid)-1);self.assertEqual(n['cancels'],0)
     def test_all_generated_ports_and_observations_fit_widths(self):
         for p in PARS:
             for name in (*C.NAMES,'random'):

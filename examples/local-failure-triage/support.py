@@ -66,21 +66,23 @@ class Simulator:
             if status=='pass':counts=native(d/'coverage.dat',log)
             if not r['error'] and (not (d/'wave.vcd').is_file() or '$enddefinitions' not in (d/'wave.vcd').read_text()):raise ValueError('waveform missing')
         except (OSError,ValueError) as exc:problems.append(str(exc))
-        record=dict(id=identity,status=status,message=message,execution=r,oracle=analysis,native=counts,problems=problems,rows=len(rows),mutation=mutation,model=model,sva_off=sva_off,sva_mode=sva_mode)
+        compared=re.findall(r'^TRIAGE_COMPARED compared=(\d+)$',log,re.M)
+        record=dict(id=identity,status=status,message=message,execution=r,oracle=analysis,native=counts,compared=int(compared[0]) if len(compared)==1 else None,problems=problems,rows=len(rows),mutation=mutation,model=model,sva_off=sva_off,sva_mode=sva_mode)
         E.P.write_json(d/'execution.json',record);self.records.append(record)
         return record,log
     def save(self):E.P.write_json(self.e.out/'executions.json',self.records)
 def detected(record,log,label):
     r=record['execution'];return not r['error'] and r['returncode']!=0 and re.findall(r'^CHECK_FAIL (\w+)$',log,re.M)==[label] and not re.search(r'^RESULT PASS',log,re.M) and not record['problems']
 def good(record):
-    return record['status']=='pass' and not record['problems'] and record['oracle'] is not None and not record['oracle']['rtl_mismatches'] and not record['oracle']['model_mismatches'] and record['native'] is not None and all(n>0 for n in record['native'].values())
+    return record['status']=='pass' and not record['problems'] and record['oracle'] is not None and not record['oracle']['rtl_mismatches'] and not record['oracle']['model_mismatches'] and record['native'] is not None and all(n>0 for n in record['native'].values()) and record['compared']==record['rows']
 def diagnose(record,log):
     # These are evidence-backed classifications for this bounded exercise.
     error=record['execution']['error']
     if error=='command timeout':return 'timeout'
     if error and 'No such file or directory' in error:return 'missing-tool'
     if error or record['problems']:return 'unclassified'
-    if record['status']=='pass' and (record['sva_off'] or not record['native'] or not all(record['native'].values())):return 'verification-configuration'
+    # Judge from what ran: required covers and executed comparisons, not from the requested settings.
+    if record['status']=='pass' and (not record['native'] or not all(record['native'].values()) or record['compared']!=record['rows']):return 'verification-configuration'
     o=record['oracle']
     if o and o['rtl_mismatches']:return 'rtl-mismatch' if not o['model_mismatches'] else 'rtl-and-model-mismatch'
     if o and o['model_mismatches']:return 'expected-value-mismatch'

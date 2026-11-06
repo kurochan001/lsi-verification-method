@@ -55,7 +55,7 @@ def vectors(program, data, wait, required=ISS.WORD_ONLY, traps=False):
     before = stale_values(trace)
     waits, access = [0] * len(trace), 0
     for i, r in enumerate(trace):
-        if r.kind:
+        if r.kind in (1, 2):  # a trap record (kind 3) reaches no memory, so it has no wait
             waits[i] = wait(access, trace, i)
             access += 1
             if waits[i] and forwards_past_wait(trace, i, before[i - 1]):

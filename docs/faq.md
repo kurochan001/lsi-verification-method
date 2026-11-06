@@ -73,7 +73,7 @@ flowchart TD
 
 ### Q1. どこから読み始めればよいですか
 
-[一般化した検証手順](method/spec-to-verification-method.md)で、仕様→要求→刺激・観測・判定→証跡という対応を確認します。[検証領域の点検](method/verification-gap-review.md)と[適用範囲の雛形](templates/verification-scope.md)で担当・構成・開発段階を決め、小さなIPの少数の要求を対象に検証手順を一通り実施します。動く例から入る場合は[IRQ・CDCの実行例](../examples/local-irq-cdc/README.md)を実行してください。
+[一般化した検証手順](method/spec-to-verification-method.md)で、仕様→要求→刺激・観測・判定→証跡という対応を確認します。[検証領域の点検](method/verification-gap-review.md)と[適用範囲の雛形](templates/verification-scope.md)で担当・構成・開発段階を決め、小さなIPの少数の要求を対象に検証手順を一通り実施します。動く例から入る場合は[同期FIFO](../examples/local-fifo/README.md)から試せます。CDC・X検査まで見るなら[IRQ・CDCの実行例](../examples/local-irq-cdc/README.md)へ進みます。
 
 仕様課題から計画・実行・仕様変更・完了または保留の判断までを通す場合は、[APB＋割り込みの総合演習](capstone-apb-irq/README.md)を使えます。目的から例を選ぶ入口は[READMEの学習案内](../README.md#学びたいことから選ぶ)です。
 
@@ -214,7 +214,7 @@ CIが成功していても、MR（GitHubではPR）がDraftならマージはブ
 
 予定と実行結果の欠落、ビルド、実行環境、DUTの比較失敗、チェッカー・期待値、必須目標の未達を切り分けます。マニフェスト、ツール版、ビルドログ、ケース別ログ・波形、summary、カバレッジ、JUnitを実行IDでたどります。実行例では意図した変異・X検出が成功項目になるので、通常回路の失敗と区別してください。再実行で合格しても最初の失敗は残します。中断時は最終JUnitやsummaryが完成しない場合もあるため、途中の記録から調べます。[保存する証跡](../examples/local-irq-cdc/README.md#4-保存するものと判定)と[継続リグレッションの手順](method/continuous-regression.md)を参照してください。
 
-具体的な調査手順は[失敗解析](method/failure-analysis.md)、元の失敗と修正後の記録は[不具合票](templates/verification-issue.md)へつなげます。[実習](../examples/local-failure-triage/README.md)では、5種類の失敗を実際に発生させ、同じ入力で修正後の結果まで確認できます。
+具体的な調査手順は[失敗解析](method/failure-analysis.md)、元の失敗と修正後の記録は[不具合票](templates/verification-issue.md)へつなげます。[実習](../examples/local-failure-triage/README.md)では、6種類の問題を実際に発生させ、同じ入力で修正後の結果まで確認できます。
 
 ## 8. 変更後の再確認と完了判断
 
@@ -398,7 +398,7 @@ python3 examples/local-code-coverage/run.py
 
 ### Q62. 複数モニターのwriteが届いた順に、スコアボードを更新してよいですか
 
-到着順が仕様上の動作順序になる根拠を確認します。同時受理や複数クロックでは、観測時刻・ID・因果関係を記録し、同時刻の処理規則も定めます。[複数クロック例](../examples/local-uvm-multiclock/README.md#2-環境と観測時刻)は、通知遅延の上限2nsより長い3nsを待って時刻順に処理し、通知順序を入れ替えて同じ結果になるかを検査します。任意の遅延へそのまま使える方式ではありません。
+到着順が仕様上の動作順序になる根拠を確認します。同時受理や複数クロックでは、観測時刻・ID・因果関係を記録し、同時刻の処理規則も定めます。[複数クロック例](../examples/local-uvm-multiclock/README.md#2-環境と観測時刻)は、通知遅延の上限2nsより長い3nsを待って時刻順に処理します。resetの通知が先に届く受理・完了を誘導して発生させ、到着順に処理するscoreboardの検出と、通知遅延を入れ替えても処理順が同じことを検査します。任意の遅延へそのまま使える方式ではありません。
 
 ### Q63. 片側だけresetしたとき、期待キューを空にすれば十分ですか
 
@@ -412,7 +412,7 @@ python3 examples/local-code-coverage/run.py
 
 ### Q65. ブロック単位のフォーマルが通れば、接続後も証明済みですか
 
-下位の仮定を上流・配線が満たすことと、証明の構成・版・依存関係を確認します。仮定を循環して保証したり、配線違いを見落としたりしないようにします。[分割証明例](../examples/local-compositional-formal/README.md)では、送信側の保持保証、受信側の条件付き保証、実配線での仮定の成立、結合実装の直接証明を分け、証明の欠落・古い版・循環等を拒否します。
+下位の仮定を上流・配線が満たすことと、証明の構成・版・依存関係を確認します。仮定を循環して保証したり、配線違いを見落としたりしないようにします。[分割証明例](../examples/local-compositional-formal/README.md)では、送信側の保持保証、それを仮定した配線の証明、受信側の条件付き保証を順に受け渡します。結合実装の直接証明は別の検算です。証明の欠落・古い版・循環・未解消の仮定等を拒否します。
 
 ### Q66. 例数、ジョブ数、JUnit件数、要求数が違うのはなぜですか
 

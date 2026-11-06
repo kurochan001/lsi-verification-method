@@ -2,7 +2,7 @@
   "schema_version": 1,
   "revision": 1,
   "requirements": [
-    {"id":"IMAGE-MATH","description":"ゼロパディングした3×3 Sobelの絶対値和を8ビットへ飽和し全画素を比較する","goals":["pixel/corner","pixel/edge","pixel/interior","value/zero","value/linear","value/saturated"]},
+    {"id":"IMAGE-MATH","description":"ゼロパディングした3×3 Sobelの絶対値和を8ビットへ飽和し全画素を比較する","goals":["pixel/corner","pixel/edge","pixel/interior","value/zero","value/linear","value/below-saturation","value/saturation-boundary","value/saturated"]},
     {"id":"IMAGE-STREAM","description":"入力の空き・出力待ち・連続フレームでも受理と出力の順序を保つ","goals":["input/gap","input/backpressure","output/hold","frame/continuous","frame/last"]},
     {"id":"IMAGE-RESET","description":"処理中のリセットで履歴を捨て再開する","goals":["reset/mid-frame"]}
   ]

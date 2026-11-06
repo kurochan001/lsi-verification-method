@@ -1,9 +1,9 @@
 {
   "schema_version":1,"revision":1,
   "requirements":[
-    {"id":"NET-REPLY","goals":["reply/arp","reply/udp","frame/minimum","frame/maximum","udp/empty","udp/odd","udp/zero-input","udp/ffff-checksum"]},
-    {"id":"NET-REJECT","goals":["drop/crc","drop/length","drop/link","drop/filter","drop/format","drop/ip-checksum","drop/udp-checksum","drop/unsupported","drop/oversize"]},
-    {"id":"NET-FLOW","goals":["flow/tx-hold","flow/rx-unthrottled","flow/full","drop/full"]},
+    {"id":"NET-REPLY","goals":["reply/arp","reply/udp","frame/minimum","frame/maximum","udp/empty","udp/odd","udp/zero-input","udp/ffff-checksum","arp/unicast-input"]},
+    {"id":"NET-REJECT","goals":["drop/crc","drop/length","drop/link","drop/filter","drop/format","drop/ip-checksum","drop/udp-checksum","drop/unsupported","drop/oversize","drop/link-first-byte","drop/link-last-byte"]},
+    {"id":"NET-FLOW","goals":["flow/tx-hold","flow/rx-unthrottled","flow/full","flow/same-edge-reuse","drop/full"]},
     {"id":"NET-RESET","goals":["reset/receive","reset/transmit"]}
   ]
 }

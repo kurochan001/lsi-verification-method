@@ -97,6 +97,6 @@ python3 -m unittest discover -s examples/local-riscv-iss/tests -v
 
 ## 確認範囲
 
-2026-10-31に、Python 3.14.7、Icarus Verilog 14.0開発版で、smoke／nightly、16目標、4種類の変異、セルフテスト10件が成功しました。アセンブラの照合にはLLVM 23.1.4の`llvm-mc`を使いました。Verilator 5.052の`--lint-only -Wall`では、変異0〜4のどれでも警告はありません。
+2026-11-07に、Python 3.14.7、Icarus Verilog 14.0開発版で、smoke／nightly、16目標、4種類の変異、セルフテスト10件が成功しました。アセンブラの照合にはLLVM 23.1.4の`llvm-mc`を使いました。Verilator 5.052の`--lint-only -Wall`では、変異0〜4のどれでも警告はありません。
 
 この例の対象は、RV32Iのうちワード単位のロード・ストアと演算・分岐・ジャンプです。バイト・ハーフワードのアクセス、分岐予測、例外と割り込み（境界に合わない番地、ECALL・CSRを含む）は、それぞれ別の例で扱います。FENCE、機械モード以外の特権モード、圧縮命令、M拡張、キャッシュは扱いません。比較は与えた命令列の範囲で行うもので、すべての命令列について正しさを示すものではありません。形式的に示す方法には、退出のポートを使う[riscv-formal](https://github.com/YosysHQ/riscv-formal)があります。

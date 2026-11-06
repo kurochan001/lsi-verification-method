@@ -31,6 +31,12 @@ class EncoderTests(unittest.TestCase):
     def test_origin_and_reset_override_counts(self):
         q=M.Encoder();q.step(1,0,1,-123);self.assertEqual(q.position,-123);q.step(0,3,1,123);self.assertEqual(q.position,0)
 
+    def test_origin_write_wins_over_a_count_on_the_same_edge(self):
+        for p in PARS:
+            c=C.Campaign(p);c.hold(p['FILTER']+3)
+            for _ in range(p['FILTER']+2):c.tick(raw=1)
+            c.tick(raw=1,origin_en=1,origin=500);self.assertEqual((c.q.position,c.q.step_flag),(500,0));self.assertEqual(c.q.previous,1)
+
 class PwmTests(unittest.TestCase):
     def test_writes_wait_for_boundary_and_same_edge_write_wins(self):
         p=M.PWM();p.step(1,1,0,0,0);p.step(1,1,0,1,4);self.assertEqual((p.active,p.shadow),(8,4))

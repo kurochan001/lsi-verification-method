@@ -62,7 +62,7 @@ stateDiagram-v2
 
 RTLは経過カウンターを使い、Pythonは絶対時刻のサービス履歴・反映履歴から期限を求めます。全サイクルで、受付可能、状態、指令、原因、IRQ、反映・取消、検査通過・破棄、キューを照合します。
 
-[5要求・22目標](requirements.json)は、MIN／MAXの境界、サービス連続提示、正常指令の期限直前反映、CRC・ID・順序の不正入力が続く場合の期限、範囲外、複数故障、未完了指令と故障の競合、ack、許可なしの復帰、復帰とARMの同時提示、リセット取消を含みます。ランダム試験は正常動作と故障・復帰を含む6／24エピソードを、smoke 1 seed／nightly 3 seedで追加します。
+[5要求・23目標](requirements.json)は、MIN／MAXの境界、サービス連続提示、正常指令の期限直前反映、CRC・ID・順序の不正入力が続く場合の期限、範囲外、複数故障、未完了指令と故障の競合、ack、許可なしの復帰、復帰とARMの同時提示、リセット取消、OFF中の外部故障を含みます。ランダム試験は正常動作と故障・復帰を含む6／24エピソードを、smoke 1 seed／nightly 3 seedで追加します。
 
 早期監視の無効化、遅延判定の1サイクルずれ、不正フレームによる期限延長、故障と同時の誤反映、ackによる故障解除の5種類を、両構成で指定チェッカーにより検出します。
 
@@ -74,7 +74,7 @@ python3 examples/local-automotive-ecu/run.py --profile nightly --out artifacts/a
 python3 -m unittest discover -s examples/local-automotive-ecu/tests -v
 ```
 
-Python 3.10以上と[固定版Icarus](../../tools/ENVIRONMENT.md)を使います。smokeは28、nightlyは32判定です。既定seedは17、nightlyは17／18／19です。
+Python 3.10以上と[固定版Icarus](../../tools/ENVIRONMENT.md)を使います。smokeは30、nightlyは34判定です。既定seedは17、nightlyは17／18／19です。
 
 完了件数は`inputs=validated+rejected`と、`validated=applied+cancelled+reset_cancels`を要求します。リセットによる取消は通常の取消と分けます。最後にキューが空、enable=0、指令=0であることも確認します。
 

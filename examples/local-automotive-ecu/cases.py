@@ -3,7 +3,7 @@ import importlib.util
 from pathlib import Path
 import random
 spec=importlib.util.spec_from_file_location('ecu_reference',Path(__file__).with_name('model.py'));M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
-NAMES=('window-boundaries','early-late','freshness-errors','shutdown-pending','recovery-reset','range-priority')
+NAMES=('window-boundaries','early-late','freshness-errors','shutdown-pending','recovery-reset','range-priority','off-external')
 class Campaign:
     def __init__(self,p):
         self.p=p;self.m=M.ECU(p);self.rows=[];self.expected=[];self.last_rst=0
@@ -60,6 +60,10 @@ def make(name,p,seed=17,iterations=12):
     elif name=='range-priority':
         c.start();c.send(payload=1001);c.tick()
         c.start();c.advance(hi-2,service_at=hi+1);c.send(payload=1001);c.tick(disarm=1,ack=1)
+    elif name=='off-external':
+        # OFF also latches the external input, and the fault beats a simultaneous ARM.
+        c.tick(rst=0);c.tick(external=1);c.tick();c.tick(recover=1,permit=1)
+        c.tick(arm=1,external=1);c.tick(recover=1,permit=1);c.tick(arm=1);c.send(payload=5);c.tick()
     elif name=='random':
         rng=random.Random(seed)
         for _ in range(iterations):

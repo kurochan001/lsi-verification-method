@@ -192,23 +192,40 @@ def run_bus(args,out,results):
     SUPPORT.write_json(out/'bus-report.json',report)
 
 
-def run_fixtures(args,out,results):
+def fixture_plan():
     for native_build in (False,True):
         for bus in (0,1):
             name=('sva' if native_build else 'four-state')+('-ahb' if bus==0 else '-axi')
-            execution,binary=build(args,out/(name+'-build'),'checker_tb',[*CHECKERS,HERE/'tb/checker_tb.sv'],{'BUS':bus},native_build)
             fixtures=([(1,'PROTO_AHB_ERROR'),(2,'PROTO_AHB_ADDRESS'),(3,'PROTO_AHB_DATA'),(7,'PROTO_AHB_ERROR')] if bus==0 else
                       [(1,'PROTO_AXI_AW'),(2,'PROTO_AXI_W'),(3,'PROTO_AXI_AR'),(4,'PROTO_AXI_B'),(5,'PROTO_AXI_R'),(6,'PROTO_AXI_CAUSALITY'),(10,'PROTO_AXI_CREDIT'),(11,'PROTO_AXI_CAUSALITY')])
             if not native_build:fixtures += [(4,'PROTO_AHB_X'),(5,None)] if bus==0 else [(7,'PROTO_AXI_X'),(8,None)]
-            fixtures += [(6 if bus==0 else 9,None)]
-            for scenario,label in fixtures:
-                d=out/(name+f'-scenario{scenario}');d.mkdir()
-                e=SUPPORT.execute([*binary,f'+SCENARIO={scenario}',f'+WAVE={d/"wave.vcd"}'],d/'simulation.log',args.timeout,d) if not execution['error'] and execution['returncode']==0 else dict(error='build failed',returncode=None,seconds=0)
-                log=(d/'simulation.log').read_text(errors='replace') if (d/'simulation.log').exists() else ''
-                checks=5 if bus==0 and scenario==6 else 4
-                status,message=SUPPORT.classify(dict(checks=checks,expected_failure=label),e,log)
-                record=dict(id=d.name,status=status,message=message,seconds=e['seconds']);results.append(record);SUPPORT.write_json(d/'result.json',record)
-                print(status.upper(),d.name,message,flush=True)
+            yield name,native_build,bus,[*fixtures,(6 if bus==0 else 9,None)]
+
+
+def check_ids(args):
+    """The result inventory, frozen before execution so that it cannot shrink with the evidence."""
+    ids=[]
+    if args.stage in ('all','bus'):
+        for bus,plugin in [('ahb',AHB),('axi',AXI)]:
+            ids.append('lint-'+bus)
+            for config,parameters in plugin.CONFIGS.items():
+                ids+=[f"{bus}-{config}-{case['id']}" for case in cases(bus,parameters,args)]+[f'{bus}-{config}-cross-and-sva-gate']
+    if args.stage in ('all','fixtures'):
+        ids+=[f'{name}-scenario{scenario}' for name,_,_,fixtures in fixture_plan() for scenario,_ in fixtures]+['actual-async-reset']
+    return ids+[stage for stage in ('bridges','axi4') if args.stage in ('all',stage)]
+
+
+def run_fixtures(args,out,results):
+    for name,native_build,bus,fixtures in fixture_plan():
+        execution,binary=build(args,out/(name+'-build'),'checker_tb',[*CHECKERS,HERE/'tb/checker_tb.sv'],{'BUS':bus},native_build)
+        for scenario,label in fixtures:
+            d=out/(name+f'-scenario{scenario}');d.mkdir()
+            e=SUPPORT.execute([*binary,f'+SCENARIO={scenario}',f'+WAVE={d/"wave.vcd"}'],d/'simulation.log',args.timeout,d) if not execution['error'] and execution['returncode']==0 else dict(error='build failed',returncode=None,seconds=0)
+            log=(d/'simulation.log').read_text(errors='replace') if (d/'simulation.log').exists() else ''
+            checks=5 if bus==0 and scenario==6 else 4
+            status,message=SUPPORT.classify(dict(checks=checks,expected_failure=label),e,log)
+            record=dict(id=d.name,status=status,message=message,seconds=e['seconds']);results.append(record);SUPPORT.write_json(d/'result.json',record)
+            print(status.upper(),d.name,message,flush=True)
     execution,binary=build(args,out/'reset-build','reset_tb',[AHB.SOURCES[0],AXI.SOURCES[0],*CHECKERS,HERE/'tb/reset_tb.sv'],{},False)
     d=out/'actual-async-reset';d.mkdir()
     e=SUPPORT.execute([*binary,f'+WAVE={d/"wave.vcd"}'],d/'simulation.log',args.timeout,d) if not execution['error'] and execution['returncode']==0 else dict(error='build failed',returncode=None,seconds=0)
@@ -233,7 +250,8 @@ def main():
     out=args.out.resolve();out.mkdir(parents=True);results=[]
     sources=[Path(__file__),SUPPORT_PATH,*CHECKERS,HERE/'sim_main.cpp',*HERE.glob('tb/*.sv'),
              Path(AHB.__file__),*AHB.SOURCES,Path(AXI.__file__),*AXI.SOURCES]
-    SUPPORT.write_json(out/'manifest.json',dict(profile=args.profile,stage=args.stage,seed=args.seed,transfers=args.transfers,
+    planned=check_ids(args)
+    SUPPORT.write_json(out/'manifest.json',dict(profile=args.profile,stage=args.stage,seed=args.seed,transfers=args.transfers,check_ids=planned,
         source_sha256={str(f.relative_to(ROOT)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sources}))
     versions={}
     for name in (('verilator','iverilog','vvp') if args.stage in ('all','fixtures') else ('verilator',) if args.stage=='bus' else ()):
@@ -251,8 +269,9 @@ def main():
                 ok=not e['error'] and e['returncode']==0 and child.exists() and json.loads(child.read_text())['success']
                 results.append(dict(id=stage,status='pass' if ok else 'error',message='child regression',seconds=e['seconds']))
     except (OSError,ValueError,KeyError,TypeError) as exc:results.append(dict(id='runner',status='error',message=str(exc),seconds=0))
-    success=bool(results) and all(r['status'] in ('pass','detected') for r in results)
-    SUPPORT.write_json(out/'summary.json',dict(success=success,results=results,scope=args.stage))
+    complete=[r['id'] for r in results]==planned
+    success=complete and all(r['status'] in ('pass','detected') for r in results)
+    SUPPORT.write_json(out/'summary.json',dict(success=success,complete=complete,planned=len(planned),results=results,scope=args.stage))
     suite=ET.Element('testsuite',name='bus.validation',tests=str(len(results)),failures=str(sum(r['status']=='fail' for r in results)),errors=str(sum(r['status']=='error' for r in results)))
     for r in results:
         n=ET.SubElement(suite,'testcase',name=r['id'],classname='bus.validation',time=f"{r['seconds']:.6f}")

@@ -2,7 +2,7 @@
 module top;
   bit clk=0,rst_n=0,event_accept=0,clear_accept=0,irq_en=0,launch=0;
   wire [3:0] pending_values,irq_values;
-  int mutation,model,sva_off,sva_mode,hang,planned,checks,fd,fields,r,e,c,en;
+  int mutation,model,sva_off,sva_mode,hang,planned,checks,compared,fd,fields,r,e,c,en;
   bit expected;
   wire pend=pending_values[mutation],irq=irq_values[mutation];
   for(genvar m=0;m<4;m++)begin: variants
@@ -45,12 +45,16 @@ module top;
       else if(clear_accept)expected=0;
       $display("TRACE cycle=%0d rst=%0d event=%0d clear=%0d enable=%0d pend=%0d irq=%0d expected=%0d",checks,rst_n,event_accept,clear_accept,irq_en,pend,irq,expected);
       checks++;
-      if(model!=2 && (pend!==expected || irq!==(expected && irq_en)))begin
-        $display("CHECK_FAIL TRIAGE_COMPARE");$fatal(1,"pending/reference mismatch");
+      if(model!=2)begin
+        compared++;
+        if(pend!==expected || irq!==(expected && irq_en))begin
+          $display("CHECK_FAIL TRIAGE_COMPARE");$fatal(1,"pending/reference mismatch");
+        end
       end
     end
     $fclose(fd);
     if(checks!=planned || launch || !rst_n || event_accept || clear_accept)$fatal(1,"missing final observation cycle");
+    $display("TRIAGE_COMPARED compared=%0d",compared);
     $display("RESULT PASS checks=%0d",checks);$finish;
   end
 endmodule

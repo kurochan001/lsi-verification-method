@@ -35,8 +35,15 @@ def run(a):
     try:L.diagnostics('%Warning-this is malformed');rejected=False
     except ValueError:rejected=True
     e.check('policy/malformed',rejected,'unrecognized diagnostic must not become zero warnings')
-    r=E.P.execute([str(e.out/'nonexistent-verilator')],e.out/'missing-tool.log',a.timeout,e.out);e.check('missing-tool',r['returncode'] is None and bool(r['error']) and 'No such file or directory' in r['error'],r)
-    r=E.P.execute([sys.executable,'-c','import time; time.sleep(60)'],e.out/'timeout.log',min(a.timeout,0.2),e.out);e.check('timeout',r['error']=='command timeout' and r['returncode'] is None,r)
+    # Tool faults go through the real lint gate: every target must fail, for the injected reason.
+    stalled=e.out/'stalled-verilator';stalled.write_text('#!/bin/sh\ncase "$1" in --version) echo "Verilator 5.052 2026-09-05 rev fixture";; *) exec sleep 60;; esac\n');stalled.chmod(0o755)
+    targets=[t['id'] for t in json.loads((ROOT/'tools/lint_targets.json').read_text())['targets']]
+    for name,verilator,limit,reason in [('missing-tool',e.out/'nonexistent-verilator',a.timeout,'No such file or directory'),('timeout',stalled,min(a.timeout,0.05),'command timeout')]:
+        r=E.P.execute([sys.executable,str(ROOT/'tools/run_lint.py'),'--verilator',str(verilator),'--timeout',str(limit),'--out',str(e.out/name)],e.out/(name+'.log'),a.child_timeout,e.out)
+        child=json.loads((e.out/name/'summary.json').read_text()) if (e.out/name/'summary.json').is_file() else {}
+        rows={x['id']:x for x in child.get('results',[])}
+        faulted=sorted(t for t in targets if rows.get(t,{}).get('status')=='fail' and reason in str(rows[t]['detail']['execution']['error']))
+        e.check(name,not r['error'] and r['returncode']==1 and child.get('success') is False and child.get('complete') is True and faulted==sorted(targets),dict(execution=r,targets=len(targets),faulted=len(faulted)))
     E.P.write_json(e.out/'fixture-executions.json',executions);return e.finish()
 def main():
     p=E.parser(__doc__,'local-lint');p.add_argument('--verilator',default='verilator');p.add_argument('--child-timeout',type=float,default=600)

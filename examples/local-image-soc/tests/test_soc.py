@@ -15,15 +15,29 @@ class FirmwareTests(unittest.TestCase):
 
     def test_all_scenarios_fit_rom_and_success_cases_compare_every_pixel(self):
         frames=S.MODEL.random_frames(7,5,17,2);gold=[S.MODEL.sobel(f,7,5) for f in frames]
-        for scenario in range(7):
-            binary=FW.program(frames,gold,scenario)
+        for scenario in range(9):
+            binary=FW.program(frames,gold,scenario,(7,5))
             self.assertLessEqual(len(binary),1024)
             reads=sum((word&0x707f)==0x2003 and ((word>>15)&31)==11 for word in binary)
             self.assertEqual(reads,0 if scenario in (1,2) else 70)
 
     def test_invalid_program_inputs_are_rejected(self):
-        for frames,expected,scenario in (([],[],0),([[0]],[],0),([[0]],[[0,1]],0),([[256]],[[0]],0),([[0]],[[0]],7)):
+        for frames,expected,scenario in (([],[],0),([[0]],[],0),([[0]],[[0,1]],0),([[256]],[[0]],0),([[0]],[[0]],9)):
             with self.subTest(frames=frames,scenario=scenario),self.assertRaises(ValueError):FW.program(frames,expected,scenario)
+
+    def test_relocated_buffers_touch_and_end_at_the_top_of_ram(self):
+        for pixels in (25,35):
+            self.assertEqual(FW.buffers(0,pixels),(0x1000,0x1400))
+            up,down=FW.buffers(7,pixels),FW.buffers(8,pixels)
+            self.assertEqual((up[0]+4*pixels,up[1]+4*pixels),(up[1],0x2000));self.assertEqual((down[1]+4*pixels,down[0]+4*pixels),(down[0],0x2000))
+
+    def test_each_invalid_start_breaks_one_term_only(self):
+        for pixels in (25,35):
+            span=4*pixels;seen=[]
+            for _,source,destination in FW.INVALID:
+                terms=(source%4!=0,destination%4!=0,source<0x1000,destination<0x1000,source+span>0x2000,destination+span>0x2000,not(source+span<=destination or destination+span<=source))
+                seen.append(sum(terms));self.assertGreaterEqual(sum(terms),1)
+            self.assertEqual(seen.count(1),len(seen))
 
     def test_oversized_rom_is_rejected(self):
         with self.assertRaisesRegex(ValueError,'ROM capacity'):FW.program([[0]*256]*3,[[0]*256]*3)
@@ -50,7 +64,7 @@ class EvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'retirement'):S.validate_completion(self.d,[[0,1]],self.counts,0,True)
 
     def test_error_interrupt_and_reset_cases_have_distinct_counts(self):
-        for scenario,counts in ((1,dict(self.counts,cpu_checks=0)),(3,dict(self.counts,irqs=4)),(5,dict(self.counts,resets=1))):
+        for scenario,counts in ((1,dict(self.counts,cpu_checks=0)),(3,dict(self.counts,irqs=10)),(5,dict(self.counts,resets=1))):
             S.validate_completion(self.d,[[0,1]],counts,scenario,True)
             with self.subTest(scenario=scenario),self.assertRaises(ValueError):S.validate_completion(self.d,[[0,1]],self.counts,scenario,True)
 

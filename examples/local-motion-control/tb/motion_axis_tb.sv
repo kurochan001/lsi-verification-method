@@ -8,7 +8,7 @@ module motion_axis_tb;
     always #5 clk=~clk;
     reg [31:0] v[0:13],e[0:44],obs[0:44];integer fd,ef,rc,checks,rows=0,resets=0,samples=0,updates=0,cancels=0,reset_cancels=0;
     integer plant_position=0,plant_velocity=0,load_torque=0,raw_phase=0,frozen_phase=0,old_mode=0,mode=0;
-    reg freeze=0,pre_hi,pre_lo,old_rst=0,old_armed,neutral_needed=0;reg [5:0] old_cause;integer last_on=0,off_cycles=999;
+    reg freeze=0,pre_hi,pre_lo,old_rst=0,old_armed,neutral_needed=0;reg [5:0] old_cause;reg signed [15:0] velocity_before;integer last_on=0,off_cycles=999;
     string vectors,expected,wave;
     function automatic integer gray(input integer n);case(n&3)0:gray=0;1:gray=1;2:gray=3;default:gray=2;endcase endfunction
     task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"row=%0d pos=%0d velocity=%0d cause=%h",rows,position,plant_velocity,cause);end endtask
@@ -25,11 +25,17 @@ module motion_axis_tb;
             else if(mode==1)begin if(old_mode!=1)frozen_phase=gray(plant_position>>>12);raw_phase=frozen_phase;end
             else raw_phase=mode==2 ? int'(v[12]):gray(plant_position>>>12);
             encoder_a=raw_phase[1];encoder_b=raw_phase[0];#1;
-            old_armed=armed;old_cause=cause;pre_hi=pwm_hi;pre_lo=pwm_lo;
+            old_armed=armed;old_cause=cause;pre_hi=pwm_hi;pre_lo=pwm_lo;velocity_before=dut.velocity;
             if(old_rst&&!rst_n)begin resets=resets+1;reset_cancels=reset_cancels+int'(dut.busy||dut.done);if(dut.busy||dut.done)$display("COVER reset/pending");end old_rst=rst_n;
             if(rst_n&&origin_en&&old_armed)$display("COVER origin/ignored-running");
             if(rst_n&&origin_en&&arm&&!old_armed)$display("COVER origin/atomic-arm");
             if(rst_n&&dut.tick&&dut.done&&dut.event_cause==0)$display("COVER deadline/boundary-on-time");
+            if(rst_n&&arm&&!old_armed&&!estop&&dut.enc_invalid)$display("COVER recovery/arm-refused-encoder");
+            if(rst_n&&arm&&!old_armed&&!estop&&dut.enc_wrapped)$display("COVER recovery/arm-refused-wrap");
+            if(rst_n&&dut.enabled&&dut.busy&&!compute_hold&&dut.controller.remaining==0)begin
+                if(dut.controller.rounded==PERIOD/2+1)$display("COVER control/limit-plus-one");
+                if(dut.controller.rounded==-(PERIOD/2)-1)$display("COVER control/limit-minus-one");
+            end
             @(posedge clk);#1;rows=rows+1;
             if(!rst_n)begin plant_position=0;plant_velocity=0;raw_phase=0;frozen_phase=0;old_mode=0;neutral_needed=0;end
             else begin
@@ -60,7 +66,7 @@ module motion_axis_tb;
                 if(cancelled&&cause!=0)$display("COVER fault/cancel");if(ack&&!armed&&old_cause!=0)$display("COVER recovery/ack-keeps-off");
                 if(!old_armed&&armed&&old_cause!=0)$display("COVER recovery/neutral");
                 if(old_armed&&!armed&&cause!=0)begin
-                    if(cause[0])$display("COVER fault/estop");if(cause[1])$display("COVER fault/encoder");if(cause[2])$display("COVER fault/deadline");if(cause[3])$display("COVER fault/progress");if(cause[4])$display("COVER fault/overspeed");if(cause[5])$display("COVER fault/wrap");
+                    if(cause[0])$display("COVER fault/estop");if(cause[1])$display("COVER fault/encoder");if(cause[2])$display("COVER fault/deadline");if(cause[3])$display("COVER fault/progress");if(cause[4])$display("COVER fault/overspeed");if(cause[4]&&velocity_before<0)$display("COVER fault/overspeed-negative");if(cause[5])$display("COVER fault/wrap");
                 end
                 if(v[13]!=0)begin
                     if(!armed || cause!=0 || int'(position)-int'(target)>2 || int'(target)-int'(position)>2 || (plant_position>>>12)-int'(target)>3 || int'(target)-(plant_position>>>12)>3)fail("AXIS_TRACKING");

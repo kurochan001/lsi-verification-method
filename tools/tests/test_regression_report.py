@@ -74,6 +74,44 @@ class ReportTests(unittest.TestCase):
         T.R.save(good,jobs,rows,True,True,'changed campaign source');self.assertFalse(self.report(good)['success'])
         (good/'junit.xml').write_text('<testsuite tests="0"/>')
         with self.assertRaisesRegex(ValueError,'JUnit'):self.report(good)
+    def test_parent_junit_contradicting_summary_is_rejected(self):
+        good=self.campaign('good');p=good/'junit.xml';x=T.ET.parse(p);T.ET.SubElement(next(c for c in x.iter('testcase') if c.get('name')=='local-fixture'),'failure',message='hidden');x.write(p)
+        with self.assertRaisesRegex(ValueError,'contradicts summary'):self.report(good)
+    def test_contradictory_summary_and_changed_plan_count_are_rejected(self):
+        good=self.campaign('good');p=good/'summary.json';original=p.read_text()
+        for change,message in [(dict(complete=False),'contradictory'),(dict(planned=2),'completion plan')]:
+            p.write_text(json.dumps({**json.loads(original),**change}))
+            with self.subTest(change=change),self.assertRaisesRegex(ValueError,message):self.report(good)
+    def test_successful_row_needs_a_zero_returncode(self):
+        good=self.campaign('good');jobs=json.loads((good/'manifest.json').read_text())['jobs'];rows=json.loads((good/'summary.json').read_text())['results'];rows[0]['returncode']=1
+        T.R.save(good,jobs,rows,True,True);r=self.report(good);self.assertFalse(r['success']);self.assertEqual(r['results'][0]['status'],'fail')
+    def test_campaign_profile_must_match_the_plan(self):
+        good=self.campaign('good');p=good/'manifest.json';m=json.loads(p.read_text());m['profile']='smoke';p.write_text(json.dumps(m))
+        r=self.report(good);self.assertFalse(r['success']);self.assertIn('profile',r['results'][0]['reason'])
+    def test_changes_while_reporting_are_rejected(self):
+        real=T.R.inspect_output
+        good=self.campaign('good')
+        def edit_artifact(*args,**kwargs):
+            (good/'junit.xml').write_text((good/'junit.xml').read_text()+'\n');return real(*args,**kwargs)
+        with patch.object(T.R,'inspect_output',side_effect=edit_artifact):r=self.report(good)
+        self.assertFalse(r['success']);self.assertIn('changed while reporting',';'.join(r['errors']))
+        later=self.campaign('later')
+        def edit_plan_source(*args,**kwargs):
+            (self.root/'tools/run_regression.py').write_text('changed');return real(*args,**kwargs)
+        with patch.object(T.R,'inspect_output',side_effect=edit_plan_source),self.assertRaisesRegex(ValueError,'stale source'):self.report(later)
+    def test_final_audit_rejects_an_adopted_result(self):
+        good=self.campaign('good')
+        with patch.object(T.R,'inspect_output',side_effect=[dict(junit=1,source_hashes=1),ValueError('replaced evidence')]):r=self.report(good)
+        self.assertFalse(r['success']);self.assertIsNone(r['results'][0]['selected']);self.assertIn('final audit: replaced evidence',r['results'][0]['reason'])
+    def test_matrix_value_must_match_the_child_manifest(self):
+        entry=self.entries['local-fixture'];entry.update(matrix={'width':[8]},matrix_evidence={'width':'configuration.width'})
+        self.registry.write_text(json.dumps(dict(schema_version=1,examples=list(self.entries.values()))))
+        self.plan['jobs']=T.R.make_plan(self.entries,self.args,self.root);self.plan['source_sha256']['tools/regressions.json']=T.digest(self.registry)
+        good=self.campaign('good');child=Path(json.loads((good/'manifest.json').read_text())['jobs'][0]['out'])/'manifest.json';record=json.loads(child.read_text())
+        for value,success in [(16,False),(8,True)]:
+            child.write_text(json.dumps(dict(record,configuration=dict(width=value))))
+            with self.subTest(value=value):self.assertEqual(self.report(good)['success'],success)
+        child.write_text(json.dumps(record));r=self.report(good);self.assertFalse(r['success']);self.assertIn('missing configuration',r['results'][0]['reason'])
     def test_oss_snapshot_is_included_in_report_input_hashes(self):
         good=self.campaign('good');snapshot=good/'runs/local-fixture/oss-source.json'
         snapshot.write_text('{"root":"fixture"}')

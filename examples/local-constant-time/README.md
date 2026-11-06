@@ -20,7 +20,7 @@ flowchart LR
 
 回路は`start && ready`で秘密値と比較値を取り込み、1サイクルに1バイトを比較します。受理端から`BYTES`サイクル後に`result_valid`を有効にし、`match`に一致／不一致を出します。不一致の位置によらず、全バイトを処理します。結果は受け取られるまで保持し、処理中・結果保留中のstartを無視します。リセットでは処理を取り消します。
 
-`match`は、`result_valid`時に公開を許す情報です（declassification）。秘密値によって一致／不一致が違うことは仕様どおりなので、2回路の`match`同士は比較しません。代わりに、それぞれが受理時の秘密値と比較値の等値判定に一致することを、別の期待値で確認します。
+`match`は、`result_valid`時に公開を許す情報です（declassification）。秘密値によって一致／不一致が違うことは仕様どおりなので、2回路の`match`同士は比較しません。代わりに、それぞれが受理時の秘密値と比較値の等値判定に一致することを、別の期待値で確認します。処理中の`match`は0のままで、途中まで一致したかどうかを出しません。待機中は、最後に公開した結果（リセットの後は0）を保持するだけで、秘密入力に追従しません。
 
 ## 証明する性質
 
@@ -28,6 +28,8 @@ flowchart LR
 | --- | --- |
 | `ap_timing` | 2回路のready・busy・result_validが一致し、独立した固定時間モデルとも一致する |
 | `ap_public` | public_statusが秘密値に依存しない |
+| `ap_match_quiet` | 処理中は、両方の回路の`match`が0である |
+| `ap_match_idle` | 待機中は、両方の回路の`match`が変わらない |
 | `ap_result` | 結果が、それぞれ受理時に取り込んだ2値の等値判定と一致する |
 | `ap_hold` | リセットされない限り、受取り待ちの結果を保持する |
 | `ai_model_bounds` | 証明用の残りサイクル数が0〜BYTESの範囲内にある補助不変条件 |
@@ -55,7 +57,7 @@ python3 -m unittest discover -s examples/local-constant-time/tests -v
 
 `--demo-bug 1..4`は証明対象にも誤りを入れ、証明がFAILになることを確認します。6セルフテストではIcarusを使い、各不一致位置のレイテンシ、処理中の入力変更とstart、結果の保持、リセット時の取消しと作業レジスタの消去、4変異の検出を照合します。
 
-2026-10-31に、固定版YoWASP Yosys／SBY／Z3で12タスクが成功しました（各SBYタスクの実行時間の合計は約25秒）。Python 3.14.7・Icarus Verilog 14.0開発版で6セルフテストも成功しました。Verilator 5.052で両構成・変異0〜4をlintしています。[SBYのプロパティ記述方法](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、回路と検査ハーネスは本教材向けに作成しました。
+2026-11-07に、固定版YoWASP Yosys／SBY／Z3で12タスクが成功しました（各SBYタスクの実行時間の合計は約28秒）。Python 3.14.7・Icarus Verilog 14.0開発版で6セルフテストも成功しました。Verilator 5.052で両構成・変異0〜4をlintしています。[SBYのプロパティ記述方法](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、回路と検査ハーネスは本教材向けに作成しました。
 
 ## 確認範囲
 

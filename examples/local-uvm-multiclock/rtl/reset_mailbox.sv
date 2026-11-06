@@ -12,11 +12,11 @@ module reset_mailbox #(parameter integer MUTATION=0)(
   reg [7:0] held_data,result;
   reg [15:0] held_id,result_id;
   wire channel_rst_n=src_rst_n && dst_rst_n;
-  wire sender_rst_n=src_channel_release[1];
-  wire receiver_rst_n=MUTATION==2 ? dst_release[1]:dst_channel_release[1];
+  wire sender_rst_n=MUTATION==4 ? channel_rst_n:src_channel_release[1];
+  wire receiver_rst_n=MUTATION==2 ? dst_release[1]:MUTATION==4 ? channel_rst_n:dst_channel_release[1];
   assign src_up=MUTATION==3 ? src_rst_n:src_release[1];
   assign dst_up=dst_release[1];
-  assign src_ready=channel_rst_n && sender_rst_n && src_up && dst_seen[1] && !req && !ack_sync[1];
+  assign src_ready=channel_rst_n && sender_rst_n && src_up && (MUTATION==5 || dst_seen[1]) && !req && !ack_sync[1];
   assign dst_valid=channel_rst_n && receiver_rst_n && dst_up && src_seen[1] && present;
   assign dst_data=result ^ (MUTATION==1 ? 8'h01:8'h00);
   assign dst_id=result_id;

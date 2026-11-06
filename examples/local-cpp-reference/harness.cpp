@@ -22,7 +22,7 @@ struct Test {
     FirReference model;
     std::deque<Pending> queue;
     unsigned cycle=0,accepted=0,retired=0,cancelled=0,resets=0;
-    bool held=false,after_reset=true;
+    bool held=false,after_reset=false,history_live=false;
     int held_data=0;
     Test(const char* vcd,const char* path,bool faulty):csv(path),model(CFG_WIDTH,faulty){
         if(!csv)fail("CPP_TRACE");
@@ -39,8 +39,15 @@ struct Test {
         bool transfer=false;
         if(!resetn){
             if(dut.in_ready || dut.out_valid)fail("CPP_RESET");
-            if(!queue.empty()){cancelled+=unsigned(queue.size());cover("reset/cancel");}
-            queue.clear();model.reset();held=false;after_reset=true;
+            if(!queue.empty()){
+                cancelled+=unsigned(queue.size());cover("reset/cancel");
+                // With LATENCY=3 this is the cycle where the processing wait is still running.
+                if(cycle==queue.front().due-CFG_LATENCY+1)cover("reset/cancel-first-cycle");
+            }
+            queue.clear();model.reset();held=false;
+            // A power-on reset clears nothing, so only a reset after real history is credited.
+            if(history_live)after_reset=true;
+            history_live=false;
         }else{
             if(held && (!dut.out_valid || data!=held_data))fail("CPP_HOLD");
             const bool due=!queue.empty() && cycle>=queue.front().due;
@@ -49,6 +56,7 @@ struct Test {
             if(bool(dut.in_ready)!=input_ready)fail("CPP_READY");
             if(dut.out_valid){
                 const auto& r=queue.front().result;
+                const std::int64_t limit=std::int64_t(1)<<(CFG_WIDTH-1);
                 if(data!=r.value)fail("CPP_DATA");
                 if(ready){
                     cover(data<0?"result/negative":data>0?"result/positive":"result/zero");
@@ -56,6 +64,8 @@ struct Test {
                     if(r.sum%4==-2)cover("round/tie-negative");
                     if(r.clip_high)cover("saturation/high");
                     if(r.clip_low)cover("saturation/low");
+                    if(r.clip_high && r.sum<4*limit+2)cover("saturation/high-boundary");
+                    if(r.clip_low && r.sum>-4*limit-6)cover("saturation/low-boundary");
                     if(r.history)cover("fir/history");
                     if(after_reset){cover("reset/history-clear");after_reset=false;}
                     cover("timing/latency");queue.pop_front();retired++;
@@ -63,7 +73,7 @@ struct Test {
             }
             if(valid && !dut.in_ready)cover("flow/input-stall");
             held=dut.out_valid && !ready;held_data=data;
-            if(valid && dut.in_ready){queue.push_back({model.accept(sample),cycle+CFG_LATENCY});accepted++;transfer=true;}
+            if(valid && dut.in_ready){queue.push_back({model.accept(sample),cycle+CFG_LATENCY});accepted++;transfer=true;history_live=history_live||sample!=0;}
             if(queue.size()>1)fail("CPP_OUTSTANDING");
         }
         dut.clk=1;dut.eval();wave.dump(context.time());context.timeInc(5);cycle++;
@@ -74,6 +84,10 @@ struct Test {
         while(!tick(true,true,17,false)){}
         while(!dut.out_valid)tick(true,false,0,false);
         for(int i=0;i<3;i++)tick(true,false,0,false);
+        reset();
+    }
+    void cancel_first_cycle(){
+        while(!tick(true,true,23,false)){}
         reset();
     }
     void stream(const std::vector<int>& samples,unsigned seed,bool stalls){
@@ -99,9 +113,9 @@ int main(int argc,char** argv){
         if(!input)fail("CPP_INPUT");while(input>>value)samples.push_back(value);
         if(!input.eof() || samples.size()!=expected || !expected)fail("CPP_INPUT");
         Test test(argv[6],argv[7],faulty);test.reset();
-        if(scenario=="reset")test.cancel_one();
+        if(scenario=="reset"){test.cancel_one();test.cancel_first_cycle();}
         test.stream(samples,seed,scenario!="basic");
-        const unsigned cancel=scenario=="reset"?1:0;
+        const unsigned cancel=scenario=="reset"?2:0;
         if(test.accepted!=expected+cancel || test.retired!=expected || test.cancelled!=cancel || !test.queue.empty())fail("CPP_COMPLETION");
         std::cout<<"COUNT accepted="<<test.accepted<<"\nCOUNT retired="<<test.retired<<"\nCOUNT cancelled="<<test.cancelled<<"\nCOUNT resets="<<test.resets<<'\n';
         std::cout<<"RESULT PASS checks="<<test.retired<<'\n';return 0;

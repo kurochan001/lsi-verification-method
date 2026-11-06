@@ -20,7 +20,7 @@ module image_soc_tb;
     reg [3:0] held_b;
     reg ar_hold=0,aw_hold=0,w_hold=0,r_hold=0,apb_hold=0,ahb_hold=0,b_hold=0;
     reg irq_old=0,reset_done=0,error_first=0;
-    integer invalid_seen=0;
+    integer invalid_seen=0,fault,src_base,dst_base,expected_apb,expected_ahb,apb_errors=0,ahb_errors=0,b_count=0,cpu_stores=0;
     integer frames,seed,scenario,cycles=0,pixels=0,completed=0,irqs=0,cpu_checks=0;
     integer rd_pixels=0,wr_pixels=0,issued=0,addressed=0,rleft=0,wleft=0,bcredit=0;
     integer cpu_mask[0:255];
@@ -31,7 +31,7 @@ module image_soc_tb;
     endtask
     task clear_epoch;
         begin
-            pixels=0;completed=0;irqs=0;cpu_checks=0;rd_pixels=0;wr_pixels=0;issued=0;addressed=0;rleft=0;wleft=0;bcredit=0;
+            pixels=0;completed=0;irqs=0;cpu_checks=0;rd_pixels=0;wr_pixels=0;issued=0;addressed=0;rleft=0;wleft=0;bcredit=0;apb_errors=0;ahb_errors=0;b_count=0;cpu_stores=0;
             ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;apb_hold=0;ahb_hold=0;b_hold=0;irq_old=0;invalid_seen=0;error_first=0;
             for(integer j=0;j<256;j=j+1)cpu_mask[j]=0;
         end
@@ -41,7 +41,8 @@ module image_soc_tb;
            !$value$plusargs("ROM=%s",rom_path) || !$value$plusargs("WAVE=%s",wave) ||
            !$value$plusargs("TRACE=%s",trace_path) || !$value$plusargs("RAMFILE=%s",ram_path) ||
            !$value$plusargs("FRAMES=%d",frames) || !$value$plusargs("SEED=%d",seed) ||
-           !$value$plusargs("SCENARIO=%d",scenario))$fatal(1,"arguments required");
+           !$value$plusargs("SCENARIO=%d",scenario) || !$value$plusargs("FAULT=%d",fault) || !$value$plusargs("SRC_BASE=%d",src_base) ||
+           !$value$plusargs("DST_BASE=%d",dst_base) || !$value$plusargs("APB_ERRORS=%d",expected_apb) || !$value$plusargs("AHB_ERRORS=%d",expected_ahb))$fatal(1,"arguments required");
         if(frames*N>256)$fatal(1,"capacity exceeded");
         #1; // The ROM module's default initialization precedes the harness image load.
         $readmemh(input_path,inputs,0,frames*N-1);$readmemh(expected_path,golden,0,frames*N-1);
@@ -54,11 +55,13 @@ module image_soc_tb;
         $fclose(fd);trace_fd=$fopen(trace_path,"w");ram_fd=$fopen(ram_path,"w");
         if(!trace_fd || !ram_fd)$fatal(1,"trace output failed");
         $dumpfile(wave);$dumpvars(2,image_soc_tb);
-        read_error=scenario==1;write_error=scenario==2;rng=32'(seed)|1;
+        rng=32'(seed)|1;
         clear_epoch();repeat(4)@(negedge clk);rst_n=1;
         while(!halted)begin
             rng={rng[30:0],rng[31]^rng[21]^rng[1]^rng[0]};
             memory_allow={rng[8:7]!=0,rng[6:5]!=0,rng[4:3]!=0,rng[2:1]!=0,rng[0]||rng[9]};
+            // FAULT<0 hits every response; otherwise only that read beat or write burst answers SLVERR.
+            read_error=scenario==1 && (fault<0 || rd_pixels==fault);write_error=scenario==2 && (fault<0 || b_count==fault);
             #1;
             if($isunknown({halted,bus_fault,irq,busy,done,error,dut.hready,dut.hresp,dut.arvalid,dut.awvalid,dut.wvalid,dut.rvalid,dut.bvalid}))fail("SOC_UNKNOWN");
             if($isunknown({dut.htrans,dut.cpu_valid,dut.cpu_ready}))fail("SOC_UNKNOWN");
@@ -85,8 +88,15 @@ module image_soc_tb;
             if(apb_hold && (!dut.psel || !dut.penable || {dut.paddr,dut.pwrite,dut.pwdata}!==held_apb[40:0]))fail("SOC_APB_HOLD");
             apb_hold=dut.psel && dut.penable && !dut.pready;held_apb={16'd0,dut.paddr,dut.pwrite,dut.pwdata};
             if(apb_hold)$display("COVER bus/apb-wait");
-            if(dut.psel && dut.penable && dut.pready && dut.pslverr)$display("COVER bus/apb-error");
-            if(dut.hresp && dut.hready)$display("COVER bus/ahb-error");
+            if(dut.psel && dut.penable && dut.pready && dut.pslverr)begin apb_errors=apb_errors+1;$display("COVER bus/apb-error");end
+            if(dut.hresp && dut.hready)begin
+                ahb_errors=ahb_errors+1;$display("COVER bus/ahb-error");
+                if(dut.cpu_addr>=32'h2000 && dut.cpu_addr[31:8]!=24'h400000)$display("COVER bus/unmapped-error");
+            end
+            if(dut.psel && dut.penable && dut.pready && !dut.pwrite && dut.paddr==20)begin
+                if(dut.prdata!==((32'(H)<<16)|32'(W)))fail("SOC_REG");
+                $display("COVER reg/shape-read");
+            end
             if(ar_hold && (!dut.arvalid || {dut.araddr,dut.arlen,dut.arsize,dut.arburst,dut.arid}!==held_ar))fail("SOC_AXI_HOLD");
             if(aw_hold && (!dut.awvalid || {dut.awaddr,dut.awlen,dut.awsize,dut.awburst,dut.awid}!==held_aw))fail("SOC_AXI_HOLD");
             if(w_hold && (!dut.wvalid || {dut.wdata,dut.wstrb,dut.wlast}!==held_w))fail("SOC_AXI_HOLD");
@@ -99,21 +109,23 @@ module image_soc_tb;
             b_hold=dut.bvalid && !dut.bready;held_b={dut.bid,dut.bresp};
             if(ar_hold || aw_hold || w_hold || r_hold)$display("COVER bus/axi-backpressure");
             if(dut.arvalid && dut.arready)begin
-                if(rleft!=0 || dut.araddr!=32'h1000+32'(4*issued) || dut.arsize!=2 || dut.arburst!=1 || dut.arid!=0 ||
+                if(rleft!=0 || dut.araddr!=32'(src_base)+32'(4*issued) || dut.arsize!=2 || dut.arburst!=1 || dut.arid!=0 ||
                    dut.arlen!=(N-issued>=4 ? 3 : N-issued-1))fail("SOC_AXI_READ");
                 rleft=int'(dut.arlen)+1;issued=issued+rleft;$display("COVER dma/read-burst");
                 if(dut.arlen!=3)$display("COVER dma/tail-burst");
             end
             if(dut.rvalid && dut.rready)begin
-                if(rleft==0 || dut.rid!=0 || dut.rlast!=(rleft==1) || dut.rresp!=(scenario==1 ? 2 : 0) ||
+                if(rleft==0 || dut.rid!=0 || dut.rlast!=(rleft==1) || dut.rresp!=(scenario==1 && (fault<0 || rd_pixels==fault) ? 2 : 0) ||
                    dut.rdata!=={24'd0,inputs[completed*N+rd_pixels]})fail("SOC_AXI_READ");
                 rleft=rleft-1;rd_pixels=rd_pixels+1;
                 if(dut.rresp!=0)$display("COVER dma/read-error");
+                if(dut.rresp!=0 && fault>=0)$display("COVER dma/read-error-single");
             end
             if(dut.awvalid && dut.awready)begin
-                if(bcredit!=0 || wleft!=0 || dut.awaddr!=32'h1400+32'(4*addressed) || dut.awsize!=2 || dut.awburst!=1 || dut.awid!=0 ||
+                if(bcredit!=0 || wleft!=0 || dut.awaddr!=32'(dst_base)+32'(4*addressed) || dut.awsize!=2 || dut.awburst!=1 || dut.awid!=0 ||
                    dut.awlen!=(N-addressed>=4 ? 3 : N-addressed-1))fail("SOC_AXI_WRITE");
                 wleft=int'(dut.awlen)+1;addressed=addressed+wleft;bcredit=1;$display("COVER dma/write-burst");
+                if(src_base!=4096)$display("COVER config/relocated");
             end
             if(dut.wvalid && dut.wready)begin
                 if(wleft==0 || dut.wlast!=(wleft==1) || dut.wstrb!=1)fail("SOC_AXI_WRITE");
@@ -121,28 +133,33 @@ module image_soc_tb;
                 wleft=wleft-1;wr_pixels=wr_pixels+1;pixels=pixels+1;
             end
             if(dut.bvalid && dut.bready)begin
-                if(bcredit!=1 || wleft!=0 || dut.bid!=0 || dut.bresp!=(scenario==2 ? 2 : 0))fail("SOC_AXI_WRITE");
-                bcredit=0;
+                if(bcredit!=1 || wleft!=0 || dut.bid!=0 || dut.bresp!=(scenario==2 && (fault<0 || b_count==fault) ? 2 : 0))fail("SOC_AXI_WRITE");
+                bcredit=0;b_count=b_count+1;
                 if(dut.bresp!=0)$display("COVER dma/write-error");
+                if(dut.bresp!=0 && fault>=0)$display("COVER dma/write-error-single");
                 if(wr_pixels==N)$display("COVER completion/last-b-response");
             end
             if(dut.ram_req && !dut.ram_ready && dut.wvalid && dut.wready)$display("COVER ram/cpu-dma-contention");
+            if(dut.ram_req && dut.ram_write && !dut.ram_ready && dut.wvalid && dut.wready)$display("COVER ram/cpu-store-contention");
             if(irq && !irq_old)begin
                 irqs=irqs+1;
-                if(scenario==3 && invalid_seen<3)begin
+                if(scenario==3 && invalid_seen<9)begin
                     if(busy || done || !error || issued!=0 || addressed!=0 || bcredit!=0)fail("SOC_INVALID_CONFIG");
                     if(invalid_seen==0)$display("COVER config/unaligned");
                     else if(invalid_seen==1)$display("COVER config/range");
-                    else $display("COVER config/overlap");
+                    else if(invalid_seen==2)$display("COVER config/overlap");
+                    else if(invalid_seen<=4)$display("COVER config/destination");
+                    else if(invalid_seen<=6)$display("COVER config/below-ram");
+                    else $display("COVER config/overlap-either");
                     invalid_seen=invalid_seen+1;$display("COVER config/rejected");
                 end else begin
                     if(busy || rleft!=0 || bcredit!=0 || wleft!=0 || rd_pixels!=N || wr_pixels!=N)fail("SOC_COMPLETION");
                     if(done!==(scenario!=1 && scenario!=2) || error!==(scenario==1 || scenario==2))fail("SOC_STATUS");
                     for(integer j=0;j<N;j=j+1)begin
-                        if(dut.memory.ram[256+j]!== (32'ha5a50000|32'(golden[completed*N+j])))fail("SOC_RAM");
-                        $fdisplay(ram_fd,"%08x",dut.memory.ram[256+j]);
+                        if(dut.memory.ram[(dst_base-4096)/4+j]!== (32'ha5a50000|32'(golden[completed*N+j])))fail("SOC_RAM");
+                        $fdisplay(ram_fd,"%08x",dut.memory.ram[(dst_base-4096)/4+j]);
                     end
-                    completed=completed+1;rd_pixels=0;wr_pixels=0;issued=0;addressed=0;
+                    completed=completed+1;rd_pixels=0;wr_pixels=0;issued=0;addressed=0;b_count=0;
                     $display("COVER completion/irq");
                     if(completed>1)$display("COVER frame/restart");
                 end
@@ -151,9 +168,9 @@ module image_soc_tb;
             if(dut.cpu_valid && dut.cpu_ready)begin
                 if(dut.cpu_write && dut.cpu_be!=15)fail("SOC_CPU_ACCESS");
                 if(!dut.cpu_write && dut.cpu_addr<32'h1000)$display("COVER boot/rom-data");
-                if(!dut.cpu_write && dut.cpu_addr>=32'h1400 && dut.cpu_addr<32'h1400+4*N)begin
+                if(!dut.cpu_write && dut.cpu_addr>=32'(dst_base) && dut.cpu_addr<32'(dst_base)+4*N)begin
                     if(completed==0)fail("SOC_FIRMWARE");
-                    index=int'((dut.cpu_addr-32'h1400)/4);frame_index=completed-1;
+                    index=int'((dut.cpu_addr-32'(dst_base))/4);frame_index=completed-1;
                     if(dut.cpu_rdata!==(32'ha5a50000|32'(golden[frame_index*N+index])) || cpu_mask[frame_index*N+index]!=0)fail("SOC_FIRMWARE");
                     cpu_mask[frame_index*N+index]=1;cpu_checks=cpu_checks+1;$display("COVER firmware/pixel-check");
                 end
@@ -167,6 +184,7 @@ module image_soc_tb;
                     $display("COVER firmware/interrupt");
                 end
                 if(ret_insn==32'h30200073)$display("COVER firmware/mret");
+                if(ret_mem==2 && ret_mem_addr==32'h1800)cpu_stores=cpu_stores+1;
             end
             @(posedge clk);#1;@(negedge clk);
             if(!reset_done && ((scenario==5 && rd_pixels>=3) || (scenario==6 && wr_pixels>=2)))begin
@@ -179,10 +197,13 @@ module image_soc_tb;
             end
             cycles=cycles+1;if(cycles>200000)fail("SOC_TIMEOUT");
         end
-        if(completed!=frames || pixels!=frames*N || irqs!=frames+3*(scenario==3) ||
+        if(completed!=frames || pixels!=frames*N || irqs!=frames+9*(scenario==3) ||
            cpu_checks!=(scenario==1 || scenario==2 ? 0 : frames*N) ||
-           (scenario==3 && invalid_seen!=3) || ((scenario==5 || scenario==6) && !reset_done) ||
+           (scenario==3 && invalid_seen!=9) || ((scenario==5 || scenario==6) && !reset_done) ||
            bus_fault!==(scenario==4) || dut.memory.ram[1023]!==32'h600d600d)fail("SOC_FIRMWARE");
+        // Every retired store to the scratch counter must be in RAM, including those stalled behind a DMA write.
+        if(dut.memory.ram[512]!==32'(cpu_stores))fail("SOC_CPU_RAM");
+        if(apb_errors!=expected_apb || ahb_errors!=expected_ahb)fail("SOC_BUS_ERRORS");
         $display("COUNT frames=%0d",completed);$display("COUNT pixels=%0d",pixels);
         $display("COUNT irqs=%0d",irqs);$display("COUNT cpu_checks=%0d",cpu_checks);$display("COUNT resets=%0d",reset_done);
         $display("RESULT PASS checks=%0d",pixels);$fclose(trace_fd);$fclose(ram_fd);$finish;

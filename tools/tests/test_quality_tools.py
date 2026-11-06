@@ -12,6 +12,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
+(ROOT/'artifacts').mkdir(exist_ok=True)  # git-ignored, so absent from a fresh clone; some tests need a temporary inside the repository
 sys.path.insert(0,str(ROOT/'tools'))
 import quality_common as Q
 import check_docs as D
@@ -156,6 +157,13 @@ class DocumentTests(unittest.TestCase):
             return dict(error=None,returncode=0)
         with patch.object(Q.P,'execute',side_effect=execute):rc,result=self.run_docs()
         self.assertEqual(rc,1);self.assertFalse(result['success'])
+    def test_parser_exit_code_must_agree_with_its_result(self):
+        def execute(command,log,*args):
+            Path(log).write_text('');blocks=json.loads(Path(command[-2]).read_text())
+            Path(command[-1]).write_text(json.dumps(dict(success=True,results=[dict(id=b['id'],success=True) for b in blocks])))
+            return dict(error=None,returncode=1)
+        with patch.object(Q.P,'execute',side_effect=execute):rc,result=self.run_docs()
+        self.assertEqual(rc,1);self.assertEqual(next(r['status'] for r in result['results'] if r['id']=='mermaid-runtime'),'fail')
     def test_glossary_and_faq_negative_controls(self):
         for text,checker in [('<table><tr><th>用語</th></tr><tr><td></td></tr></table>',D.glossary),('<table><tr><th>用語</th></tr><tr><td>A</td></tr><tr><td>A</td></tr></table>',D.glossary),('<h2>Q1. A</h2><h2>Q3. B</h2>',D.faq),('<h2>Q1. A</h2><h2>Q1. B</h2>',D.faq)]:
             page=D.Page();page.feed(text)
@@ -180,6 +188,39 @@ class EnvironmentTests(unittest.TestCase):
     def test_wrong_versions_fail(self):
         for name,good,bad in [('node','v24.1.0','v20.1.0'),('iverilog','Icarus Verilog version 14.0','Icarus Verilog version 12.0'),('vvp','Icarus Verilog runtime version 14.0','Icarus Verilog runtime version 13.0'),('verilator','Verilator 5.052 2026-09-05 rev x','Verilator 5.052-dev x'),('sta','3.1.0 abc','3.0.0'),('yowasp-yosys','Yosys 0.70 (git sha1 x)','Yosys 0.69'),('z3','Z3 version 4.15.3 - 64 bit','Z3 version 4.14.0')]:
             with self.subTest(name=name):self.assertTrue(E.version_ok(name,good));self.assertFalse(E.version_ok(name,bad))
+    def test_relative_oss_home_still_runs_from_the_report_directory(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'artifacts') as directory,redirect_stdout(io.StringIO()):
+            base=Path(directory);(base/'oss/bin').mkdir(parents=True);real=Q.P.execute
+            for name in ('yosys','sby','mcy'):
+                p=base/'oss/bin'/name;p.write_text('#!/bin/sh\nexit 0\n');p.chmod(0o755)
+            def execute(command,log,*args):
+                # Only the OSS tools are under test; every other probe is a bounded failure.
+                if Path(command[0]).parent==(base/'oss/bin').absolute() or not Path(command[0]).is_absolute() and 'oss/bin' in command[0]:return real(command,log,*args)
+                Path(log).write_text('');return dict(command=command,returncode=None,error='not under test')
+            out=base/'out';argv=['check_environment.py','--profile','full','--oss-home',os.path.relpath(base/'oss'),'--out',str(out)]
+            with patch.object(sys,'argv',argv),patch.object(E.O,'verify',return_value=dict(fixture=True)),patch.object(Q.P,'execute',side_effect=execute):self.assertEqual(E.main(),1)
+            rows={r['id']:r['status'] for r in json.loads((out/'summary.json').read_text())['results']}
+            self.assertEqual([rows[k] for k in ('oss-cad','oss/yosys','oss/sby','oss/mcy')],['pass']*4)
+    def test_wrong_python_package_version_fails(self):
+        with tempfile.TemporaryDirectory() as directory,redirect_stdout(io.StringIO()):
+            packages={n:v['version'] for n,v in json.loads((ROOT/'tools/environment.json').read_text())['packages']['docs'].items()}
+            def run(installed):
+                def execute(command,log,*args):
+                    Path(log).write_text(json.dumps(dict(python=list(sys.version_info[:3]),packages=installed)) if 'importlib.metadata' in ' '.join(command) else '');return dict(command=command,returncode=0,error=None)
+                a=argparse.Namespace(profile='docs',python=sys.executable,formal_python=sys.executable,rdl_python=sys.executable,cocotb_python=sys.executable,tool_bin=[],timeout=1,out=Path(directory)/str(len(list(Path(directory).iterdir()))))
+                with patch.object(Q.P,'execute',side_effect=execute):E.run(a)
+                return next(r['status'] for r in json.loads((a.out/'summary.json').read_text())['results'] if r['id']=='packages/docs')
+            self.assertEqual(run(packages),'pass');self.assertEqual(run({**packages,'Markdown':'0.0.0'}),'fail')
+    def test_setup_rejects_exit_zero_diagnosis_with_a_failed_summary(self):
+        with tempfile.TemporaryDirectory() as directory,redirect_stdout(io.StringIO()):
+            a=argparse.Namespace(profile='smoke',out=Path(directory)/'setup',python=sys.executable,npm='npm',timeout=1,tool_bin=[])
+            def execute(command,log,*args):
+                Path(log).write_text('')
+                if 'check_environment.py' in ' '.join(command):
+                    (a.out/'diagnosis').mkdir();(a.out/'diagnosis/summary.json').write_text(json.dumps(dict(success=False,complete=True,planned=1,results=[dict(id='python',status='fail')])))
+                return dict(command=command,returncode=0,error=None)
+            with patch.object(Q.P,'execute',side_effect=execute):self.assertEqual(U.run(a),1)
+            self.assertEqual(next(r['status'] for r in json.loads((a.out/'summary.json').read_text())['results'] if r['id']=='diagnosis'),'fail')
     def test_failed_setup_does_not_run_dependent_commands(self):
         with tempfile.TemporaryDirectory() as directory,redirect_stdout(io.StringIO()):
             calls=[]
@@ -208,7 +249,7 @@ class WorkflowTests(unittest.TestCase):
         import yaml
         for name in ('quality','nightly','affected'):
             workflow=yaml.load((ROOT/f'.github/workflows/{name}.yml').read_text(),Loader=yaml.BaseLoader)
-            self.assertEqual(workflow['permissions'],{'contents':'read'})
+            self.assertEqual(workflow['permissions'],{'contents':'read','actions':'read'} if name=='affected' else {'contents':'read'})
             for job in workflow['jobs'].values():
                 self.assertIn('timeout-minutes',job)
                 uploads=[]
@@ -230,5 +271,37 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn('tools/select_regression.py',commands)
         self.assertEqual(next(s for s in steps if s.get('id')=='selection')['name'],'Select affected jobs')
         self.assertIn("steps.selection.outputs.jobs != '0'",next(s for s in steps if s.get('name')=='Run and audit the selected jobs')['if'])
+    def affected_base(self,event,gh=None,gh_code=0,before='',pull=''):
+        import yaml
+        script=next(s for s in yaml.load((ROOT/'.github/workflows/affected.yml').read_text(),Loader=yaml.BaseLoader)['jobs']['affected']['steps'] if s.get('id')=='base')['run']
+        output=self.repo/'output';calls=self.repo/'calls';output.write_text('');calls.write_text('')
+        env=dict(os.environ,GITHUB_EVENT_NAME=event,GITHUB_REF_NAME='feature',GITHUB_OUTPUT=str(output),PUSH_BEFORE=before,PULL_REQUEST_BASE=pull,PATH=str(self.bin)+os.pathsep+os.environ['PATH'],FAKE_GH_OUTPUT=gh or '',FAKE_GH_CODE=str(gh_code),FAKE_GH_CALLS=str(calls))
+        r=subprocess.run(['bash','-e','-c',script],cwd=self.repo,env=env,capture_output=True,text=True);self.assertEqual(r.returncode,0,r.stdout+r.stderr)
+        return dict(line.split('=',1) for line in output.read_text().splitlines())['value'],calls.read_text(),r.stdout
+    def test_affected_base_follows_the_last_successful_push(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.repo=Path(directory)/'repo';self.bin=Path(directory)/'bin';self.repo.mkdir();self.bin.mkdir()
+            gh=self.bin/'gh';gh.write_text('#!/bin/sh\necho "$@" >> "$FAKE_GH_CALLS"\nif [ -n "$FAKE_GH_OUTPUT" ]; then echo "$FAKE_GH_OUTPUT"; fi\nexit "$FAKE_GH_CODE"\n');gh.chmod(0o755)
+            def git(*args):return subprocess.check_output(['git','-c','user.name=Fixture','-c','user.email=fixture@example.invalid','-C',str(self.repo),*args],text=True).strip()
+            git('init','-q')
+            commits=[]
+            for name in ('verified','failed','latest'):git('commit','-q','--allow-empty','-m',name);commits.append(git('rev-parse','HEAD'))
+            verified,failed,latest=commits
+            git('checkout','-q','-b','other',verified);git('commit','-q','--allow-empty','-m','elsewhere');elsewhere=git('rev-parse','HEAD');git('checkout','-q',latest)
+            # A failed or replaced push stays inside the next push's comparison.
+            base,calls,_=self.affected_base('push',gh=verified,before=failed);self.assertEqual(base,verified)
+            for flag in ('--workflow affected.yml','--branch feature','--event push','--status success'):self.assertIn(flag,calls)
+            for label,kwargs in [('no successful run',dict(gh='')),('rewritten history',dict(gh=elsewhere)),('unknown commit',dict(gh='f'*40))]:
+                with self.subTest(label):self.assertEqual(self.affected_base('push',before=failed,**kwargs)[0],failed)
+            base,_,stdout=self.affected_base('push',gh_code=1,before=failed);self.assertEqual(base,failed);self.assertIn('::warning::',stdout)
+            base,calls,_=self.affected_base('pull_request',gh=verified,before=failed,pull=elsewhere);self.assertEqual((base,calls),(elsewhere,''))
+            base,calls,_=self.affected_base('workflow_dispatch',gh=verified);self.assertEqual((base,calls),('HEAD~1',''))
+    def test_affected_uses_one_base_and_only_cancels_pull_requests(self):
+        import yaml
+        workflow=yaml.load((ROOT/'.github/workflows/affected.yml').read_text(),Loader=yaml.BaseLoader);steps=workflow['jobs']['affected']['steps']
+        self.assertEqual(workflow['concurrency']['cancel-in-progress'],"${{ github.event_name == 'pull_request' }}")
+        users=[s for s in steps if 'CHANGE_BASE' in s.get('env',{})];self.assertEqual([s['name'] for s in users],['Select affected jobs','Run and audit the selected jobs'])
+        self.assertTrue(all(s['env']['CHANGE_BASE']=='${{ steps.base.outputs.value }}' for s in users))
+        self.assertLess([s.get('id') for s in steps].index('base'),[s.get('id') for s in steps].index('selection'))
 
 if __name__=='__main__':unittest.main()

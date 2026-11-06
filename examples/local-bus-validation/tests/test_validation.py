@@ -1,3 +1,5 @@
+from contextlib import redirect_stdout
+import io
 from pathlib import Path
 import shutil
 import subprocess
@@ -5,6 +7,7 @@ import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'local-common'))
 from local_test_support import load_example,read_json
 V=load_example('local-bus-validation')
@@ -49,6 +52,22 @@ class ValidationTest(unittest.TestCase):
             for malformed in (''.join(records[:-1]),''.join(records[1:]),''.join(records+[records[0]]),'not coverage\n'):
                 path.write_text(malformed)
                 with self.subTest(malformed=malformed),self.assertRaises(ValueError):V.native(path,checker,'ahb',rtl)
+
+    def test_result_inventory_is_frozen_for_every_stage(self):
+        args=SimpleNamespace(stage='all',transfers=8,seed=17,profile='smoke');planned=V.check_ids(args)
+        self.assertEqual(len(planned),len(set(planned)));self.assertEqual(len(planned),64)
+        for name in ('lint-ahb','ahb-wait3-cross-and-sva-gate','axi-delay2-stall-recovery','sva-axi-scenario11','four-state-ahb-scenario5','actual-async-reset','bridges','axi4'):self.assertIn(name,planned)
+        parts=[]
+        for stage in ('bus','fixtures','bridges','axi4'):parts+=V.check_ids(SimpleNamespace(stage=stage,transfers=8,seed=17,profile='smoke'))
+        self.assertEqual(parts,planned)
+
+    def test_manifest_freezes_the_plan_and_missing_results_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'out';argv=['run.py','--stage','fixtures','--out',str(out)]
+            with patch.object(sys,'argv',argv),patch.object(V,'run_fixtures',lambda *args:None),redirect_stdout(io.StringIO()):self.assertEqual(V.main(),1)
+            planned=read_json(out/'manifest.json')['check_ids'];summary=read_json(out/'summary.json')
+            self.assertEqual(planned,V.check_ids(SimpleNamespace(stage='fixtures')));self.assertEqual(summary['planned'],len(planned))
+            self.assertFalse(summary['success']);self.assertFalse(summary['complete'])
 
     def test_invalid_count_and_existing_output_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

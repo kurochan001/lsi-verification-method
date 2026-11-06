@@ -1,5 +1,7 @@
+from contextlib import redirect_stdout
 import copy
 import hashlib
+import io
 import importlib.util
 import json
 import os
@@ -15,6 +17,15 @@ import unittest
 from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 S=importlib.util.spec_from_file_location('campaign',Path(__file__).resolve().parents[1]/'run_regression.py');R=importlib.util.module_from_spec(S);S.loader.exec_module(R)
+EVIDENCE='''import hashlib,json,sys
+from pathlib import Path
+out,source,code,configuration=Path(sys.argv[1]),Path(sys.argv[2]),int(sys.argv[3]),json.loads(sys.argv[4])
+out.mkdir(parents=True)
+(out/"manifest.json").write_text(json.dumps(dict(profile="nightly",configuration=configuration,source_sha256={str(source):hashlib.sha256(source.read_bytes()).hexdigest()})))
+(out/"summary.json").write_text(json.dumps(dict(success=True,planned=1,results=[dict(id="check",status="pass")])))
+(out/"junit.xml").write_text('<testsuite tests="1"><testcase name="check"/></testsuite>')
+sys.exit(code)
+'''
 class CampaignTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
@@ -23,7 +34,7 @@ class CampaignTests(unittest.TestCase):
             path=self.root/'examples'/name/'run.py';path.parent.mkdir(parents=True);path.write_text('# fixture\n')
             self.entries[name]=dict(id=name,script=str(path.relative_to(self.root)),kind=kind,profile=kind!='formal',tools=[],options=[])
         self.entries['local-parent']['children']={'local-child':'local-child','local-proof':'local-proof'}
-        self.entries['local-child']['matrix']={'width':[1,8]}
+        self.entries['local-child']['matrix']={'width':[1,8]};self.entries['local-child']['matrix_evidence']={'width':'configuration.width'}
         self.registry=self.root/'registry.json';self.write_registry()
     def write_registry(self):self.registry.write_text(json.dumps(dict(schema_version=1,examples=list(self.entries.values()))))
     def args(self,**changes):
@@ -55,13 +66,34 @@ class CampaignTests(unittest.TestCase):
             self.entries['local-parent']['children']=children;self.write_registry()
             with self.subTest(children=children),self.assertRaisesRegex(ValueError,'child evidence'):
                 R.load_registry(self.registry,self.root)
+    def test_every_matrix_value_needs_a_manifest_path(self):
+        for evidence in ({},{'width':''},{'width':'configuration.width','depth':'configuration.depth'},['configuration.width']):
+            self.entries['local-child']['matrix_evidence']=evidence;self.write_registry()
+            with self.subTest(evidence=evidence),self.assertRaisesRegex(ValueError,'manifest path'):R.load_registry(self.registry,self.root)
+    def test_matrix_values_reach_the_runner_command(self):
+        jobs=R.make_plan(self.entries,self.args(example=['local-child']),self.root)
+        self.assertEqual({j['configuration']['width']:j['command'][j['command'].index('--width')+1] for j in jobs},{1:'1',8:'8'})
+    def test_missing_python_package_is_a_preflight_failure(self):
+        self.entries['local-proof']['packages']={'python':['no_such_verification_module_20261107']}
+        jobs=R.make_plan(self.entries,self.args(),self.root);result=R.preflight(jobs,self.entries,self.args(),dict(os.environ))
+        self.assertFalse(result['success']);self.assertIn('missing/unusable packages',';'.join(result['errors']))
+    def test_every_aggregate_child_limit_is_reachable_as_child_timeout(self):
+        entries=R.load_registry(R.ROOT/'tools/regressions.json');jobs=R.make_plan(entries,self.args(child_timeout=7200.0))
+        for job in (j for j in jobs if entries[j['example']]['kind']=='aggregate'):
+            with self.subTest(job=job['id']):
+                self.assertEqual(job['command'][job['command'].index('--child-timeout')+1],'7200.0')
+                self.assertIn('--child-timeout',subprocess.run([sys.executable,str(R.ROOT/entries[job['example']]['script']),'--help'],capture_output=True,text=True,timeout=30).stdout)
+        for name in ('local-system-regression','local-advanced-regression'):
+            with self.subTest(name=name):  # The alias is the limit that these parents validate and apply.
+                r=subprocess.run([sys.executable,str(R.ROOT/entries[name]['script']),'--child-timeout','0','--out',str(self.root/name)],capture_output=True,text=True,timeout=30)
+                self.assertEqual(r.returncode,2);self.assertFalse((self.root/name).exists())
     def test_missing_tools_are_a_preflight_failure(self):
         self.entries['local-proof']['tools']=['no-such-verification-tool-20261031']
         jobs=R.make_plan(self.entries,self.args(),self.root);result=R.preflight(jobs,self.entries,self.args(),dict(os.environ))
         self.assertFalse(result['success']);self.assertIn('missing executable',';'.join(result['errors']))
     def test_zero_duplicate_and_failed_summary_cases_are_rejected(self):
         good=dict(success=True,planned=1,results=[dict(id='check',status='pass')]);self.assertEqual(R.validate_summary(good),{'check'})
-        for d in (dict(good,planned=0,results=[]),dict(good,planned=2,results=good['results']*2),dict(good,results=[dict(id='check',status='pass',outcome='error')]),dict(success=True,complete=True,planned=2,results=1)):
+        for d in (dict(good,planned=0,results=[]),dict(good,planned=2,results=good['results']*2),dict(good,results=[dict(id='check',status='pass',outcome='error')]),dict(success=True,complete=True,planned=2,results=1),dict(success=True,results=good['results'])):
             with self.assertRaises(ValueError):R.validate_summary(d)
     def test_incomplete_or_failed_row_cannot_claim_a_passing_status(self):
         for change in (dict(complete=False),dict(success=False)):
@@ -104,6 +136,17 @@ class CampaignTests(unittest.TestCase):
         for name in ('manifest.json','summary.json','junit.xml'):(child/name).write_bytes((directory/name).read_bytes())
         parent=dict(entry,children={'local-child':'nested/child'})
         self.assertEqual(R.inspect_output(directory,parent,{'local-child':entry},self.root,'nightly')['junit'],1)
+    def test_failed_child_evidence_fails_its_parent(self):
+        directory,entry=self.output();child=directory/'nested/child';child.mkdir(parents=True)
+        for name in ('manifest.json','summary.json','junit.xml'):(child/name).write_bytes((directory/name).read_bytes())
+        (child/'summary.json').write_text(json.dumps(dict(success=False,planned=1,results=[dict(id='check',status='fail')])))
+        with self.assertRaisesRegex(ValueError,'unsuccessful'):R.inspect_output(directory,dict(entry,children={'local-child':'nested/child'}),{'local-child':entry},self.root,'nightly')
+    def test_configuration_evidence_must_exist_and_match(self):
+        directory,entry=self.output();entry['matrix_evidence']={'width':'configuration.width'}
+        with self.assertRaisesRegex(ValueError,'missing configuration'):R.inspect_output(directory,entry,{},self.root,'nightly',{'width':8})
+        manifest=json.loads((directory/'manifest.json').read_text());manifest['configuration']=dict(width=8);(directory/'manifest.json').write_text(json.dumps(manifest))
+        self.assertEqual(R.inspect_output(directory,entry,{},self.root,'nightly',{'width':8})['junit'],1)
+        with self.assertRaisesRegex(ValueError,'configuration differs'):R.inspect_output(directory,entry,{},self.root,'nightly',{'width':16})
     def test_stale_source_and_wrong_profile_are_rejected(self):
         directory,entry=self.output()
         with self.assertRaisesRegex(ValueError,'profile'):R.inspect_output(directory,entry,{},self.root,'smoke')
@@ -257,6 +300,55 @@ class CampaignTests(unittest.TestCase):
     def test_real_registry_covers_all_run_files_and_all_migration_modes(self):
         entries=R.load_registry(R.ROOT/'tools/regressions.json');self.assertEqual(entries['local-uvm-migration']['matrix']['mode'],['passive','active'])
         jobs=R.make_plan(entries,self.args());self.assertEqual(len({j['id'] for j in jobs}),len(jobs))
+    def evidence_job(self,identity,code=0,example='local-proof',configuration=None,produced=None):
+        source=self.root/'rtl.sv';source.write_text('// source\n');out=self.root/'campaign/runs'/identity;configuration=configuration or {}
+        return dict(id=identity,example=example,configuration=configuration,out=str(out),command=[sys.executable,'-c',EVIDENCE,str(out),str(source),str(code),json.dumps(configuration if produced is None else produced)])
+    def campaign(self,*jobs,**changes):
+        out=self.root/'campaign';values=dict(out=out,registry=R.ROOT/'tools/regressions.json',check_tools=False,jobs=1,job_timeout=30);values.update(changes)
+        with redirect_stdout(io.StringIO()):rc=R.run(self.args(**values),self.entries,list(jobs))
+        summary=json.loads((out/'summary.json').read_text())
+        return rc,summary,{r['id']:r for r in summary['results']}
+    def test_run_accepts_complete_evidence(self):
+        rc,summary,rows=self.campaign(self.evidence_job('job'))
+        self.assertEqual(rc,0);self.assertTrue(summary['success']);self.assertTrue(rows['job']['success'])
+    def test_zero_exit_without_evidence_fails_when_the_job_finishes(self):
+        job=dict(self.evidence_job('job'),command=[sys.executable,'-c','pass'])
+        rc,summary,rows=self.campaign(job)
+        self.assertEqual(rc,1);self.assertFalse(summary['success']);self.assertFalse(rows['job']['success'])
+        self.assertIn('manifest.json',rows['job']['message']);self.assertNotIn('final audit',rows['job']['message'])
+    def test_nonzero_exit_fails_despite_valid_evidence(self):
+        rc,summary,rows=self.campaign(self.evidence_job('job',code=3))
+        self.assertEqual(rc,1);self.assertFalse(summary['success']);self.assertEqual(rows['job']['message'],'runner exit 3')
+    def test_final_audit_rechecks_jobs_that_finished_earlier(self):
+        first=self.evidence_job('first');second=self.evidence_job('second')
+        damage=[sys.executable,'-c','import subprocess,sys;from pathlib import Path;Path(sys.argv[1]).unlink();raise SystemExit(subprocess.call(sys.argv[2:]))',str(Path(first['out'])/'junit.xml'),*second['command']]
+        rc,summary,rows=self.campaign(first,dict(second,command=damage))
+        self.assertEqual(rc,1);self.assertFalse(rows['first']['success']);self.assertTrue(rows['first']['message'].startswith('final audit: '));self.assertTrue(rows['second']['success'])
+    def test_campaign_source_change_is_an_integrity_failure(self):
+        registry=self.root/'copy.json';registry.write_bytes((R.ROOT/'tools/regressions.json').read_bytes());job=self.evidence_job('job')
+        edit=[sys.executable,'-c','import subprocess,sys;from pathlib import Path;p=Path(sys.argv[1]);p.write_text(p.read_text()+"\\n");raise SystemExit(subprocess.call(sys.argv[2:]))',str(registry),*job['command']]
+        rc,summary,rows=self.campaign(dict(job,command=edit),registry=registry)
+        self.assertEqual(rc,1);self.assertIn('campaign source changed',summary['integrity_error']);self.assertFalse(summary['success'])
+    def test_job_timeout_fails_and_stops_the_job(self):
+        job=dict(self.evidence_job('job'),command=[sys.executable,'-c','import time;time.sleep(30)'])
+        started=time.monotonic();rc,summary,rows=self.campaign(job,job_timeout=.2)
+        self.assertEqual(rc,1);self.assertEqual(rows['job']['message'],'job timeout');self.assertLess(time.monotonic()-started,10)
+    def test_matrix_job_is_not_credited_with_another_configuration(self):
+        good=self.evidence_job('good',example='local-child',configuration={'width':1})
+        wrong=self.evidence_job('wrong',example='local-child',configuration={'width':1},produced={'width':8})
+        rc,summary,rows=self.campaign(good,wrong)
+        self.assertEqual(rc,1);self.assertTrue(rows['good']['success']);self.assertFalse(rows['wrong']['success']);self.assertEqual(rows['wrong']['message'],'configuration differs from plan: width')
+    def test_failed_process_inspection_is_recorded_and_the_job_is_stopped(self):
+        real=subprocess.check_output;pidfile=self.root/'job.pid'
+        def ps(command,*args,**kwargs):
+            if command[0]=='ps':raise subprocess.CalledProcessError(1,command)
+            return real(command,*args,**kwargs)
+        job=dict(self.evidence_job('job'),command=[sys.executable,'-c','import os,sys,time;open(sys.argv[1],"w").write(str(os.getpid()));time.sleep(30)',str(pidfile)])
+        started=time.monotonic()
+        with patch.object(R.subprocess,'check_output',side_effect=ps):rc,summary,rows=self.campaign(job,job_timeout=1)
+        self.assertEqual(rc,1);self.assertFalse(summary['success']);self.assertTrue(summary['complete']);self.assertIn('ps',rows['job']['message']);self.assertTrue(rows['job']['started']);self.assertLess(time.monotonic()-started,15)
+        state=subprocess.run(['ps','-p',pidfile.read_text(),'-o','stat='],capture_output=True,text=True)
+        self.assertTrue(state.returncode or state.stdout.strip().startswith('Z'),'job survived')
     @unittest.skipUnless(os.name=='posix','POSIX signals required')
     def test_interrupted_campaign_records_no_active_jobs_and_never_passes(self):
         ready=self.root/'ready';out=self.root/'interrupted'

@@ -1,8 +1,13 @@
+from contextlib import redirect_stdout
 import copy
 import importlib.util
+import io
+import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
 s=importlib.util.spec_from_file_location('lint_under_test',ROOT/'tools/run_lint.py');L=importlib.util.module_from_spec(s);s.loader.exec_module(L)
 class LintPolicyTests(unittest.TestCase):
@@ -51,4 +56,41 @@ class LintPolicyTests(unittest.TestCase):
             with self.assertRaises(ValueError):L.validate_catalog(catalog,root)
             (p.parent/'new.sv').write_text('module added; endmodule\n')
             with self.assertRaises(ValueError):L.validate_catalog(catalog,root)
+
+class LintGateTests(unittest.TestCase):
+    """Run the real gate against one clean DUT target and a scripted Verilator."""
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
+        catalog=json.loads((ROOT/'tools/lint_targets.json').read_text());baseline=json.loads((ROOT/'tools/lint_baseline.json').read_text())
+        self.target=next(t for t in catalog['targets'] if not baseline['targets'][t['id']]['diagnostics'])
+        self.catalog=self.root/'catalog.json';self.catalog.write_text(json.dumps(dict(catalog,rtl_files=self.target['sources'],blackbox_sources={})))
+        self.baseline=self.root/'baseline.json';self.baseline.write_text(json.dumps(dict(baseline,targets={self.target['id']:baseline['targets'][self.target['id']]})))
+    def run_gate(self,lint='exit 0',version='Verilator 5.052 2026-09-05 rev fixture',timeout=10):
+        tool=self.root/'verilator';tool.write_text(f'#!/bin/sh\nif [ "$1" = --version ]; then echo "{version}"; exit 0; fi\n{lint}\n');tool.chmod(0o755)
+        a=SimpleNamespace(verilator=str(tool),timeout=timeout,out=self.root/'out',catalog=self.catalog,baseline=self.baseline,profile='smoke',seed=17)
+        with patch.object(L,'validate_catalog',return_value=[self.target]),redirect_stdout(io.StringIO()):rc=L.run(a)
+        return rc,{r['id']:r for r in json.loads((a.out/'summary.json').read_text())['results']}
+    def failures(self,rows):return sorted(k for k,r in rows.items() if r['status']=='fail')
+    def test_clean_target_passes(self):
+        rc,rows=self.run_gate();self.assertEqual(rc,0);self.assertEqual(self.failures(rows),[])
+    def test_nonzero_exit_without_diagnostics_fails_the_target(self):
+        rc,rows=self.run_gate('exit 3');self.assertEqual(rc,1);self.assertEqual(self.failures(rows),[self.target['id']])
+    def test_timeout_fails_the_target(self):
+        rc,rows=self.run_gate('exec sleep 30',timeout=.2);self.assertEqual(rc,1);self.assertEqual(rows[self.target['id']]['detail']['execution']['error'],'command timeout')
+    def test_absent_tool_fails_every_check_that_uses_it(self):
+        with patch.object(L,'validate_catalog',return_value=[self.target]),redirect_stdout(io.StringIO()):
+            rc=L.run(SimpleNamespace(verilator=str(self.root/'absent'),timeout=10,out=self.root/'out',catalog=self.catalog,baseline=self.baseline,profile='smoke',seed=17))
+        rows={r['id']:r for r in json.loads((self.root/'out/summary.json').read_text())['results']}
+        self.assertEqual(rc,1);self.assertEqual(self.failures(rows),sorted(['tool-version',self.target['id']]))
+    def test_new_warning_fails_the_target(self):
+        source=ROOT/self.target['sources'][0]
+        rc,rows=self.run_gate(f'echo "%Warning-WIDTHTRUNC: {source}:1:1: width differs"');self.assertEqual(rc,1);self.assertEqual(self.failures(rows),[self.target['id']])
+        self.assertEqual(rows[self.target['id']]['detail']['changes']['new'][0]['diagnostic']['rule'],'WIDTHTRUNC')
+    def test_other_tool_release_fails_version_and_target(self):
+        rc,rows=self.run_gate(version='Verilator 5.050 2026-08-01 rev fixture');self.assertEqual(rc,1);self.assertEqual(self.failures(rows),sorted(['tool-version',self.target['id']]))
+    def test_baseline_inventory_difference_fails_inventory_and_target(self):
+        baseline=json.loads(self.baseline.read_text());baseline['targets']['unexpected/target']=dict(diagnostics=[]);self.baseline.write_text(json.dumps(baseline))
+        rc,rows=self.run_gate();self.assertEqual(rc,1);self.assertEqual(self.failures(rows),sorted(['inventory',self.target['id']]))
+    def test_input_changed_during_lint_fails_source_freshness(self):
+        rc,rows=self.run_gate(f'echo "\n" >> "{self.catalog}"');self.assertEqual(rc,1);self.assertEqual(self.failures(rows),['source-freshness'])
 if __name__=='__main__':unittest.main()

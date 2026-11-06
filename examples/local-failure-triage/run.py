@@ -9,7 +9,7 @@ HERE=Path(__file__).resolve().parent
 s=importlib.util.spec_from_file_location('triage_support',HERE/'support.py');S=importlib.util.module_from_spec(s);s.loader.exec_module(S);E=S.E
 def run(a):
     rows=S.vectors(a.seed,256 if a.profile=='nightly' else 32)
-    faults=[('rtl','rtl-mismatch',dict(mutation=1)),('expected-value','expected-value-mismatch',dict(model=1)),('sva-disabled','verification-configuration',dict(sva_off=1,model=2)),('missing-tool','missing-tool',dict(missing=True)),('timeout','timeout',dict(hang=1))]
+    faults=[('rtl','rtl-mismatch',dict(mutation=1)),('expected-value','expected-value-mismatch',dict(model=1)),('sva-disabled','verification-configuration',dict(sva_off=1,model=2)),('comparator-disabled','verification-configuration',dict(model=2)),('missing-tool','missing-tool',dict(missing=True)),('timeout','timeout',dict(hang=1))]
     ids=['build','normal']+[f'{name}/{step}' for name,_,_ in faults for step in ('diagnose','fixed')]
     e=E.Evidence('local-failure-triage',a,[Path(__file__),*S.inputs()],dict(rows=rows,faults=[dict(id=n,classification=c,flags=f) for n,c,f in faults]),ids);sim=S.Simulator(e)
     r,log=sim.execute('normal',rows);e.check('normal',S.good(r),r)

@@ -42,6 +42,8 @@ module sobel_tb;
                 if(out_last !== (pixels%N==N-1)) fail("IMAGE_LAST");
                 if(out_pixel !== expected_pixels[pixels]) fail("IMAGE_DATA");
             end
+            if(dut.window_valid && dut.window_ready && dut.magnitude==254) $display("COVER value/below-saturation");
+            if(dut.window_valid && dut.window_ready && dut.magnitude==256) $display("COVER value/saturation-boundary");
             if(in_valid && !in_ready) $display("COVER input/backpressure");
             if(!in_valid && sent>0 && sent<frames*N) $display("COVER input/gap");
             if(out_valid && !out_ready) $display("COVER output/hold");

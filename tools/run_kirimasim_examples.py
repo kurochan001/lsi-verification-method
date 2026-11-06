@@ -13,13 +13,18 @@ import math
 import os
 from pathlib import Path
 import re
+import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 PARAM_TOP = "kirimasim_parameters"
+# Each outer watchdog outlives the one inside it, so a timeout is still recorded
+# as an event and buffered output is still flushed before the runner kills us.
+WATCHDOG_MARGIN = 5
 
 
 def digest(path):
@@ -33,13 +38,14 @@ def write(path, value):
 def parse_compile(argv):
     """Accept only the exact Icarus CLI subset used by these example runners."""
     top = output = None
+    generation = False
     parameters = {}
     sources = []
     i = 0
     while i < len(argv):
         arg = argv[i]
         if arg == "-g2012":
-            pass
+            generation = True
         elif arg in ("-s", "-o"):
             i += 1
             if i == len(argv):
@@ -66,10 +72,13 @@ def parse_compile(argv):
             path = Path(arg).absolute()
             if path.suffix not in (".sv", ".v") or not path.is_file():
                 raise ValueError("missing/non-Verilog source: " + arg)
+            if path in sources:
+                raise ValueError("duplicate source: " + arg)
             sources.append(path)
         i += 1
-    if not top or not re.fullmatch(r"[A-Za-z_]\w*", top) or top == PARAM_TOP or output is None or not sources:
-        raise ValueError("one top, output and Verilog sources are required")
+    if (not generation or not top or not re.fullmatch(r"[A-Za-z_]\w*", top) or top == PARAM_TOP or
+            output is None or not sources):
+        raise ValueError("-g2012, one top, output and Verilog sources are required")
     if any(name != top for name, _ in parameters):
         raise ValueError("only parameters of the selected top can be overridden")
     return top, output, parameters, sources
@@ -83,11 +92,19 @@ def parameter_source(parameters):
         for (top, name), value in parameters.items()) + "endmodule\n"
 
 
+def source_command(binary, top, sources, overrides, timeout):
+    # --max-wall-time takes whole seconds; round up so the limit is never shortened.
+    return [binary, "--top=" + top, "--top=" + PARAM_TOP, "--timescale=1ns/1ps",
+            "--seed=0", "--stop=error", "--max-wall-time=" + str(math.ceil(timeout)),
+            *map(str, sources), str(overrides)]
+
+
 def native(command, phase, recipe, config):
     event = dict(phase=phase, recipe=str(recipe), cwd=str(Path.cwd()), command=command,
                  adapter_sha256=digest(__file__), returncode=None, error=None)
     try:
-        result = subprocess.run(command, capture_output=True, timeout=config["timeout"])
+        result = subprocess.run(command, capture_output=True,
+                                timeout=math.ceil(config["timeout"]) + WATCHDOG_MARGIN)
         event["returncode"] = result.returncode
         stdout, stderr = result.stdout, result.stderr
     except subprocess.TimeoutExpired as exc:
@@ -130,18 +147,15 @@ def adapter(mode, argv):
         print("kirimasim adapter (" + mode + " interface; not Icarus Verilog)")
         print(config["version"])
         return 0
-    if digest(config["binary"]) != config["binary_sha256"]:
-        raise ValueError("kirimasim binary changed")
     if mode == "compile":
+        if digest(config["binary"]) != config["binary_sha256"]:
+            raise ValueError("kirimasim binary changed")
         top, output, parameters, sources = parse_compile(argv)
         if output.exists():
             output.unlink()
         overrides = output.with_suffix(".parameters.sv")
         overrides.write_text(parameter_source(parameters))
-        command = [config["binary"], "--top=" + top, "--top=" + PARAM_TOP,
-                   "--timescale=1ns/1ps",
-                   "--seed=0", "--stop=error", "--max-wall-time=" + str(config["timeout"]),
-                   *map(str, sources), str(overrides)]
+        command = source_command(config["binary"], top, sources, overrides, config["timeout"])
         data = dict(format="kirimasim-source-recipe-v1", command=command,
                     binary_sha256=config["binary_sha256"],
                     source_sha256={str(p): digest(p) for p in [*sources, overrides]})
@@ -176,11 +190,18 @@ def audit_events(events):
 
 
 def snapshot_inputs():
-    return sorted({Path(__file__), *[p for base in ("examples", "tools")
-                   for p in (ROOT / base).rglob("*")
-                   if p.is_file() and not any(x in p.parts for x in
-                   ("node_modules", "__pycache__")) and p.suffix in
-                   (".py", ".sv", ".v", ".json", ".hex", ".txt")]})
+    return sorted(p for base in ("examples", "tools")
+                  for p in (ROOT / base).rglob("*")
+                  if p.is_file() and not any(x in p.parts for x in
+                  ("node_modules", "__pycache__")) and p.suffix in
+                  (".py", ".sv", ".v", ".json", ".hex", ".txt"))
+
+
+def write_shim(path, mode, python=sys.executable):
+    # A shebang cannot hold an interpreter path with spaces, so go through sh.
+    command = [python, str(Path(__file__).resolve()), "--adapter-" + mode]
+    Path(path).write_text("#!/bin/sh\nexec " + shlex.join(command) + ' "$@"\n')
+    Path(path).chmod(0o755)
 
 
 def run(a):
@@ -200,21 +221,26 @@ def run(a):
     write(a.out / "adapter.json", config)
     env = dict(os.environ, KIRIMASIM_ADAPTER_CONFIG=str(a.out / "adapter.json"))
     for name, mode in (("iverilog", "compile"), ("vvp", "run")):
-        shim = binary.parent / name
-        shim.write_text("#!" + sys.executable + "\nimport os, sys\nos.execv(" +
-                        repr(sys.executable) + ", [" + repr(sys.executable) + ", " +
-                        repr(str(Path(__file__).resolve())) + ", '--adapter-" + mode + "', *sys.argv[1:]])\n")
-        shim.chmod(0o755)
+        write_shim(binary.parent / name, mode)
     command = [sys.executable, str(ROOT / "tools/run_regression.py"),
                "--suite", "simulation", "--profile", a.profile, "--seed", str(a.seed),
                "--jobs", str(a.jobs), "--job-timeout", str(a.job_timeout),
-               "--command-timeout", str(a.command_timeout), "--child-timeout", str(a.job_timeout),
+               "--command-timeout", str(a.command_timeout + 2 * WATCHDOG_MARGIN),
+               "--child-timeout", str(a.job_timeout),
                "--tool-bin", str(binary.parent), "--out", str(a.out / "campaign")]
     for name in selected:
         command += ["--example", name]
     write(a.out / "manifest.json", dict(created_at=datetime.now(timezone.utc).isoformat(),
           command=command, selected=selected, source_sha256=hashes, tool=config))
-    result = subprocess.run(command, env=env)
+    # Let the regression runner stop its job sessions and save its summary first.
+    process = subprocess.Popen(command, env=env)
+    previous = {number: signal.signal(number, lambda signum, _frame: process.send_signal(signum))
+                for number in (signal.SIGINT, signal.SIGTERM)}
+    try:
+        returncode = process.wait()
+    finally:
+        for number, handler in previous.items():
+            signal.signal(number, handler)
     summary = json.loads((a.out / "campaign/summary.json").read_text())
     recorded = [json.loads(p.read_text()) for p in sorted(events.glob("*.json"))]
     rows = []
@@ -231,11 +257,14 @@ def run(a):
     if digest(binary) != config["binary_sha256"]:
         changed.append("kirimasim binary")
     complete = summary.get("complete") is True and len(rows) == summary["planned"]
-    success = complete and not changed and result.returncode == 0 and all(r["success"] for r in rows)
+    # The overall audit also covers events whose cwd belongs to no planned job.
+    native_audit = audit_events(recorded)
+    success = (complete and not changed and returncode == 0 and native_audit["success"] and
+               all(r["success"] for r in rows))
     report = dict(success=success, complete=complete, profile=a.profile, seed=a.seed,
                   selected_examples=len(selected), planned=summary["planned"],
                   passed=sum(r["success"] for r in rows), source_changes=changed,
-                  native=audit_events(recorded), results=rows,
+                  native=native_audit, results=rows,
                   returncodes=dict(Counter(str(e["returncode"]) for e in recorded)))
     write(a.out / "summary.json", report)
     print("Kirimasim:", report["passed"], "/", report["planned"], "jobs passed; artifacts:", a.out)

@@ -34,7 +34,7 @@ python3 examples/local-riscv-pmp/run.py --profile nightly
 python3 -m unittest discover -s examples/local-riscv-pmp/tests -v
 ```
 
-構成は`pa16`・`pa18`です。各構成で固定シナリオ、ランダムシナリオ、4変異を実行し、JUnitはsmoke 14件／nightly 18件です。通常ケースで要求する目標は16個です。出力・終了・COUNT・カバレッジ・ソースのハッシュの判定は[共通手順](../local-common/README.md)を使います。
+構成は`pa16`・`pa18`です。各構成で固定シナリオ、ランダムシナリオ、4変異を実行し、JUnitはsmoke 14件／nightly 18件です。通常ケースで要求する目標は16個です。固定シナリオには、設定の予約ビットと未実装の物理アドレスビットへの書込み、アドレス空間より広いNAPOT（アドレス空間を越える要求の拒否だけが効く）、上下限が等しいTORをまたぐアクセスも含めます。出力・終了・COUNT・カバレッジ・ソースのハッシュの判定は[共通手順](../local-common/README.md)を使います。
 
 | 変異 | 誤り | 検出ラベル |
 | --- | --- | --- |
@@ -43,9 +43,9 @@ python3 -m unittest discover -s examples/local-riscv-pmp/tests -v
 | 3 | ロックした領域でもMモードの権限を無視する | `PMP_DECISION` |
 | 4 | ロックしたTORの直前のアドレスを書き換えられる | `PMP_STATE` |
 
-`--demo-bug 1..4`は通常ケースにも変異を入れ、終了コード1になることを確かめるオプションです。セルフテスト7件には、先頭が領域外でも一部が優先エントリーに掛かるアクセス、OFFのロック、NAPOTの最大範囲、逆転したTOR、誤った期待値の拒否を含みます。
+`--demo-bug 1..4`は通常ケースにも変異を入れ、終了コード1になることを確かめるオプションです。セルフテスト7件には、先頭が領域外でも一部が優先エントリーに掛かるアクセス、OFFのロック、NAPOTの最大範囲、逆転したTOR、上下限が等しいTORをまたぐアクセス（`hi>lo`の判定を外すと失敗することも確かめます）、誤った期待値の拒否を含みます。
 
-2026-10-31に、Python 3.14.7・Icarus Verilog 14.0開発版で2構成のsmoke／nightlyと7セルフテストが成功しました。Verilator 5.052でRTLの全構成・変異0〜4をlintしています。
+2026-11-07に、Python 3.14.7・Icarus Verilog 14.0開発版で2構成のsmoke／nightlyと7セルフテストが成功しました。Verilator 5.052でRTLの全構成・変異0〜4をlintしています。
 
 ## 確認範囲
 

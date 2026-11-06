@@ -32,7 +32,7 @@ class Campaign:
         if self.m.pending is not None or self.m.state==3:raise ValueError('campaign did not drain')
         return self.rows,self.expected,self.counts
 
-NAMES=('normal','single-bit','scrub','tmr-persistent','watchdog','kick-boundary','bad-command','recovery-ecc','recovery-cfg','reset-pending','reset-check','write-upset','scrub-write-collision','simultaneous','sequence-wrap')
+NAMES=('normal','single-bit','scrub','tmr-persistent','watchdog','kick-boundary','bad-command','recovery-ecc','recovery-cfg','reset-pending','reset-check','write-upset','scrub-write-collision','simultaneous','sequence-wrap','write-expiry','scrub-uncorrectable','check-tmr-upset','opcode-sequence','maintenance-locked','ready-blocked')
 def make(name,pars,seed=17,random_count=16):
     c=Campaign(pars['DEPTH'],pars['WD_LIMIT'],pars['TRIP']);d=c.m.depth
     if name=='normal':
@@ -87,6 +87,39 @@ def make(name,pars,seed=17,random_count=16):
     elif name=='sequence-wrap':
         for i in range(260):c.command(0,i%d,i&255)
         c.command(1)
+    elif name=='write-expiry':
+        # The pending RAM write loses to the deadline at its commit edge: word 1 stays blank.
+        c.command(0,0,90)
+        for _ in range(c.m.limit-2):c.tick(kick=0)
+        c.tick(valid=1,op=0,addr=1,data=77,seq=c.m.seq,kick=0);c.tick(kick=0)
+        c.recovery();c.command(1,1)
+    elif name=='scrub-uncorrectable':
+        # Only the background scrub can see this double fault: no command reads the word.
+        c.command(0,1,55);c.tick(inject=1,inject_addr=1,inject_mask=3,scrub=0)
+        for _ in range(d+2):c.tick()
+        c.tick(ack=1);c.tick(maint=1,maint_addr=1,maint_data=55);c.recovery();c.command(1,1)
+    elif name=='check-tmr-upset':
+        # A lane flips during CHECK, first mid-scan and then on the final word, so RUN is refused twice.
+        c.command(3);c.tick(ack=1,scrub=0);c.tick(recover=1,scrub=0);c.tick(f0=1,scrub=0);c.tick(scrub=0);c.tick(scrub=0)
+        c.tick(cfg_write=1,cfg_data=180,scrub=0);c.tick(recover=1,scrub=0)
+        for _ in range(d-2):c.tick(scrub=0)
+        c.tick(f0=1,scrub=0);c.tick(scrub=0);c.tick(scrub=0)
+        c.tick(cfg_write=1,cfg_data=180,scrub=0);c.recovery();c.command(1)
+    elif name=='opcode-sequence':
+        # Opcode 2 and a forward jump: 'bad-command' only sends opcode 3 and a duplicate.
+        c.command(0,0,61);c.command(2);c.recovery();c.command(1,seq=(c.m.seq+5)&255);c.recovery();c.command(1)
+    elif name=='maintenance-locked':
+        # Maintenance writes outside SAFE must not reach the RAM: OFF, RUN and CHECK in turn.
+        c.tick(rst=0,kick=0);c.tick(maint=1,maint_addr=d-1,maint_data=43,cfg_write=1,cfg_data=180,kick=0);c.tick(start=1);c.command(1,d-1)
+        c.command(0,d-1,44);c.tick(maint=1,maint_addr=d-1,maint_data=45);c.command(1,d-1)
+        c.command(3);c.tick(ack=1);c.tick(recover=1);c.tick(maint=1,maint_addr=d-1,maint_data=46)
+        for _ in range(d):c.tick()
+        c.command(1,d-1)
+    elif name=='ready-blocked':
+        # The expiry is already observable, so this command must not be accepted at all.
+        c.command(0,0,91)
+        for _ in range(c.m.limit-1):c.tick(kick=0)
+        c.tick(valid=1,op=1,seq=c.m.seq,kick=0);c.recovery();c.command(1)
     elif name=='random':
         rng=random.Random(seed)
         for _ in range(random_count):

@@ -12,7 +12,7 @@ SOURCES=[*sorted((HERE/'rtl').glob('*.sv')),HERE/'tb/network_tb.sv']
 
 def run(a):
     seeds=list(range(a.seed,a.seed+(3 if a.profile=='nightly' else 1)))
-    names=['directed','reject','overflow','recover','reset-rx','reset-tx',*[f'random-{s}' for s in seeds],*[f'mutation-{i}' for i in range(1,5)]]
+    names=['directed','reject','overflow','recover','swap-exact','swap-early','reset-rx','reset-tx',*[f'random-{s}' for s in seeds],*[f'mutation-{i}' for i in range(1,5)]]
     e=E.Evidence('local-network-echo',a,[Path(__file__),HERE/'model.py',HERE/'support.py',HERE/'requirements.json',*SOURCES],dict(configurations=CONFIGS,seeds=seeds),
         ['toolchain',*[cfg+'/'+name for cfg in CONFIGS for name in [*names,'coverage']],'source-freshness'])
     sim=S.Simulator(e,'network_tb',SOURCES);probes={n:E.P.execute([getattr(a,n),'-V'],e.out/(n+'-version.log'),a.timeout,e.out) for n in ('iverilog','vvp')}
@@ -21,13 +21,15 @@ def run(a):
     for cfg,pars in CONFIGS.items():
         limit=pars['MAX_FRAME']
         def execute(name,frames,seed=a.seed,mode='sequential',reset=None,mutation=0,label=None):
-            selected=frames[:3] if mode=='overflow' else [frames[i] for i in (0,1,2,4)] if mode=='recover' else frames
+            admitted=(0,1,2) if mode in ('overflow','swap-early') else (0,1,2,4) if mode=='recover' else range(len(frames))
+            selected=[frames[i] for i in admitted];fate=M.expect_drops(frames,limit,admitted)
             replies=[r for f in selected if (r:=M.decode(f['data'] if isinstance(f,dict) else f,limit,f.get('link_error',False) if isinstance(f,dict) else False)[0]) is not None]
             counts=dict(rx_frames=len(frames),tx_frames=len(replies),tx_bytes=sum(map(len,replies)),drops=len(frames)-len(replies),resets=int(reset is not None))
-            return sim.execute(cfg+'/'+name,pars,frames,replies,M.rows(frames,seed,mode,reset),seed,counts,mutation,label)
+            return sim.execute(cfg+'/'+name,pars,frames,replies,M.rows(frames,seed,mode,reset),seed,counts,mutation,label,drops=fate)
         execute('directed',M.directed(limit));execute('reject',M.invalid_frames(limit)+[M.udp(b'recovered')])
         burst=[M.udp(bytes((i,1,2)),source_port=2100+i,identification=i) for i in range(5)]
         execute('overflow',burst,mode='overflow');execute('recover',burst,mode='recover')
+        execute('swap-exact',burst[:4],mode='swap-exact');execute('swap-early',burst[:4],mode='swap-early')
         execute('reset-rx',[M.arp(),M.udp(b'reset')],reset='receive');execute('reset-tx',[M.arp(),M.udp(b'reset')],reset='transmit')
         for seed in seeds:execute(f'random-{seed}',M.random_frames(limit,seed,10 if a.profile=='nightly' else 4),seed)
         execute('mutation-1',[M.invalid_frames(limit)[0]],mutation=1,label='NET_UNEXPECTED')

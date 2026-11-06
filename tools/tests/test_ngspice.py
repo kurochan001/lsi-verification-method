@@ -51,3 +51,12 @@ class NgspiceTests(unittest.TestCase):
             (out/'summary.json').write_text(json.dumps(dict(success=True,planned=1,results=[dict(id='probe',status='pass')])))
             (out/'junit.xml').write_text('<testsuite tests="1"><testcase name="probe"/></testsuite>')
             with self.assertRaisesRegex(ValueError,'missing ngspice'):R.inspect_output(out,dict(tools=['lsi-ngspice-config']),{},root)
+
+    def test_recorded_installation_is_reverified_at_inspection(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);out=root/'result';out.mkdir();(root/'source.txt').write_text('fixture')
+            (out/'manifest.json').write_text(json.dumps(dict(source_sha256={'source.txt':hashlib.sha256(b'fixture').hexdigest()})))
+            (out/'summary.json').write_text(json.dumps(dict(success=True,planned=1,results=[dict(id='probe',status='pass')])))
+            (out/'junit.xml').write_text('<testsuite tests="1"><testcase name="probe"/></testsuite>')
+            (out/'ngspice-source.json').write_text(json.dumps(dict(root=str(root/'removed-installation'))))
+            with self.assertRaises(OSError):R.inspect_output(out,dict(tools=['lsi-ngspice-config']),{},root)

@@ -14,6 +14,10 @@ class PiTests(unittest.TestCase):
     def test_rounding_ties_are_symmetric(self):
         p=M.PI(8,3);p.integral=-1;self.assertEqual(calculate(p,1),1)
         p=M.PI(8,3);p.integral=1;self.assertEqual(calculate(p,-1),-1)
+    def test_exact_limit_plus_one_is_clipped_in_both_directions(self):
+        for limit,error in ((8,17),(12,25)):
+            for sign in (1,-1):
+                p=M.PI(limit,3);self.assertEqual(calculate(p,sign*error),sign*limit);self.assertEqual((p.clip,p.anti,p.integral),(1,1,0))
     def test_antiwindup_prevents_accumulation_and_release_is_neutral(self):
         for sign in (-1,1):
             p=M.PI(8,3)
@@ -43,6 +47,16 @@ class LoopTests(unittest.TestCase):
         for p in PARS:
             for name,bit in (('estop-rearm',1),('encoder-invalid',2),('deadline',4),('encoder-stuck',8),('mechanical-stall',8),('overspeed',16),('position-wrap',32)):
                 rows,e,n=C.make(name,p);self.assertTrue(any(o[1]&bit for o in e),(p,name))
+    def test_reverse_overspeed_is_a_fault(self):
+        for p in PARS:
+            rows,e,n=C.make('overspeed-reverse',p);entry=next(o for o in e if o[1]);self.assertEqual(entry[1]&16,16);self.assertLess(M.S(entry[6]),0)
+    def test_arm_waits_for_the_encoder_notices_to_clear(self):
+        for p in PARS:
+            rows,e,n=C.make('arm-on-notice',p);arms=[o[0] for r,o in zip(rows,e) if r[1]];self.assertEqual(arms,[0,0,1])
+    def test_saturation_boundary_stimulus_keeps_running_without_faults(self):
+        for p in PARS:
+            rows,e,n=C.make('saturation-boundary',p);self.assertTrue(all(o[1]==0 for o in e));self.assertEqual(n['updates'],2)
+            limit=p['PERIOD']//2;self.assertEqual({M.S(o[7]) for o in e if o[3]},{limit,-limit})
     def test_ack_does_not_arm_and_rearm_is_neutral(self):
         rows,e,n=C.make('estop-rearm',PARS[0]);self.assertTrue(any(r[3] and o[1]!=0 and not o[0] for r,o in zip(rows,e)))
         last=0;neutral=False

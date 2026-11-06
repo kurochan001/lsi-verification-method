@@ -16,12 +16,12 @@ module tagged_reorder #(parameter MUTATION=0)(
   for(integer i=0;i<4;i=i+1)begin
    if(!occupied[i] && free_slot<0)free_slot=i;
    if(occupied[i] && ids[i]==s_id)id_busy=1;
-   if(occupied[i] && delay_count[i]==0)candidate=i;
+   if(occupied[i] && (delay_count[i]==0 || MUTATION==7))candidate=i;
   end
  end
- assign s_ready=rst_n && free_slot>=0 && !id_busy;
+ assign s_ready=rst_n && free_slot>=0 && (!id_busy || MUTATION==5);
  assign m_valid=rst_n && held;
- assign m_id=ids[selected];
+ assign m_id=(MUTATION==6) ? selected:ids[selected];
  assign m_token=tokens[selected]^((MUTATION==2) ? 16'd1:16'd0);
  assign m_data=data[selected]^((MUTATION==1) ? 8'd1:8'd0);
  always @(posedge clk)begin
@@ -32,7 +32,7 @@ module tagged_reorder #(parameter MUTATION=0)(
    started<=1;
    for(integer i=0;i<4;i=i+1)if(occupied[i] && delay_count[i]!=0)delay_count[i]<=delay_count[i]-3'd1;
    if(held && m_ready)begin held<=0;if(MUTATION!=3)occupied[selected]<=0;end
-   if(!held && release_enable && candidate>=0)begin held<=1;selected<=2'(candidate);end
+   if((!held || (MUTATION==8 && !m_ready)) && release_enable && candidate>=0)begin held<=1;selected<=2'(candidate);end
    if(s_valid && s_ready)begin
     occupied[free_slot]<=1;ids[free_slot]<=s_id;tokens[free_slot]<=s_token;
     data[free_slot]<=(s_data<<1)+s_data+{6'b0,s_id};delay_count[free_slot]<=s_data[2:0];

@@ -7,20 +7,22 @@ module network_tb;
     network_echo #(.MAX_FRAME(MAX_FRAME),.MUTATION(MUTATION)) dut(.*);
     always #5 clk=~clk;
     reg [7:0] expected[0:16383],rx_packet[0:MAX_FRAME+15],tx_packet[0:MAX_FRAME-1];
-    reg [15:0] lengths[0:127];reg [31:0] v[0:5];
+    reg [15:0] lengths[0:127];reg [31:0] v[0:5];reg [3:0] reasons[0:127];
     reg held=0;reg [8:0] held_payload;
     reg [8*MAX_FRAME+16:0] held_head;
     reg head_hold=0;
-    integer expected_rx,expected_tx,expected_bytes,expected_drops,planned_checks;
+    integer expected_rx,expected_tx,expected_bytes,expected_drops,planned_checks,expected_rejected,expected_full,expected_long,reason_index=0;
     integer fd,n,rx_frames=0,tx_frames=0,tx_bytes=0,rx_index=0,tx_index=0,resets=0,stall=0;
     reg [31:0] old_full=0,old_long=0,old_rejected=0;
-    string vectors,expected_path,lengths_path,wave;
+    string vectors,expected_path,lengths_path,reasons_path,wave;
     task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"rx=%0d tx=%0d bytes=%0d",rx_frames,tx_frames,tx_bytes);end endtask
     initial begin
         if(!$value$plusargs("VECTORS=%s",vectors) || !$value$plusargs("EXPECTED=%s",expected_path) || !$value$plusargs("LENGTHS=%s",lengths_path) ||
            !$value$plusargs("WAVE=%s",wave) || !$value$plusargs("RX_FRAMES=%d",expected_rx) || !$value$plusargs("TX_FRAMES=%d",expected_tx) ||
-           !$value$plusargs("TX_BYTES=%d",expected_bytes) || !$value$plusargs("DROPS=%d",expected_drops) || !$value$plusargs("CHECKS=%d",planned_checks))$fatal(1,"arguments required");
-        if(expected_tx>128 || expected_bytes>16384)$fatal(1,"capacity exceeded");
+           !$value$plusargs("TX_BYTES=%d",expected_bytes) || !$value$plusargs("DROPS=%d",expected_drops) || !$value$plusargs("CHECKS=%d",planned_checks) ||
+           !$value$plusargs("REASONS=%s",reasons_path) || !$value$plusargs("REJECTED=%d",expected_rejected) || !$value$plusargs("FULL_DROPS=%d",expected_full) || !$value$plusargs("LONG_DROPS=%d",expected_long))$fatal(1,"arguments required");
+        if(expected_tx>128 || expected_bytes>16384 || expected_rejected>128)$fatal(1,"capacity exceeded");
+        if(expected_rejected>0)$readmemh(reasons_path,reasons,0,expected_rejected-1);
         if(expected_tx>0)begin $readmemh(lengths_path,lengths,0,expected_tx-1);$readmemh(expected_path,expected,0,expected_bytes-1);end
         $dumpfile(wave);$dumpvars(2,network_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"stimulus missing");
         repeat(3)@(negedge clk);
@@ -36,7 +38,7 @@ module network_tb;
             #1;
             if(!rst_n)begin
                 rx_frames=0;tx_frames=0;tx_bytes=0;rx_index=0;tx_index=0;held=0;head_hold=0;stall=0;
-                old_full=0;old_long=0;old_rejected=0;
+                old_full=0;old_long=0;old_rejected=0;reason_index=0;
             end else begin
                 if($isunknown({tx_valid,occupancy,accepted,full_drops,long_drops,rejected,transmitted}))fail("NET_UNKNOWN");
                 if(held && (!tx_valid || {tx_last,tx_data}!==held_payload))fail("NET_HOLD");
@@ -46,8 +48,15 @@ module network_tb;
                 if(held)$display("COVER flow/tx-hold");
                 if(rx_valid && held)$display("COVER flow/rx-unthrottled");
                 if(occupancy==2)$display("COVER flow/full");
+                if(rx_valid && occupancy==2 && !dut.queue.in_frame && dut.queue.pop)$display("COVER flow/same-edge-reuse");
+                if(rx_valid && rx_error && rx_index==0)$display("COVER drop/link-first-byte");
+                if(rx_valid && rx_error && rx_last)$display("COVER drop/link-last-byte");
                 if(full_drops!=old_full)$display("COVER drop/full");
                 if(long_drops!=old_long)$display("COVER drop/oversize");
+                if(rejected!=old_rejected)begin
+                    if(reason_index>=expected_rejected || last_drop!==reasons[reason_index])fail("NET_REASON");
+                    reason_index=reason_index+1;
+                end
                 if(rejected!=old_rejected)case(last_drop)
                     1:$display("COVER drop/crc");2:$display("COVER drop/length");3:$display("COVER drop/link");4:$display("COVER drop/filter");
                     5:$display("COVER drop/format");6:$display("COVER drop/ip-checksum");7:$display("COVER drop/udp-checksum");8:$display("COVER drop/unsupported");
@@ -60,6 +69,7 @@ module network_tb;
                     if(rx_last)begin
                         rx_frames=rx_frames+1;
                         if(rx_index>=42 && rx_packet[12]==8'h08 && rx_packet[13]==0 && rx_packet[40]==0 && rx_packet[41]==0)$display("COVER udp/zero-input");
+                        if(rx_index>=42 && rx_packet[12]==8'h08 && rx_packet[13]==8'h06 && rx_packet[0]==8'h02)$display("COVER arp/unicast-input");
                         rx_index=0;
                     end
                 end
@@ -86,6 +96,7 @@ module network_tb;
         end
         if(rx_frames!=expected_rx || tx_frames!=expected_tx || tx_bytes!=expected_bytes || tx_index!=0 || rx_index!=0 || tx_valid || occupancy!=0 ||
            full_drops+long_drops+rejected!=expected_drops || accepted!=transmitted+rejected || transmitted!=expected_tx)fail("NET_COMPLETION");
+        if(full_drops!=expected_full || long_drops!=expected_long || rejected!=expected_rejected || reason_index!=expected_rejected)fail("NET_DROP_COUNT");
         $display("COUNT rx_frames=%0d",rx_frames);$display("COUNT tx_frames=%0d",tx_frames);$display("COUNT tx_bytes=%0d",tx_bytes);
         $display("COUNT drops=%0d",full_drops+long_drops+rejected);$display("COUNT resets=%0d",resets);
         if(planned_checks!=1+tx_bytes)fail("NET_COMPLETION");

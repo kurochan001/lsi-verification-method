@@ -38,6 +38,8 @@ kirimasimのコミットは、確認時点の公開`main`とも一致しまし�
 
 [機械可読の実測記録](results-20261103.json)に、構成別の結果、起動数、ソース760件とバイナリーのSHA-256、修正前の試行、追加確認の終了コード、証跡のハッシュを収録しています。生ログ・入力・波形等はGit管理外の`artifacts/kirimasim-20261103/`に保存しました。`final-smoke/`・`icarus-final/`が最終smoke、`selected-nightly/`・`icarus-nightly/`が追加nightlyで、修正前の`full-smoke/`・`full-smoke-timescale/`を上書きしていません。
 
+記録内の`adapter_sha256`と`tools/run_kirimasim_examples.py`のハッシュは、実測時のアダプターの値です。2026-11-06のアダプター修正により、現行ファイルのハッシュとは一致しません。修正後も、同じバイナリーと下記の手順で全107構成のsmokeを1回再実行し、PASSと起動数・終了コードの内訳が上記と同じであることを確認しました。この再実行は並列4・Python 3.14で行い、Icarusとの出力照合と追加nightlyは再実行していません。
+
 ### smokeを実行した80例
 
 下表の構成数は統合ランナーが展開するジョブ数です。各ジョブ内でも、元の例が持つ追加構成・通常ケース・変異検出等を実行します。たとえば幅変換は1ジョブの内部で待ち0／2の2構成を扱います。
@@ -199,6 +201,8 @@ python3 tools/run_regression.py \
   --example local-axi4 --example local-width-converter \
   --profile smoke --seed 17 --jobs 2 --out artifacts/icarus-comparison
 ```
+
+`--command-timeout`は、kirimasimの`--max-wall-time`へ整数秒に切り上げて渡す上限です。時間超過を`events/`へ記録できるよう、アダプターのプロセス監視はこれより5秒、既存ランナー側の上限は10秒長くしています。
 
 `--example`は繰り返し指定でき、省略時は条件に合う全登録例を選びます。`--profile nightly`も渡せますが、nightlyを指定した実行の範囲と結果を別に確認してください。未対応のシミュレータ用オプションを黙って捨てたり、Icarusへ自動的に切り替えて合格させたりはしません。
 

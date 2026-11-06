@@ -5,9 +5,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: affected-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   affected:
     runs-on: ubuntu-24.04
@@ -29,10 +30,29 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: tools/docs/package-lock.json
+      - name: Decide change base
+        id: base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_BASE: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          # A push's own delta omits an earlier push that failed or was replaced while
+          # pending, so a push is compared with the last run that passed on its branch.
+          base="${PULL_REQUEST_BASE:-${PUSH_BEFORE:-HEAD~1}}"
+          if [[ "$GITHUB_EVENT_NAME" == push ]]; then
+            passed="$(gh run list --workflow affected.yml --branch "$GITHUB_REF_NAME" --event push --status success --limit 1 --json headSha --jq '.[0].headSha // empty')" || {
+              echo '::warning::Last successful Affected run unavailable; comparing with this push only.'
+              passed=''
+            }
+            if [[ -n "$passed" ]] && git merge-base --is-ancestor "$passed" HEAD; then base="$passed"; fi
+          fi
+          echo "Change base: $base"
+          echo "value=$base" >> "$GITHUB_OUTPUT"
       - name: Select affected jobs
         id: selection
         env:
-          CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+          CHANGE_BASE: ${{ steps.base.outputs.value }}
         run: |
           python tools/select_regression.py --base "$CHANGE_BASE" --out artifacts/ci/selection
           python -c 'import json,os; d=json.load(open("artifacts/ci/selection/selection.json")); open(os.environ["GITHUB_OUTPUT"],"a").write("jobs="+str(len(d["selected_jobs"]))+"\n")'
@@ -97,7 +117,7 @@ jobs:
       - name: Run and audit the selected jobs
         if: steps.selection.outputs.jobs != '0'
         env:
-          CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+          CHANGE_BASE: ${{ steps.base.outputs.value }}
         run: >-
           artifacts/ci-env/python/bin/python tools/select_regression.py
           --base "$CHANGE_BASE" --run --profile smoke

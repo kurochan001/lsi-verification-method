@@ -26,6 +26,32 @@ class PacketTests(unittest.TestCase):
         for limit in (96,128):
             for frame in M.invalid_frames(limit):
                 with self.subTest(limit=limit,reason=frame['reason']):self.assertEqual(M.decode(frame['data'],limit,frame.get('link_error',False))[1],frame['reason'])
+    def test_each_added_frame_is_rejected_by_one_term_only(self):
+        good=M.udp(b'odd');self.assertEqual(M.decode(M.edit(good,{23:17},True))[1],0)
+        for changes,reason in (({23:6},8),({12:0x86,13:0xdd},8),({i:255 for i in range(6)},4)):
+            self.assertEqual(M.decode(M.edit(good,changes,bool(23 in changes)))[1],reason)
+        lenient=M.udp(b'odd',zero_checksum=True)
+        self.assertEqual(M.decode(M.edit(lenient,{38:0,39:9}))[1],5)
+        self.assertEqual(M.decode(M.edit(lenient,{16:0,17:50,38:0,39:30},True))[1],5)
+        request=M.arp();self.assertEqual(M.decode(request)[1],0)
+        for changes,reason in (({15:2},8),({16:0x86},8),({18:8},8),({19:16},8),({21:2},8),({22:4},5)):
+            self.assertEqual(M.decode(M.edit(request,changes))[1],reason)
+    def test_drop_expectations_separate_queue_length_and_decoder_fates(self):
+        good=M.udp(b'odd');bad=bytearray(good);bad[-1]^=1
+        self.assertEqual(M.expect_drops([good,bytes(bad),M.with_fcs(bytes(96))],96),dict(reasons=[1],full=0,long=1))
+        self.assertEqual(M.expect_drops([good,bytes(bad)],96,admitted=(0,)),dict(reasons=[],full=1,long=0))
+    def test_link_error_position_follows_the_frame_request(self):
+        good=M.udp(b'odd');n=len(good)
+        for at,position in ((0,0),(-1,n-1),(None,n//2)):
+            frame=dict(data=good,link_error=True,reason=3)
+            if at is not None:frame['link_at']=at
+            rows=[r for r in M.rows([frame],mode='overflow') if r[1]];self.assertEqual([i for i,r in enumerate(rows) if r[4]],[position])
+    def test_swap_rows_start_the_fourth_frame_on_or_before_the_pop_row(self):
+        frames=[M.udp(bytes((i,1,2))) for i in range(4)]
+        starts=[next(i for i,r in enumerate(M.rows(frames,mode=mode)) if i>3+3*64 and r[1]) for mode in ('swap-exact','swap-early')]
+        self.assertEqual(starts[0]-starts[1],1);self.assertEqual(starts[0],3+3*64+8+64)
+    def test_directed_frames_include_unicast_arp(self):
+        unicast=M.directed(96)[1];self.assertEqual(unicast[:6],M.LOCAL_MAC);self.assertEqual(M.decode(unicast)[1:],(0,1))
     def test_maximum_payload_and_frame_limit(self):
         for limit in (96,128):
             f=M.udp(bytes(range(limit-46)));self.assertEqual(len(f),limit);self.assertEqual(len(M.decode(f,limit)[0]),limit)

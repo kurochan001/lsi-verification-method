@@ -14,7 +14,7 @@
     {
       "id": "PRED-RECOVERY",
       "goals": [
-        "branch/shadowed-prediction",
+        "branch/shadowed-predictable",
         "branch/forwarded-operand",
         "jalr/forwarded-base"
       ]

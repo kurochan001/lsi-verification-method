@@ -116,7 +116,7 @@ def main():
     p.add_argument('--oss-home',type=Path,default=Q.ROOT/'artifacts/toolchains/oss/oss-cad-suite')
     a=p.parse_args()
     if not math.isfinite(a.timeout) or a.timeout<=0 or a.out.exists():p.error('positive finite timeout and fresh --out required')
-    a.python=Q.executable(a.python)
+    a.python=Q.executable(a.python);a.oss_home=a.oss_home.absolute()
     for name in ('formal_python','rdl_python','cocotb_python'):
         value=getattr(a,name) or a.python;setattr(a,name,Q.executable(value))
     try:return run(a)

@@ -7,6 +7,7 @@ module request_source #(parameter MUTATION=0)(
     if(!rst_n)begin valid<=0;data<=0;end
     else if(!valid || ready)begin valid<=issue;if(issue)data<=value;end
     else if(MUTATION==1)data<=data^8'h01;
+    else if(MUTATION==4)valid<=0;
   end
 endmodule
 

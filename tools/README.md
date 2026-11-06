@@ -15,7 +15,7 @@
 | [`regressions.json`](regressions.json) | 全体実行の入口・構成・依存・親子関係の登録表。未登録の例を自動的に省略しない。 |
 | [`run_lint.py`](run_lint.py) | [共通DUT lint](../docs/method/lint-and-waivers.md)。[`lint_targets.json`](lint_targets.json)の構成を読み、[`lint_baseline.json`](lint_baseline.json)からの新規・解消・版変更を拒否する。既知の未解決指摘は警告0件と区別する。 |
 
-セルフテストは[文書用環境](ENVIRONMENT.md)を準備して実行します。単独なら`python3 -m unittest discover -s tools/tests -v`、証跡付きなら`run_selftests.py --scope tools`です。[CIの起動条件と保存範囲](CI.md)も参照してください。
+セルフテストは[文書用環境](ENVIRONMENT.md)を準備して実行します。単独なら`artifacts/toolchains/docs/python/bin/python -m unittest discover -s tools/tests -v`、証跡付きなら`run_selftests.py --scope tools`です。[CIの起動条件と保存範囲](CI.md)も参照してください。
 
 <a id="case-study-reference-tools"></a>
 

@@ -8,11 +8,11 @@ TOP='compare_formal';CONFIGS={'bytes2':{'BYTES':2},'bytes4':{'BYTES':4}}
 BOUND=12;PROOF_DEPTH=8
 SOURCES=[HERE/'rtl/constant_time_compare.sv',HERE/'compare_formal.sv']
 SCOPE=('Unbounded self-composition proof for 2/4-byte comparisons: identical public inputs and arbitrary '
-       'independent changing secrets produce identical ready/busy/result-valid and public status. '
-       'Only the comparison result at result-valid is declassified. Each accepted operation completes '
+       'independent changing secrets produce identical ready/busy/result-valid and public status; match stays 0 '
+       'while busy and unchanged while idle. Only the comparison result at result-valid is declassified. Each accepted operation completes '
        'after BYTES cycles with the equality of the captured operands, unless reset; held results stay stable. '
        'This is a digital cycle/public-port property, not physical power/EM or cache side-channel security.')
-ASSERTS={'ap_timing','ap_public','ap_result','ap_hold','ai_model_bounds'}
+ASSERTS={'ap_timing','ap_public','ap_match_quiet','ap_match_idle','ap_result','ap_hold','ai_model_bounds'}
 COVERS={'cp_match','cp_mismatch','cp_different_secrets','cp_first_byte','cp_last_byte','cp_backpressure','cp_reset_busy'}
 
 

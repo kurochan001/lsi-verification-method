@@ -58,7 +58,7 @@ python3 examples/local-advanced-regression/run.py --stage formal \
 
 既定stageはall、simulationは6例、formalは完了期限の1例です。`--profile`と`--seed`はシミュレーションへ渡します。`--python`で通常の子、`--cocotb-python`と`--formal-python`で専用環境を選択し、省略時は親と同じPythonを使います。詳細な構成・タスク選択は各例のCLIを直接使ってください。
 
-`--timeout`は子リグレッション全体の上限（既定1800秒）、`--formal-timeout`は各SBYタスクの上限（300秒）です。既存の`--out`は上書きしません。
+`--timeout`（別名`--child-timeout`）は子リグレッション全体の上限（既定1800秒）、`--formal-timeout`は各SBYタスクの上限（300秒）です。既存の`--out`は上書きしません。
 
 ## 判定と集計
 

@@ -58,7 +58,7 @@ flowchart LR
 
 PythonのPWMモデルは切替えを許可する時刻、エンコーダモデルはGray状態の環上の距離で期待値を作ります。RTLの空白カウンターやcase表をそのまま複写しません。全サイクルで出力・設定値・内部状態・計数・通知を比較し、端子の相互排他と極性切替え間の空白も別の自動チェッカーで確認します。
 
-[要求カタログ](requirements.json)は4要求・15観測目標です。0／100%／中間duty、設定の遅延反映・境界同時反映、不正設定、stop、正逆転、短いノイズ、不正遷移、原点、両方向の折返し、resetを固定ケースで確保し、ランダム列を加えます。
+[要求カタログ](requirements.json)は4要求・16観測目標です。0／100%／中間duty、設定の遅延反映・境界同時反映、不正設定、stop、正逆転、短いノイズ、不正遷移、原点、採用エッジと重なる原点設定、両方向の折返し、resetを固定ケースで確保し、ランダム列を加えます。
 
 5変異は、同時出力を`IO_OVERLAP`、方向・不正遷移通知の誤りを`IO_ENCODER`、周期途中の設定反映・空白省略を`IO_PWM`で検出します。変異ケースの観測で通常ケースの未達を埋めません。
 
@@ -67,6 +67,6 @@ python3 examples/local-motion-io/run.py --profile smoke --out artifacts/motion-i
 python3 examples/local-motion-io/run.py --profile nightly --out artifacts/motion-io-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。2構成でJUnitはsmoke 26件／nightly 30件です。nightlyはランダムseedを1→3、各seedの追加区間を32→96へ増やします。
+Python 3・Icarus Verilog・vvpを使います。2構成でJUnitはsmoke 28件／nightly 32件です。nightlyはランダムseedを1→3、各seedの追加区間を32→96へ増やします。
 
 生成入力と期待値のハッシュ、`vectors.txt`、`expected.hex`、VCD、ログ、行数・遷移・不正遷移・wrap・設定拒否・reset件数を保存します。符号付き値は32ビットへ符号拡張して比較し、期待値の切捨てによる見かけ一致を防ぎます。観測ログによる機能カバレッジで、ネイティブcovergroup DB・コードカバレッジ・フォーマル証明とは区別します。[追加記録](../../PROVENANCE.md#robotics-20261101)も参照してください。

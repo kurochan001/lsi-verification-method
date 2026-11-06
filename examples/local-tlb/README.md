@@ -49,13 +49,13 @@ python3 examples/local-tlb/run.py --profile nightly
 python3 -m unittest discover -s examples/local-tlb/tests -v
 ```
 
-構成は`entries2`・`entries4`です。固定シナリオだけで21目標に到達し、各構成の固定・ランダム・4変異とカバレッジ判定で、JUnitはsmoke 14件／nightly 18件です。判定・証跡は[共通手順](../local-common/README.md)を使います。
+構成は`entries2`・`entries4`です。固定シナリオだけで21目標に到達し、各構成の固定・ランダム・4変異とカバレッジ判定で、JUnitはsmoke 14件／nightly 18件です。判定・証跡は[共通手順](../local-common/README.md)を使います。固定シナリオには、U=0のページ（`0xcf`）、読出しだけのページ（`0xd3`）、実行だけのページ（`0xd9`）も含めます。補充した後のヒットで、U・R・W・X・MXRの判定をそれぞれ通します。
 
 4変異は、ASIDを無視する検索、4KiBページを4MiBのタグ幅で照合する検索、スーパーページのフェンスを完全一致の4KiBタグで判定する誤り、ヒット時の権限チェック漏れです。前の3つは`TLB_FLOW`、権限の誤りは`TLB_RESULT`で検出します。`--demo-bug 1..4`では通常ケースも失敗します。
 
 セルフテストは7件です。ASID上位ビットの違い、非リーフから継承したグローバル変換、スーパーページ内を指定するフェンス、PTE更新後の再変換、ヒット時の権限変更、ウォーク・応答待ち中のフェンスを実RTLで照合します。
 
-2026-10-31に、Python 3.14.7・Icarus Verilog 14.0開発版で両構成のsmoke／nightlyと7セルフテストが成功しました。Verilator 5.052で両構成・変異0〜4をlintしています。
+2026-11-07に、Python 3.14.7・Icarus Verilog 14.0開発版で両構成のsmoke／nightlyと7セルフテストが成功しました。Verilator 5.052で両構成・変異0〜4をlintしています。
 
 ## 確認範囲
 

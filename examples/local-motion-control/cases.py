@@ -2,7 +2,7 @@ import importlib.util
 from pathlib import Path
 import random
 spec=importlib.util.spec_from_file_location('motion_axis_cases_model',Path(__file__).with_name('model.py'));M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
-NAMES=('tracking','reversal','load-step','saturation','estop-rearm','encoder-invalid','encoder-stuck','mechanical-stall','deadline','deadline-boundary','overspeed','position-wrap','reset-pending','origin-arm')
+NAMES=('tracking','reversal','load-step','saturation','estop-rearm','encoder-invalid','encoder-stuck','mechanical-stall','deadline','deadline-boundary','overspeed','position-wrap','reset-pending','origin-arm','overspeed-reverse','arm-on-notice','saturation-boundary')
 class Campaign:
     def __init__(self,p):
         self.p=p;self.m=M.Axis(p['PERIOD'],p['DEAD'],p['FILTER'],p['SAMPLE'],p['LATENCY'],p['SPEED_LIMIT']);self.rows=[];self.expected=[];self.old_rst=0
@@ -34,6 +34,20 @@ def make(name,p,seed=17,random_count=4):
         c.tick(origin_en=1,origin=1000,arm=1,target=1000);c.tick(origin_en=1,origin=-1000,target=1000);c.hold(5*s,target=1000);return c.finish()
     if name=='position-wrap':
         c.tick(origin_en=1,origin=32767);c.arm(target=32767,load=-768);c.hold(3*s,target=32767,load=-768);return c.finish()
+    if name=='arm-on-notice':
+        # ARM is refused on the cycle an encoder notice is visible and accepted on a later edge.
+        c.hold(p['FILTER']+6,mode=2,override=3)
+        while not c.m.encoder.invalid:c.tick(mode=2,override=0)
+        c.tick(arm=1,mode=2,override=0);c.tick(mode=2,override=0);c.tick(origin_en=1,origin=32767,mode=2,override=0)
+        while not c.m.encoder.wrapped:c.tick(mode=2,override=1)
+        c.tick(arm=1,mode=2,override=1);c.tick(mode=2,override=1);c.tick(arm=1,mode=2,override=1);c.hold(3,mode=2,override=1)
+        return c.finish()
+    if name=='saturation-boundary':
+        # With no integral yet, an error of 2U+1 rounds to exactly U+1 once the update is frozen.
+        for sign in (1,-1):
+            c.tick(rst=0);c.tick();c.arm();c.hold(s-1)
+            c.tick(target=c.m.encoder.position+sign*(p['PERIOD']+1));c.hold(p['LATENCY']+2)
+        return c.finish()
     c.arm(target=target)
     if name=='tracking':c.track(40*s,target=target)
     elif name=='reversal':c.track(32*s,target=target);c.track(40*s,target=-target)
@@ -51,6 +65,7 @@ def make(name,p,seed=17,random_count=4):
         c.hold(s,target=target)
         c.hold(s-p['LATENCY']-1,target=target,hold=1);c.hold(p['LATENCY']+3,target=target);c.hold(2*s,target=target)
     elif name=='overspeed':c.hold(4*s,target=target,load=-768)
+    elif name=='overspeed-reverse':c.hold(4*s,target=-target,load=768)
     elif name=='reset-pending':
         c.hold(s+1,target=target,hold=1);c.tick(rst=0,arm=1,target=target);c.tick();c.arm(target=-target);c.track(40*s,target=-target)
     elif name=='random':

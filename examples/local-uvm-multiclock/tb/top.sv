@@ -4,8 +4,8 @@ module top;
   import uvm_pkg::*;import uvm_apb_pkg::fatal_to_exit;import mc_pkg::*;
   bit src_clk=0,dst_clk=0;int pair_id,mutation,sva_off,sva_fault;int src_count,dst_count;bit [7:0] tick;bit traffic_seen,reset_after_traffic;
   mc_if bus(src_clk,dst_clk);
-  wire [3:0] ready,valid,src_up,dst_up;wire [7:0] data[4];wire [15:0] ids[4];
-  for(genvar m=0;m<4;m++)begin: variants
+  wire [5:0] ready,valid,src_up,dst_up;wire [7:0] data[6];wire [15:0] ids[6];
+  for(genvar m=0;m<6;m++)begin: variants
     reset_mailbox #(.MUTATION(m)) dut(src_clk,dst_clk,bus.src_rst_n,bus.dst_rst_n,bus.src_valid,bus.src_data,bus.src_id,
       ready[m],src_up[m],dst_up[m],bus.dst_ready,valid[m],data[m],ids[m]);
   end
@@ -28,6 +28,18 @@ module top;
       if(dst_count<2)dst_count++;
     end
   end
+  // Release contract at the source port, independent of the RTL's synchronizers: after a channel
+  // reset the sender needs two local edges, and then dst_up must be sampled on two further edges.
+  wire channel_rst_n=bus.src_rst_n && bus.dst_rst_n;
+  int channel_count,peer_count;
+  always @(posedge src_clk or negedge channel_rst_n)begin
+    if(!channel_rst_n)begin channel_count=0;peer_count=0;end
+    else begin
+      if(sva_off==0)ap_channel_release:assert(!bus.src_ready || (channel_count>=2 && peer_count>=2))else begin $display("CHECK_FAIL MC_CHANNEL");$fatal(1,"source became ready before the channel release completed");end
+      if(channel_count>=2 && bus.dst_up && peer_count<2)peer_count++;
+      if(channel_count<2)channel_count++;
+    end
+  end
   always @(posedge dst_clk)tick<=tick+1;
   always @(posedge src_clk)if(bus.src_valid && bus.src_ready)traffic_seen<=1;
   always @(negedge bus.src_rst_n or negedge bus.dst_rst_n)if(traffic_seen)reset_after_traffic<=1;
@@ -43,11 +55,12 @@ module top;
   cp_src_up:cover property(@(posedge src_clk) sva_off==0 && bus.src_up && src_count==2)$display("MC_COVER cp_src_up");
   cp_dst_up:cover property(@(posedge dst_clk) sva_off==0 && bus.dst_up && dst_count==2)$display("MC_COVER cp_dst_up");
   cp_recovery:cover property(@(posedge dst_clk) sva_off==0 && bus.dst_valid && bus.dst_ready && reset_after_traffic)$display("MC_COVER cp_recovery");
+  cp_release_wait:cover property(@(posedge src_clk) sva_off==0 && channel_rst_n && bus.src_valid && !bus.src_ready && !(channel_count>=2 && peer_count>=2))$display("MC_COVER cp_release_wait");
   initial begin
     string wave;fatal_to_exit catcher;
     bus.src_rst_n=0;bus.dst_rst_n=0;bus.src_valid=0;bus.src_data=0;bus.src_id=0;bus.dst_ready=0;
     void'($value$plusargs("MUTATION=%d",mutation));void'($value$plusargs("SVA_OFF=%d",sva_off));void'($value$plusargs("SVA_FAULT=%d",sva_fault));
-    if(mutation<0 || mutation>3 || !$value$plusargs("WAVE=%s",wave))$fatal(1,"invalid run arguments");
+    if(mutation<0 || mutation>5 || !$value$plusargs("WAVE=%s",wave))$fatal(1,"invalid run arguments");
     $dumpfile(wave);$dumpvars(0,top);catcher=new;uvm_report_cb::add(null,catcher);
     uvm_config_db#(virtual mc_if)::set(null,"uvm_test_top.env","vif",bus);run_test("mc_test");
   end

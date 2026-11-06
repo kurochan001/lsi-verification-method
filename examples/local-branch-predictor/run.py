@@ -22,7 +22,7 @@ LOOP_EXIT, SHADOW = 1 << 13, 1 << 14  # coverage bits beyond the ISS example's t
 # mutant cannot change anything there, so it must pass (a diagnostic).
 LABELS = {'none': {5: None, 6: None, 7: None, 8: None},
           'static': {5: 'ISS_FLOW', 6: 'ISS_PERF', 7: 'ISS_PERF', 8: 'ISS_FLOW'},
-          'dynamic': {5: 'ISS_FLOW', 6: None, 7: None, 8: 'ISS_FLOW'}}
+          'dynamic': {5: 'ISS_FLOW', 6: 'ISS_PERF', 7: None, 8: 'ISS_FLOW'}}
 BRANCH, JAL, JALR = 0x63, 0x6f, 0x67
 
 
@@ -47,6 +47,25 @@ def counters(trace, predict):
     return ctrl, flush
 
 
+def dynamic_flushes(trace):
+    """The flushes of dynamic prediction. Exact while branches that share a counter (pc bits 5:2)
+    are at least three retired instructions apart: a branch then reads its counter in IF after
+    the one before it has updated the counter in EX."""
+    bht, last, flush = [1] * 16, {}, 0  # weakly not taken, as the core resets them
+    for i, r in enumerate(trace):
+        op = r.insn & 0x7f
+        if op == BRANCH:
+            index = r.pc >> 2 & 15
+            if i - last.get(index, -3) < 3:
+                raise ValueError(f'branches at {trace[last[index]].pc:#x} and {r.pc:#x} share a counter too closely')
+            last[index] = i
+            flush += r.taken != (bht[index] >= 2)
+            bht[index] = min(bht[index] + 1, 3) if r.taken else max(bht[index] - 1, 0)
+        elif op == JALR:
+            flush += 1
+    return flush
+
+
 def predictor_vectors(program, data, wait, predict):
     """The ISS example's rows, two more coverage tags, and the expected counters."""
     rows = BASE.vectors(program, data, wait)
@@ -60,7 +79,7 @@ def predictor_vectors(program, data, wait, predict):
                 row[8] |= LOOP_EXIT
             shadow = words.get((rec.pc >> 2) + 2, 0)
             if rec.taken and offset > 0 and (shadow & 0x7f == JAL or (shadow & 0x7f == BRANCH and branch_offset(shadow) < 0)):
-                row[8] |= SHADOW  # a predicted-taken jump sits in IF while this branch is redirected
+                row[8] |= SHADOW  # from the instruction words alone; PREDICT decides what IF does with it
     ctrl, flush = counters(trace, predict)
     return rows + [[4, ctrl, flush, int(predict != 2)] + [0] * 7]
 
@@ -82,6 +101,40 @@ def directed_program():
         ('jal', 1, 'f4'), ('addi', 5, 0, 96), 'f4:',
         'here:', ('auipc', 5, 0), ('jalr', 6, ('off', 'f5', 'here'), 5), ('addi', 5, 0, 95), 'f5:',
         ('ebreak',), 'bad:', ('addi', 5, 0, 94), ('ebreak',)]
+
+
+def counter_program():
+    """Where dynamic_flushes is exact: counters saturate both ways and keep their direction after
+    one opposite outcome; branches 64 bytes apart share a counter, 4 and 32 bytes apart do not."""
+    program = []
+
+    def fill(address):  # NOPs up to a byte address, to put the next branch on a chosen counter
+        program.extend([('addi', 0, 0, 0)] * ((address - 4 * sum(not isinstance(x, str) for x in program)) // 4))
+    program += [('addi', 2, 0, 0), ('addi', 3, 0, 2), 'outer:', ('addi', 1, 0, 6), 'up:', ('addi', 1, 1, -1), ('addi', 2, 2, 1),
+                ('bne', 1, 0, 'up'), ('addi', 3, 3, -1), ('addi', 2, 2, 1), ('bne', 3, 0, 'outer')]
+    program += [('addi', 1, 0, 5), 'down:', ('bne', 0, 0, 'bad'), ('addi', 1, 1, -1), ('addi', 2, 2, 1), ('bne', 1, 0, 'down')]
+    fill(0x7c)
+    program += [('addi', 1, 0, 4), 'far:', ('beq', 0, 0, 'far1'), 'far1:']
+    fill(0xa0)
+    program += [('bne', 0, 0, 'bad'), ('addi', 1, 1, -1), ('addi', 2, 2, 1), ('bne', 1, 0, 'far')]
+    fill(0xbc)
+    program += [('addi', 1, 0, 4), 'near:', ('beq', 0, 0, 'near1'), 'near1:', ('bne', 0, 0, 'bad'), ('addi', 1, 1, -1),
+                ('addi', 2, 2, 1), ('bne', 1, 0, 'near')]
+    fill(0x138)
+    program += [('beq', 0, 0, 'share')]
+    fill(0x170)
+    program += ['share:', ('addi', 2, 2, 1), ('addi', 2, 2, 1), ('beq', 0, 0, 'jumps'), 'jumps:', ('jal', 0, 'j1'), ('addi', 2, 0, 99), 'j1:',
+                'here:', ('auipc', 5, 0), ('jalr', 0, ('off', 'j2', 'here'), 5), ('addi', 2, 0, 98), 'j2:',
+                ('ebreak',), 'bad:', ('addi', 2, 0, 97), ('ebreak',)]
+    return program
+
+
+def counter_vectors():
+    """The case that checks the flushes of dynamic prediction, with their exact count."""
+    program, data = counter_program(), [0] * ISS.DATA_WORDS
+    rows = BASE.vectors(program, data, lambda access, trace, i: 0)
+    trace = ISS.execute(ISS.assemble(program), data)
+    return rows + [[4, counters(trace, 2)[0], dynamic_flushes(trace), 1] + [0] * 7]
 
 
 def boundary_vectors(predict):
@@ -106,10 +159,13 @@ def make_cases(args, parameters):
     for seed in range(args.seed, args.seed + (3 if args.profile == 'nightly' else 1)):
         cases.append(dict(id=f'random-seed{seed}', vectors=random_vectors(seed, args.iterations, predict),
                           mutation=demo, category='functional', expected_failure=None))
+    exact = counter_vectors() if predict == 2 else None  # only here do the flushes of dynamic prediction have an expected value
+    if exact:
+        cases.append(dict(id='counters', vectors=exact, mutation=demo, category='functional', expected_failure=None))
     for mutation, label in LABELS[configuration].items():
         if label:
-            cases.append(dict(id=f'detect-mutation{mutation}', vectors=base, mutation=mutation,
-                              category='mutation', expected_failure=label))
+            cases.append(dict(id=f'detect-mutation{mutation}', vectors=exact if exact and label == 'ISS_PERF' else base,
+                              mutation=mutation, category='mutation', expected_failure=label))
         else:
             cases.append(dict(id=f'unaffected-mutation{mutation}', vectors=base, mutation=mutation,
                               category='diagnostic', expected_failure=None))

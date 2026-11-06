@@ -206,9 +206,38 @@ class RunnerIntegrationTests(unittest.TestCase):
 
 
 class ProcessCleanupTests(unittest.TestCase):
+    def test_timeout_stops_a_nested_runner_and_its_detached_tools(self):
+        # A nested runner's tools are in their own sessions, as with an aggregate's --child-timeout.
+        with tempfile.TemporaryDirectory() as tmp:
+            pids=Path(tmp)/'pids'
+            leaf='import os,subprocess,sys,time;d=subprocess.Popen([sys.executable,"-c","import time;time.sleep(60)"],start_new_session=True);open(sys.argv[1],"a").write(f"{os.getpid()} {d.pid} ");time.sleep(60)'
+            runner='import subprocess,sys,time;subprocess.Popen([sys.executable,"-c",sys.argv[1],sys.argv[2]],start_new_session=True);time.sleep(60)'
+            def live():
+                found=[]
+                for pid in pids.read_text().split() if pids.exists() else []:
+                    state=subprocess.run(['ps','-p',pid,'-o','stat='],capture_output=True,text=True)
+                    if state.returncode==0 and not state.stdout.strip().startswith('Z'):found.append(pid)
+                return found
+            def cleanup():
+                for pid in live():os.kill(int(pid),signal.SIGKILL)
+            self.addCleanup(cleanup)
+            result=MODULE.execute([sys.executable,'-c',runner,leaf,str(pids)],Path(tmp)/'runner.log',2,Path(tmp))
+            self.assertEqual(result['error'],'command timeout');self.assertEqual(len(pids.read_text().split()),2,'fixture never reached its tools')
+            deadline=time.monotonic()+5
+            while live() and time.monotonic()<deadline:time.sleep(.05)
+            self.assertEqual(live(),[])
+            cleanup()
+
+    def test_failed_tree_inspection_still_stops_the_child_and_is_recorded(self):
+        proc=mock.Mock(pid=12345)
+        with mock.patch.object(MODULE.os,'killpg') as kill,mock.patch.object(MODULE.subprocess,'check_output',side_effect=subprocess.CalledProcessError(1,['ps'])):
+            error=MODULE.stop_process_group(proc)
+        self.assertIn('process tree inspection failed',error);kill.assert_called_once_with(12345,signal.SIGKILL)
+
     def test_zombie_group_permission_error_is_not_cleanup_failure(self):
         proc=mock.Mock(pid=12345)
-        with mock.patch.object(MODULE.os,'killpg',side_effect=PermissionError('denied')),mock.patch.object(MODULE.subprocess,'check_output',return_value='PGID STAT\n12345 Z\n'):
+        def ps(command,**_):return 'PID PPID PGID\n12345 1 12345\n' if command[-1]=='pid,ppid,pgid' else 'PGID STAT\n12345 Z\n'
+        with mock.patch.object(MODULE.os,'killpg',side_effect=PermissionError('denied')),mock.patch.object(MODULE.subprocess,'check_output',side_effect=ps):
             self.assertIsNone(MODULE.stop_process_group(proc))
         proc.kill.assert_not_called()
         proc.wait.assert_called_once_with(timeout=5)

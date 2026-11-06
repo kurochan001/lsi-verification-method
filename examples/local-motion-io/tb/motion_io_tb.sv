@@ -24,6 +24,7 @@ module motion_io_tb;
                 if(enable&&load&&duty_in<=PERIOD&&pwm.running&&phase!=PERIOD-1)$display("COVER pwm/update-deferred");
                 if(enable&&load&&duty_in<=PERIOD&&pwm.running&&phase==PERIOD-1)$display("COVER pwm/update-boundary");
                 if(origin_en)$display("COVER encoder/origin");
+                if(origin_en&&encoder.previous!=encoder.next_filtered)$display("COVER encoder/origin-priority");
                 if(encoder.candidate!=encoder.sync2 && encoder.stable<FILTER && encoder.filtered==encoder.previous)$display("COVER encoder/filter-delay");
             end
             @(posedge clk);#1;rows=rows+1;

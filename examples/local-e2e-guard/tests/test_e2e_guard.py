@@ -15,6 +15,9 @@ class GuardTests(unittest.TestCase):
     def test_identity_is_checked_even_with_a_valid_crc(self):
         g=M.Guard(0xa12f);self.assertEqual(g.step(1,0,1,M.frame(0x35c9,0,42),1)[3:],[0,1,2]);self.assertEqual(g.expected,0)
         self.assertEqual(g.step(1,0,1,M.frame(0xa12f,0,42),1)[1:],[1,42,1,0,0])
+    def test_identity_outranks_a_wrong_counter(self):
+        g=M.Guard(0xa12f);self.assertEqual(g.step(1,0,1,M.frame(0x35c9,7,42),1)[3:],[0,1,2]);self.assertEqual(g.expected,0)
+        rows,out,_=C.make('corruption-identity',PARS[0]);self.assertIn(2,[o[5] for o,r in zip(out,rows) if (r[3]>>24)&255 not in (0,1)])
     def test_counter_wrap_and_replay_do_not_resynchronize(self):
         g=M.Guard(0xa12f)
         for counter in range(257):self.assertEqual(g.step(1,0,1,M.frame(0xa12f,counter%256,99),1)[3],1)

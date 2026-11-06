@@ -1499,21 +1499,21 @@
     },
     "local-compositional-formal/request_sink/default": {
       "target_sha256": "374710bc77938f907944604c0b34acd594bede57d47ab1b02debf6ccf46614c8",
-      "source_sha256": {"examples/local-compositional-formal/rtl/blocks.sv": "a7d21a084a2c60f691b47d408e7a371d6aaaed384f9243606e37d191aa97641a"},
+      "source_sha256": {"examples/local-compositional-formal/rtl/blocks.sv": "08f5db9086859dbfc5e13334015aa736dc1fcfcfc67b924859ec5932b75573c8"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 8, "file": "examples/local-compositional-formal/rtl/blocks.sv", "line": 2, "message": "Filename 'blocks' does not match MODULE name: 'request_source'", "rule": "DECLFILENAME", "severity": "Warning"}, "disposition": "waived", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "モジュール選択はファイル名に依存しない。追加・名前変更・配置変更時は再レビュー。", "method": "宣言されたモジュールと台帳のトップを照合。", "reason": "同一ファイルに複数の関連モジュールを定義した教材。解析トップは構成台帳で明示。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-compositional-formal/request_source/default": {
       "target_sha256": "4f96b632f0f4f43fd6ceb221ed865a2820a73f2577413e6df1033cca2649e84b",
-      "source_sha256": {"examples/local-compositional-formal/rtl/blocks.sv": "a7d21a084a2c60f691b47d408e7a371d6aaaed384f9243606e37d191aa97641a"},
+      "source_sha256": {"examples/local-compositional-formal/rtl/blocks.sv": "08f5db9086859dbfc5e13334015aa736dc1fcfcfc67b924859ec5932b75573c8"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 8, "file": "examples/local-compositional-formal/rtl/blocks.sv", "line": 2, "message": "Filename 'blocks' does not match MODULE name: 'request_source'", "rule": "DECLFILENAME", "severity": "Warning"}, "disposition": "waived", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "モジュール選択はファイル名に依存しない。追加・名前変更・配置変更時は再レビュー。", "method": "宣言されたモジュールと台帳のトップを照合。", "reason": "同一ファイルに複数の関連モジュールを定義した教材。解析トップは構成台帳で明示。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-uvm-multiclock/reset_mailbox/default": {
       "target_sha256": "32eac9138d1b22490e056110183054a3735e69974db25f4c9fa6e5be9916ea3e",
-      "source_sha256": {"examples/local-uvm-multiclock/rtl/reset_mailbox.sv": "f62554fd7d3e91210a1e53e2ee6b2cc04736925dd6260f426e1c9278d3253693"},
+      "source_sha256": {"examples/local-uvm-multiclock/rtl/reset_mailbox.sv": "69d673ec4189562e966428c611471e56ff62c42c3247efe888b803ee3ce88c6d"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 37, "file": "examples/local-uvm-multiclock/rtl/reset_mailbox.sv", "line": 10, "message": "Signal flopped as both synchronous and async: 'reset_mailbox.src_channel_release'", "rule": "SYNCASYNCNET", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "SYNCASYNCNETの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"},
         {"count": 1, "diagnostic": {"column": 57, "file": "examples/local-uvm-multiclock/rtl/reset_mailbox.sv", "line": 10, "message": "Signal flopped as both synchronous and async: 'reset_mailbox.dst_channel_release'", "rule": "SYNCASYNCNET", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "SYNCASYNCNETの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
@@ -2040,7 +2040,7 @@
     },
     "local-auto-mutation/irq_regs/default": {"target_sha256": "8cceb0f37bb3967827d8fb52e395c6386c7be62b68959e70b87de8497a5f6aad", "source_sha256": {"examples/local-auto-mutation/rtl/irq_regs.sv": "48bc554b0f3594edbbdba09f0990b611c5aaffafb5813b6c58ed20a1a7cac3c7"}, "diagnostics": []},
     "local-liveness/fair_arbiter/default": {"target_sha256": "638002b59e51e928dcabd52253d912a83cf52363ffe09fa0c58093fc76bbdbfe", "source_sha256": {"examples/local-liveness/rtl/fair_arbiter.sv": "4272fb2f58ffd612654c937021c5d90d301949464785c68795ab748ac3a72059"}, "diagnostics": []},
-    "local-uvm-outstanding/tagged_reorder/default": {"target_sha256": "5466d63a6edde334a8d7ea09e2364afbf7ad464d5d00f0dfeea8a1d8644c87f5", "source_sha256": {"examples/local-uvm-outstanding/rtl/tagged_reorder.sv": "87ae83c918b93cc6ad3a07438062f71ef3edfbd95b004a6ba5e3dfa264f58ba0"}, "diagnostics": []},
+    "local-uvm-outstanding/tagged_reorder/default": {"target_sha256": "5466d63a6edde334a8d7ea09e2364afbf7ad464d5d00f0dfeea8a1d8644c87f5", "source_sha256": {"examples/local-uvm-outstanding/rtl/tagged_reorder.sv": "7fe927ce826dc66246079f659686d948ee5e726e76ba7757bba38e44390d10e5"}, "diagnostics": []},
     "local-image-sobel/sobel_stream/default": {
       "target_sha256": "bf3c0f6c7ad4109c77cbf0334d6c314f1479ad650fee108f351bac6cebd2feb3",
       "source_sha256": {"examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c"},

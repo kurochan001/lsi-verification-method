@@ -2,8 +2,8 @@
   "schema_version": 1,
   "revision": 1,
   "requirements": [
-    {"id":"CPP-MATH","goals":["result/zero","result/positive","result/negative","round/tie-positive","round/tie-negative","saturation/high","saturation/low","fir/history"]},
+    {"id":"CPP-MATH","goals":["result/zero","result/positive","result/negative","round/tie-positive","round/tie-negative","saturation/high","saturation/low","saturation/high-boundary","saturation/low-boundary","fir/history"]},
     {"id":"CPP-FLOW","goals":["flow/input-stall","flow/output-stall","timing/latency"]},
-    {"id":"CPP-RESET","goals":["reset/cancel","reset/history-clear"]}
+    {"id":"CPP-RESET","goals":["reset/cancel","reset/cancel-first-cycle","reset/history-clear"]}
   ]
 }

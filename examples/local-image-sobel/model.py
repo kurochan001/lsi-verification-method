@@ -26,7 +26,10 @@ def directed(width, height):
             [255 if x >= width // 2 else 0 for y in range(height) for x in range(width)],
             [3*x + 5*y for y in range(height) for x in range(width)],
             [255 if (x, y) == (width // 2, height // 2) else 0 for y in range(height) for x in range(width)],
-            [(7*x + 11*y + 1) % 64 for y in range(height) for x in range(width)]]
+            [(7*x + 11*y + 1) % 64 for y in range(height) for x in range(width)],
+            # Every neighbour of an impulse v computes 2v, so these frames straddle saturation: 254 and 256.
+            [127 if (x, y) == (width // 2, height // 2) else 0 for y in range(height) for x in range(width)],
+            [128 if (x, y) == (width // 2, height // 2) else 0 for y in range(height) for x in range(width)]]
 
 
 def random_frames(width, height, seed, frames):

@@ -25,7 +25,7 @@ def validate_completion(directory, output, observed, scenario, soc):
     total=sum(map(len,output))
     expected=dict(pixels=total,frames=len(output))
     if soc:
-        expected.update(cpu_checks=0 if scenario in (1,2) else total,irqs=len(output)+3*int(scenario==3),resets=int(scenario in (5,6)))
+        expected.update(cpu_checks=0 if scenario in (1,2) else total,irqs=len(output)+9*int(scenario==3),resets=int(scenario in (5,6)))
         memory=[int(line,16) for line in (directory/'ram-readback.hex').read_text().splitlines()]
         if memory != [0xa5a50000|value for frame in output for value in frame]:raise ValueError('RAM readback differs from whole-frame oracle')
         if not (directory/'retirement.log').read_text().strip():raise ValueError('retirement trace missing')
@@ -41,7 +41,7 @@ class Simulator:
         self.builds = {}
         self.records = []
 
-    def execute(self, name, parameters, frames, seed, mutation=0, expected=None, scenario=0, firmware=None):
+    def execute(self, name, parameters, frames, seed, mutation=0, expected=None, scenario=0, firmware=None, plusargs=None):
         d = self.e.out/name
         d.mkdir(parents=True)
         width, height = parameters['W'], parameters['H']
@@ -65,7 +65,7 @@ class Simulator:
         command = [self.e.args.vvp, str(binary), '+INPUT='+str(d/'pixels.hex'), '+EXPECTED='+str(d/'expected.hex'),
                    '+ROM='+str(d/'rom.hex'), '+WAVE='+str(d/'trace.vcd'), '+TRACE='+str(d/'retirement.log'),
                    '+RAMFILE='+str(d/'ram-readback.hex'),
-                   f'+FRAMES={len(frames)}', f'+SEED={seed}', f'+SCENARIO={scenario}']
+                   f'+FRAMES={len(frames)}', f'+SEED={seed}', f'+SCENARIO={scenario}', *[f'+{k}={v}' for k, v in (plusargs or {}).items()]]
         if build['error'] or build['returncode'] != 0:
             execution = dict(returncode=None, error='build failed; see '+key+'-build.log', seconds=0)
             (d/'simulation.log').write_text(execution['error']+'\n')

@@ -8,7 +8,7 @@ module fdir_tb;
     fdir_node #(.DEPTH(DEPTH),.WD_LIMIT(WD_LIMIT),.TRIP(TRIP),.MUTATION(MUTATION)) dut(.*);
     always #5 clk=~clk;
     reg [31:0] v[0:21],e[0:20+DEPTH];integer fd,ef,rc,checks,rows=0,injections=0,resets=0,accepted=0,commits=0,cancels=0,recoveries=0,failures=0,rejected=0,reset_cancels=0;
-    reg old_rst=0;reg [1:0] old_state;reg [3:0] event_before;
+    reg old_rst=0,scrub_before,mismatch_before,write_before;reg [1:0] old_state;reg [3:0] event_before;reg [7:0] prior_seq;
     string vectors,expected,wave;
     task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"row=%0d state=%0d cause=%h",rows,state,cause);end endtask
     initial begin
@@ -29,7 +29,7 @@ module fdir_tb;
             rst_n=v[0][0];start=v[1][0];kick=v[2][0];ack=v[3][0];recover=v[4][0];scrub_en=v[5][0];cfg_write=v[6][0];cfg_data=v[7][7:0];
             fault0=v[8][7:0];fault1=v[9][7:0];fault2=v[10][7:0];inject_en=v[11][0];inject_addr=$clog2(DEPTH)'(v[12]);inject_mask=v[13][12:0];
             maint_write=v[14][0];maint_addr=$clog2(DEPTH)'(v[15]);maint_data=v[16][7:0];cmd_valid=v[17][0];cmd_op=v[18][1:0];cmd_addr=$clog2(DEPTH)'(v[19]);cmd_data=v[20][7:0];cmd_seq=v[21][7:0];
-            #1;old_state=state;event_before=dut.event_cause;
+            #1;old_state=state;event_before=dut.event_cause;scrub_before=dut.scrub_uncorrectable;mismatch_before=dut.mismatch;write_before=dut.pending&&dut.operation==0;prior_seq=expected_seq-8'd1;
             if(old_rst&&!rst_n)begin resets=resets+1;if(dut.pending)reset_cancels=reset_cancels+1;$display("COVER reset/active");end old_rst=rst_n;
             if(rst_n)begin
                 if(cmd_valid&&cmd_ready)begin accepted=accepted+1;if(cmd_op>1 || cmd_seq!=expected_seq)rejected=rejected+1;end
@@ -45,6 +45,10 @@ module fdir_tb;
                 if(ack && state==2)$display("COVER recovery/ack-keeps-safe");
                 if(maint_write && state==2)$display("COVER recovery/maintenance");
                 if(dut.pending && rst_n && inject_en)$display("COVER fault/pending");
+                if(cmd_valid&&cmd_ready&&cmd_op==2)$display("COVER command/opcode2");
+                if(cmd_valid&&cmd_ready&&cmd_seq!=expected_seq&&cmd_seq!=prior_seq)$display("COVER command/sequence-jump");
+                if(maint_write&&state!=2)$display("COVER maintenance/locked");
+                if(cmd_valid&&!cmd_ready&&state==1&&!dut.pending&&dut.pre_fault!=0)$display("COVER ready/fault-blocked");
             end
             @(posedge clk);#1;rows=rows+1;
             if(commit!==e[4][0] || cancelled!==e[5][0])fail("FDIR_CONTAIN");
@@ -57,12 +61,12 @@ module fdir_tb;
             for(integer j=0;j<DEPTH;j=j+1)if(dut.store.memory[j]!==e[21+j][12:0])fail("FDIR_MEMORY");
             if(rst_n)begin
                 if(commit)begin commits=commits+1;$display("COVER normal/commit");if(expected_seq==0)$display("COVER command/sequence-wrap");end
-                if(cancelled)begin cancels=cancels+1;$display("COVER containment/cancel");end
+                if(cancelled)begin cancels=cancels+1;$display("COVER containment/cancel");if(write_before)$display("COVER containment/write-cancel");end
                 if(recovered)begin recoveries=recoveries+1;$display("COVER recovery/success");end
-                if(recovery_failed)begin failures=failures+1;$display("COVER recovery/refused");end
+                if(recovery_failed)begin failures=failures+1;$display("COVER recovery/refused");if(mismatch_before)$display("COVER recovery/refused-tmr");end
                 if(old_state==1 && state==2)begin
                     if((event_before[0]+event_before[1]+event_before[2]+event_before[3])>=2)$display("COVER safe/simultaneous");
-                    if(event_before[0])$display("COVER safe/tmr");if(event_before[1])$display("COVER safe/ecc");
+                    if(event_before[0])$display("COVER safe/tmr");if(event_before[1])$display("COVER safe/ecc");if(event_before[1]&&scrub_before)$display("COVER safe/scrub");
                     if(event_before[2])$display("COVER safe/watchdog");if(event_before[3])$display("COVER safe/command");
                 end
             end

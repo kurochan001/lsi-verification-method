@@ -29,6 +29,7 @@ def make(name,p,seed=17,iterations=200):
         for bit in range(48):c.send(damage=1<<bit)
         c.send(data_id=p['DATA_ID']^0x8001)
         c.send(data_id=p['DATA_ID']^1,damage=1)
+        c.send(counter=(c.m.expected+7)%256,data_id=p['DATA_ID']^0x8001)
         c.send()
     elif name=='sequence':
         c.send(counter=1);c.send(counter=0);c.send(counter=0);c.send(counter=2);c.send(counter=1);c.send(counter=3);c.send(counter=2)

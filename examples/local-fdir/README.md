@@ -96,18 +96,18 @@ stateDiagram-v2
 
 ## 検証計画と実行
 
-固定ケースは、通常の全ワードアクセス、13ビット全位置の単一反転、スクラブ、繰返しTMR故障、期限とkick、誤連番・不正命令、再走査の失敗・保守修復、設定不一致による復帰拒否、pending／CHECK中のreset、書込みと注入、書込みとスクラブ、同時原因、連番折返しです。さらにseed付きのデータ・アドレス・故障位置を加えます。
+固定ケースは、通常の全ワードアクセス、13ビット全位置の単一反転、スクラブ、繰返しTMR故障、期限とkick、誤連番・不正命令、再走査の失敗・保守修復、設定不一致による復帰拒否、pending／CHECK中のreset、書込みと注入、書込みとスクラブ、同時原因、連番折返しです。保留中RAM書込みと期限満了の競合、スクラブだけが見つける訂正不能、CHECK中のTMR反転（走査途中と最終ワード）、opcode 2と連番の飛越し、SAFE以外での保守書込み、異常が観測できる時点の受付拒否も固定ケースで確保します。さらにseed付きのデータ・アドレス・故障位置を加えます。
 
 PythonモデルはECCの符号語集合からHamming距離を調べて訂正・検出を決め、RTLのsyndrome補正を複写しません。全サイクルで外部出力、TMRの3系統、RAMの全符号語、ウォッチドッグ、連番、IRQ、状態を比較します。メモリモデルのセルに故障を入れるテストと、テストの検出力を確かめる変異は分けます。
 
-[要求カタログ](requirements.json)は5要求・22観測目標です。各構成の通常成功ケースから全目標を集計し、変異の到達では未達を埋めません。4変異は、異常時の誤commitを`FDIR_CONTAIN`、不正な復帰・IRQ優先順位・ackによる復帰を`FDIR_STATE`で検出します。
+[要求カタログ](requirements.json)は5要求・29観測目標です。各構成の通常成功ケースから全目標を集計し、変異の到達では未達を埋めません。4変異は、異常時の誤commitを`FDIR_CONTAIN`、不正な復帰・IRQ優先順位・ackによる復帰を`FDIR_STATE`で検出します。
 
 ```sh
 python3 examples/local-fdir/run.py --profile smoke --out artifacts/fdir-smoke
 python3 examples/local-fdir/run.py --profile nightly --out artifacts/fdir-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。2構成でJUnitはsmoke 44件／nightly 48件です。nightlyはseedを1→3、各seedのランダムな書込み・故障・読出しの組を16→48へ増やします。
+Python 3・Icarus Verilog・vvpを使います。2構成でJUnitはsmoke 56件／nightly 60件です。nightlyはseedを1→3、各seedのランダムな書込み・故障・読出しの組を16→48へ増やします。
 
 ソース・構成・seed・生成入力のハッシュ、`vectors.txt`、全状態の`expected.hex`、VCD、ログ、受理・commit・取消・復帰・注入・reset件数を保存します。[全体ランナー](../../tools/REGRESSION.md)と[実行記録](../../PROVENANCE.md#aerospace-20261101)で予定と証跡を照合できます。
 
