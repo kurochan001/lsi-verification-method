@@ -1,8 +1,8 @@
 # WSLのLinuxで確認するためのハンドオフ
 
-2026-11-07に[リポジトリ全体のレビュー](../PROVENANCE.md#repository-review-20261107)を行い、修正を`05e957f`までmainへ入れました。全例の検証を手元で通したのはmacOS arm64だけで、Linuxでの実行はGitHub ActionsのUbuntu 24.04に任せています。この資料は、WSLのLinuxで同じ検証をやり直すための手順です。人でもClaude Codeでも、上から順に進められます。
+2026-11-07に[リポジトリ全体のレビュー](../PROVENANCE.md#repository-review-20261107)を行い、修正を`05e957f`までmainへ入れました。この時点で全例の検証を手元で通したのはmacOS arm64だけで、Linuxでの実行はGitHub ActionsのUbuntu 24.04に任せていました。この資料は、WSLのLinuxで同じ検証をやり直すための手順です。人でもClaude Codeでも、上から順に進められます。
 
-**この手順はmacOSで書いたもので、WSLではまだ実行していません。** 引数と結果を読むスクリプトはmacOSで確かめましたが、OSのパッケージ、Python・Node.jsの導入、WSLの設定は未確認です。ずれていたら直し、直した内容も結果と一緒に記録してください。
+**この手順はmacOSで書き、2026-11-07にWSL2のUbuntu 24.04で初めて実行しました。** [結果と、手順から直した箇所](../PROVENANCE.md#wsl-linux-check-20261107)を記録してあります。別の環境でやり直してずれていたら直し、直した内容も結果と一緒に記録してください。
 
 ## 確かめること
 
@@ -10,7 +10,7 @@
 | --- | --- |
 | 手順書どおりに、空の環境から全ツールを構築できる | CIは構築結果をキャッシュから戻すことが多い |
 | 文書検査、全セルフテスト、全例のsmoke・nightlyがmacOSと同じ結果になる | CIと別のLinux環境でも同じになるかを見る |
-| kirimasimで80例・107構成のsmokeが合格する | CIで実行していない。記録に残る実行はmacOSだけ |
+| kirimasimで80例・107構成のsmokeが合格する | CIで実行していない |
 
 GitHub Actionsの比較基準のステップは、WSLでは確かめられません。[CIの状態](#ciの状態)で別に確認します。
 
@@ -24,7 +24,9 @@ PowerShellで次を実行します。
 wsl --install -d Ubuntu-24.04
 ```
 
-Windows側のコマンドがLinuxのPATHに混ざらないよう、`/etc/wsl.conf`に次を書き、PowerShellで`wsl --shutdown`を実行してから開き直します。
+同じ名前のdistroが既にあれば、開発ツールが入っていないことを確かめて、それを使えます。開発に使っているdistroは避けます。別版のコンパイラーやVerilator、`VERILATOR_ROOT`のような環境変数が結果に影響し得るので、空の環境から構築できることも確かめられません。
+
+Windows側のコマンドがLinuxのPATHに混ざらないよう、`/etc/wsl.conf`に次を追記します。既存の`[boot]`などは残します。PowerShellで`wsl --terminate Ubuntu-24.04`を実行してから開き直します。`wsl --shutdown`は他のdistroも止めます。
 
 ```ini
 [interop]
@@ -38,10 +40,10 @@ appendWindowsPath=false
 ```sh
 uname -m                      # x86_64
 . /etc/os-release; echo "$VERSION_ID"   # 24.04
-nproc; free -h; df -h ~       # 空きディスクは30GB以上を目安にする
+nproc; free -h; df -h ~       # 空きディスクは50GB以上を目安にする
 ```
 
-ディスクの目安はmacOSの実測です。OSS CAD Suiteが1.8GB、smokeの出力が4.8GB、nightlyの出力が7.8GB、kirimasimの出力が557MBでした。ネイティブツールとkirimasimの構築にも別に必要です。
+ディスクの目安はWSLの実測です。終了時の使用量はOSを含めて47GBでした。内訳は、OSS CAD Suiteが3.2GB、ネイティブツールが2.9GB、kirimasimの構築が8.9GB、smokeの出力が12GB、nightlyの出力が15GB、kirimasimの出力が915MBです。再実行すると、その分が増えます。
 
 長い実行はtmuxの中で行い、実行中はWindowsをスリープさせません。
 
@@ -103,7 +105,7 @@ J=2     # 初回はCIと同じ2並列にする
 artifacts/toolchains/full/python/bin/cocotb-config --libpython   # libpythonのパスが出ること
 ```
 
-ネイティブツールの構築時間は計測値がありません。Verilator、OpenSTA、SystemCをソースから構築するので、数十分を見込んでください。各段階の上限は既定で1800秒です。足りなければ`--timeout`で延ばします。
+ネイティブツールの構築は、WSL（32論理CPU、2並列）で約10分でした。Verilator、OpenSTA、SystemCをソースから構築するので、マシンによってはさらにかかります。各段階の上限は既定で1800秒です。足りなければ`--timeout`で延ばします。
 
 環境の診断が合格しても、回路の検証が合格したことにはなりません。
 
@@ -159,7 +161,7 @@ git -C ~/kirimasim checkout d73d8922dfa20e19ccb9411adbe42a6d258bb49d
   --command-timeout 60 --job-timeout 900 --out "$R/kirimasim"
 ```
 
-時間はマシンで大きく変わります。CIの2並列ではセルフテストが約4分、nightlyが約49分でした（2026-11-05、今回の修正の前）。macOSでは、全例を6並列で実行してsmokeが約6分、nightlyが約7分で、セルフテストが約1分、kirimasimが約3分でした。
+時間はマシンで大きく変わります。WSL（32論理CPU、2並列）ではセルフテストが約2分、smokeが約18分、nightlyが約21分、kirimasimの構築が約3分、実行が約12分でした。CIの2並列ではセルフテストが約4分、nightlyが約49分でした（2026-11-05、今回の修正の前）。macOSでは、全例を6並列で実行してsmokeが約6分、nightlyが約7分で、セルフテストが約1分、kirimasimが約3分でした。
 
 ## 6. 結果を読む
 

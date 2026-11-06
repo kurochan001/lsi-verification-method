@@ -1840,3 +1840,75 @@ SVG自体を編集可能な原本とし、`viewBox`・`title`・`desc`・代替�
 - `VCI_COMMAND_HOLD`はドライバー側の検査で、DUTの保持は応答側の検査だけが確かめます。文書を直しただけで、検査は追加していません。
 - NICでDROPのIRQを許可する`IRQ_MASK`のビット3と、画像SoCの`done`・`error`とW1Cの同一エッジの競合は試していません。
 - `run_selftests.py`はSIGTERMを受けると実行中のunittestを1プロセス残します。判定には影響しません。OSSスナップショット比較の負例も追加していません。
+
+<a id="wsl-linux-check-20261107"></a>
+## WSL2のLinuxで全例を再確認（2026-11-07）
+
+検証したコミットは`b18e36b65f664a98755bb5653e8b994fcadac5c0`です。[ハンドオフ](docs/handoff-wsl-linux.md)を上から実行し、開発ツールの入っていないUbuntu 24.04から全ツールを構築しました。全検査が初回で合格し、再実行はしていません。RTL、テストベンチ、計画、時間上限は変更していません。
+
+| 項目 | 値 |
+| --- | --- |
+| WSL | 3.0.3.0、WSL2、カーネル6.18.54.1 |
+| OS | Ubuntu 24.04.1 LTS、x86-64 |
+| CPU・メモリー | 32論理CPU、110GiB、スワップ32GiB |
+| コンパイラーなど | GCC 13.3.0、CMake 3.28.3、Ninja 1.11.1 |
+| Python・Node.js | Python 3.13.18（uv）、Node.js 24.22.2 |
+| 構築したツール | Verilator 5.052、Icarus Verilog 14.0開発版、OpenSTA 3.1.0、SystemC 2.3.4、ngspice 47、固定版のOSS CAD Suite・UVM |
+| kirimasim | `d73d8922dfa20e19ccb9411adbe42a6d258bb49d`、GCC 13.3.0で構築 |
+| 並列数 | ツールの構築と全例の実行は2。kirimasimの構築だけはプリセットの既定 |
+
+ハンドオフの第6節の出力は次のとおりです。
+
+```text
+docs success True complete True 460 / 460
+selftests success True complete True 132 / 132
+smoke success True complete True 108 / 108
+nightly success True complete True 108 / 108
+selftests groups 130 tests 1179
+kirimasim success True 107 / 107 {'success': True, 'lowering': 936, 'simulations': 2367, 'abnormal': 0} {'1': 808, '0': 2495}
+```
+
+件数はハンドオフに載せたmacOSの結果とすべて一致しました。セルフテストのskipは0件です。`regression_report.py`の監査はsmoke、nightlyとも108／108で合格し、kirimasimのソース変更はなく、実行後の作業ツリーも変更なしでした。実行後の`setup_oss_cad.py --check`も合格しました。
+
+macOSと違ったのは、ハンドオフが予告したパス、`libngspice.so`、Linux x64用のOSS CAD Suiteのハッシュと、時間とディスク使用量です。
+
+| 段階 | 時間 | ディスク |
+| --- | --- | --- |
+| ネイティブツールの構築 | 約10分 | 2.9GB |
+| OSS CAD Suiteの準備 | 約1分 | 3.2GB |
+| ngspiceの構築 | 約2分 | 213MB |
+| full環境の準備 | 約30秒 | 348MB |
+| 文書検査 | 2秒 | 604KB |
+| セルフテスト | 約2分 | 888KB |
+| 全例smoke | 約18分 | 12GB |
+| 全例nightly | 約21分 | 15GB |
+| kirimasimの構築 | 約3分 | 8.9GB |
+| kirimasimのsmoke | 約12分 | 915MB |
+
+終了時のディスク使用量は、OSを含めて47GBでした。smokeとnightlyの出力は、macOSの実測の4.8GB、7.8GBより多くなりました。増えた原因は調べていません。
+
+CIは次のとおりで、どちらのコミットもハンドオフの予想と同じ比較基準でした。ただし、どちらも直前のpushが合格していた場合です。失敗または取り消されたpushを挟む場合は、GitHub Actions上で試していません。
+
+| コミット | Quality | Affected | 比較基準 | 選択 |
+| --- | --- | --- | --- | --- |
+| `05e957f` | 合格（`42285207933`） | 合格（`42285207844`） | `6e87b32` | `full planned 108 executed 108` |
+| `b18e36b` | 合格（`42286800826`） | 合格（`42286800859`） | `05e957f` | `docs-only planned 0 executed 0` |
+
+ハンドオフの手順から変えた点は次のとおりです。
+
+- 新しいdistroは作らず、同じマシンにあった未使用の`Ubuntu-24.04`を使いました。開始時の使用量は1.3GBで、GCCもCMakeも入っていませんでした。既定のdistroは開発に使っていて、GCC 15、CMake 4.2、別版のVerilator、`VERILATOR_ROOT`が入っていたので使いませんでした。
+- `/etc/wsl.conf`は既存の`[boot]`を残して`[interop]`を追記し、`wsl --shutdown`の代わりに`wsl --terminate`でこのdistroだけを再起動しました。同じVMで別のビルドが動いていたためです。
+- rootの作業は`sudo`ではなく`wsl.exe -u root`で行いました。コマンドは別のdistroから`wsl.exe --exec`で渡し、長い実行はtmuxの中で行いました。各コマンドの引数は変えていません。
+
+失敗した試行は1回で、検査の失敗ではありません。`nvm install 24`を出力を絞るために`tail`へパイプでつないだところ、サブシェルでPATHの変更が失われ、次の`node`が見つかりませんでした。実行する側の誤りで、手順書のとおりならば起きません。`nvm.sh`を読み直して続けました。
+
+実行結果に合わせ、ハンドオフは次の箇所を直しました。
+
+- 冒頭の「WSLではまだ実行していません」という記述。
+- 第1節の`wsl.conf`の書き方、再起動の方法、既に同じ名前のdistroがある場合の扱い。
+- 第1節のディスクの目安。30GBでは足りないので50GBへ上げ、内訳をWSLの実測へ替えました。
+- 第4節と第5節の時間の目安。
+
+直した文書とこの節を含めて、文書検査を別のクローンで再実行し、460判定がすべて合格しました。回路とツールは変更していないので、全例は再実行していません。
+
+次は確かめていません。kirimasimのnightly、Icarusとkirimasimの出力の照合、Arm版のWindows、他のCPU数やメモリー量です。OSのパッケージの更新（`apt-get upgrade`）はしていないので、Ubuntuの版は24.04.1のままです。証跡はGit管理外で、実行したマシンの`artifacts/wsl-check/`に残っています。
