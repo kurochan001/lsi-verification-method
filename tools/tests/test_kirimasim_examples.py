@@ -16,6 +16,10 @@ RESULTS_PATH = PATH.with_name('kirimasim_results.py')
 RESULTS_SPEC = importlib.util.spec_from_file_location('kirimasim_results', RESULTS_PATH)
 R = importlib.util.module_from_spec(RESULTS_SPEC)
 RESULTS_SPEC.loader.exec_module(R)
+UVM_PATH = PATH.with_name('kirimasim_uvm_check.py')
+UVM_SPEC = importlib.util.spec_from_file_location('kirimasim_uvm_check', UVM_PATH)
+U = importlib.util.module_from_spec(UVM_SPEC)
+UVM_SPEC.loader.exec_module(U)
 
 
 class KirimasimExamplesTests(unittest.TestCase):
@@ -193,6 +197,102 @@ class KirimasimResultsTests(unittest.TestCase):
                       f"{record['native']['simulations']:,} | {codes['0']:,}／{codes['1']:,} | "
                       f"{record['native']['abnormal']} |", row)
         self.assertIn('(docs/case-study-kirimasim/results.md)', (root / 'README.md').read_text())
+
+
+class KirimasimUvmCheckTests(unittest.TestCase):
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name).resolve()
+        self.uvm = self.root / 'uvm/1800.2-2020.3.2'
+        (self.uvm / 'src').mkdir(parents=True)
+        (self.uvm / 'src/uvm_pkg.sv').write_text('package uvm_pkg; endpackage\n')
+        self.calls = self.root / 'calls'
+        self.count = 0
+
+    def check(self, body, timeout=30, uvm_home=None):
+        self.count += 1
+        binary = self.root / f'kirimasim{self.count}'
+        binary.write_text('#!/bin/sh\nif [ "$1" = --version ]; then echo "kirimasim 0.0.0 (commit abc)"; exit 0; fi\n'
+                          f'echo "$@" >> "{self.calls}"\n{body}\n')
+        binary.chmod(0o755)
+        return U.check(binary, uvm_home or self.uvm, self.root / f'out{self.count}', timeout)
+
+    def statuses(self, report):
+        return {row['id']: row['status'] for row in report['checks']}
+
+    def test_both_checks_use_the_documented_commands(self):
+        self.check('exit 0')
+        parse, lower = self.calls.read_text().splitlines()
+        src = self.uvm / 'src'
+        for line in (parse, lower):
+            for part in (f'-I{src}', '+define+UVM_NO_DPI', '--timescale=1ns/1ps', str(src / 'uvm_pkg.sv')):
+                self.assertIn(part, line)
+        self.assertTrue(parse.startswith('parse --top=uvm_parse_probe'))
+        self.assertTrue(lower.startswith('--dump-sir --top=top'))
+        self.assertIn('examples/local-uvm/tb/top.sv', lower)
+
+    def test_pass_requires_exit_zero_without_any_error(self):
+        report = self.check('exit 0')
+        self.assertEqual(self.statuses(report), dict(parse='pass', lower='pass'))
+        text = U.render(report)
+        self.assertIn('**通過**', text)
+        self.assertIn('UVM例の実行の進め方', text)
+        self.assertIn('UVMのテストを実行したことを意味しません', text)
+        report = self.check('echo "a.sv:1:2: error: late" >&2; exit 0')
+        self.assertEqual(self.statuses(report), dict(parse='unsupported', lower='unsupported'))
+        self.assertNotIn('**通過**', U.render(report))
+
+    def test_unsupported_groups_errors_without_leaking_paths(self):
+        report = self.check(f'for n in 1 2 3; do echo "{self.uvm}/src/base/g.svh:13$n:19: error: expected port | x" >&2; done\n'
+                            'echo "fatal error: too many errors emitted" >&2\nexit 2')
+        row = report['checks'][0]
+        self.assertEqual((row['status'], row['returncode']), ('unsupported', 2))
+        self.assertEqual(row['messages'], {'expected port | x': 3})
+        self.assertEqual(row['first_error'], 'src/base/g.svh:131')
+        text = U.render(report)
+        self.assertIn('`expected port \\| x`が3件。最初は`src/base/g.svh:131`', text)
+        self.assertNotIn(str(self.root), text)
+        self.assertNotIn('通過した確認', text)
+        # kirimasim really prints paths relative to its working directory.
+        relative = '../uvm/1800.2-2020.3.2/src/base/g.svh'
+        report = self.check(f'echo "{relative}:139:19: error: expected port" >&2\nexit 2')
+        self.assertEqual(report['checks'][0]['first_error'], 'src/base/g.svh:139')
+        report = self.check('echo "../outside/x.sv:7:1: error: expected port" >&2\nexit 2')
+        self.assertEqual(report['checks'][0]['first_error'], 'x.sv:7')
+
+    def test_crash_and_timeout_are_not_reported_as_unsupported(self):
+        report = self.check('kill -SEGV $$')
+        self.assertEqual(self.statuses(report), dict(parse='crash', lower='crash'))
+        self.assertIn('kirimasimのバグかどうか', U.render(report))
+        report = self.check('exit 139')
+        self.assertEqual(self.statuses(report), dict(parse='crash', lower='crash'))
+        report = self.check('exec sleep 30', timeout=0.2)
+        self.assertEqual(self.statuses(report), dict(parse='timeout', lower='timeout'))
+        self.assertIn('**時間切れ**', U.render(report))
+
+    def test_missing_inputs_are_reported_and_nothing_runs(self):
+        report = self.check('exit 0', uvm_home=self.root / 'missing/1800.2-2020.3.2')
+        self.assertEqual(report['checks'], [])
+        self.assertIn('固定版のUVMを用意できませんでした', U.render(report))
+        self.assertFalse(self.calls.exists())
+        out = self.root / 'no-binary'
+        report = U.check(self.root / 'absent', self.uvm, out, 30)
+        self.assertEqual(report['checks'], [])
+        self.assertIn('kirimasimを実行できませんでした', (out / 'uvm-check.md').read_text())
+        self.assertEqual(json.loads((out / 'uvm-check.json').read_text())['checks'], [])
+
+    def test_command_line_exits_zero_whatever_the_outcome(self):
+        binary = self.root / 'kirimasim'
+        binary.write_text('#!/bin/sh\nif [ "$1" = --version ]; then echo v; exit 0; fi\nexit 2\n')
+        binary.chmod(0o755)
+        for name, uvm in (('unsupported', self.uvm), ('no-uvm', self.root / 'missing')):
+            with self.subTest(name):
+                done = subprocess.run([sys.executable, str(UVM_PATH), '--kirimasim', str(binary),
+                                       '--uvm-home', str(uvm), '--out', str(self.root / name)],
+                                      capture_output=True, text=True, cwd=self.root)
+                self.assertEqual(done.returncode, 0, done.stderr)
+                self.assertTrue((self.root / name / 'uvm-check.md').is_file())
 
 
 if __name__ == '__main__':

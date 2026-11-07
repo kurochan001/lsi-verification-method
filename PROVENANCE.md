@@ -1957,3 +1957,49 @@ READMEから辿れる[実行結果のページ](docs/case-study-kirimasim/result
 
 - Summaryの新しい表は、Actionsでまだ出していません。pushした後の実行で分かります。
 - ページの表は自動では更新しません。自動で更新するには、ワークフローに書き込み権限を与えるか、GitHub Pagesを有効にする必要があるので、今回は入れていません。今の状態はバッジと実行の一覧で確認します。
+
+<a id="testbench-race-fix-20261107"></a>
+## DMAのテストベンチの競合を修正（2026-11-07）
+
+[kirimasim向けの修正](docs/case-study-kirimasim/README.md#4-実行で見つかった問題と修正)を見直す中で、幅変換と同じ競合が残っているのを見つけました。`examples/local-dma/tb/dma_tb.sv`の`cycles`と、`examples/local-descriptor-dma/tb/descriptor_tb.sv`の`tick_count`、`fetches`をノンブロッキング代入へ変えました。`fetches`を読むカバレッジの条件は、更新前の値を読むように`fetches>1`から`fetches>0`へ変えました。意味は同じです。RTL、期待値、目標、変異は変更していません。
+
+見つけ方は、全131個のテストベンチの正規表現の検索です。修正前の`width_tb.sv`を検出できることを確かめました。検索で見つかった形が本当に結果に影響するかは、一時コピーでDUTやRAMのクロックを連続代入の5段で遅らせて確かめました。`416cca52d085`での結果は次のとおりです。
+
+| テストベンチ | 実行順を変えない | 実行順を変える |
+| --- | --- | --- |
+| 修正前の`width_tb.sv`（対照） | 不合格（`WIDTH_SUBDATA`） | 不合格（`WIDTH_SUBDATA`） |
+| 修正前の`dma_tb.sv` | 合格 | 不合格（`DMA_PROTOCOL`、`DMA_TIMEOUT`） |
+| 修正前の`descriptor_tb.sv` | 合格 | 不合格（`SG_TIMEOUT`、`SG_COPY_ADDRESS`） |
+| `tick_count`だけ直した`descriptor_tb.sv`、nightly | 合格 | 不合格（`SG_FETCH`、`SG_TIMEOUT`） |
+| 修正後の`dma_tb.sv`、`descriptor_tb.sv`、smokeとnightly | 合格 | 合格（16通り） |
+
+`fetches`の競合はsmokeでは現れません。2番目以降のディスクリプターでabortする行が、smokeには0行、nightlyには15行あるためです。
+
+修正後の確認は次のとおりです。
+
+- Icarusのsmokeを修正の前後で比べ、`local-dma`と`local-descriptor-dma`の生成ファイル各12個と、検査の出力282行・178行が同じでした。今の実行順での結果を変えていません。
+- 80例・107構成のsmokeは、Icarusと`416cca52d085`の両方で107／107 PASSです。lowering 936回、シミュレーション2,367回、シミュレーションの終了コードは0が1,559回、1が808回です。生成ファイル4,030個が同一で、ログ2,367個の検査の出力の内容と回数が一致しました。17個は`COVER`の順序だけが違います。
+- 修正した2例のnightlyは、両方のシミュレータで合格しました。4種類の変異は、両構成で予定のラベルで検出されています。
+- 依存する5つの集約ジョブ（`local-lint`を含む）は、固定版のツールでsmokeとnightlyに合格しました。
+
+次の点は未確認です。
+
+- 商用を含む他のシミュレータでは試していません。Icarusは実行順を変える実験でも合格しましたが、遅らせても実行順が変わっていない可能性があり、安全の根拠にはなりません。
+- 正規表現の検索は全数を保証しません。修正後の検出は0件です。
+
+<a id="kirimasim-uvm-check-20261107"></a>
+## KirimasimのUVM解析確認（2026-11-07）
+
+[Kirimasim latest](tools/CI.md#kirimasimの最新版)に、kirimasimがUVMを処理できるかの確認を追加しました。[`kirimasim_uvm_check.py`](tools/kirimasim_uvm_check.py)が、固定版のUVM 2020.3.2の解析と`local-uvm`のloweringを試し、結果をSummaryの先頭に出します。結果は通過、未対応、クラッシュ、時間切れ、未実行に分けます。107構成の合否には影響しません。[kirimasimがUVMに対応したら](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)UVM例を実行するための目印です。
+
+`tools/tests`に7件追加し、全セルフテストは130グループ・1,195件です。
+
+`main`の先頭の`60c26d7c8113`をmacOSでビルドして試すと、どちらも未対応でした。終了コード2で、`expected subroutine port declaration`が20件、最初は`src/base/uvm_globals.svh:139`です（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。エラーの上限で止まるので、後ろに別の問題があるかは分かりません。
+
+kirimasimはこの上限で止まるときに`--error-limit=`を案内しますが、そのオプションは受け付けません。[#112](https://github.com/kurochan001/kirimasim/issues/112)として報告しました。
+
+次の点は未確認です。
+
+- この確認は、GitHub Actionsでまだ実行していません。UVMの取得もActionsでは試していません。
+- 通過を実際に見たことはありません。通過の表示はテストの偽のバイナリーでだけ確かめています。
+- 通過してもメールなどの通知はありません。

@@ -29,6 +29,8 @@ Ubuntuの既定ミラーで接続が停滞したため、CIのamd64ランナー�
 
 各実行のSummaryには、[`kirimasim_results.py`](kirimasim_results.py)で作った例ごとの表を出します。記録した結果は[実行結果の一覧](../docs/case-study-kirimasim/results.md)にまとめています。
 
+Summaryの先頭には、kirimasimがUVMを処理できるかの確認も出します。[`kirimasim_uvm_check.py`](kirimasim_uvm_check.py)が、固定版のUVMライブラリの解析と`local-uvm`のloweringを試します。107構成の合否には影響せず、UVMの取得に失敗しても「未実行」と表示するだけです。通過したら、[UVM例の実行](../docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を検討します。通過してもメールなどの通知はなく、Summaryと実行の注釈に出るだけです。
+
 kirimasimへのコミットそのものでは起動しません。kirimasimのpushごとに動かすには、kirimasim側にワークフローとトークンを追加する必要があります。
 
 このワークフローが赤くなっても、他のワークフローの合否は変わりません。kirimasim自身のCIが不合格のコミットを試して赤くなることもあります。次の順に切り分けます。

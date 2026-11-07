@@ -9,6 +9,7 @@ on:
       - '!examples/**/*.md'
       - 'tools/run_kirimasim_examples.py'
       - 'tools/kirimasim_results.py'
+      - 'tools/kirimasim_uvm_check.py'
       - 'tools/run_regression.py'
       - 'tools/regressions.json'
       - '.github/workflows/kirimasim.yml'
@@ -97,6 +98,21 @@ jobs:
         with:
           path: artifacts/kirimasim-tool
           key: ${{ steps.binary.outputs.cache-primary-key }}
+      # A signpost for UVM support. It reports only and never decides this run.
+      - name: Prepare the pinned UVM for the parse check
+        continue-on-error: true
+        timeout-minutes: 5
+        run: python examples/local-uvm/setup_uvm.py --out artifacts/kirimasim-uvm-source
+      - name: Check whether kirimasim can process UVM yet
+        continue-on-error: true
+        timeout-minutes: 15
+        run: |
+          python tools/kirimasim_uvm_check.py \
+            --kirimasim artifacts/kirimasim-tool/kirimasim \
+            --uvm-home artifacts/kirimasim-uvm-source/1800.2-2020.3.2 \
+            --out artifacts/ci/kirimasim-uvm
+          cat artifacts/ci/kirimasim-uvm/uvm-check.md >> "$GITHUB_STEP_SUMMARY"
+          cat artifacts/ci/kirimasim-uvm/uvm-check.md
       - name: Run the pure-Icarus examples on kirimasim
         run: >-
           python tools/run_kirimasim_examples.py
@@ -124,6 +140,7 @@ jobs:
           retention-days: 14
           if-no-files-found: warn
           path: |
+            artifacts/ci/kirimasim-uvm/**
             artifacts/ci/kirimasim/results.md
             artifacts/ci/kirimasim/summary.json
             artifacts/ci/kirimasim/manifest.json

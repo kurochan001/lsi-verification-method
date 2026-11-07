@@ -156,7 +156,7 @@ kirimasimは1段階でソースを処理・実行するため、次の違いを�
 
 保存する`.vvp`は**JSON形式の実行手順**で、Icarusのバイトコードではありません。`.sir`も実行可能モデルではなく、`--dump-sir`はシミュレーションを実行しません。実行時に元ソースから再処理するため、Icarusとの速度比較にもそのまま使えません。`tools.json`等の`iverilog`・`vvp`というキーは、既存ランナーの入口名として残ります。
 
-パラメータは整数のトップパラメータだけに限定し、不明なオプションや重複指定は拒否します。ソースの書換え、SVAの無効化、期待値の変更、失敗ケースの恒久除外は行いません。2件のテストベンチ修正は次節に明記します。
+パラメータは整数のトップパラメータだけに限定し、不明なオプションや重複指定は拒否します。ソースの書換え、SVAの無効化、期待値の変更、失敗ケースの恒久除外は行いません。テストベンチの修正は次節に明記します。
 
 ## 4. 実行で見つかった問題と修正
 
@@ -168,7 +168,9 @@ kirimasimは1段階でソースを処理・実行するため、次の違いを�
 
 [`axi4_tb.sv`](../../examples/local-axi4/tb/axi4_tb.sv)は、ファイル名を`reg [2047:0]`へ保持し、`$dumpfile`・`$fopen`へ渡していました。Icarusでは動作していましたが、今回のkirimasimはpacked配列から`string`への暗黙変換を拒否しました。
 
-ファイル名の宣言を`string vectors,wave;`へ変更しました。入力ファイル、波形出力先、回路への刺激、比較内容は同じです。移植時の型の違いとして扱い、Icarusで不正だったと断定しません。
+ファイル名の宣言を`string vectors,wave;`へ変更しました。入力ファイル、波形出力先、回路への刺激、比較内容は同じです。
+
+この拒否は、kirimasimのフロントエンドslangの既知の制限です（[#74](https://github.com/kurochan001/kirimasim/issues/74)）。#74によれば元の書き方も規格で許されるので、テストベンチの誤りの修正ではなく、この制限を避けるための変更です。packed配列でファイル名を持つ例は、他にありません。
 
 ### 幅変換：テストベンチ内の同一エッジの競合
 
@@ -177,6 +179,20 @@ kirimasimは1段階でソースを処理・実行するため、次の違いを�
 修正前の通常回路では、kirimasimが最初の64ビット書込みの途中で`WIDTH_SUBDATA`を報告しました。保存した波形では、下位Wデータが二重に受け付けられ、上位32ビットを期待する時点に下位32ビットが残っていました。同じ入力のIcarus実行はPASSしており、シミュレータ間の差からテストベンチの競合を発見できました。
 
 カウンターを`ticks<=ticks+1`へ変更し、同一エッジのサンプリング中はカウンター由来の`ready`を安定させました。DUTの状態機械、データ経路、期待値、15目標、4種類の変異と失敗ラベルは変更していません。修正前の失敗結果も、修正後の再実行とは別に保存しています。
+
+### DMAとディスクリプターDMA：残っていた同じ競合
+
+2026-11-07に上の修正を見直したところ、幅変換と同じ形の競合が2つのテストベンチに残っていました。[`dma_tb.sv`](../../examples/local-dma/tb/dma_tb.sv)の`cycles`と、[`descriptor_tb.sv`](../../examples/local-descriptor-dma/tb/descriptor_tb.sv)の`tick_count`、`fetches`です。クロック立上りのブロッキング代入で更新した値から、DUTとRAMが同じエッジで見る組合せ信号を作っていました。
+
+kirimasimとIcarusのどちらでも合格し、両者の出力も一致していたので、これまでの実行では見つかりませんでした。一時コピーでDUTやRAMのクロックだけを連続代入で少し遅らせ、規格が許す実行順を作ると、kirimasimで次のように失敗します。
+
+| 条件 | 修正前 | 修正後 |
+| --- | --- | --- |
+| `dma_tb.sv` | `DMA_PROTOCOL`、`DMA_TIMEOUT` | 合格 |
+| `descriptor_tb.sv`の`tick_count` | `SG_TIMEOUT`、`SG_COPY_ADDRESS` | 合格 |
+| `descriptor_tb.sv`の`fetches`（nightlyだけ） | `SG_FETCH`、`SG_TIMEOUT` | 合格 |
+
+3つの変数をノンブロッキング代入へ変えました。テストベンチ側の問題で、kirimasimのバグではありません。Icarusはこの実験でもすべて合格しましたが、遅らせても実行順が変わっていない可能性があり、安全の根拠にはなりません。出力が一致しても、実行順の競合がないとは言えないということです。[確認の詳細](../../PROVENANCE.md#testbench-race-fix-20261107)は由来にあります。
 
 ## 5. 再実行する
 
@@ -249,5 +265,32 @@ UVM_HOME=/path/to/1800.2-2020.3.2
   examples/local-uvm/tb/uvm_apb_pkg.sv examples/local-apb/rtl/apb_regs.sv \
   examples/local-uvm/tb/top.sv
 ```
+
+### kirimasimがUVMに対応したら
+
+kirimasimがUVMを実行できるようになったら、このリポジトリのUVM例も実行します。2026-11-07時点では、`416cca52d085`でも固定版のUVMの解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。エラーの上限で止まるので、後ろに別の問題があるかは分かりません。次の順に進めます。
+
+1. **開始の判断：** #110が解決し、上のUVMの確認コマンドが終了コード0になることを確かめます。[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)の各実行のSummaryの先頭に、UVMライブラリの解析と`local-uvm`のloweringの結果が出ます。107構成の合否には影響しないので、Summaryか#110の状態を見て判断します。
+2. **実行の準備：** UVMの例はVerilator向けの実行手順なので、[アダプター](../../tools/run_kirimasim_examples.py)を拡張します。
+3. **最初の例：** 同時アサーション、`covergroup`、DPIを使っていない`local-uvm`から始めます。
+4. **対象の拡大：** 下の表で、必要な機能がそろった例から増やします。同時アサーションには[#111](https://github.com/kurochan001/kirimasim/issues/111)も必要です。
+5. **判定：** 既存の計画と判定をそのまま使い、緩めません。
+
+表は、各例のディレクトリーのソースを検索した結果です。
+
+| 例 | 同時アサーション | `covergroup`またはDPI |
+| --- | --- | --- |
+| [`local-uvm`](../../examples/local-uvm/README.md) | なし | なし |
+| [`local-generated-ral`](../../examples/local-generated-ral/README.md) | なし | なし |
+| [`local-register-spec`](../../examples/local-register-spec/README.md) | なし | なし |
+| [`local-uvm-random`](../../examples/local-uvm-random/README.md) | なし | あり |
+| [`local-uvm-hierarchy`](../../examples/local-uvm-hierarchy/README.md) | あり | なし |
+| [`local-uvm-multiclock`](../../examples/local-uvm-multiclock/README.md) | あり | なし |
+| [`local-uvm-outstanding`](../../examples/local-uvm-outstanding/README.md) | あり | なし |
+| [`local-uvm-coordination`](../../examples/local-uvm-coordination/README.md) | あり | あり |
+| [`local-uvm-migration`](../../examples/local-uvm-migration/README.md) | あり | あり |
+| [`local-mxfp4`](../../examples/local-mxfp4/README.md) | あり | あり |
+
+### この結果の読み方
 
 この結果を、ネイティブcovergroup／コードカバレッジ、フォーマルの再証明、cocotb・VPI、C++・DPI、SystemC、SPICE協調、上流DV環境の実行成功へ読み替えません。通常のCIと環境診断の既定ツールもIcarus／Verilatorのままです。

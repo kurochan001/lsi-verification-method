@@ -254,7 +254,9 @@ class WorkflowTests(unittest.TestCase):
                 self.assertIn('timeout-minutes',job)
                 uploads=[]
                 for step in job['steps']:
-                    self.assertNotIn('continue-on-error',step)
+                    # Only the UVM signpost may fail softly: it reports and never gates.
+                    if (name,step.get('name')) not in {('kirimasim','Prepare the pinned UVM for the parse check'),('kirimasim','Check whether kirimasim can process UVM yet')}:
+                        self.assertNotIn('continue-on-error',step)
                     if 'uses' in step:self.assertRegex(step['uses'],r'^[^@]+@[a-f0-9]{40}$')
                     if step.get('uses','').startswith('actions/upload-artifact@'):uploads.append(step)
                 self.assertTrue(uploads);self.assertTrue(all(s['if']=='always()' for s in uploads))
@@ -366,5 +368,32 @@ class WorkflowTests(unittest.TestCase):
             r=subprocess.run(['bash','-e','-c',step['run']],cwd=root,env=env,capture_output=True,text=True);self.assertEqual(r.returncode,0,r.stderr)
             text=page.read_text();self.assertEqual(text,r.stdout);self.assertEqual(text,(out/'results.md').read_text())
             self.assertIn('**0／1 FAIL**',text);self.assertIn('crashed（異常終了1回）',text);self.assertIn('(https://github.example/o/r/tree/'+'f'*40+'/examples/fifo/README.md)',text)
+    def test_kirimasim_uvm_check_reports_without_deciding_the_run(self):
+        import yaml
+        workflow=yaml.load((ROOT/'.github/workflows/kirimasim.yml').read_text(),Loader=yaml.BaseLoader)
+        self.assertIn('tools/kirimasim_uvm_check.py',workflow['on']['push']['paths'])
+        steps=self.kirimasim_steps();names=[s.get('name') for s in steps]
+        prepare,check=[next(s for s in steps if s.get('name')==name) for name in ('Prepare the pinned UVM for the parse check','Check whether kirimasim can process UVM yet')]
+        # Neither step can fail the run, and the verdict still comes from the examples.
+        self.assertEqual((prepare['continue-on-error'],check['continue-on-error']),('true','true'))
+        self.assertLess(names.index('Save the confirmed binary before verification'),names.index(prepare['name']))
+        self.assertLess(names.index(prepare['name']),names.index(check['name']))
+        self.assertLess(names.index(check['name']),names.index('Run the pure-Icarus examples on kirimasim'))
+        self.assertNotIn('if',next(s for s in steps if s.get('name')=='Run the pure-Icarus examples on kirimasim'))
+        self.assertIn('artifacts/ci/kirimasim-uvm/**',next(s for s in steps if s.get('name')=='Preserve results, including failures')['with']['path'])
+        self.assertIn('--out artifacts/kirimasim-uvm-source',prepare['run'])
+        self.assertIn('artifacts/kirimasim-uvm-source/1800.2-2020.3.2',check['run'])
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);binary=root/'artifacts/kirimasim-tool/kirimasim';binary.parent.mkdir(parents=True)
+            binary.write_text('#!/bin/sh\nif [ "$1" = --version ]; then echo "kirimasim 0.0.0 (commit abc)"; exit 0; fi\necho "x.sv:1:1: error: nope" >&2\nexit 2\n');binary.chmod(0o755)
+            (root/'tools').symlink_to(ROOT/'tools');(root/'bin').mkdir();(root/'bin/python').symlink_to(sys.executable);page=root/'step-summary.md'
+            env=dict(os.environ,GITHUB_STEP_SUMMARY=str(page),PYTHONDONTWRITEBYTECODE='1',PATH=str(root/'bin')+os.pathsep+os.environ['PATH'])
+            # The download failed, so the source is missing: the summary still says so.
+            r=subprocess.run(['bash','-e','-c',check['run']],cwd=root,env=env,capture_output=True,text=True);self.assertEqual(r.returncode,0,r.stderr)
+            self.assertIn('固定版のUVMを用意できませんでした',page.read_text())
+            source=root/'artifacts/kirimasim-uvm-source/1800.2-2020.3.2/src';source.mkdir(parents=True);(source/'uvm_pkg.sv').write_text('package uvm_pkg; endpackage\n')
+            import shutil;shutil.rmtree(root/'artifacts/ci/kirimasim-uvm');page.write_text('')
+            r=subprocess.run(['bash','-e','-c',check['run']],cwd=root,env=env,capture_output=True,text=True);self.assertEqual(r.returncode,0,r.stderr)
+            self.assertIn('| UVMライブラリの解析 | 未対応 | 2 |',page.read_text());self.assertIn('`nope`が1件',r.stdout)
 
 if __name__=='__main__':unittest.main()

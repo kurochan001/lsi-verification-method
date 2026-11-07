@@ -24,12 +24,15 @@ module descriptor_tb;
  task tick;begin @(posedge clk);#1;@(negedge clk);end endtask
  task reset_all;begin monitor=0;rst_n=0;start=0;abort_req=0;repeat(3)tick();rst_n=1;tick();end endtask
  always @(posedge clk)begin
- tick_count=tick_count+1;
+ // Keep permit stable while the DUT and RAM sample the same clock edge.
+ // A blocking update races with the combinational handshake gating above.
+ tick_count<=tick_count+1;
  if(rst_n && monitor)begin
  if(arvalid && arready && arid==0)begin
  active_slot=(v[0]+fetches)%DEPTH;
- if(araddr!==6144+16*active_slot || arlen!==8'd3)fail("SG_FETCH");fetches=fetches+1;
- if(active_slot==0 && fetches>1)$display("COVER ring/wrap");
+ // fetches also gates arready through abort_hold, so it changes after this edge.
+ if(araddr!==6144+16*active_slot || arlen!==8'd3)fail("SG_FETCH");fetches<=fetches+1;
+ if(active_slot==0 && fetches>0)$display("COVER ring/wrap");
  end
  if(arvalid && arready && arid==1)begin
  if(araddr!==source_address(active_slot) || arlen!==active_slot)fail("SG_COPY_ADDRESS");

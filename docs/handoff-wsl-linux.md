@@ -186,7 +186,7 @@ macOSの結果は次のとおりです。件数はOSに依存しないはずな�
 | 検査 | macOSの結果 |
 | --- | --- |
 | 文書検査 | 461判定がすべて合格（この資料を含む） |
-| セルフテスト | 130グループ、1,188件、skipなし（`summary.json`の予定は132判定） |
+| セルフテスト | 130グループ、1,195件、skipなし（`summary.json`の予定は132判定） |
 | 全例smoke | 108／108 |
 | 全例nightly | 108／108 |
 | kirimasim | 107／107。lowering 936回、シミュレーション2,367回、全起動の終了コード0が2,495回・1が808回（loweringを含む）、異常終了0回 |
@@ -248,5 +248,7 @@ Claude Codeのメモリーは別のマシンへ引き継がれないので、こ
 - pushは「コミットしてmainにpush」と言われたときだけ行います。ブランチやpull requestは作らず、mainへ直接pushします。
 - 長い作業の途中で、pushせずにローカルでコミットするのは構いません。
 - pushには`gh auth login`と`gh auth setup-git`が必要です。
+- kirimasimのバグと思われるものを見つけたら、確認を待たずに[kirimasimのテンプレート](https://github.com/kurochan001/kirimasim/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml)でBug Issueを発行し、番号を報告します。先に、既存のIssueとの重複、最新の`main`での最小例の再現、テストベンチ側の競合でないことを確かめます。テンプレートの投稿方針に従い、商用シミュレータの出力、規格の本文、非公開のパスは載せません。
+- kirimasimに関わる作業では[#110](https://github.com/kurochan001/kirimasim/issues/110)の状態を確かめます。解決していたら、[UVM例の実行](case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を提案します。Kirimasim latestのSummaryにも結果が出ますが、メールなどの通知はありません。
 
 [レビューの未解決の項目](../PROVENANCE.md#repository-review-20261107)は、この確認の範囲に含めません。

@@ -23,7 +23,9 @@ module dma_tb;
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"batch=%0d cycle=%0d",checks,cycles);end endtask
  function [7:0] initial_byte(input integer seed,input integer address);initial_byte=seed ^ (13*address) ^ (address>>5) ^ (address>>8);endfunction
  always @(posedge clk)begin
-  cycles=cycles+1;
+  // Keep permit stable while the DUT and RAM sample the same clock edge.
+  // A blocking update races with the combinational handshake gating above.
+  cycles<=cycles+1;
   if(rst_n && psel && penable && pwrite && pready && !pslverr && paddr==12 && pwdata[0])starts=starts+1;
   if(monitor && rst_n)begin
    if(arheld && (!arvalid || {araddr,arlen,arid}!==oldar))fail("DMA_PROTOCOL");

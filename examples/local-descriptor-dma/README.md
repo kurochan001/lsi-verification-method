@@ -40,6 +40,8 @@ Pythonが順番・完了数・エラー・中断・取得数・書込みの残�
 
 空／全件／周回、4種類のエラー、取得／コピー中のabort、head・件数の不正、動作中リセットと再実行を各13目標で確認します。ring2は待ちなし、ring4-stallsはAR/AW/Wの受付を周期的に止めます。4種類の変異はリング位置の進め方、flags無視、IRQ欠落、コピーのデータ破損です。
 
+受付の停止とabortのためのARの保持は、テストベンチの`tick_count`と`fetches`から作っています。これらをブロッキング代入で更新すると、DUTとRAMが同じエッジで見る値が実行順で変わります。2026-11-07に[ノンブロッキング代入へ修正](../../PROVENANCE.md#testbench-race-fix-20261107)しました。修正の前後で、smokeの生成ファイルと検査の出力は同じです。`fetches`の競合が結果に現れる入力は、nightlyにだけ含まれます。
+
 ```sh
 python3 examples/local-descriptor-dma/run.py
 python3 examples/local-descriptor-dma/run.py --profile nightly
