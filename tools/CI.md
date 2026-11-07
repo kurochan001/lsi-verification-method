@@ -9,7 +9,7 @@ GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と�
 | Nightly verification | 毎日UTC 18:23（日本時間翌03:23）、手動 | 全文書、skipなしの全セルフテスト、全例のnightly、全フォーマル・STA・lint、保存結果の履歴照合 |
 | Kirimasim latest | 毎日UTC 19:07（日本時間翌04:07）、mainへのpush（例と実行ツールの変更）、手動 | [kirimasim](https://github.com/kurochan001/kirimasim)の`main`の最新コミットで、[Icarus向け80例・107構成](../docs/case-study-kirimasim/README.md)のsmokeを実行 |
 
-スケジュールはmainのワークフローを使います。GitHub側の混雑等で開始が遅れる場合があり、時刻どおりの開始を保証する仕組みではありません。`--profile nightly`というランナー引数自体には、定期起動の機能はありません。
+スケジュールはmainのワークフローを使います。GitHub側の混雑等で開始が遅れる場合があり、時刻どおりの開始を保証する仕組みではありません。2026-11-01から11-06までのNightlyは、予定の約3時間50分から6時間40分後に作成されました。`--profile nightly`というランナー引数自体には、定期起動の機能はありません。
 
 ## 実行環境
 
@@ -25,7 +25,7 @@ Ubuntuの既定ミラーで接続が停滞したため、CIのamd64ランナー�
 
 他のツールはコミットやハッシュで固定していますが、Kirimasim latestだけは固定しません。kirimasimの変更がこのリポジトリの例で問題を起こしていないかを、早く知るためです。
 
-起動ごとに`main`の先頭を1度だけ調べ、そのコミットをUbuntu 24.04のGCCと`dev`プリセットでビルドします。`dev`は`-O1 -g`にライブラリーのassertを加えた構成で、[2026-11-03の実測](../docs/case-study-kirimasim/README.md)と同じプリセットです。`kirimasim --version`のコミットが一致しなければ、検証へ進みません。バイナリーはコミットごとにキャッシュし、同じコミットならビルドを省きます。判定には[アダプター](run_kirimasim_examples.py)の監査をそのまま使います。未実装、クラッシュ、タイムアウトがあれば不合格です。
+起動ごとに`main`の先頭を1度だけ調べ、そのコミットをUbuntu 24.04のGCCと`dev`プリセットでビルドします。`dev`は`-O1 -g`にライブラリーのassertを加えた構成で、[2026-11-03の実測](../docs/case-study-kirimasim/README.md)と同じプリセットです。`kirimasim --version`のコミットが一致しなければ、検証へ進みません。バイナリーはコミットごとにキャッシュし、同じコミットならビルドを省きます。[最初の実行](../PROVENANCE.md#kirimasim-latest-ci-20261107)では、ビルドが約8分、smokeが約20分でした。判定には[アダプター](run_kirimasim_examples.py)の監査をそのまま使います。未実装、クラッシュ、タイムアウトがあれば不合格です。
 
 kirimasimへのコミットそのものでは起動しません。kirimasimのpushごとに動かすには、kirimasim側にワークフローとトークンを追加する必要があります。
 
