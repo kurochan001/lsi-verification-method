@@ -34,6 +34,8 @@ RALにはCONFIG（RW）、ID（RO）、PENDING（W1C）を登録します。通�
 
 DUTへのリセット駆動とRALの`reset()`は別々に行います。各フロントドアアクセスの戻りstatusを確認します。データ列はseed付きの固定アルゴリズムで生成し、SystemVerilogの制約ソルバーや`randomize()`は使いません。
 
+2026-11-07に、アダプターの`bus2reg`の引数名を`item`から`bus_item`へ直しました。仮想メソッドを上書きするときは、引数名も元の宣言と同じにする必要があります。Verilatorは違いを拒否しませんが、[kirimasimでの確認](../../docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でエラーになりました。検証の内容は変わりません。
+
 ## ライブラリの準備
 
 POSIX環境、Python 3.10以上、Verilator 5.052、C++20に対応するビルド環境を使います。UVMライブラリはGitへ取り込まず、外部ディレクトリへ明示的に準備します。`run.py`は自動ダウンロードしません。

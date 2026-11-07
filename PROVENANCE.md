@@ -1998,8 +1998,16 @@ READMEから辿れる[実行結果のページ](docs/case-study-kirimasim/result
 
 kirimasimはこの上限で止まるときに`--error-limit=`を案内しますが、そのオプションは受け付けません。[#112](https://github.com/kurochan001/kirimasim/issues/112)として報告しました。
 
+pushした後の最初の実行（[`42330580132`](https://github.com/kurochan001/lsi-verification-method/actions/runs/42330580132）、`bfa9e79`）は、予想と違う結果でした。`main`の先頭の`4bb954f2b205`をGCC 13.3.0でビルドすると、UVMライブラリの解析は通過し、`local-uvm`のloweringは`examples/local-uvm/tb/uvm_apb_pkg.sv:69`で止まりました。107構成のsmokeも107／107 PASSです。`60c26d7c8113`からの3コミットは、記録とテスト生成器の変更だけです。
+
+同じ`4bb954f2b205`をmacOSのAppleClangでビルドすると解析で止まり、#110の最小例も再現しました。UVMは同じアーカイブのソースで、macOS側の188ファイルのハッシュも一致します。したがって、確かめた範囲では#110はmacOSのビルドだけの問題で、「今はUVMの解析で止まる」という最初の記述はLinuxについて誤りでした。[#110にコメント](https://github.com/kurochan001/kirimasim/issues/110#issuecomment-6701653360)で報告しました。
+
+`uvm_apb_pkg.sv:69`は、このリポジトリのテストベンチの問題です。`bus2reg`の引数名`item`が、UVMの`bus_item`と違います。上書きする仮想メソッドは引数名も同じにする必要があるという規定（IEEE 1800の8.20）は、規格の本文ではなく、引用している二次資料で確かめました。kirimasimのバグではないのでIssueは発行していません。
+
+この行の引数名を`bus_item`へ直しました。変更はこの引数の宣言と、それを読む1か所だけです。Verilatorの`local-uvm`はsmokeの13判定、nightlyの17判定に合格しました。影響を受ける13ジョブ（UVMの各例と`local-lint`を含む）も、固定版のツールでsmokeとnightlyに合格し、保存結果の監査も合格しました。他のUVM例の244個のメソッドを正規表現で調べ、同じ不一致は見つかりませんでした。全数の保証ではありません。
+
 次の点は未確認です。
 
-- この確認は、GitHub Actionsでまだ実行していません。UVMの取得もActionsでは試していません。
-- 通過を実際に見たことはありません。通過の表示はテストの偽のバイナリーでだけ確かめています。
+- 引数名を直した後の`local-uvm`のloweringは、まだ実行していません。このMacのビルドは#110で止まるので、確かめられるのはLinuxだけです。pushした後のKirimasim latestで分かります。
+- #110の最小例そのものはLinuxで実行していません。GCCのmacOSとClangのLinuxも試していないので、原因がコンパイラーか標準ライブラリーかは分かりません。
 - 通過してもメールなどの通知はありません。

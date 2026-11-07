@@ -405,7 +405,7 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
 4. **テンプレートの実案件への適用**：検証領域の適用範囲、サインオフ、[不具合票](docs/templates/verification-issue.md)、[AIへの依頼・採否](docs/templates/ai-verification-request.md)の雛形を、実際の担当・構成・証跡へ対応付けて見直します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
-5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない80例が対象です。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。今は固定版のUVMの解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。解析できるようになったかは、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
+5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない80例が対象です。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドで固定版のUVMの解析が通り、macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
 
 ### 注意
 

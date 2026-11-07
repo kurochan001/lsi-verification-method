@@ -16,6 +16,7 @@ kirimasimの`main`の最新コミットを、[Kirimasim latest](https://github.c
 
 | 日付 | kirimasim | 環境 | 結果 | lowering | シミュレーション | 終了コード0／1 | 異常終了 | 記録 |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| 2026-11-07 | [`4bb954f2b205`](https://github.com/kurochan001/kirimasim/commit/4bb954f2b205eba7797db6849cc1ccf5f12f3726) | GitHub Actions、Ubuntu 24.04、GCC 13.3.0、テストベンチ修正後 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [push](https://github.com/kurochan001/lsi-verification-method/actions/runs/42330580132) |
 | 2026-11-07 | [`416cca52d085`](https://github.com/kurochan001/kirimasim/commit/416cca52d085665c3fe83d952f61ba66790c03e7) | macOS arm64、AppleClang 21、テストベンチ修正後 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [由来](../../PROVENANCE.md#testbench-race-fix-20261107) |
 | 2026-11-07 | [`b279f56275cd`](https://github.com/kurochan001/kirimasim/commit/b279f56275cd344b4f76cc60bd70eea708341a0c) | GitHub Actions、Ubuntu 24.04、GCC 13.3.0 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [push](https://github.com/kurochan001/lsi-verification-method/actions/runs/42308647137)、[手動](https://github.com/kurochan001/lsi-verification-method/actions/runs/42312231158)、[JSON](results-20261107.json) |
 | 2026-11-07 | [`416cca52d085`](https://github.com/kurochan001/kirimasim/commit/416cca52d085665c3fe83d952f61ba66790c03e7) | macOS arm64、AppleClang 21 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [由来](../../PROVENANCE.md#kirimasim-latest-ci-20261107) |
