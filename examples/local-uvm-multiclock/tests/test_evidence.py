@@ -51,4 +51,5 @@ class MulticlockEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):M.ledger(log.replace(line+'\n','',1),0)
     def test_rtl_defects_and_scoreboard_order_have_required_labels(self):
         self.assertEqual(dict(M.MUTANTS),{1:'MC_DATA',2:'MC_STALE',3:'MC_RELEASE',4:'MC_CHANNEL',5:'MC_CHANNEL'})
+        self.assertEqual(M.RECEIVER_MUTANT,(6,'MC_CHANNEL'));self.assertIn(M.FAST_SOURCE,M.PAIRS)
 if __name__=='__main__':unittest.main()

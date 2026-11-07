@@ -15,6 +15,8 @@ BASE=HERE.parent/'local-uvm';HARNESS=HERE.parent/'local-uvm-random/sim_main.cpp'
 SOURCES=[BASE/'tb/apb_if.sv',BASE/'tb/uvm_apb_pkg.sv',HERE/'tb/mc_if.sv',HERE/'tb/mc_pkg.sv',HERE/'rtl/reset_mailbox.sv',HERE/'tb/top.sv']
 COVERS={'cp_'+s for s in ('source','destination','stall','src_reset','dst_reset','both_reset','src_up','dst_up','recovery','release_wait')}
 MUTANTS=((1,'MC_DATA'),(2,'MC_STALE'),(3,'MC_RELEASE'),(4,'MC_CHANNEL'),(5,'MC_CHANNEL'))
+# The receiver's own release delay shows at the pins only when the source is much faster.
+PAIRS=(0,1,2);FAST_SOURCE=2;RECEIVER_MUTANT=(6,'MC_CHANNEL')
 
 def ledger(log,n):
     """Reconstruct the contract from raw monitor records and return the order the scoreboard actually used."""
@@ -84,8 +86,8 @@ def run(args):
     seeds=list(range(args.seed,args.seed+(3 if args.profile=='nightly' else 1)));n=160 if args.profile=='nightly' else 40
     diags=[('source-off','MC_STALE',{'CHECKER_OFF':1}),('reset-off','MC_COUNTS',{'CHECKER_OFF':2}),('sva-fault','MC_DST_HOLD',{'SVA_FAULT':1}),
            ('arrival-order','MC_STALE',{'ARRIVAL_ORDER':1}),('arrival-order-acceptance','MC_COUNTS',{'ARRIVAL_ORDER':1,'GUIDED_SWAP':1})]
-    ids=['build']+[f'pair{p}/order{o}/seed{s}' for p in (0,1) for o in (0,1) for s in seeds]+[f'pair{p}/seed{s}/order-invariance' for p in (0,1) for s in seeds]+[f'pair{p}/order{o}/mutation{m}' for p in (0,1) for o in (0,1) for m,_ in MUTANTS]+[f'pair{p}/order{o}/{d}' for p in (0,1) for o in (0,1) for d,_,_ in diags]+['coverage']
-    e=E.Evidence('local-uvm-multiclock',args,[Path(__file__),HARNESS,*SOURCES],dict(clock_pairs=[0,1],monitor_orders=[0,1],seeds=seeds,iterations=n,sva_covers=sorted(COVERS)),ids)
+    ids=['build']+[f'pair{p}/order{o}/seed{s}' for p in PAIRS for o in (0,1) for s in seeds]+[f'pair{p}/seed{s}/order-invariance' for p in PAIRS for s in seeds]+[f'pair{p}/order{o}/mutation{m}' for p in PAIRS for o in (0,1) for m,_ in MUTANTS]+[f'pair{FAST_SOURCE}/order{o}/mutation{RECEIVER_MUTANT[0]}' for o in (0,1)]+[f'pair{p}/order{o}/{d}' for p in PAIRS for o in (0,1) for d,_,_ in diags]+['coverage']
+    e=E.Evidence('local-uvm-multiclock',args,[Path(__file__),HARNESS,*SOURCES],dict(clock_pairs=list(PAIRS),monitor_orders=[0,1],seeds=seeds,iterations=n,sva_covers=sorted(COVERS)),ids)
     home=args.uvm_home.resolve()
     E.P.write_json(e.out/'uvm-source.json',dict(root=str(home),source_sha256={str(p.relative_to(home)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((home/'src').rglob('*')) if p.is_file()}))
     E.P.write_json(e.out/'tools.json',dict(verilator=E.P.execute([args.verilator,'--version'],e.out/'verilator-version.log',args.timeout,e.out)))
@@ -105,14 +107,14 @@ def run(args):
         record=dict(case,clock_pair=pair,monitor_order=order,seed=seed,mutation=mutation,success=ok,message=message,native=counts,execution=r)
         records.append(record);E.P.write_json(d/'result.json',record);e.check(identity,ok,record)
         if label is None:traces[pair,order,seed]=events if ok else None
-    for p in (0,1):
+    for p in PAIRS:
         for o in (0,1):
             for s in seeds:execute(f'pair{p}/order{o}/seed{s}',p,o,s,args.demo_bug)
-            for m,label in MUTANTS:execute(f'pair{p}/order{o}/mutation{m}',p,o,seeds[0],m,label)
+            for m,label in MUTANTS+((RECEIVER_MUTANT,) if p==FAST_SOURCE else ()):execute(f'pair{p}/order{o}/mutation{m}',p,o,seeds[0],m,label)
             for name,label,flags in diags:execute(f'pair{p}/order{o}/{name}',p,o,seeds[0],label=label,**flags)
         for s in seeds:e.check(f'pair{p}/seed{s}/order-invariance',traces[p,0,s] is not None and traces[p,0,s]==traces[p,1,s],dict(clock_pair=p,seed=s))
     normal=[r for r in records if r['expected_failure'] is None]
-    e.check('coverage',len(normal)==4*len(seeds) and all(r['success'] and set(r['native'])==COVERS for r in normal),dict(normal_runs=len(normal),covers=sorted(COVERS)))
+    e.check('coverage',len(normal)==2*len(PAIRS)*len(seeds) and all(r['success'] and set(r['native'])==COVERS for r in normal),dict(normal_runs=len(normal),covers=sorted(COVERS)))
     E.P.write_json(e.out/'executions.json',records);return e.finish()
 
 def main():

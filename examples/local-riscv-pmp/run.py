@@ -80,6 +80,9 @@ def vectors(seed,iterations,aw,boundary=False):
     p.cycle(rst=0);p.cycle(cfg=1,index=0,data=0xff);p.cycle(pa=1,index=1,data=0xffffffff) # reserved and unimplemented bits
     p.cycle(rst=0);p.entry(0,0,0x100);p.entry(1,1,0x100) # lower bound equal to upper: only hi>lo stops a straddling access
     p.cycle(address=0xfe,size=2);p.cycle(address=0xfe,size=2,machine=1)
+    # Only a locked TOR freezes the address of the entry below it.
+    for mode,lock in ((1,False),(0,True),(2,True),(3,True)):
+        p.cycle(rst=0);p.entry(1,mode,0x100,5,lock);p.cycle(pa=1,index=0,data=0x40);p.cycle()
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):

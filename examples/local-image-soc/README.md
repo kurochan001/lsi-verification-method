@@ -119,7 +119,7 @@ python3 -m unittest discover -s examples/local-image-soc/tests -v
 
 これにRAMモデルのチャネル別の待ちを加えます。B応答は最後のW受理後、少なくとも5サイクル遅らせ、通知の順序を確認します。完全なフレーム転送には4ビートの通常バーストと短い末尾の両方が含まれます。
 
-smokeは1 seed、nightlyは3 seedのランダム画像を使います。JUnitはsmoke 40件／nightly 44件、セルフテストは10件です。画素数や要求数へ合算しません。
+smokeは1 seed、nightlyは3 seedのランダム画像を使います。JUnitはsmoke 40件／nightly 44件、セルフテストは12件です。完了と同じエッジのW1Cはファームウェアでは狙えないので、[ブロック単体のテストベンチ](tb/dma_status_tb.sv)で確かめます。doneとerrorはW1Cに負けず、W1Cが勝つ誤りは`DMA_STATUS_LOST`になります。画素数や要求数へ合算しません。
 
 各ケースに入力画像・期待画像・ROMイメージとそのハッシュ、退出命令ログ、VCD、全フレームのRAM読戻し、合否を保存します。PythonもRAMの全ワードとCPU比較・IRQ・resetの件数を再照合します。実行例の固定条件と確認実績は[由来と確認記録](../../PROVENANCE.md#image-soc-20261101)を参照してください。
 

@@ -6,14 +6,32 @@ from datetime import datetime,timezone
 import math
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
+import threading
+import time
 import quality_common as Q
 def groups(root,scope):return ([root/'tools/tests'] if scope=='tools' else sorted((root/'examples').glob('*/tests'))+[root/'tools/tests'])
 def repository_inputs(root,out):
     data=subprocess.check_output(['git','-C',str(root),'ls-files','-z','--cached','--others','--exclude-standard'])
     paths={root/p.decode() for p in data.split(b'\0') if p}
     return sorted(p for p in paths if p.is_file() and not p.resolve().is_relative_to(out.resolve()))
+def execute(command,log,timeout,cwd,cancel):
+    """Like the shared helper, but a worker thread cannot see the signal, so it watches for a cancellation."""
+    started=time.monotonic();code=error=None
+    with log.open('w',encoding='utf-8') as stream:
+        process=subprocess.Popen(command,cwd=cwd,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+        while code is None and error is None:
+            try:code=process.wait(timeout=.2)
+            except subprocess.TimeoutExpired:
+                if cancel.is_set():error='cancelled'
+                elif time.monotonic()-started>timeout:error='command timeout'
+        if error:
+            cleanup=Q.P.stop_process_group(process)
+            if cleanup:error+='; '+cleanup
+            stream.write(f'\nRUNNER_ERROR {error}\n')
+    return dict(command=command,returncode=code,error=error,seconds=time.monotonic()-started)
 def evaluate(execution,log):
     counts=re.findall(r'^Ran (\d+) tests? in ',log,re.M)
     skips=re.findall(r"^.*?\.\.\. skipped (.+)$",log,re.M)
@@ -25,13 +43,18 @@ def run(a):
     files=[p for path in selected for p in sorted(path.rglob('*.py'))];inputs=repository_inputs(Q.ROOT,a.out)
     report=Q.Report('selftests',a.out,[Path(__file__),*inputs,*files],['inventory',*names,'source-freshness'],dict(groups=[str(p.relative_to(Q.ROOT)) for p in selected],python=a.python,scope=a.scope))
     report.check('inventory',bool(names),dict(groups=len(names),test_files=len(files)))
-    def execute(item):
-        name,path=item;r=Q.P.execute([a.python,'-m','unittest','discover','-s',str(path),'-v'],report.out/(name+'.log'),a.timeout,Q.ROOT)
+    cancel=threading.Event()
+    def group(item):
+        name,path=item;r=execute([a.python,'-m','unittest','discover','-s',str(path),'-v'],report.out/(name+'.log'),a.timeout,Q.ROOT,cancel)
         return name,evaluate(r,(report.out/(name+'.log')).read_text(errors='replace'))
     results=[]
     with concurrent.futures.ThreadPoolExecutor(max_workers=a.jobs) as pool:
-        for name,result in pool.map(execute,zip(names,selected)):
-            results.append(dict(id=name,**result));report.check(name,result['success'],result);print('PASS' if result['success'] else 'FAIL',name,flush=True)
+        try:
+            for name,result in pool.map(group,zip(names,selected)):
+                results.append(dict(id=name,**result));report.check(name,result['success'],result);print('PASS' if result['success'] else 'FAIL',name,flush=True)
+        except Q.P.RunInterrupted:
+            # Leaving the block waits for the workers, which now stop their process groups.
+            cancel.set();pool.shutdown(wait=False,cancel_futures=True);raise
     changed=report.fresh()
     current=groups(Q.ROOT,a.scope)
     if current!=selected or [p for path in current for p in sorted(path.rglob('*.py'))]!=files:changed.append('unittest inventory changed')
@@ -43,6 +66,9 @@ def main():
     a=p.parse_args()
     if not 1<=a.jobs<=16 or not math.isfinite(a.timeout) or a.timeout<=0 or a.out.exists():p.error('valid jobs, finite positive timeout and fresh --out required')
     a.python=Q.executable(a.python)
+    previous=signal.signal(signal.SIGTERM,Q.P.interrupted)
     try:return run(a)
+    except Q.P.RunInterrupted as exc:return 128+exc.signum
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as exc:print('SELFTEST_ERROR',exc,file=sys.stderr);return 1
+    finally:signal.signal(signal.SIGTERM,previous)
 if __name__=='__main__':sys.exit(main())

@@ -82,6 +82,28 @@ def mapping(memory,va,asid,ppn,flags=0xdf,large=False,global_parent=False):
         memory[table*4096+((va>>12)&1023)*4]=(ppn<<10)|flags
 
 
+def fence_targets(p,m,entries):
+    """Each fence form removes its own targets and nothing else; survivors are probed first."""
+    a=0x40001020;b=a+4096;s=0x80401000
+    def scenario(filled,fence,survivors,removed):
+        p.cycle(rst=0)
+        for va,asid in filled:p.transfer(m,va=va,asid=asid)
+        p.fence(*fence)
+        for va,asid in survivors+removed:p.transfer(m,va=va,asid=asid)
+    scenario([(a,0),(b,0)],(1,0,a,0),[(b,0)],[(a,0)]) # address: another page in the same 4MiB stays
+    scenario([(a,0),(b,0)],(1,1,a,0),[(b,0)],[(a,0)]) # both: likewise
+    scenario([(a,0),(a,1)],(1,1,a,0),[(a,1)],[(a,0)]) # both: another ASID stays
+    scenario([(a,0),(a,1)],(0,1,0,0),[(a,1)],[(a,0)]) # the ASID value 0 is not "all ASIDs"
+    scenario([(a,1),(a,0x101)],(0,1,0,1),[(a,0x101)],[(a,1)]) # all 9 bits of the ASID count
+    scenario([(s,0)],(1,0,s-0x400000,0),[(s,0)],[]) # the neighbouring 4MiB page stays
+    pages=[(0x50000000+i*4096,0) for i in range(entries+1)]
+    scenario(pages[:entries],(0,0,0,0),[],pages[:entries]) # a fence reaches every slot
+    # A hit does not advance replacement: the next fill still takes the oldest slot.
+    p.cycle(rst=0)
+    for va,_ in pages[:entries]:p.transfer(m,va=va)
+    p.transfer(m,va=pages[0][0]);p.transfer(m,va=pages[entries][0]);p.transfer(m,va=pages[1][0])
+
+
 def vectors(seed,iterations,entries,boundary=False):
     p=Plan(entries);m={};a=0x40001020;b=a+4096;g=0x60001020;s=0x80401000;d=0x70001020
     asids=(0,1,2,3,0x101,0x1ff)
@@ -112,6 +134,7 @@ def vectors(seed,iterations,entries,boundary=False):
     mapping(m,h,0,0x100,flags=0xcf);p.transfer(m,va=h,user=0);p.transfer(m,va=h,user=1)
     mapping(m,r,0,0x101,flags=0xd3);p.transfer(m,va=r);p.transfer(m,va=r,kind=1);p.transfer(m,va=r,kind=2)
     mapping(m,x,0,0x102,flags=0xd9);p.transfer(m,va=x,kind=2);p.transfer(m,va=x);p.transfer(m,va=x,mxr=1)
+    fence_targets(p,m,entries)
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):

@@ -31,7 +31,7 @@ def idle_rejects(max_frame):
 
 
 def source(replies,max_frame=128,drops=0,scenario=0,rx_base=0x1000,tx_base=0x1400):
-    if max_frame not in (96,128) or scenario not in (0,1,2,3,4) or type(drops) is not int or not 0<=drops<=2047 or len(replies)>7 or any(not 64<=len(r)<=max_frame or any(type(v) is not int or not 0<=v<=255 for v in r) for r in replies):raise ValueError('invalid firmware contract')
+    if max_frame not in (96,128) or scenario not in (0,1,2,3,4,5) or type(drops) is not int or not 0<=drops<=2047 or len(replies)>7 or any(not 64<=len(r)<=max_frame or any(type(v) is not int or not 0<=v<=255 for v in r) for r in replies):raise ValueError('invalid firmware contract')
     p=[('jal',0,'main'),'handler:',('lw',28,4,12),('or',31,31,28),('sw',28,4,12),('mret',),'main:']
     if rx_base%4 or tx_base%4 or not 0x1000<=min(rx_base,tx_base) or max(rx_base,tx_base)>0x2000-4*max_frame or abs(rx_base-tx_base)<4*max_frame:raise ValueError('invalid buffer placement')
     p+=li(10,rx_base)+li(11,tx_base)+li(12,0x40000000)+li(13,0x800)+li(16,0x1ffc)
@@ -46,7 +46,7 @@ def source(replies,max_frame=128,drops=0,scenario=0,rx_base=0x1000,tx_base=0x140
             p+=li(1,value)+[('sw',1,offset,12),('lw',2,offset,12),('bne',2,1,'fail'),('sw',base,offset,12)]
         p+=[('addi',1,0,64),('sw',1,20,12)]
     if (rx_base,tx_base)!=(0x1000,0x1400):p+=[('sw',10,8,12),('sw',11,12,12)]
-    p+=[('addi',1,0,7),('sw',1,40,12),('addi',1,0,1),('sw',1,0,12),('addi',14,0,0),('addi',9,0,len(replies))]
+    p+=[('addi',1,0,8 if scenario==5 else 7),('sw',1,40,12),('addi',1,0,1),('sw',1,0,12),('addi',14,0,0),('addi',9,0,len(replies))]
     if scenario==3:
         # Running but not yet owning: start, release, stop and pointer writes are all refused.
         for value in (3,5,0):p+=[('addi',1,0,value),('sw',1,0,12)]
@@ -116,6 +116,10 @@ def source(replies,max_frame=128,drops=0,scenario=0,rx_base=0x1000,tx_base=0x140
     if scenario==0 and drops and not replies:
         # Mask 7 leaves DROP out of the IRQ: the status bit is set, no handler ran, and W1C clears it.
         p+=[('lw',1,4,12),('andi',1,1,8),('beq',1,0,'fail'),('bne',31,0,'fail'),('addi',1,0,8),('sw',1,4,12),('lw',1,4,12),('andi',1,1,8),('bne',1,0,'fail')]
+    if scenario==5:
+        # Mask 8 unmasks DROP alone: the handler must run and clear it, within a bounded wait.
+        p+=[('addi',2,0,64),'drop_wait:',('lw',1,4,12),('andi',1,1,8),('beq',1,0,'drop_done'),('addi',2,2,-1),('bne',2,0,'drop_wait'),('jal',0,'fail'),
+            'drop_done:',('andi',1,31,8),('beq',1,0,'fail')]
     p+=[*li(1,SUCCESS),('sw',1,0,16),('ebreak',),
         'fail:',*li(1,FAILURE),('sw',1,0,16),('ebreak',)]
     return p

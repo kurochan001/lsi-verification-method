@@ -16,6 +16,7 @@ kirimasimの`main`の最新コミットを、[Kirimasim latest](https://github.c
 
 | 日付 | kirimasim | 環境 | 結果 | lowering | シミュレーション | 終了コード0／1 | 異常終了 | 記録 |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| 2026-11-07 | [`97d5b0001e7c`](https://github.com/kurochan001/kirimasim/commit/97d5b0001e7ca759ae8f928c6217690a119d1700) | macOS arm64、AppleClang 21、[検証の穴の解消後](../../PROVENANCE.md#verification-gaps-20261107) | 107／107 PASS | 938 | 2,371 | 1,561／810 | 0 | [由来](../../PROVENANCE.md#verification-gaps-20261107) |
 | 2026-11-07 | [`97d5b0001e7c`](https://github.com/kurochan001/kirimasim/commit/97d5b0001e7ca759ae8f928c6217690a119d1700) | GitHub Actions、Ubuntu 24.04、GCC 13.3.0、テストベンチ修正後 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [push](https://github.com/kurochan001/lsi-verification-method/actions/runs/42344642005) |
 | 2026-11-07 | [`4bb954f2b205`](https://github.com/kurochan001/kirimasim/commit/4bb954f2b205eba7797db6849cc1ccf5f12f3726) | GitHub Actions、Ubuntu 24.04、GCC 13.3.0、テストベンチ修正後 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [push](https://github.com/kurochan001/lsi-verification-method/actions/runs/42330580132) |
 | 2026-11-07 | [`416cca52d085`](https://github.com/kurochan001/kirimasim/commit/416cca52d085665c3fe83d952f61ba66790c03e7) | macOS arm64、AppleClang 21、テストベンチ修正後 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [由来](../../PROVENANCE.md#testbench-race-fix-20261107) |
@@ -24,6 +25,8 @@ kirimasimの`main`の最新コミットを、[Kirimasim latest](https://github.c
 | 2026-11-07 | [`d73d8922dfa2`](https://github.com/kurochan001/kirimasim/commit/d73d8922dfa20e19ccb9411adbe42a6d258bb49d) | WSL2、Ubuntu 24.04.1、GCC 13.3.0 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [由来](../../PROVENANCE.md#wsl-linux-check-20261107) |
 | 2026-11-07 | [`d73d8922dfa2`](https://github.com/kurochan001/kirimasim/commit/d73d8922dfa20e19ccb9411adbe42a6d258bb49d) | macOS arm64、AppleClang 21 | 107／107 PASS | 936 | 2,367 | 1,559／808 | 0 | [由来](../../PROVENANCE.md#repository-review-20261107) |
 | 2026-11-03 | [`d73d8922dfa2`](https://github.com/kurochan001/kirimasim/commit/d73d8922dfa20e19ccb9411adbe42a6d258bb49d) | macOS arm64、AppleClang 21 | 107／107 PASS | 936 | 2,314 | 1,509／805 | 0 | [JSON](results-20261103.json) |
+
+全80例のnightlyは、2026-11-07に[`97d5b0001e7c`](https://github.com/kurochan001/kirimasim/commit/97d5b0001e7ca759ae8f928c6217690a119d1700)のmacOS arm64（AppleClang 21）のビルドで2回実行しました。どちらも107／107 PASSで、異常終了は0回です。2回目は検証の穴を解消した後のコードで、lowering 938回、シミュレーション2,719回、終了コード0／1が1,903回／816回です。毎日の実行はsmokeで、nightlyは含みません。
 
 - **シミュレーションの増加：** 2,314回から2,367回へ増えたのは、kirimasimの違いではありません。[全体レビュー](../../PROVENANCE.md#repository-review-20261107)で、このリポジトリの刺激とテストベンチを増やしたためです。
 - **終了コード1：** 意図的な誤実装などを、既存のランナーが予定どおり検出した実行です。未実装、クラッシュ、タイムアウトは異常終了に数え、検出の成功には数えません。
@@ -137,5 +140,5 @@ kirimasimの`main`の最新コミットを、[Kirimasim latest](https://github.c
 
 - 教材側の回路とチェッカーでの互換性の確認で、SystemVerilog全体への適合性の評価ではありません。[確認範囲の外側](README.md#6-確認範囲の外側)にも説明があります。
 - Icarusとの出力の照合は、2026-11-03と2026-11-07の2回です。2026-11-07は`416cca52d085`と比べ、生成ファイル4,030個が同一で、ログ2,367個の検査の出力の内容と回数が一致しました。17個は`COVER`の順序だけが違います。出力が一致しても、[実行順の競合](README.md#dmaとディスクリプターdma残っていた同じ競合)がないとは言えません。
-- 全80例のnightlyは実行していません。今後の版で同じ結果になることも示しません。
+- 全80例のnightlyは、上のmacOSのビルドでの2回だけです。Actionsでは実行しておらず、Icarusとの出力の照合もしていません。今後の版で同じ結果になることも示しません。
 - UVMを使う例は対象外です。kirimasimがUVMに対応したら、[この進め方](README.md#kirimasimがuvmに対応したら)で実行します。

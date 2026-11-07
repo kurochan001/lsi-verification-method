@@ -22,7 +22,7 @@ def completion(log,expected):
  if len(pairs)!=len(dict(pairs)) or {k:int(v) for k,v in pairs}!=expected:raise ValueError('completion counts differ')
 def run(a):
  inputs=sources();seeds=list(range(a.seed,a.seed+(3 if a.profile=='nightly' else 1)));_,goals=E.C.catalog(HERE/'requirements.json')
- names=[*NAMES,*[f'random-{s}' for s in seeds],'detect-byte-enable','detect-id'];plan=['toolchain',*[f'b{b}/{n}' for b in (4,8) for n in [*names,*(['upstream-original'] if b==8 else []),'coverage']],'source-freshness']
+ names=[*NAMES,*[f'random-{s}' for s in seeds],'detect-byte-enable','detect-id','detect-response-hold','detect-driver-hold'];plan=['toolchain',*[f'b{b}/{n}' for b in (4,8) for n in [*names,*(['upstream-original'] if b==8 else []),'coverage']],'source-freshness']
  e=E.Evidence('local-vci-soclib',a,[Path(__file__),HERE/'model.py',HERE/'tb/vci_tb.cpp',HERE/'requirements.json',HERE/'upstream.json',Path(SC.__file__),ROOT/'tools/environment.json',*inputs],dict(cell_bytes=[4,8],seeds=seeds),plan)
  prefix_probe=E.P.execute([a.systemc_config,'--prefix'],e.out/'systemc-prefix.log',a.timeout,e.out)
  if prefix_probe['error'] or prefix_probe['returncode']!=0:raise ValueError('SystemC prefix unavailable')
@@ -39,7 +39,7 @@ def run(a):
  for b in (4,8):
   hits=set()
   for name in [*names,*(['upstream-original'] if b==8 else [])]:
-   mutation={'upstream-original':1,'detect-byte-enable':2,'detect-id':3}.get(name,0);scenario='basic' if mutation else 'random' if name.startswith('random-') else name
+   mutation={'upstream-original':1,'detect-byte-enable':2,'detect-id':3,'detect-response-hold':4,'detect-driver-hold':5}.get(name,0);scenario='basic' if mutation else 'random' if name.startswith('random-') else name
    seed=int(name.removeprefix('random-')) if name.startswith('random-') else a.seed;rows,counts=M.make(scenario,b,seed,128 if a.profile=='nightly' else 32)
    d=e.out/f'b{b}'/name;d.mkdir(parents=True);vectors=d/'vectors.txt';vectors.write_text(''.join(' '.join(f'{x:x}' for x in row)+'\n' for row in rows))
    E.P.write_json(d/'manifest.json',dict(source_sha256={str(vectors):E.hashlib.sha256(vectors.read_bytes()).hexdigest()},expected_counts=counts,cell_bytes=b,seed=seed,scenario=scenario,mutation=mutation))
@@ -52,14 +52,23 @@ def run(a):
      if mutation==1 and p.name=='vci_ram.cpp':data=data.replace('ram_t cur = tab[index];','unsigned int cur = tab[index];')
      if mutation==2 and p.name=='vci_ram.cpp':data=data.replace('vci_param::be2mask(be)','vci_param::be2mask((1 << vci_param::B)-1)')
      if mutation==3 and p.name=='vci_target_fsm.cpp':data=data.replace('m_current_cmd.srcid = p_vci.srcid.read();','m_current_cmd.srcid = p_vci.srcid.read() ^ 1;')
+     # The DUT changes its response while the bench stalls it: the check that really watches the DUT.
+     if mutation==4 and p.name=='vci_target_fsm.cpp':data=data.replace('p_vci.rdata  = m_current_cmd.rdata;','static unsigned hold_fault=0;p_vci.rdata  = m_current_cmd.rdata ^ (m_send_rsp ? (++hold_fault)&1 : 0);')
      target=out/p.name;target.write_text(data);files.append(target)
+    bench=HERE/'tb/vci_tb.cpp'
+    if mutation==5:
+     # The driver changes a stalled command: VCI_COMMAND_HOLD is the driver's self-check, so break the driver.
+     stalled='for(unsigned k=0;k<r[8];k++){auto s=tick();'
+     if stalled not in bench.read_text():raise ValueError('driver fault target missing')
+     data=bench.read_text().replace(stalled,'for(unsigned k=0;k<r[8];k++){if(ahead)bus.be=(~bus.be.read())&((1u<<CELL_BYTES)-1);auto s=tick();')
+     bench=out/'vci_tb.cpp';bench.write_text(data);files.append(bench)
     E.P.write_json(out/'manifest.json',dict(source_sha256={str(p):E.hashlib.sha256(p.read_bytes()).hexdigest() for p in files}))
-    binary=out/'simulation';cmd=[a.cxx,'-std=gnu++17',f'-DCELL_BYTES={b}','-I'+str(out),'-I'+str(home/'include'),*['-I'+str(p) for p in sorted(includes)],str(HERE/'tb/vci_tb.cpp'),str(home/'lib/libsystemc.a'),'-pthread','-o',str(binary)]
+    binary=out/'simulation';cmd=[a.cxx,'-std=gnu++17',f'-DCELL_BYTES={b}','-I'+str(out),'-I'+str(home/'include'),*['-I'+str(p) for p in sorted(includes)],str(bench),str(home/'lib/libsystemc.a'),'-pthread','-o',str(binary)]
     build=E.P.execute(cmd,out/'build.log',a.build_timeout,out);builds[key]=(binary,build)
    binary,build=builds[key]
    if build['error'] or build['returncode']!=0:ex=dict(error='build failed',returncode=None);(d/'simulation.log').write_text('build failed\n')
    else:ex=E.P.execute([str(binary),str(vectors),str(d/'trace')],d/'simulation.log',a.timeout,d)
-   log=(d/'simulation.log').read_text(errors='replace');label='VCI_ID' if mutation==3 else 'VCI_DATA' if mutation else None
+   log=(d/'simulation.log').read_text(errors='replace');label={0:None,3:'VCI_ID',4:'VCI_RESPONSE_HOLD',5:'VCI_COMMAND_HOLD'}.get(mutation,'VCI_DATA')
    status,message=E.P.classify(dict(checks=len(rows),expected_failure=label),ex,log)
    if status=='pass':
     try:completion(log,counts)

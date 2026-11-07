@@ -204,6 +204,10 @@ def manifest_value(manifest,path):
     return manifest
 
 
+def load_oss():
+    spec=importlib.util.spec_from_file_location('regression_oss',Path(__file__).resolve().parent/'oss_cad.py');oss=importlib.util.module_from_spec(spec);spec.loader.exec_module(oss)
+    return oss
+
 def inspect_output(directory,entry,entries,root=ROOT,profile=None,configuration=None):
     manifest=json.loads((directory/'manifest.json').read_text())
     if not isinstance(manifest.get('source_sha256'),dict) or not manifest['source_sha256']:raise ValueError('missing root source manifest')
@@ -258,7 +262,7 @@ def inspect_output(directory,entry,entries,root=ROOT,profile=None,configuration=
     oss_snapshots=list(directory.rglob('oss-source.json'))
     if 'oss-home' in entry.get('options',[]) and not oss_snapshots:raise ValueError('missing OSS CAD Suite source snapshot')
     if oss_snapshots:
-        spec=importlib.util.spec_from_file_location('regression_oss',Path(__file__).resolve().parent/'oss_cad.py');oss=importlib.util.module_from_spec(spec);spec.loader.exec_module(oss)
+        oss=load_oss()
         for snapshot in oss_snapshots:
             record=json.loads(snapshot.read_text());observed=oss.verify(Path(record['root']),record['platform'])
             if any(record.get(k)!=observed[k] for k in ('platform','release','archive_sha256','tree_sha256','files')):raise ValueError('OSS CAD Suite snapshot differs')

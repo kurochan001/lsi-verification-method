@@ -243,6 +243,15 @@ class KirimasimUvmCheckTests(unittest.TestCase):
         self.assertEqual(self.statuses(report), dict(parse='unsupported', lower='unsupported'))
         self.assertNotIn('**通過**', U.render(report))
 
+    def test_only_the_lowering_passing_asks_for_attention(self):
+        script = 'case " $* " in *" parse "*) exit 0;; *) echo "a.sv:1:2: error: not yet" >&2; exit 2;; esac'
+        report = self.check(script)
+        self.assertEqual(self.statuses(report), dict(parse='pass', lower='unsupported'))
+        text = U.render(report)
+        self.assertIn('**通過**', text)
+        self.assertNotIn('loweringが通りました', text)
+        self.assertNotIn('UVM例の実行の進め方', text)
+
     def test_unsupported_groups_errors_without_leaking_paths(self):
         report = self.check(f'for n in 1 2 3; do echo "{self.uvm}/src/base/g.svh:13$n:19: error: expected port | x" >&2; done\n'
                             'echo "fatal error: too many errors emitted" >&2\nexit 2')
@@ -253,7 +262,7 @@ class KirimasimUvmCheckTests(unittest.TestCase):
         text = U.render(report)
         self.assertIn('`expected port \\| x`が3件。最初は`src/base/g.svh:131`', text)
         self.assertNotIn(str(self.root), text)
-        self.assertNotIn('通過した確認', text)
+        self.assertNotIn('loweringが通りました', text)
         # kirimasim really prints paths relative to its working directory.
         relative = '../uvm/1800.2-2020.3.2/src/base/g.svh'
         report = self.check(f'echo "{relative}:139:19: error: expected port" >&2\nexit 2')

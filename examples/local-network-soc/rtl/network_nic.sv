@@ -57,7 +57,7 @@ module network_nic #(parameter MAX_FRAME=128,WAIT_CYCLES=1,MUTATION=0)(
             default:prdata=0;
         endcase
     end
-    assign irq=|(status&mask);
+    assign irq=|(status&mask&(MUTATION==5 ? 4'b0111:4'b1111));
     assign frame_ready=run && frame_valid && (!accept || (!rx_owned && !rx_busy));
     assign awvalid=rx_state==ADDRESS;assign awaddr=rx_ptr+{14'd0,ri,2'b00}+(MUTATION==2 ? 32'd4:32'd0);
     assign awlen=0;assign awsize=2;assign awburst=1;assign awid=0;

@@ -55,7 +55,7 @@ AHB-Liteは1件ずつのNONSEQ/SINGLE、APBはsetup/accessと待ち、AXI4はID 
 | `0x18` | DROP_COUNT | 満杯、サイズ超過、プロトコル検査で破棄した総数 |
 | `0x1c`／`0x20` | RX_OK／TX_OK | 正常なRX DMA完了／最終TXバイトの受理数 |
 | `0x24` | LAST_ERROR | 1: RX書込み応答、2: TX読出し応答のエラー |
-| `0x28` | IRQ_MASK | STATUS下位4ビットの通知許可。ファームウェアは7で完了とDMAエラーを許可 |
+| `0x28` | IRQ_MASK | STATUS下位4ビットの通知許可。ファームウェアは7で完了とDMAエラーを許可。`drop-irq`だけ8でDROPを許可 |
 | `0x2c` | RX_KIND | RO。1: ARP、2: UDP |
 
 RUNはリセットまで保持し、途中の停止は受け付けません。ポインターは4バイト整列、最大フレーム分がRAM内に収まること、RX／TX領域が重ならないことを検査します。不正なレジスタ・操作はPSLVERRを返し、状態を変更しません。TX_STARTはRX所有中かつRX DMA完了後、TX長64〜MAX_FRAME、TX停止中だけ受理します。RX_RELEASEはRX所有中かつRX／TX停止中だけ受理します。TX_STARTとRX_RELEASEの同時指示は拒否します。
@@ -73,19 +73,20 @@ RUNはリセットまで保持し、途中の停止は受け付けません。�
 | rx-error／tx-error | 全B／全RへSLVERRを注入し、正常完了や部分的な送信を出さない。`-mid`・`-last`は途中または最後の1件だけのエラーで、同じ結果を要求する |
 | relocated | RX／TXの両バッファを既定以外へ置き、RAM上端までの配置で全処理を確認 |
 | w1c-race | DROPのW1Cを連続で書き、同じエッジのイベントを失わないことを確認 |
+| drop-irq | DROPだけを許可し、IRQでハンドラーが動いてW1Cで解除することを確認 |
 | detect-rom-compare | ROMの期待値を1ビット壊し、CPUの比較ループが失敗署名を残すことを確認 |
 | bus-errors | 非整列・範囲外・領域重複のポインター、読出し専用と未定義のレジスタ（未定義は読書きとも）、RUN前後とRX／TX処理中の不正なTX_START・RX_RELEASE・停止、短すぎ／長すぎるTX長を拒否し、元の設定で正常処理。隣接と上端の配置は受理 |
 | reset-rx／reset-dma-tx／reset-wire-tx | RX DMA・TX DMA・送信待ち中に全体リセットし、入力を巻き戻してROMから再起動 |
 | random | 再現可能な長さ・ペイロード・ID・ポートと、バス／TXのランダムな待ち |
 
-[要求カタログ](requirements.json)は4要求・20観測目標です。通常成功ケースの観測だけで構成ごとの達成を確認します。4種類の変異は、RXの早過ぎる完了`NET_SOC_RX_ORDER`、誤DMAアドレス`NET_SOC_AXI`、W1Cでの誤返却`NET_SOC_OWNERSHIP`、送信前の完了`NET_SOC_TX_ORDER`で検出します。
+[要求カタログ](requirements.json)は4要求・21観測目標です。通常成功ケースの観測だけで構成ごとの達成を確認します。5種類の変異は、RXの早過ぎる完了`NET_SOC_RX_ORDER`、誤DMAアドレス`NET_SOC_AXI`、W1Cでの誤返却`NET_SOC_OWNERSHIP`、送信前の完了`NET_SOC_TX_ORDER`、`IRQ_MASK`のビット3の無視`NET_SOC_COMPLETION`で検出します。
 
 ```sh
 python3 examples/local-network-soc/run.py --profile smoke --out artifacts/network-soc-smoke
 python3 examples/local-network-soc/run.py --profile nightly --out artifacts/network-soc-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 48件／nightly 52件です。nightlyはランダムseedを1→3へ増やします。
+Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 52件／nightly 56件です。nightlyはランダムseedを1→3へ増やします。
 
 送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致するリタイア命令列、CPUの比較ループ、終了署名を照合します。RX DMAのデータとRAMは受信したフレームと比較し、DUT内部のコピーや長さを基準にしません。比較ループはそのPCで数え、全バイトとの完全一致を要求します。破棄したフレームの理由と3種類の破棄カウンターも別々に照合します。
 

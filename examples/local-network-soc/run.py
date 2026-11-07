@@ -14,7 +14,7 @@ SOURCES=[*sorted((HERE/'rtl').glob('*.sv')),*sorted((HERE.parent/'local-network-
 
 def run(a):
     seeds=list(range(a.seed,a.seed+(3 if a.profile=='nightly' else 1)))
-    names=['arp-udp','boundaries','reject','overflow','rx-error','tx-error','rx-error-mid','rx-error-last','tx-error-mid','tx-error-last','relocated','w1c-race','bus-errors','reset-rx','reset-dma-tx','reset-wire-tx','detect-rom-compare',*[f'random-{s}' for s in seeds],*[f'mutation-{i}' for i in range(1,5)]]
+    names=['arp-udp','boundaries','reject','overflow','rx-error','tx-error','rx-error-mid','rx-error-last','tx-error-mid','tx-error-last','relocated','w1c-race','drop-irq','bus-errors','reset-rx','reset-dma-tx','reset-wire-tx','detect-rom-compare',*[f'random-{s}' for s in seeds],*[f'mutation-{i}' for i in range(1,6)]]
     e=E.Evidence('local-network-soc',a,[Path(__file__),HERE/'firmware.py',HERE.parent/'local-network-echo/model.py',HERE.parent/'local-network-echo/support.py',HERE/'requirements.json',*SOURCES],dict(configurations=CONFIGS,seeds=seeds),
         ['toolchain',*[cfg+'/'+name for cfg in CONFIGS for name in [*names,'coverage']],'source-freshness'])
     sim=S.Simulator(e,'network_soc_tb',SOURCES)
@@ -23,7 +23,7 @@ def run(a):
     _,goals=E.C.catalog(HERE/'requirements.json');coverage={}
     for cfg,pars in CONFIGS.items():
         limit=pars['MAX_FRAME']
-        def execute(name,frames,seed=a.seed,scenario=0,mutation=0,label=None,overflow=False,fault=-1,bases=(0x1000,0x1400),race=False,corrupt=False):
+        def execute(name,frames,seed=a.seed,scenario=0,mutation=0,label=None,overflow=False,fault=-1,bases=(0x1000,0x1400),race=False,corrupt=False,drop_irq=False):
             selected=frames[:3] if overflow else frames
             decoded=[(f,M.decode(f['data'] if isinstance(f,dict) else f,limit,f.get('link_error',False) if isinstance(f,dict) else False)[0]) for f in selected]
             admitted=[f for f,r in decoded if r is not None];golden=[r for _,r in decoded if r is not None]
@@ -33,7 +33,7 @@ def run(a):
             # SoC completion is event-based; no fixed long drain is needed in the input file.
             rows=rows[3:-1500]
             while rows and not rows[-1][1]:rows.pop()
-            stage=3 if scenario==6 else 4 if race else scenario if scenario<3 else 0
+            stage=3 if scenario==6 else 4 if race else 5 if drop_irq else scenario if scenario<3 else 0
             table=[bytes((r[0]^1,*r[1:])) for r in golden] if corrupt else golden
             image=dict(max_frame=limit,drops=drops,scenario=stage,rx_base=bases[0],tx_base=bases[1])
             plusargs=dict(FAULT=fault,RX_BASE=bases[0],TX_BASE=bases[1],COMPARE_PC=F.compare_pc(table,**image),CPU_CHECKS=0 if scenario==1 else sum(map(len,golden)),APB_ERRORS=F.rejected_accesses(stage,limit,len(golden)))
@@ -50,11 +50,14 @@ def run(a):
         # Both buffers away from their reset values, ending exactly at the top of RAM.
         execute('relocated',[M.arp(),M.udp(b'moved')],bases=(0x2000-4*limit,0x1000))
         execute('w1c-race',M.invalid_frames(limit)*2,race=True)
+        # DROP is the only unmasked event: bit 3 of the mask must reach the IRQ on its own.
+        execute('drop-irq',M.invalid_frames(limit),drop_irq=True)
         execute('detect-rom-compare',[M.arp()],corrupt=True,label='NET_SOC_COMPLETION')
         for scenario,name in enumerate(('reset-rx','reset-dma-tx','reset-wire-tx'),3):execute(name,[M.arp(),M.udp(b'reset')],scenario=scenario)
         for seed in seeds:execute(f'random-{seed}',M.random_frames(limit,seed,3),seed)
         for i,label in enumerate(('NET_SOC_RX_ORDER','NET_SOC_AXI','NET_SOC_OWNERSHIP','NET_SOC_TX_ORDER'),1):
             execute(f'mutation-{i}',[M.arp(),M.udp(b'ownership')],mutation=i,label=label)
+        execute('mutation-5',M.invalid_frames(limit),mutation=5,label='NET_SOC_COMPLETION',drop_irq=True)
         hits=set(g for r in sim.records if r['id'].startswith(cfg+'/') for g in r['coverage']);coverage[cfg]=dict(required=sorted(goals),hit=sorted(hits),missing=sorted(goals-hits));e.check(cfg+'/coverage',not goals-hits,coverage[cfg])
     sim.save();E.P.write_json(e.out/'coverage.json',coverage);S.fresh(e);return e.finish()
 

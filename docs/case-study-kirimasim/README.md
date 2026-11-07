@@ -23,7 +23,7 @@ kirimasimのコミットは、確認時点の公開`main`とも一致しまし�
 
 ## 2. 実測結果
 
-テストベンチ2件の修正後、**kirimasim・Icarusの両方で、80例・107構成のsmokeがすべてPASS**しました。追加したFIFO・AXI4・幅変換のnightlyも、両方で8構成すべてPASSしました。全80例のnightlyは今回実行していません。
+テストベンチ2件の修正後、**kirimasim・Icarusの両方で、80例・107構成のsmokeがすべてPASS**しました。追加したFIFO・AXI4・幅変換のnightlyも、両方で8構成すべてPASSしました。全80例のnightlyは今回実行していません（その後の実行は[結果のページ](results.md)にあります）。
 
 | 確認 | kirimasim | Icarus | 範囲 |
 | --- | --- | --- | --- |
@@ -193,6 +193,8 @@ kirimasimとIcarusのどちらでも合格し、両者の出力も一致して�
 | `descriptor_tb.sv`の`fetches`（nightlyだけ） | `SG_FETCH`、`SG_TIMEOUT` | 合格 |
 
 3つの変数をノンブロッキング代入へ変えました。テストベンチ側の問題で、kirimasimのバグではありません。Icarusはこの実験でもすべて合格しましたが、遅らせても実行順が変わっていない可能性があり、安全の根拠にはなりません。出力が一致しても、実行順の競合がないとは言えないということです。[確認の詳細](../../PROVENANCE.md#testbench-race-fix-20261107)は由来にあります。
+
+同じ形が増えないように、[`check_tb_races.py`](../../tools/check_tb_races.py)が全テストベンチをテキスト検索し、ツールのセルフテストの中で毎回確かめます。全数は保証しません。
 
 ## 5. 再実行する
 

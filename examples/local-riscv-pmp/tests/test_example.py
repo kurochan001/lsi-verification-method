@@ -50,6 +50,24 @@ class PmpTests(SystemContract,unittest.TestCase):
         result=simulate_vectors(P,p.rows,replacements={'pmp.sv':[('hi>lo && ','')]})
         self.assertNotEqual(result.returncode,0);self.assertIn('CHECK_FAIL PMP_DECISION',result.stdout)
 
+    def test_fixed_scenario_requires_a_locked_tor_to_freeze_the_lower_address(self):
+        rule='cfg[index+1][7] && cfg[index+1][4:3]==1'
+        bugs={
+            'the lock is ignored':'cfg[index+1][4:3]==1',
+            'the mode is ignored':'cfg[index+1][7]',
+            'a locked NA4 or NAPOT also freezes':'cfg[index+1][7] && cfg[index+1][4:3]!=0',
+            'a locked NA4 also freezes':'cfg[index+1][7] && cfg[index+1][4:3]!=3',
+            'a locked NAPOT also freezes':'cfg[index+1][7] && cfg[index+1][4:3]!=2',
+        }
+        for parameters in P.CONFIGS.values():
+            rows=P.vectors(17,0,parameters['AW'],True)
+            result=simulate_vectors(P,rows,parameters);self.assertEqual(result.returncode,0,result.stdout)
+            for name,wrong in bugs.items():
+                with self.subTest(bug=name,aw=parameters['AW']):
+                    result=simulate_vectors(P,rows,parameters,{'pmp.sv':[(rule,wrong)]})
+                    # A frozen address can first show as a changed decision, not as the read-back.
+                    self.assertNotEqual(result.returncode,0);self.assertRegex(result.stdout,'CHECK_FAIL PMP_(STATE|DECISION)')
+
     def test_checker_rejects_incorrect_permission_oracle(self):
         p=P.Plan(16);p.cycle(rst=0);p.cycle(machine=0)
         p.rows[-1][9]=1

@@ -17,7 +17,7 @@ class FirmwareTests(unittest.TestCase):
     def test_oversized_tables_do_not_overwrite_rom(self):
         with self.assertRaisesRegex(ValueError,'ROM table'):F.program([bytes(128)]*4)
     def test_invalid_contracts_are_rejected(self):
-        for replies,size,drops,scenario in (([bytes(63)],128,0,0),([bytes(97)],96,0,0),([],129,0,0),([],128,0,5),([],128,-1,0),([[256]*64],128,0,0)):
+        for replies,size,drops,scenario in (([bytes(63)],128,0,0),([bytes(97)],96,0,0),([],129,0,0),([],128,0,6),([],128,-1,0),([[256]*64],128,0,0)):
             with self.subTest(size=size,scenario=scenario),self.assertRaises(ValueError):F.program(replies,size,drops,scenario)
     def test_compare_label_points_at_the_rom_then_ram_reads(self):
         for scenario in (0,2,3):

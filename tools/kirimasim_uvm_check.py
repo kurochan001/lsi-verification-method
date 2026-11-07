@@ -101,6 +101,10 @@ def errors_cell(row):
     return text
 
 
+def lowering_passed(report):
+    return any(row["id"] == "lower" and row["status"] == "pass" for row in report["checks"])
+
+
 def render(report):
     lines = ["## kirimasimのUVM対応の確認", "",
              f"{cell(report['version'])}で、固定版のUVM {report['uvm']}を処理できるかを確かめます。"
@@ -115,8 +119,9 @@ def render(report):
                          f"{row['seconds']:g}秒 | {errors_cell(row)} |")
         lines.append("")
     statuses = {row["status"] for row in report["checks"]}
-    if "pass" in statuses:
-        lines += [f"**通過した確認があります。[UVM例の実行の進め方]({PLAN_URL})を確認してください。**"
+    # The parse alone passes on every Linux build, so only the lowering is a signal to act on.
+    if lowering_passed(report):
+        lines += [f"**`local-uvm`のloweringが通りました。[UVM例の実行の進め方]({PLAN_URL})を確認してください。**"
                   "通過はUVMのテストを実行したことを意味しません。", ""]
     if statuses & {"crash", "timeout"}:
         lines += ["クラッシュと時間切れは、未対応とは別の問題です。kirimasimのバグかどうかを確認してください。", ""]
@@ -156,10 +161,10 @@ def main():
     parser.add_argument("--timeout", type=float, default=300, help="seconds for each check")
     args = parser.parse_args()
     report = check(args.kirimasim.resolve(), args.uvm_home.resolve(), args.out.resolve(), args.timeout)
+    if lowering_passed(report):
+        print(f"::notice title=kirimasim UVM::local-uvm lowering passed. See {PLAN_URL}")
     for row in report["checks"]:
-        if row["status"] == "pass":
-            print(f"::notice title=kirimasim UVM::{row['label']} passed. See {PLAN_URL}")
-        elif row["status"] in ("crash", "timeout"):
+        if row["status"] in ("crash", "timeout"):
             print(f"::warning title=kirimasim UVM::{row['label']}: {row['status']}")
     print("UVM check:", {row["id"]: row["status"] for row in report["checks"]} or report["reason"])
     return 0

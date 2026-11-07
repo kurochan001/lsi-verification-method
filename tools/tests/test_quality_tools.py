@@ -9,6 +9,9 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import signal
+import threading
+import time
 import unittest
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[2]
@@ -33,7 +36,7 @@ class QualityEvidenceTests(unittest.TestCase):
                 (group/'test_new.py').write_text('# newly added test')
                 return dict(command=command,error=None,returncode=0)
             a=argparse.Namespace(scope='tools',out=root/'out',python=sys.executable,timeout=1,jobs=1)
-            with patch.object(Q,'ROOT',root),patch.object(Q.P,'execute',side_effect=execute):rc=S.run(a)
+            with patch.object(Q,'ROOT',root),patch.object(S,'execute',side_effect=execute):rc=S.run(a)
             self.assertEqual(rc,1)
             summary=json.loads((a.out/'summary.json').read_text())
             self.assertEqual(next(r['status'] for r in summary['results'] if r['id']=='source-freshness'),'fail')
@@ -52,7 +55,7 @@ class QualityEvidenceTests(unittest.TestCase):
                     (root/'examples/local-a'/name).write_text('# changed input')
                 return dict(command=command,error=None,returncode=0)
             a=argparse.Namespace(scope='tools',out=root/'out',python=sys.executable,timeout=1,jobs=1)
-            with patch.object(Q,'ROOT',root),patch.object(Q.P,'execute',side_effect=execute):rc=S.run(a)
+            with patch.object(Q,'ROOT',root),patch.object(S,'execute',side_effect=execute):rc=S.run(a)
             return rc,json.loads((a.out/'summary.json').read_text()),json.loads((a.out/'manifest.json').read_text())
     def test_selftests_bind_implementation_rtl_and_requirements_even_in_tools_scope(self):
         rc,summary,manifest=self.run_selftest_source_fixture();self.assertEqual(rc,0);self.assertTrue(summary['success'])
@@ -89,6 +92,32 @@ class QualityEvidenceTests(unittest.TestCase):
             with self.subTest(log=log):self.assertFalse(S.evaluate(execution,log)['success'])
         self.assertFalse(S.evaluate(dict(error='timeout',returncode=0),'Ran 1 test in 0s\nOK\n')['success'])
         self.assertFalse(S.evaluate(dict(error=None,returncode=1),'Ran 1 test in 0s\nOK\n')['success'])
+
+class SelftestRunnerTests(unittest.TestCase):
+    def test_sigterm_stops_the_running_groups(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);pidfile=root/'group.pid';fake=root/'fake-python'
+            fake.write_text(f'#!/bin/sh\necho $$ > "{pidfile}.tmp"\nmv "{pidfile}.tmp" "{pidfile}"\nexec sleep 60\n');fake.chmod(0o755)
+            process=subprocess.Popen([sys.executable,str(Path(S.__file__)),'--scope','tools','--python',str(fake),'--timeout','120','--out',str(root/'out')],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            self.addCleanup(lambda:process.poll() is None and (process.kill(),process.wait()))
+            deadline=time.monotonic()+60
+            while not pidfile.exists() and time.monotonic()<deadline:time.sleep(.02)
+            pid=int(pidfile.read_text())
+            process.terminate();self.assertEqual(process.wait(timeout=30),128+signal.SIGTERM)
+            deadline=time.monotonic()+5;alive=True
+            while alive and time.monotonic()<deadline:
+                try:os.kill(pid,0);time.sleep(.02)
+                except ProcessLookupError:alive=False
+            if alive:os.kill(pid,signal.SIGKILL)
+            self.assertFalse(alive,'the unittest process outlived its runner')
+
+    def test_a_group_past_its_limit_is_stopped_and_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r=S.execute([sys.executable,'-c','import time;time.sleep(60)'],Path(tmp)/'group.log',.3,tmp,threading.Event())
+            self.assertEqual(r['error'],'command timeout');self.assertIsNone(r['returncode'])
+            self.assertIn('RUNNER_ERROR',(Path(tmp)/'group.log').read_text())
+            self.assertFalse(S.evaluate(r,'Ran 1 test in 0.1s\n\nOK\n')['success'])
+
 
 class DocumentTests(unittest.TestCase):
     def test_stray_closing_code_tag_cannot_hide_subsequent_links(self):

@@ -88,6 +88,7 @@ module network_soc_tb;
             end
             if(dut.psel&&dut.penable&&dut.pready&&dut.pwrite&&!dut.pslverr&&dut.paddr==4&&(dut.pwdata[3:0]&dut.nic.events)!=0)$display("COVER status/event-beats-w1c");
             if(dut.psel&&dut.penable&&dut.pready&&dut.pwrite&&!dut.pslverr&&dut.paddr==4&&dut.pwdata[3]&&dut.nic.status[3])$display("COVER drop/status-w1c");
+            if(irq && dut.nic.status==4'b1000 && dut.nic.mask==4'b1000)$display("COVER drop/irq");
             if(dut.awvalid&&dut.awready)begin
                 if(aw_credit!=0 || dut.awaddr!=32'(rx_base)+32'(4*wr) || dut.awlen!=0 || dut.awsize!=2 || dut.awburst!=1 || dut.awid!=0)fail("NET_SOC_AXI");aw_credit=1;
             end

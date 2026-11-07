@@ -234,6 +234,16 @@ class CampaignTests(unittest.TestCase):
         import oss_cad
         (directory/'oss-source.json').write_text(json.dumps(dict(root=str(self.root),platform=oss_cad.platform_key(),release='claimed',archive_sha256='claimed',tree_sha256='claimed',files=1)))
         with self.assertRaisesRegex(ValueError,'pinned installation'):R.inspect_output(directory,entry,{},self.root,'nightly')
+    def test_oss_snapshot_is_compared_with_the_verified_installation_field_by_field(self):
+        directory,entry=self.output();entry['options']=['oss-home']
+        observed=dict(root=str(self.root),platform='fixture',release='r1',archive_sha256='a'*64,tree_sha256='b'*64,files=3)
+        stub=SimpleNamespace(verify=lambda root,platform:dict(observed))
+        snapshot=directory/'oss-source.json';snapshot.write_text(json.dumps(observed))
+        with patch.object(R,'load_oss',return_value=stub):
+            R.inspect_output(directory,entry,{},self.root,'nightly')
+            for field,value in (('release','r2'),('archive_sha256','c'*64),('tree_sha256','d'*64),('files',4)):
+                snapshot.write_text(json.dumps(dict(observed,**{field:value})))
+                with self.subTest(field=field),self.assertRaisesRegex(ValueError,'snapshot differs'):R.inspect_output(directory,entry,{},self.root,'nightly')
     def test_partial_campaign_junit_contains_an_integrity_failure(self):
         directory=self.root/'campaign';directory.mkdir();jobs=[dict(id='one'),dict(id='two')]
         results=[dict(id='one',success=True,message='ok')]

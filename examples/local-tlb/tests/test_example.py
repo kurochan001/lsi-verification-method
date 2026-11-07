@@ -47,5 +47,28 @@ class TlbTests(SystemContract,unittest.TestCase):
         begin=len(p.rows);p.transfer(m);self.assertEqual(p.rows[begin][20],0)
         result=simulate_vectors(P,p.rows);self.assertEqual(result.returncode,0,result.stdout)
 
+    def test_fixed_scenario_detects_a_fence_or_replacement_with_the_wrong_targets(self):
+        address='(!fence_address_valid || ((big_page[j]';asid='owner[j]==fence_asid)) &&'
+        loop='for(j=0;j<ENTRIES;j=j+1)begin\n                    if((!fence_asid_valid'
+        bugs={
+            'address fence flushes everything':(address,"(1'b1 || ((big_page[j]"),
+            'both forms ignore the address':(address,'(fence_asid_valid || !fence_address_valid || ((big_page[j]'),
+            'both forms ignore the ASID':('(!fence_asid_valid || (!global_entry[j] &&','(!fence_asid_valid || fence_address_valid || (!global_entry[j] &&'),
+            'ASID form ignores the owner':(asid,"1'b1)) &&"),
+            'ASID value 0 selects all ASIDs':(asid,'(fence_asid==0 || owner[j]==fence_asid))) &&'),
+            'only 8 ASID bits are compared':(asid,'owner[j][7:0]==fence_asid[7:0])) &&'),
+            '4KiB fence compares the 4MiB tag':('((big_page[j] && MUTATION!=3) ?',"(1'b1 ?"),
+            '4MiB fence compares an 8MiB tag':('vpn[j][19:10]==fence_address[31:22]','vpn[j][19:11]==fence_address[31:23]'),
+            'fence misses the last slot':(loop,loop.replace('j<ENTRIES','j<ENTRIES-1')),
+            'hit advances replacement':('if(permission || MUTATION==4)physical_address',"victim<=victim==IW'(ENTRIES-1) ? 0 : victim+1'b1;if(permission || MUTATION==4)physical_address"),
+        }
+        for parameters in P.CONFIGS.values():
+            rows=P.vectors(17,0,parameters['ENTRIES'],True)
+            result=simulate_vectors(P,rows,parameters);self.assertEqual(result.returncode,0,result.stdout)
+            for name,edit in bugs.items():
+                with self.subTest(bug=name,entries=parameters['ENTRIES']):
+                    result=simulate_vectors(P,rows,parameters,{'sv32_tlb.sv':[edit]})
+                    self.assertNotEqual(result.returncode,0);self.assertIn('CHECK_FAIL TLB_FLOW',result.stdout)
+
 
 if __name__=='__main__':unittest.main()
