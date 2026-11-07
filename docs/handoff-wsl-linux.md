@@ -249,6 +249,6 @@ Claude Codeのメモリーは別のマシンへ引き継がれないので、こ
 - 長い作業の途中で、pushせずにローカルでコミットするのは構いません。
 - pushには`gh auth login`と`gh auth setup-git`が必要です。
 - kirimasimのバグと思われるものを見つけたら、確認を待たずに[kirimasimのテンプレート](https://github.com/kurochan001/kirimasim/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml)でBug Issueを発行し、番号を報告します。先に、既存のIssueとの重複、最新の`main`での最小例の再現、テストベンチ側の競合でないことを確かめます。テンプレートの投稿方針に従い、商用シミュレータの出力、規格の本文、非公開のパスは載せません。
-- kirimasimに関わる作業では、Kirimasim latestのSummaryの先頭でUVMの確認結果を見て、進んでいたら[UVM例の実行](case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を提案します。メールなどの通知はありません。Linuxのビルドは解析が通り、macOSのビルドは[#110](https://github.com/kurochan001/kirimasim/issues/110)で止まります。
+- kirimasimに関わる作業では、Kirimasim latestのSummaryの先頭でUVMの確認結果を見て、進んでいたら[UVM例の実行](case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を提案します。メールなどの通知はありません。Linuxのビルドは解析が通り、`local-uvm`のloweringで未実装の連想配列のために止まります（UVMの`src/base/uvm_policy.svh:51`）。macOSのビルドは[#110](https://github.com/kurochan001/kirimasim/issues/110)で止まります。
 
 [レビューの未解決の項目](../PROVENANCE.md#repository-review-20261107)は、この確認の範囲に含めません。

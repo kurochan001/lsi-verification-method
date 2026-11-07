@@ -268,14 +268,16 @@ UVM_HOME=/path/to/1800.2-2020.3.2
 
 ### kirimasimがUVMに対応したら
 
-kirimasimがUVMを実行できるようになったら、このリポジトリのUVM例も実行します。2026-11-07時点の状況は次のとおりです。どちらも[`4bb954f2b205`](https://github.com/kurochan001/kirimasim/commit/4bb954f2b205eba7797db6849cc1ccf5f12f3726)のビルドで、結果はビルド環境で変わります。
+kirimasimがUVMを実行できるようになったら、このリポジトリのUVM例も実行します。2026-11-07時点の状況は次のとおりです。結果はビルド環境で変わります。
 
-| ビルド | UVMライブラリの解析 | `local-uvm`のlowering |
-| --- | --- | --- |
-| Linux、GCC 13.3.0 | 通過 | `uvm_apb_pkg.sv:69`で停止 |
-| macOS、AppleClang 21 | [#110](https://github.com/kurochan001/kirimasim/issues/110)で停止 | #110で停止 |
+| ビルド | kirimasim | UVMライブラリの解析 | `local-uvm`のlowering |
+| --- | --- | --- | --- |
+| Linux、GCC 13.3.0 | [`97d5b0001e7c`](https://github.com/kurochan001/kirimasim/commit/97d5b0001e7ca759ae8f928c6217690a119d1700) | 通過 | UVMの`src/base/uvm_policy.svh:51`で停止（連想配列が未対応） |
+| macOS、AppleClang 21 | [`4bb954f2b205`](https://github.com/kurochan001/kirimasim/commit/4bb954f2b205eba7797db6849cc1ccf5f12f3726) | [#110](https://github.com/kurochan001/kirimasim/issues/110)で停止 | #110で停止 |
 
-`uvm_apb_pkg.sv:69`は、このリポジトリのテストベンチの問題でした。`bus2reg`の引数名が`item`で、UVMの元の宣言の`bus_item`と違っていました。仮想メソッドを上書きするときは引数名も同じにする必要があり（IEEE 1800の8.20）、kirimasimのバグではありません。Verilatorはこの違いを拒否しないので、今まで気づきませんでした。2026-11-07に引数名を直したので、その先にどんな問題があるかは、次の[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)で分かります。次の順に進めます。
+Linuxのビルドは、最初は`uvm_apb_pkg.sv:69`で止まりました。これはこのリポジトリのテストベンチの問題でした。`bus2reg`の引数名が`item`で、UVMの元の宣言の`bus_item`と違っていました。仮想メソッドを上書きするときは引数名も同じにする必要があり（IEEE 1800の8.20）、kirimasimのバグではありません。Verilatorはこの違いを拒否しないので、今まで気づきませんでした。2026-11-07に引数名を直しました。
+
+今の停止箇所は、UVMの`local uvm_object m_extensions[uvm_object_wrapper];`です。kirimasimは連想配列をまだ実装しておらず、[対応状況の文書](https://github.com/kurochan001/kirimasim/blob/97d5b0001e7ca759ae8f928c6217690a119d1700/docs/P1_SUPPORT.ja.md)にも未対応と書かれているので、バグではありません。UVMのほかのファイルでも連想配列を使っています。エラーは最初の1件だけ報告されるので、連想配列の先に別の問題があるかは分かりません。次の順に進めます。
 
 1. **開始の判断：** Linuxのビルドで、上のUVMの確認コマンドが終了コード0になることを確かめます。[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)の各実行のSummaryの先頭に、UVMライブラリの解析と`local-uvm`のloweringの結果が出ます。107構成の合否には影響しません。macOSで試すには、#110の解決も必要です。
 2. **実行の準備：** UVMの例はVerilator向けの実行手順なので、[アダプター](../../tools/run_kirimasim_examples.py)を拡張します。

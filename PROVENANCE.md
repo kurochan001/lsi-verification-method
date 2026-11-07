@@ -2006,8 +2006,11 @@ pushした後の最初の実行（[`42330580132`](https://github.com/kurochan001
 
 この行の引数名を`bus_item`へ直しました。変更はこの引数の宣言と、それを読む1か所だけです。Verilatorの`local-uvm`はsmokeの13判定、nightlyの17判定に合格しました。影響を受ける13ジョブ（UVMの各例と`local-lint`を含む）も、固定版のツールでsmokeとnightlyに合格し、保存結果の監査も合格しました。他のUVM例の244個のメソッドを正規表現で調べ、同じ不一致は見つかりませんでした。全数の保証ではありません。
 
+直した後の最初の実行（[`42344642005`](https://github.com/kurochan001/lsi-verification-method/actions/runs/42344642005)、`e7ea9f5`）で、`main`の先頭の`97d5b0001e7c`をGCC 13.3.0でビルドすると、loweringは`uvm_apb_pkg.sv:69`を越え、UVMの`src/base/uvm_policy.svh:51`で止まりました。`local uvm_object m_extensions[uvm_object_wrapper];`が`unsupported: type 'uvm_object$[uvm_object_wrapper]' (not implemented yet)`になります。終了コードは2、エラーは1件です。107構成のsmokeは107／107 PASSです。
+
+kirimasimの`docs/P1_SUPPORT.ja.md`にも、連想配列は未対応と書かれています。このMacの`4bb954f2b205`のビルドで最小例を試すと、キーが`int`でもクラスでも同じ`not implemented yet`の診断になりました。未実装の機能を明示している診断で、バグではないのでIssueは発行していません。UVMのソースを正規表現で検索すると、連想配列の宣言は約80か所あります。全数の保証ではありません。エラーは1件しか報告されないので、連想配列の先に別の問題があるかは分かりません。
+
 次の点は未確認です。
 
-- 引数名を直した後の`local-uvm`のloweringは、まだ実行していません。このMacのビルドは#110で止まるので、確かめられるのはLinuxだけです。pushした後のKirimasim latestで分かります。
 - #110の最小例そのものはLinuxで実行していません。GCCのmacOSとClangのLinuxも試していないので、原因がコンパイラーか標準ライブラリーかは分かりません。
 - 通過してもメールなどの通知はありません。
