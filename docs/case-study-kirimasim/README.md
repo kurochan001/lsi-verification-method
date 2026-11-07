@@ -1,6 +1,6 @@
 # kirimasimでローカル検証例を実行する
 
-2026-11-03に、このリポジトリのIcarus向け検証例を[kirimasim](https://github.com/kurochan001/kirimasim)で実行し、テストベンチ2件の修正後、80例・107構成のsmokeがすべてPASSしました。対象、実行方法、移植時に見つけた問題、確認できない範囲を記録します。これは教材側の回路とチェッカーを使った互換性確認であり、SystemVerilog全体への適合性評価ではありません。
+2026-11-03に、このリポジトリのIcarus向け検証例を[kirimasim](https://github.com/kurochan001/kirimasim)で実行し、テストベンチ2件の修正後、80例・107構成のsmokeがすべてPASSしました。対象、実行方法、移植時に見つけた問題、確認できない範囲を記録します。これは教材側の回路とチェッカーを使った互換性確認であり、SystemVerilog全体への適合性評価ではありません。その後の版を含む[実行結果の一覧](results.md)は、別のページにまとめています。
 
 ## 1. 対象と判定方法
 
@@ -38,7 +38,7 @@ kirimasimのコミットは、確認時点の公開`main`とも一致しまし�
 
 [機械可読の実測記録](results-20261103.json)に、構成別の結果、起動数、ソース760件とバイナリーのSHA-256、修正前の試行、追加確認の終了コード、証跡のハッシュを収録しています。生ログ・入力・波形等はGit管理外の`artifacts/kirimasim-20261103/`に保存しました。`final-smoke/`・`icarus-final/`が最終smoke、`selected-nightly/`・`icarus-nightly/`が追加nightlyで、修正前の`full-smoke/`・`full-smoke-timescale/`を上書きしていません。
 
-記録内の`adapter_sha256`と`tools/run_kirimasim_examples.py`のハッシュは、実測時のアダプターの値です。2026-11-06のアダプター修正により、現行ファイルのハッシュとは一致しません。修正後も、同じバイナリーと下記の手順で全107構成のsmokeを1回再実行し、PASSと起動数・終了コードの内訳が上記と同じであることを確認しました。この再実行は並列4・Python 3.14で行い、Icarusとの出力照合と追加nightlyは再実行していません。その後の[全体レビュー](../../PROVENANCE.md#repository-review-20261107)で刺激とテストベンチを増やしたため、起動数は変わりました。レビュー後に同じバイナリーで全107構成のsmokeを並列6で再実行した結果は、107／107 PASS、lowering 936回、実シミュレーション2,367回、終了コード0が2,495回・1が808回です。
+記録内の`adapter_sha256`と`tools/run_kirimasim_examples.py`のハッシュは、実測時のアダプターの値です。2026-11-06のアダプター修正により、現行ファイルのハッシュとは一致しません。修正後も、同じバイナリーと下記の手順で全107構成のsmokeを1回再実行し、PASSと起動数・終了コードの内訳が上記と同じであることを確認しました。この再実行は並列4・Python 3.14で行い、Icarusとの出力照合と追加nightlyは再実行していません。その後の[全体レビュー](../../PROVENANCE.md#repository-review-20261107)で刺激とテストベンチを増やしたため、起動数は変わりました。レビュー後に同じバイナリーで全107構成のsmokeを並列6で再実行した結果は、107／107 PASS、lowering 936回、実シミュレーション2,367回で、シミュレーションの終了コードは0が1,559回、1が808回です（lowering 936回を含む全起動では、0が2,495回です）。
 
 ### smokeを実行した80例
 
@@ -218,7 +218,7 @@ python3 tools/run_regression.py \
 
 ### GitHub Actionsで最新版を実行する
 
-[Kirimasim latest](../../.github/workflows/kirimasim.yml)は、kirimasimの`main`の最新コミットをビルドし、同じ80例・107構成のsmokeを毎日実行します。[起動条件と失敗の切り分け](../../tools/CI.md#kirimasimの最新版)はCIの説明にあります。この節の上にある記録は`d73d8922dfa2`の実測のままで、Actionsの結果では更新しません。各実行の結果はSummaryと14日間保存される証跡で確認します。
+[Kirimasim latest](../../.github/workflows/kirimasim.yml)は、kirimasimの`main`の最新コミットをビルドし、同じ80例・107構成のsmokeを毎日実行します。[起動条件と失敗の切り分け](../../tools/CI.md#kirimasimの最新版)はCIの説明にあります。この節の上にある記録は`d73d8922dfa2`の実測のままで、Actionsの結果では更新しません。各実行の結果はSummaryの表と14日間保存される証跡で確認します。記録した結果は[実行結果の一覧](results.md)にあります。
 
 ## 6. 確認範囲の外側
 

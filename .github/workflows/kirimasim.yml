@@ -8,6 +8,7 @@ on:
       - 'examples/**'
       - '!examples/**/*.md'
       - 'tools/run_kirimasim_examples.py'
+      - 'tools/kirimasim_results.py'
       - 'tools/run_regression.py'
       - 'tools/regressions.json'
       - '.github/workflows/kirimasim.yml'
@@ -108,13 +109,13 @@ jobs:
         env:
           KIRIMASIM_COMMIT: ${{ steps.kirimasim.outputs.commit }}
         run: |
-          {
-            echo "kirimasim [\`${KIRIMASIM_COMMIT:0:12}\`](https://github.com/kurochan001/kirimasim/commit/$KIRIMASIM_COMMIT)"
-            echo
-            jq -r '"\(.passed) / \(.planned) jobs; lowering \(.native.lowering), simulations \(.native.simulations), abnormal \(.native.abnormal); exit codes \(.returncodes | tostring)"' artifacts/ci/kirimasim/summary.json
-            echo
-            jq -r '.results[] | select(.success | not) | "- `\(.id)`: \(.message)"' artifacts/ci/kirimasim/summary.json
-          } >> "$GITHUB_STEP_SUMMARY"
+          python tools/kirimasim_results.py \
+            --summary artifacts/ci/kirimasim/summary.json \
+            --commit "$KIRIMASIM_COMMIT" \
+            --examples-base "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/$GITHUB_SHA/examples" \
+            --out artifacts/ci/kirimasim/results.md
+          cat artifacts/ci/kirimasim/results.md >> "$GITHUB_STEP_SUMMARY"
+          cat artifacts/ci/kirimasim/results.md
       - name: Preserve results, including failures
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -123,6 +124,7 @@ jobs:
           retention-days: 14
           if-no-files-found: warn
           path: |
+            artifacts/ci/kirimasim/results.md
             artifacts/ci/kirimasim/summary.json
             artifacts/ci/kirimasim/manifest.json
             artifacts/ci/kirimasim/adapter.json

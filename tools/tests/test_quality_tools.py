@@ -350,5 +350,21 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(identity('kirimasim 0.0.0 (commit 0123456789ab), built with GNU 13.3.0'),0)
             for text in ('kirimasim 0.0.0 (commit 111111111111), built with GNU 13.3.0','kirimasim 0.0.0'):
                 with self.subTest(text):self.assertNotEqual(identity(text),0)
+    def test_kirimasim_run_summary_is_the_rendered_table_even_when_the_run_fails(self):
+        import yaml
+        workflow=yaml.load((ROOT/'.github/workflows/kirimasim.yml').read_text(),Loader=yaml.BaseLoader)
+        self.assertIn('tools/kirimasim_results.py',workflow['on']['push']['paths'])
+        steps=self.kirimasim_steps();step=next(s for s in steps if s.get('name')=='Summarize the result');self.assertIn('always()',step['if'])
+        self.assertIn('artifacts/ci/kirimasim/results.md',next(s for s in steps if s.get('name')=='Preserve results, including failures')['with']['path'])
+        native=dict(success=False,lowering=2,simulations=2,abnormal=1)
+        summary=dict(success=False,complete=True,profile='smoke',seed=17,selected_examples=1,planned=1,passed=0,source_changes=[],native=native,simulation_returncodes={'0':1,'-11':1},results=[dict(id='fifo',example='fifo',success=False,native=native,message='crashed')])
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);out=root/'artifacts/ci/kirimasim';out.mkdir(parents=True);(out/'summary.json').write_text(json.dumps(summary))
+            (root/'tools').symlink_to(ROOT/'tools');(root/'bin').mkdir();(root/'bin/python').symlink_to(sys.executable)
+            page=root/'step-summary.md'
+            env=dict(os.environ,KIRIMASIM_COMMIT='a'*40,GITHUB_STEP_SUMMARY=str(page),GITHUB_SERVER_URL='https://github.example',GITHUB_REPOSITORY='o/r',GITHUB_SHA='f'*40,PYTHONDONTWRITEBYTECODE='1',PATH=str(root/'bin')+os.pathsep+os.environ['PATH'])
+            r=subprocess.run(['bash','-e','-c',step['run']],cwd=root,env=env,capture_output=True,text=True);self.assertEqual(r.returncode,0,r.stderr)
+            text=page.read_text();self.assertEqual(text,r.stdout);self.assertEqual(text,(out/'results.md').read_text())
+            self.assertIn('**0／1 FAIL**',text);self.assertIn('crashed（異常終了1回）',text);self.assertIn('(https://github.example/o/r/tree/'+'f'*40+'/examples/fifo/README.md)',text)
 
 if __name__=='__main__':unittest.main()

@@ -27,6 +27,8 @@ Ubuntuの既定ミラーで接続が停滞したため、CIのamd64ランナー�
 
 起動ごとに`main`の先頭を1度だけ調べ、そのコミットをUbuntu 24.04のGCCと`dev`プリセットでビルドします。`dev`は`-O1 -g`にライブラリーのassertを加えた構成で、[2026-11-03の実測](../docs/case-study-kirimasim/README.md)と同じプリセットです。`kirimasim --version`のコミットが一致しなければ、検証へ進みません。バイナリーはコミットごとにキャッシュし、同じコミットならビルドを省きます。[最初の実行](../PROVENANCE.md#kirimasim-latest-ci-20261107)では、ビルドが約8分、smokeが約20分でした。判定には[アダプター](run_kirimasim_examples.py)の監査をそのまま使います。未実装、クラッシュ、タイムアウトがあれば不合格です。
 
+各実行のSummaryには、[`kirimasim_results.py`](kirimasim_results.py)で作った例ごとの表を出します。記録した結果は[実行結果の一覧](../docs/case-study-kirimasim/results.md)にまとめています。
+
 kirimasimへのコミットそのものでは起動しません。kirimasimのpushごとに動かすには、kirimasim側にワークフローとトークンを追加する必要があります。
 
 このワークフローが赤くなっても、他のワークフローの合否は変わりません。kirimasim自身のCIが不合格のコミットを試して赤くなることもあります。次の順に切り分けます。

@@ -1,6 +1,7 @@
 [![License: Apache-2.0 WITH LLVM-exception](https://img.shields.io/badge/License-Apache--2.0%20WITH%20LLVM--exception-blue)](LICENSE)
 [![Quality](https://github.com/kurochan001/lsi-verification-method/actions/workflows/quality.yml/badge.svg)](https://github.com/kurochan001/lsi-verification-method/actions/workflows/quality.yml)
 [![Nightly](https://github.com/kurochan001/lsi-verification-method/actions/workflows/nightly.yml/badge.svg)](https://github.com/kurochan001/lsi-verification-method/actions/workflows/nightly.yml)
+[![Kirimasim latest](https://github.com/kurochan001/lsi-verification-method/actions/workflows/kirimasim.yml/badge.svg)](https://github.com/kurochan001/lsi-verification-method/actions/workflows/kirimasim.yml)
 [![RTL: SystemVerilog](https://img.shields.io/badge/RTL-SystemVerilog-8A2BE2)](examples/README.md)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)](#準備と実行)
 [![Verification: SVA / UVM / Formal](https://img.shields.io/badge/Verification-SVA%20%2F%20UVM%20%2F%20Formal-2e7d32)](#検証の進め方)
@@ -24,6 +25,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
 | 失敗・再実行・採用結果をまとめる | [履歴レポート](tools/REPORTING.md)／[実際の時間切れから再実行する例](examples/local-regression-report/README.md) |
+| kirimasimでの実行結果を見る | [版と環境ごと、例ごとの結果](docs/case-study-kirimasim/results.md)／[最新の実行](https://github.com/kurochan001/lsi-verification-method/actions/workflows/kirimasim.yml)／[対象と再実行の手順](docs/case-study-kirimasim/README.md) |
 | lintの指摘や失敗を解析する | [警告の扱い](docs/method/lint-and-waivers.md)／[失敗解析](docs/method/failure-analysis.md)／[不具合票](docs/templates/verification-issue.md) |
 | AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
@@ -306,7 +308,7 @@ python3 examples/local-fifo/run.py --depth 3 --width 8 --profile nightly --seed 
 
 同じ環境で、[AHB-Lite](examples/local-ahb/README.md)や[AXI4-Lite](examples/local-axi/README.md)なども実行できます。オプション、カバレッジ・JUnit・証跡の形式は[Icarus共通手順](examples/local-common/README.md)を参照してください。
 
-[kirimasimでの実行記録と手順](docs/case-study-kirimasim/README.md)も用意しました。2026-11-03に、テストベンチ2件の修正後、Icarus向け80例・107構成のsmokeがkirimasim・Icarusの両方でPASSしました。FIFO・AXI4・幅変換のnightly計8構成も確認しています。実行ツール、全対象の一覧、修正前の失敗、SVA・UVMの追加確認と未確認範囲は同資料を参照してください。GitHub Actionsでは、[kirimasimの最新版](tools/CI.md#kirimasimの最新版)でも同じsmokeを毎日実行します。
+[kirimasimでの実行記録と手順](docs/case-study-kirimasim/README.md)も用意しました。2026-11-03に、テストベンチ2件の修正後、Icarus向け80例・107構成のsmokeがkirimasim・Icarusの両方でPASSしました。FIFO・AXI4・幅変換のnightly計8構成も確認しています。実行ツール、全対象の一覧、修正前の失敗、SVA・UVMの追加確認と未確認範囲は同資料を参照してください。GitHub Actionsでは、[kirimasimの最新版](tools/CI.md#kirimasimの最新版)でも同じsmokeを毎日実行します。[版と環境ごと、例ごとの実行結果](docs/case-study-kirimasim/results.md)は表で読めます。
 
 ### アサーションとカバレッジを実測する
 

@@ -189,6 +189,11 @@ def audit_events(events):
                 simulations=len(runs), abnormal=len(bad))
 
 
+def returncode_counts(events, phase=None):
+    """Count exit codes of all tool starts, or of one phase such as "run"."""
+    return dict(Counter(str(e["returncode"]) for e in events if phase in (None, e["phase"])))
+
+
 def snapshot_inputs():
     return sorted(p for base in ("examples", "tools")
                   for p in (ROOT / base).rglob("*")
@@ -265,7 +270,8 @@ def run(a):
                   selected_examples=len(selected), planned=summary["planned"],
                   passed=sum(r["success"] for r in rows), source_changes=changed,
                   native=native_audit, results=rows,
-                  returncodes=dict(Counter(str(e["returncode"]) for e in recorded)))
+                  returncodes=returncode_counts(recorded),
+                  simulation_returncodes=returncode_counts(recorded, "run"))
     write(a.out / "summary.json", report)
     print("Kirimasim:", report["passed"], "/", report["planned"], "jobs passed; artifacts:", a.out)
     return 0 if success else 1

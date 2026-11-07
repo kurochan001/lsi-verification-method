@@ -1,0 +1,1335 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "repository_commit": "0dd92f84b309d8aeae2f4c4d1b2b7dfa85416647",
+  "kirimasim": {
+    "source_commit": "b279f56275cd344b4f76cc60bd70eea708341a0c",
+    "version": "kirimasim 0.0.0 (commit b279f56275cd), built with GNU 13.3.0",
+    "sha256": "4cc6be8f245904423d9014d8c3d749e09dfa7c3a931dc032c9673593cbb0f643",
+    "preset": "dev"
+  },
+  "host": {
+    "runner": "GitHub Actions ubuntu-24.04",
+    "arch": "x86-64",
+    "python": "3.13"
+  },
+  "runs": [
+    {
+      "id": 42308647137,
+      "event": "push"
+    },
+    {
+      "id": 42312231158,
+      "event": "workflow_dispatch",
+      "binary": "restored from the cache"
+    }
+  ],
+  "success": true,
+  "complete": true,
+  "profile": "smoke",
+  "seed": 17,
+  "selected_examples": 80,
+  "planned": 107,
+  "passed": 107,
+  "source_changes": [],
+  "native": {
+    "success": true,
+    "lowering": 936,
+    "simulations": 2367,
+    "abnormal": 0
+  },
+  "returncodes": {
+    "0": 2495,
+    "1": 808
+  },
+  "simulation_returncodes": {
+    "0": 1559,
+    "1": 808
+  },
+  "results": [
+    {
+      "id": "local-access-control",
+      "example": "local-access-control",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-activation",
+      "example": "local-activation",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 16,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-address-map",
+      "example": "local-address-map",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-ahb",
+      "example": "local-ahb",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 15,
+        "simulations": 18,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-irq-coverage",
+      "example": "local-apb-irq-coverage",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 21,
+        "simulations": 822,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-irq-wait0",
+      "example": "local-apb-irq",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-irq-wait1",
+      "example": "local-apb-irq",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-irq-wait3",
+      "example": "local-apb-irq",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-timer",
+      "example": "local-apb-timer",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 20,
+        "simulations": 24,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait0-parity0",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait0-parity1",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait0-parity2",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait1-parity0",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait1-parity1",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait1-parity2",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait3-parity0",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait3-parity1",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-uart-wait3-parity2",
+      "example": "local-apb-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 6,
+        "simulations": 7,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-wait0",
+      "example": "local-apb",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-wait1",
+      "example": "local-apb",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-apb-wait3",
+      "example": "local-apb",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-arbiter-ports2",
+      "example": "local-arbiter",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-arbiter-ports3",
+      "example": "local-arbiter",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-arbiter-ports4",
+      "example": "local-arbiter",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-async-fifo",
+      "example": "local-async-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 20,
+        "simulations": 24,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-automotive-ecu",
+      "example": "local-automotive-ecu",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 12,
+        "simulations": 26,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-axi",
+      "example": "local-axi",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-axi-reorder",
+      "example": "local-axi-reorder",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-axi4",
+      "example": "local-axi4",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-axis",
+      "example": "local-axis",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-branch-predictor",
+      "example": "local-branch-predictor",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 15,
+        "simulations": 19,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-bus-bridge",
+      "example": "local-bus-bridge",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 20,
+        "simulations": 24,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-cache-coherence",
+      "example": "local-cache-coherence",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-cache-dma",
+      "example": "local-cache-dma",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-cdc-bridge",
+      "example": "local-cdc-bridge",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-cdc-handshake",
+      "example": "local-cdc-handshake",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-clock-reset",
+      "example": "local-clock-reset",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-conv-window",
+      "example": "local-conv-window",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-counter-snapshot",
+      "example": "local-counter-snapshot",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-coverage-feedback",
+      "example": "local-coverage-feedback",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 10,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-credit-link",
+      "example": "local-credit-link",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-descriptor-dma",
+      "example": "local-descriptor-dma",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-divider",
+      "example": "local-divider",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-dma",
+      "example": "local-dma",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-dma-ownership",
+      "example": "local-dma-ownership",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-dram",
+      "example": "local-dram",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-dsp",
+      "example": "local-dsp",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-e2e-guard",
+      "example": "local-e2e-guard",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 12,
+        "simulations": 20,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-ecc",
+      "example": "local-ecc",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 8,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-ecc-memory",
+      "example": "local-ecc-memory",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-failure-reduction",
+      "example": "local-failure-reduction",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 2,
+        "simulations": 9,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fdir",
+      "example": "local-fdir",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 52,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fifo-depth1-width16",
+      "example": "local-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fifo-depth1-width8",
+      "example": "local-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fifo-depth3-width16",
+      "example": "local-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fifo-depth3-width8",
+      "example": "local-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fifo-depth8-width16",
+      "example": "local-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-fifo-depth8-width8",
+      "example": "local-fifo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-i2c",
+      "example": "local-i2c",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-image-sobel",
+      "example": "local-image-sobel",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 14,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-image-soc",
+      "example": "local-image-soc",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 36,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-interconnect",
+      "example": "local-interconnect",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-irq-cdc",
+      "example": "local-irq-cdc",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 37,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-jtag-tap",
+      "example": "local-jtag-tap",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-load-store",
+      "example": "local-load-store",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-lockstep-monitor",
+      "example": "local-lockstep-monitor",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-mbist",
+      "example": "local-mbist",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-memory-order",
+      "example": "local-memory-order",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-motion-control",
+      "example": "local-motion-control",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 44,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-motion-io",
+      "example": "local-motion-io",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 12,
+        "simulations": 24,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-network-echo",
+      "example": "local-network-echo",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 26,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-network-soc",
+      "example": "local-network-soc",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 44,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-packet-crc",
+      "example": "local-packet-crc",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-packet-switch",
+      "example": "local-packet-switch",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-performance-monitor",
+      "example": "local-performance-monitor",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-power",
+      "example": "local-power",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-priority-irq",
+      "example": "local-priority-irq",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-recovery",
+      "example": "local-recovery",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-reduction",
+      "example": "local-reduction",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 229,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-regression-report",
+      "example": "local-regression-report",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 24,
+        "simulations": 30,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-requantize",
+      "example": "local-requantize",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-retry-link",
+      "example": "local-retry-link",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-riscv-iss",
+      "example": "local-riscv-iss",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-riscv-pmp",
+      "example": "local-riscv-pmp",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-riscv-traps",
+      "example": "local-riscv-traps",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-scan-atpg",
+      "example": "local-scan-atpg",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-secure-lifecycle",
+      "example": "local-secure-lifecycle",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-sha256",
+      "example": "local-sha256",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-spi",
+      "example": "local-spi",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 40,
+        "simulations": 48,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-store-buffer",
+      "example": "local-store-buffer",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-stream-depth1-width16",
+      "example": "local-stream",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-stream-depth1-width8",
+      "example": "local-stream",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-stream-depth3-width16",
+      "example": "local-stream",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-stream-depth3-width8",
+      "example": "local-stream",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-stream-dma",
+      "example": "local-stream-dma",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-sv32",
+      "example": "local-sv32",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-systolic-array",
+      "example": "local-systolic-array",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-timer-watchdog",
+      "example": "local-timer-watchdog",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-tlb",
+      "example": "local-tlb",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-tmr",
+      "example": "local-tmr",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 10,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-uart-divisor16-parity0",
+      "example": "local-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-uart-divisor16-parity1",
+      "example": "local-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-uart-divisor16-parity2",
+      "example": "local-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-uart-divisor8-parity0",
+      "example": "local-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 4,
+        "simulations": 5,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-uart-divisor8-parity1",
+      "example": "local-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-uart-divisor8-parity2",
+      "example": "local-uart",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 5,
+        "simulations": 6,
+        "abnormal": 0
+      }
+    },
+    {
+      "id": "local-width-converter",
+      "example": "local-width-converter",
+      "success": true,
+      "runner_success": true,
+      "native": {
+        "success": true,
+        "lowering": 10,
+        "simulations": 12,
+        "abnormal": 0
+      }
+    }
+  ]
+}
