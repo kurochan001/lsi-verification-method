@@ -1,5 +1,6 @@
 """Prove on the real RTL what no clock pair in the simulation can show."""
 from pathlib import Path
+import os
 import shutil
 import subprocess
 import tempfile
@@ -11,7 +12,13 @@ INVARIANTS='  mailbox_invariants invariants(.src_up(src_up),.req(req),.present(p
 def sby(mode,depth,edit=None):
     """Return the tool output and the prepared model for one task."""
     tool=shutil.which('yowasp-sby')
-    if not tool:raise unittest.SkipTest('yowasp-sby required')
+    yosys=shutil.which('yowasp-yosys')
+    smtbmc=shutil.which('yowasp-yosys-smtbmc')
+    if not (tool and yosys and smtbmc):raise unittest.SkipTest('yowasp-sby toolchain required')
+    # sby looks for unprefixed yosys/yosys-smtbmc on PATH; CI provides only the yowasp wrappers.
+    env=dict(os.environ,YOSYS=yosys,SMTBMC=smtbmc)
+    witness=shutil.which('yowasp-yosys-witness')
+    if witness:env['WITNESS']=witness
     rtl=(HERE/'rtl/reset_mailbox.sv').read_text()
     if rtl.count('endmodule')!=1:raise ValueError('expected one module')
     if edit:
@@ -35,8 +42,11 @@ prep -flatten -top mailbox_formal
 {out/'rtl.sv'}
 {HERE/'formal/mailbox_formal.sv'}
 ''')
-        result=subprocess.run([tool,'-f','task.sby'],cwd=out,capture_output=True,text=True,timeout=300)
-        return result.stdout,(out/'task/model/design_prep.il').read_text()
+        result=subprocess.run([tool,'-f','task.sby'],cwd=out,capture_output=True,text=True,timeout=300,env=env)
+        model=out/'task/model/design_prep.il'
+        if not model.is_file():
+            raise AssertionError(f'sby task produced no model ({result.returncode}):\n{result.stdout}\n{result.stderr}')
+        return result.stdout,model.read_text()
 
 
 class MailboxProofTests(unittest.TestCase):

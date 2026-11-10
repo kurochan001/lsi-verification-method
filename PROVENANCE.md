@@ -2052,3 +2052,11 @@ macOS arm64で、全例のsmokeとnightlyが108／108、全セルフテストが
 - kirimasimのnightlyは、macOSのビルドでの実行だけです。Actionsでは実行していません。Icarusとの出力の照合もしていません。
 - 形式証明は論理モデルの上の証明です。物理的なメタスタビリティは含みません。
 - クロック条件2は1つの比率です。全比率の試験ではありません。`check_tb_races.py`はテキスト検索で、全数を保証しません。
+
+## Nightlyの複数クロック形式検証の修正（2026-11-10）
+
+GitHub ActionsのNightly verification `42737039795`（および同じ失敗を含む`42418277397`）で、セルフテスト`local-uvm-multiclock`の形式証明3件が`task/model/design_prep.il`を読めずに失敗しました。
+
+原因は、テストが`yowasp-sby`を直接起動し、その内部がPATH上の`yosys`・`yosys-smtbmc`を探していたことです。ローカル環境にはシステムのYosysがあるため成功しましたが、CIのセルフテスト手順は`yowasp-yosys`などのラッパーだけをPATHへ置いており、無接頭辞の`yosys`がありませんでした。そのため`sby`の`prep`が完了せず、生成物がありませんでした。
+
+テストは`YOSYS`・`SMTBMC`・`WITNESS`を`yowasp-yosys`・`yowasp-yosys-smtbmc`・`yowasp-yosys-witness`へ明示的に向け、生成物がない場合はsbyの標準出力・標準エラーを失敗メッセージへ含めるようにしました。無接頭辞のYosysを含めないCI相当のPATHで`local-uvm-multiclock`の14テストが成功し、通常のPATHでも同じ14テストが成功しました。GitHub Actionsの再実行はまだ行っていません。
