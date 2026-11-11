@@ -1,5 +1,5 @@
 {"schema_version":1,"revision":1,"requirements":[
- {"id":"NIC-CPU","goals":["cpu/build-and-check","reply/packet","reg/rx-len-read","config/relocated"]},
+ {"id":"NIC-CPU","goals":["cpu/build-and-check","reply/packet","reg/rx-len-read","config/relocated","irq/waits-for-access"]},
  {"id":"NIC-FLOW","goals":["flow/tx-hold","bus/axi-wait","bus/apb-wait","bus/apb-error","status/event-beats-w1c"]},
  {"id":"NIC-OWNERSHIP","goals":["ownership/release","ownership/w1c-keeps-buffer","completion/rx-b-response","completion/wire-last"]},
  {"id":"NIC-ERROR","goals":["error/rx-b","error/tx-r","error/rx-b-single","error/tx-r-single","drop/packet","drop/status-w1c","drop/irq","reset/global"]}

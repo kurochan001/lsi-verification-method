@@ -79,14 +79,16 @@ RUNはリセットまで保持し、途中の停止は受け付けません。�
 | reset-rx／reset-dma-tx／reset-wire-tx | RX DMA・TX DMA・送信待ち中に全体リセットし、入力を巻き戻してROMから再起動 |
 | random | 再現可能な長さ・ペイロード・ID・ポートと、バス／TXのランダムな待ち |
 
-[要求カタログ](requirements.json)は4要求・21観測目標です。通常成功ケースの観測だけで構成ごとの達成を確認します。6種類の変異は、RXの早過ぎる完了`NET_SOC_RX_ORDER`、誤DMAアドレス`NET_SOC_AXI`、W1Cでの誤返却`NET_SOC_OWNERSHIP`、送信前の完了`NET_SOC_TX_ORDER`、`IRQ_MASK`のビット3の無視`NET_SOC_COMPLETION`、バスへ出したロードを割り込みで取り下げるCPU`NET_SOC_COMPLETION`で検出します。最後の変異は、待ちのある構成だけで実行します。待ちがないと、取り下げたロードの応答がハンドラーのロードより前に終わり、結果に現れないためです。
+[要求カタログ](requirements.json)は4要求・22観測目標です。通常成功ケースの観測だけで構成ごとの達成を確認します。6種類の変異は、RXの早過ぎる完了`NET_SOC_RX_ORDER`、誤DMAアドレス`NET_SOC_AXI`、W1Cでの誤返却`NET_SOC_OWNERSHIP`、送信前の完了`NET_SOC_TX_ORDER`、`IRQ_MASK`のビット3の無視`NET_SOC_COMPLETION`、バスへ出したアクセスを割り込みで取り下げるCPU`NET_SOC_CPU_HOLD`で検出します。
+
+CPUとAHBアダプターの間では、一度出したアクセスを応答まで保持することを毎サイクル確認します。アダプターはバスへ出した転送を取り消せないので、取り下げると、その応答が次のアクセスへ届きます。待ちのある構成の`drop-irq`では、ハンドラーがSTATUSの代わりにDROP_COUNTの値を読みます。この結果が現れるかどうかは割り込みの時刻で決まるので、テストベンチは結果ではなく取り下げそのものを見ます。ファームウェアが要求する「ハンドラーが見た状態はDROPだけ」は、その後ろの確認です。割り込みが許可されて立っている間にCPUがアクセスを保持した回を、`irq/waits-for-access`として数えます。
 
 ```sh
 python3 examples/local-network-soc/run.py --profile smoke --out artifacts/network-soc-smoke
 python3 examples/local-network-soc/run.py --profile nightly --out artifacts/network-soc-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 53件／nightly 57件です。nightlyはランダムseedを1→3へ増やします。
+Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 54件／nightly 58件です。nightlyはランダムseedを1→3へ増やします。
 
 送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致するリタイア命令列、CPUの比較ループ、終了署名を照合します。RX DMAのデータとRAMは受信したフレームと比較し、DUT内部のコピーや長さを基準にしません。比較ループはそのPCで数え、全バイトとの完全一致を要求します。破棄したフレームの理由と3種類の破棄カウンターも別々に照合します。
 

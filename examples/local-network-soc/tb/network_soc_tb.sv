@@ -12,7 +12,7 @@ module network_soc_tb;
     reg [46:0] held_ar,held_aw;reg [36:0] held_w,held_r;reg [3:0] held_b;reg [8:0] held_tx;
     reg [40:0] held_apb;reg [72:0] held_ahb;
     reg ar_hold=0,aw_hold=0,w_hold=0,r_hold=0,b_hold=0,tx_hold=0,apb_hold=0,ahb_hold=0;
-    reg owned=0,early_error=0,wire_finished=0,reset_done=0;
+    reg owned=0,early_error=0,wire_finished=0,reset_done=0,cpu_hold=0;reg [32:0] cpu_held;
     integer resets=0,apb_errors=0,fault,rx_base,tx_base,compare_pc,expected_cpu,expected_apb,expected_rejected,expected_full,expected_long,admitted_frames;
     integer frame_index=0,frame_offset=0,reason_index=0,compare_index=0,admitted_bytes=0;
     integer fd,rc,words=0,cycles=0,trace_fd,ram_fd,scenario,seed,checks,expected_rx,expected_tx,expected_bytes,expected_drops;
@@ -45,7 +45,7 @@ module network_soc_tb;
                 rst_n=0;rx_valid=0;tx_ready=0;memory_allow=0;
                 $display("COVER reset/global");resets=resets+1;reset_done=1;
                 rx_frames=0;tx_frames=0;tx_bytes=0;ti=0;ri=0;wb=0;wr=0;rr=0;aw_credit=0;ar_credit=0;rx_done=0;tx_done=0;cpu_checks=0;stall=0;
-                ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;b_hold=0;tx_hold=0;apb_hold=0;ahb_hold=0;owned=0;early_error=0;wire_finished=0;
+                ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;b_hold=0;tx_hold=0;apb_hold=0;ahb_hold=0;owned=0;early_error=0;wire_finished=0;cpu_hold=0;
                 frame_index=0;frame_offset=0;reason_index=0;compare_index=0;rx_checked=0;
                 $fclose(fd);fd=$fopen(vectors,"r");$fclose(trace_fd);trace_fd=$fopen(trace_path,"w");$fclose(ram_fd);ram_fd=$fopen(ram_path,"w");
                 repeat(3)@(negedge clk);rst_n=1;
@@ -137,6 +137,11 @@ module network_soc_tb;
                 if(tx_frames>=expected_tx || tx_bytes>=expected_bytes || tx_data!==expected[tx_bytes] || tx_last!==(ti==int'(lengths[tx_frames])-1))fail("NET_SOC_FRAME");
                 if(tx_ready)begin tx_bytes=tx_bytes+1;ti=ti+1;if(tx_last)begin tx_frames=tx_frames+1;ti=0;wire_finished=1;$display("COVER reply/packet");end end
             end
+            // The adapter cannot take an access back from the bus, so the CPU must hold one until it is answered.
+            // An interrupt is the one event that could make the CPU drop it.
+            if(cpu_hold && (!dut.cpu_valid || {dut.cpu_write,dut.cpu_addr}!==cpu_held))fail("NET_SOC_CPU_HOLD");
+            if(cpu_hold && dut.cpu_valid && dut.irq && dut.cpu.st_mie && dut.cpu.ie_meie)$display("COVER irq/waits-for-access");
+            cpu_hold=dut.cpu_valid && !dut.cpu_ready;cpu_held={dut.cpu_write,dut.cpu_addr};
             if(ret_valid)begin
                 if(ret_pc[1:0]!=0 || ret_pc>=32'h800 || ret_insn!==rom_words[ret_pc>>2])fail("NET_SOC_ROM");
                 $fdisplay(trace_fd,"%08x %08x rd=%0d value=%08x mem=%0d addr=%08x data=%08x",ret_pc,ret_insn,ret_rd,ret_wdata,ret_mem,ret_mem_addr,ret_mem_data);
