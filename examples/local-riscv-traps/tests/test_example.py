@@ -70,8 +70,10 @@ class ExampleTests(SystemContract, unittest.TestCase):
         t = ISS.execute(ISS.assemble(P.directed_program()), ISS.directed_data(), traps=True)
         interrupted = [r.insn for r in t if r.kind == 3 and r.addr >> 31]
         self.assertEqual(interrupted, ISS.assemble([('addi', 12, 0, 2), ('addi', 15, 0, 5), ('addi', 13, 0, 3), ('ecall',),
-                                                    ('addi', 23, 0, 0)]))
-        self.assertEqual(len(traps(t)), 18)
+                                                    ('word', P.ILLEGAL[2]), ('lw', 5, 2, 10), ('addi', 23, 0, 0)]))
+        # An interrupt has no trap value, also when the instruction it goes before would have had one.
+        self.assertEqual([r.data for r in t if r.kind == 3 and r.addr >> 31], [0] * 7)
+        self.assertEqual(len(traps(t)), 22)
 
     def test_enabled_by_csr_is_reached_through_mret_and_through_csr_writes(self):
         t = ISS.execute(ISS.assemble(P.directed_program()), ISS.directed_data(), traps=True)

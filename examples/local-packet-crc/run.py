@@ -27,8 +27,9 @@ class Plan:
         payload=[(d>>(8*i))&255 for d,k in beats for i in range(4) if k&(1<<i)]
         wanted=reference(payload,self.initial)^bad
         for i,(d,k) in enumerate(beats):self.cycle(valid=1,data=d,keep=k,last=int(i==len(beats)-1),check=check,expected=wanted)
-        for _ in range(stall):self.cycle(ready=0)
-        self.cycle();self.cycle()
+        # A beat offered while the result is held must be ignored, and so must data and last without valid.
+        for _ in range(stall):self.cycle(valid=1,data=0xdeadbeef,keep=15,last=1,ready=0)
+        self.cycle(valid=1,data=0xdeadbeef,keep=15,last=1);self.cycle(data=0x5a5a5a5a,keep=15,last=1)
 def vectors(seed,iterations,parameters,boundary=False):
     p=Plan(parameters['INIT']);p.cycle(rst=0)
     p.packet([(0x34333231,15),(0x38373635,15),(0xeeeeee39,1)],1,stall=3)

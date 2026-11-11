@@ -112,6 +112,11 @@ def vectors(seed,iterations,timeout,retries,boundary=False):
     p.transfer(0x91,'lose-all');p.cycle(valid=1,data=0x92);p.cycle(rst=0)
     p.transfer(0x93,'ack-all');p.cycle(valid=1,data=0x94);p.cycle(rst=0)
     p.cycle(valid=1,data=0xb1);p.cycle(rst=0);p.transfer(0xb2)
+    # A second frame is offered all the while the first waits for the line: the sender must not take it.
+    p.cycle(valid=1,data=0xc1)
+    for _ in range(6):p.cycle(valid=1,data=0xc2,line_ready=0)
+    while not p.done:p.cycle()
+    p.cycle();p.cycle()
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):p.transfer(rng.randrange(256),rng.choice(('good','drop','crc','ack-loss','ack-crc')),rng.randrange(3))

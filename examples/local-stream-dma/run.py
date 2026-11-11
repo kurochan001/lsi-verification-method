@@ -15,7 +15,8 @@ def row(direction,address,byte_count,seed=17,mode=0,position=0):
     transferred=min(byte_count,completed*4) if not invalid else 0
     return [direction,address,byte_count,seed,mode,position,error,transferred]
 def vectors(seed,iterations,parameters,boundary=False):
-    rows=[row(0,256,31),row(1,512,31),row(0,256,0),row(1,512,0),row(0,256,1),row(1,512,1),row(0,256,12,mode=1,position=1),row(1,512,12,mode=2,position=1),row(1,512,12,mode=3,position=1),row(1,512,12,mode=4,position=1),row(0,256,16,mode=5),row(1,512,16,mode=5),row(0,257,4),row(1,512,33),row(1,512,5,mode=6),row(1,512,31,mode=6)]
+    # The two 8188 rows run past the end of memory in each direction and must be refused.
+    rows=[row(0,8188,8),row(1,8188,8),row(0,256,31),row(1,512,31),row(0,256,0),row(1,512,0),row(0,256,1),row(1,512,1),row(0,256,12,mode=1,position=1),row(1,512,12,mode=2,position=1),row(1,512,12,mode=3,position=1),row(1,512,12,mode=4,position=1),row(0,256,16,mode=5),row(1,512,16,mode=5),row(0,257,4),row(1,512,33),row(1,512,5,mode=6),row(1,512,31,mode=6)]
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):

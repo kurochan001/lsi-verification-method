@@ -749,6 +749,8 @@ A later review of the 194 tests with `:oracle: spec` whose result Lyra did not
 match (2026-10-25) found no further expected output to be wrong, but two
 tests whose diagnostic regular expression required the format of Icarus
 Verilog and Verilator, since fixed; see the [review](lyra-disagreement-review-20261025.md).
+That review judged `ch4/test_reactive_region_set_order` wrongly: its expected output
+conflicted with 4.5 (M111) and was corrected upstream on 2026-10-31 (`f0908394`).
 
 ## Cases added by the 2026-10-25 imported tests
 

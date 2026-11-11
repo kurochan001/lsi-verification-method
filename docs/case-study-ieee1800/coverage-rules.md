@@ -46,7 +46,7 @@ flowchart TD
 
 Nightlyは各シミュレータの開発版で実行し、`publish`が**その回の結果だけ**を使って
 `results`ブランチ直下の`behavior-coverage-summary.md`と関連JSON・履歴へ記録します。
-この処理を含むNightlyが初めて公開されるまでは、出力先が存在しない場合があります。
+この公開は上流で動いています。2026-10-25の定時Nightlyの結果は、[Lyraとの不一致の見直し](lyra-disagreement-review-20261025.md)で使っています。
 Nightlyの`Match`割合はテスト出力の一致率であり、要求台帳に対する設計網羅率・実行確認率とは別です。
 対象コミット・版・実行範囲を確認してから結果を比較してください。
 
@@ -312,4 +312,4 @@ Nightlyはその回の全ランナーのJSONから再計測し、`results` ブ�
 履歴には集計を保存し、全登録行の状態はその回の詳細JSONに保存します。
 GitHub Actionsの実行概要にも暫定値・確定値と残件数を表示します。
 
-Nightlyを実際に実行するには、この変更がGitHubに反映される必要があります。
+このNightlyは上流のkirimasim-testsで動いています。このリポジトリには、そのワークフローを収録していません。

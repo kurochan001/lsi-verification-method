@@ -41,7 +41,7 @@ flowchart TD
 
 ```sh
 python3 examples/local-formal-replay/run.py \
-  --formal-python /tmp/lsi-bus-formal-venv/bin/python --out artifacts/formal-replay
+  --formal-python artifacts/toolchains/formal-venv/bin/python --out artifacts/formal-replay
 python3 -m unittest discover -s examples/local-formal-replay/tests -v
 ```
 

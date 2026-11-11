@@ -14,7 +14,7 @@ SCOPE = ('Unbounded proof, for every operand pair and every input sequence, that
          'division that is not flushed or reset produces exactly one result after the specified '
          'latency, equal to Verilog / and % with the RISC-V special cases, held under backpressure '
          'and discarded by flush and reset. W = 4 and 8.')
-ASSERTS = {'ap_reset', 'ap_flush', 'ap_hold', 'ap_latency', 'ap_completion', 'ap_quotient', 'ap_remainder',
+ASSERTS = {'ap_reset', 'ap_flush', 'ap_hold', 'ap_release', 'ap_ready', 'ap_latency', 'ap_completion', 'ap_quotient', 'ap_remainder',
            'ai_exclusive', 'ai_pending', 'ai_operands', 'ai_signs', 'ai_age', 'ai_partial'}
 COVERS = {'cp_zero', 'cp_overflow', 'cp_equal', 'cp_mixed', 'cp_unsigned_top', 'cp_hold', 'cp_flush_last'}
 FAILURES = {1: 'ap_quotient', 2: 'ap_remainder', 3: 'ap_latency', 4: 'ap_flush'}

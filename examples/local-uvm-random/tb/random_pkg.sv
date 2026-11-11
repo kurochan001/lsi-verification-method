@@ -42,8 +42,9 @@ package random_pkg;
   task run_phase(uvm_phase phase);
    stimulus item=stimulus::type_id::create("item");bit ok;
    phase.raise_objection(this);item.srandom(seed);reset_dut();
-   // Deterministic minimum plan covers every address/operation, then random history.
-   for(int a=0;a<4;a++)for(int w=0;w<2;w++)raw(w!=0,8'(a*4),32'h12345678);
+   // Deterministic minimum plan covers every address/operation, then random history. Each address gets
+   // its own data, so a write that lands on another register changes it and cannot hide behind equal values.
+   for(int a=0;a<4;a++)for(int w=0;w<2;w++)raw(w!=0,8'(a*4),32'h12345678+32'(a));
    for(int event_bit=0;event_bit<2;event_bit++)for(int clear_bit=0;clear_bit<2;clear_bit++)begin
     @(negedge vif.clk);vif.events=4'(event_bit);raw(1,8,32'(clear_bit));
     @(negedge vif.clk);vif.events=0;

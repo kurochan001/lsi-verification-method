@@ -53,7 +53,7 @@ sequenceDiagram
   Note over D: B受理後に次へ<br/>最終なら完了
 ```
 
-図は1メモリアクセス分で、信号の提示開始時刻と待ちサイクルは省略しています。AWの受理とRAMへのAW転送は、同じハンドシェイクを二つの境界で表しています。DMAはAWとWを独立に提示し、テスト用バッファが受理順を作ります。B応答の前にdoneになる実装は、終了時の応答件数の照合で失敗にします。
+図は1メモリアクセス分で、信号の提示開始時刻と待ちサイクルは省略しています。AWの受理とRAMへのAW転送は、同じハンドシェイクを二つの境界で表しています。DMAはAWとWを独立に提示し、テスト用バッファが受理順を作ります。B応答の前にdoneになる実装は、doneが出ている間の応答件数の照合で失敗にします（`STREAM_RESPONSE`）。固定の操作には、メモリの終端を越える転送を両方向で含み、拒否されることを確かめます。
 
 ## 実行
 
@@ -63,6 +63,6 @@ python3 examples/local-stream-dma/run.py --profile nightly
 python3 -m unittest discover -s examples/local-stream-dma/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。S2MMでは1ビートのテスト用バッファでWを先に受理し、その後でAWと保持したWをRAMへ渡すケースも実行します。B応答は実RAMから返します。smoke18操作、nightly120操作×3 seedへ固定16操作を加え、各13目標を要求します。KEEP・LAST・WSTRB・データの4種類の変異です。JUnit14／18件、確認7件です。
+[共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。S2MMでは1ビートのテスト用バッファでWを先に受理し、その後でAWと保持したWをRAMへ渡すケースも実行します。B応答は実RAMから返します。smoke18操作、nightly120操作×3 seedへ固定18操作を加え、各13目標を要求します。KEEP・LAST・WSTRB・データの4種類の変異です。JUnit14／18件、確認7件です。
 
 Streamの基本信号は[AMDの説明](https://docs.amd.com/r/2023.1-English/ug1393-vitis-application-acceleration/Streaming-Interfaces)、メモリ側は[Arm AXI仕様](https://documentation-service.arm.com/static/602a9df190ee6824a1e02b98)を参照しています。商用DMAの実装・レジスタ配置・全属性・大規模バースト・全二重動作への適合性は対象外です。

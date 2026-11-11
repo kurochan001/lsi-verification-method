@@ -4,7 +4,7 @@ from pathlib import Path
 import random
 import sys
 HERE=Path(__file__).resolve().parent
-NAME='local-axi-reorder';TOP='reorder_tb';CONFIGS={'slots2': {'SLOTS': 2}, 'slots4': {'SLOTS': 4}}
+NAME='local-axi-reorder';MUTANTS=5;TOP='reorder_tb';CONFIGS={'slots2': {'SLOTS': 2}, 'slots4': {'SLOTS': 4}}
 ITERATIONS={'smoke': 16, 'nightly': 100};SOURCES=[HERE.parent/'local-axi4/rtl/axi4_ram.sv',HERE/'rtl/reorder.sv',HERE/'tb/reorder_tb.sv']
 def order(ids):
     # Independent per-ID queues; choose the newest currently eligible queue head.
@@ -29,7 +29,7 @@ def make_cases(args,parameters):
     cs=[dict(id='boundaries',vectors=base,mutation=args.demo_bug,category='functional',expected_failure=None)]
     for seed in range(args.seed,args.seed+(3 if args.profile=='nightly' else 1)):
         cs.append(dict(id=f'random-seed{seed}',vectors=vectors(seed,args.iterations,parameters),mutation=args.demo_bug,category='functional',expected_failure=None))
-    for mutation,label in [(1, 'AXIO_BID'), (2, 'AXIO_RID'), (3, 'AXIO_DATA'), (4, 'AXIO_DATA')]:
+    for mutation,label in zip(range(1,MUTANTS+1),('AXIO_BID','AXIO_RID','AXIO_DATA','AXIO_DATA','AXIO_HOLD'),strict=True):
         cs.append(dict(id=f'detect-mutation{mutation}',vectors=base,mutation=mutation,category='mutation',expected_failure=label))
     for c in cs:c['counts']={'steps':len(c['vectors'])}
     return cs

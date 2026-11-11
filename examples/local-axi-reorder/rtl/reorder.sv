@@ -26,8 +26,8 @@ module reorder #(parameter MUTATION=0,SLOTS=2)(
  if(eligible && (rpick<0 || rt[i]>rt[rpick]))rpick=i;
  end end
  assign mem_bready=rst_n && bfree>=0;assign mem_rready=rst_n && (capture>=0 || rfree>=0);
- assign bvalid=rst_n && bhold>=0;assign bid=bhold>=0 ? bi[bhold]^(MUTATION==1 ? 2'd1:0):0;assign bresp=bhold>=0 ? br[bhold]:0;
- always @*begin rvalid=rst_n && rhold>=0;rid=rhold>=0 ? ri[rhold]^(MUTATION==2 ? 2'd1:0):0;rresp=rhold>=0 ? rr[rhold]:0;rdata=rhold>=0 ? rd[rhold][rbeat]^(MUTATION==4 ? 32'd1:0):0;end
+ assign bvalid=rst_n && bhold>=0 && (MUTATION!=5 || release_enable);assign bid=bhold>=0 ? bi[bhold]^(MUTATION==1 ? 2'd1:0):0;assign bresp=bhold>=0 ? br[bhold]:0; // Mutation 5 withdraws a response already shown when release_enable falls.
+ always @*begin rvalid=rst_n && rhold>=0 && (MUTATION!=5 || release_enable);rid=rhold>=0 ? ri[rhold]^(MUTATION==2 ? 2'd1:0):0;rresp=rhold>=0 ? rr[rhold]:0;rdata=rhold>=0 ? rd[rhold][rbeat]^(MUTATION==4 ? 32'd1:0):0;end
  assign rlast=rhold>=0 && rbeat==length[rhold]-1;
  integer slot;
  always @(posedge clk or negedge rst_n)begin

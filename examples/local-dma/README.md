@@ -62,7 +62,7 @@ python3 examples/local-dma/run.py --profile nightly
 python3 -m unittest discover -s examples/local-dma/tests -v
 ```
 
-smokeは24コマンド×1 seed、nightlyは200×3 seed。固定14ケースは別枠です。1ベクトルが1コマンドで、リセット試験では破棄するstartをもう1回発行します。JUnitは全2構成で14／18件です。
+smokeは24コマンド×1 seed、nightlyは200×3 seed。固定17ケースは別枠です。最大長の32ワード、それを超える33ワード、転送先が領域外になる設定を含みます。1ベクトルが1コマンドで、リセット試験では破棄するstartをもう1回発行します。JUnitは全2構成で14／18件です。
 
 CPU・実ドライバ、キャッシュ整合性、仮想アドレス、重複領域、非整列コピー、クロックドメイン間の転送、合成後タイミング、DMA全体のフォーマル証明は対象外です。APBのレジスタ仕様・中断・エラー時の残存範囲は教材独自の仕様です。AXIの規則は[Arm IHI 0022E](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)を参照しています。
 

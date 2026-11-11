@@ -27,6 +27,8 @@ module progress_formal #(parameter SERVICE=1,READY_GAP=2,MUTATION=0,FAIR=1,FORCE
   if(past_valid && rst_n)begin
    ap_owner:assert(!response_valid || (pending && response_owner==owner));
    ap_exclusive:assert(accept!=3);
+   // A source is granted only while it requests.
+   ap_requested:assert((accept & ~request)==0);
    if($past(rst_n && response_valid && !response_ready))ap_hold:assert(response_valid && response_owner==$past(response_owner));
    cp_contention:cover(request==3);
    cp_stall:cover(response_valid && !response_ready);

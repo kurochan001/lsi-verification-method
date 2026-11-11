@@ -63,7 +63,7 @@ flowchart LR
 [共通フォーマル手順](../local-formal-common/README.md)の固定版ツールを使います。
 
 ```sh
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-topk/run.py
 python3 examples/local-topk/run.py --configuration n8-k3 --task topk-proof
 python3 -m unittest discover -s examples/local-topk/tests -v

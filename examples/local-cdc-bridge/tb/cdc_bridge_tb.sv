@@ -48,7 +48,8 @@ module cdc_bridge_tb;
    #1;if(rsp_valid || req_ready)fail("CDC_RESET");
    #(4*(SRC_HALF+DST_HALF));
    qw=0;qr=0;ew=0;er=0;received=0;config_model=0;checksum=0;held=0;
-   srst_n=1;prst_n=1;wait_up();
+   // Release each reset while its own clock is low, never on a rising edge.
+   @(negedge sclk);srst_n=1;@(negedge pclk);prst_n=1;wait_up();
    // Either-side reset must also clear the APB registers, which the request sequence would overwrite.
    if(dut.config_value!==0 || dut.pending!==0)fail("CDC_RESET");
    repeat(3)@(negedge sclk);if(rsp_valid)fail("CDC_RESET");

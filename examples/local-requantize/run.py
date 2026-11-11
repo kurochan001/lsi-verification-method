@@ -128,7 +128,7 @@ def boundary_vectors(ch, lo, hi):
             for d in (-1, 0, 1):
                 p.send(c, solve(sign * (k * (1 << s) + (1 << (s - 1))) + d, m))
     p.configure(0, HALF, 0, -128)          # activation limits and one step beyond them
-    for u in (lo - 1, lo, hi, hi + 1):
+    for u in (lo - 1, lo, lo + 1, hi - 1, hi, hi + 1):
         p.send(0, 2 * (u + 128))
     p.configure(0, MAX_MULT, 0, -128)      # magnitudes that only fit before narrowing
     p.send(0, INT32[1])

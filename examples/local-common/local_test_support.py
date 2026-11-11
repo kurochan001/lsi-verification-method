@@ -24,13 +24,13 @@ def read_json(path):
     return json.loads(path.read_text())
 
 
-def assert_evidence(test,out,configurations,goal_count,executions,diagnostics=0):
+def assert_evidence(test,out,configurations,goal_count,executions,diagnostics=0,mutants=4):
     summary=read_json(out/'summary.json')
     test.assertTrue(summary['success'],summary)
     test.assertTrue(summary['complete'])
     test.assertEqual(summary['planned'],executions)
     test.assertEqual(summary['results'],executions)
-    test.assertEqual(summary['mutations_detected'],4*len(configurations))
+    test.assertEqual(summary['mutations_detected'],mutants*len(configurations))
     test.assertEqual(summary['diagnostics_pass'],diagnostics)
     coverage=read_json(out/'coverage.json')
     test.assertEqual(set(coverage),set(configurations))

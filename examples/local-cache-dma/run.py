@@ -44,11 +44,14 @@ class Plan:
         return self.rows[-1]
     def command(self,op,addr=0,data=0,stall=0,strb=15):
         if not self.cycle(valid=1,op=op,addr=addr,data=data,ready=0,strb=strb)[8]:raise ValueError('request not accepted')
+        # Another request is offered all the while: it must not be accepted while busy or while a response waits.
+        other=dict(valid=1,op=6,addr=(addr+5)%16,data=~data&0xffffffff,strb=15)
         for _ in range(self.latency+4):
-            row=self.cycle(ready=0)
+            row=self.cycle(ready=0,**other)
+            if row[8]:raise ValueError('request accepted while busy')
             if row[9]:break
         else:raise ValueError('missing response')
-        for _ in range(stall):self.cycle(ready=0)
+        for _ in range(stall):self.cycle(ready=0,**other)
         self.cycle(ready=1)
         for a in range(16):self.cycle(debug=a)
 def vectors(seed,iterations,parameters,boundary=False):

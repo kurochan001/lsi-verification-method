@@ -41,6 +41,7 @@ def vectors(seed,iterations,parameters,boundary=False):
     p.load_count(0x5fffffffc);p.access(0);p.access(24,1,3)
     for _ in range(12):p.cycle()
     p.access(4);p.access(0);p.access(4);p.access(24,1,0)
+    p.access(0,1,1);p.access(4,1,1)  # COUNT is read-only: both halves refuse a write
     p.load_count(MASK-2);p.access(24,1,3)
     for _ in range(8):p.cycle()
     p.access(24,1,0);p.load_count(100);p.access(16,1,150);p.access(20,1,0);p.access(24,1,3)

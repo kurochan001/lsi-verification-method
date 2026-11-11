@@ -44,7 +44,7 @@ flowchart LR
 
 各構成8タスク、計16件のJUnitです。
 
-- `deadline-proof`：期限、応答保持・所有者・排他、監視台帳とRTLの一致、カウンター等12条件を、仮定の下で非有界に証明します。補助条件もassertです。
+- `deadline-proof`：期限、応答保持・所有者・排他、監視台帳とRTLの一致、要求していないソースへ許可しないこと、カウンター等13条件を、仮定の下で非有界に証明します。補助条件もassertです。
 - `scenario-cover`：競合、応答待ち、各要求元の完了、長い待ち、未完了時リセット、復帰の7目標を到達確認します。
 - 4種類の変異：固定優先による飢餓、待ち中の応答消失、処理停止、所有者の誤りを、それぞれ予定assertの反例で確認します。
 - `unfair-safety-proof`：READYの期限仮定と完了期限assertを外しても、安全性を証明します。
@@ -57,7 +57,7 @@ flowchart LR
 [共通フォーマル手順](../local-formal-common/README.md)の固定版ツールを使います。
 
 ```sh
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-progress/run.py
 python3 examples/local-progress/run.py --task detect-missing-fairness
 python3 -m unittest discover -s examples/local-progress/tests -v

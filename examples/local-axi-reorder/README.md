@@ -26,7 +26,7 @@ flowchart TD
 | 応答待ち | BREADY／RREADYを止める | VALID・ID・RESP・データ・LASTの保持 |
 | 部分・ゼロ書込み | WSTRBを変更 | 独立バイトメモリと全RAMの比較 |
 
-PythonはID別のキューから予定順を計算します。SVはID・RESP・LASTと、独立した期待メモリを照合します。初期値はアドレス依存で、異なる番地の取違えも検出します。各構成10目標、BID・RIDの破損、同一ID内の逆順、RDATA反転の4種類の変異です。
+PythonはID別のキューから予定順を計算します。SVはID・RESP・LASTと、独立した期待メモリを照合します。初期値はアドレス依存で、異なる番地の取違えも検出します。各構成10目標、BID・RIDの破損、同一ID内の逆順、RDATA反転、`release_enable`を下げたときの応答の取下げの5種類の変異です。テストベンチは、応答が出ている間に`release_enable`を下げ、VALIDと内容が保持されることを確認します。
 
 ## 4件の応答を返す具体例
 
@@ -53,7 +53,7 @@ python3 examples/local-axi-reorder/run.py --profile nightly
 python3 -m unittest discover -s examples/local-axi-reorder/tests -v
 ```
 
-[共通手順](../local-common/README.md)を使います。smokeは16バッチ、nightlyは100バッチ×3 seedに固定4バッチを加えます。JUnitは14／18件、セルフテスト6件です。リセットはバッファとRAMを一緒に初期化します。未対応属性、4ビートを超えるバースト、任意ターゲットの応答逆転・不正応答、物理タイミング、全AXI適合性は対象外です。
+[共通手順](../local-common/README.md)を使います。smokeは16バッチ、nightlyは100バッチ×3 seedに固定4バッチを加えます。JUnitは16／20件、セルフテスト6件です。リセットはバッファとRAMを一緒に初期化します。未対応属性、4ビートを超えるバースト、任意ターゲットの応答逆転・不正応答、物理タイミング、全AXI適合性は対象外です。
 
 順序の基準は[Arm AXI仕様A6章](https://documentation-service.arm.com/static/602a9df190ee6824a1e02b98)を参照しています。原文・外部RTLは転載せず、既存教材RAMを再利用しています。
 

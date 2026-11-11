@@ -16,10 +16,10 @@ module owned_tb;
  else begin if(acked)expected_irq=0;if(retired!=last_retired)expected_irq=1;last_retired=retired;acked=host_valid && host_op==4;if(irq!==expected_irq)fail("OWN_IRQ");end
  if(awvalid && awready)begin
  write_slot=retired%DEPTH;write_turn=retired/DEPTH;write_beat=0;
- if(awaddr!=1024+32*write_slot || awid!=2 || awlen!=(write_slot+write_turn)%4)fail("OWN_BUS");end
+ if(awaddr!==1024+32*write_slot || awid!==2 || awlen!==(write_slot+write_turn)%4)fail("OWN_BUS");end
  if(wvalid && wready)begin
  expected_word={initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+3),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+2),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+1),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat)};
- if(wdata!==expected_word || wstrb!=15)fail("OWN_DATA");write_beat=write_beat+1;end
+ if(wdata!==expected_word || wstrb!==15)fail("OWN_DATA");write_beat=write_beat+1;end
  if(busy)begin $display("COVER engine/busy");if(owners[2*head+:2]!=2)fail("OWN_STATE");end
  @(posedge clk);#1;@(negedge clk);cycles=cycles+1;gate=STALL_PERIOD==0 || cycles%STALL_PERIOD!=0;if(cycles>8000)fail("OWN_TIMEOUT");
  end endtask

@@ -100,7 +100,7 @@ k-inductionの帰納ステップは、任意の状態から始まってkサイ�
 
 各構成6タスク、計12件のJUnitです。
 
-- `divider-proof`：13個のassertを深さ12のk-inductionで証明します。
+- `divider-proof`：15個のassertを深さ12のk-inductionで証明します。
 - `scenario-cover`：0除算、オーバーフロー、絶対値が等しく符号が異なる組、負の被除数と正の除数で剰余が0でない組、符号なしで両方の最上位ビットが1、3サイクル続く保持、最後のステップでの取消しの7目標に到達することを確認します。
 - 4種類の変異：深さ16のBMCで、予定したassertの反例を要求します。
 
@@ -120,7 +120,7 @@ seed 17〜19の200除算のランダム刺激だけで実行すると、変異1�
 ```sh
 python3 examples/local-divider/run.py --out artifacts/divider
 python3 examples/local-divider/run.py --profile nightly --out artifacts/divider-nightly
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-divider/formal.py
 python3 -m unittest discover -s examples/local-divider/tests -v
 ```

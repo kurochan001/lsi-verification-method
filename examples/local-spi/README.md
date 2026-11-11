@@ -54,6 +54,9 @@ Pythonは送受信バイトと操作列を作ります。テストベンチは�
 | 2 | 完了時の受信データのLSBを反転 | SPI_RX |
 | 3 | 最初のエッジでCSを解除 | SPI_CS |
 | 4 | 半周期を1クロック短縮 | SPI_CLOCK |
+| 5 | MISOを各ビットの反対のエッジでサンプル | SPI_RX |
+
+テストベンチは、MISOの各ビットをサンプルするエッジまでだけ保持し、その後は反転した値を出します。反対のエッジで読むマスターは、どのモードでも誤ったデータを受け取ります。
 
 変異検出が合格するには、予定のラベルと非ゼロ終了が必要です。通常回路の検証と区別し、変異ケースの観測を通常の16目標には算入しません。
 
@@ -68,7 +71,7 @@ python3 examples/local-spi/run.py --profile nightly --out artifacts/spi-nightly
 python3 -m unittest discover -s examples/local-spi/tests -v
 ```
 
-構成名は`mode0-div2`から`mode3-div4`までの8構成（mode 0／1／2／3×div 2／4）です。smokeは各構成で32ランダム操作＋末尾の正常転送、nightlyは256操作＋末尾転送を3 seedで実行します。正常時のJUnitは、構成当たりsmoke **7件**、nightly **9件**で、全8構成では**56／72件**です（固定1＋ランダム1／3＋変異4＋合否判定1）。`checks`は操作の検査完了数であり、ベースクロック数ではありません。
+構成名は`mode0-div2`から`mode3-div4`までの8構成（mode 0／1／2／3×div 2／4）です。smokeは各構成で32ランダム操作＋末尾の正常転送、nightlyは256操作＋末尾転送を3 seedで実行します。正常時のJUnitは、構成当たりsmoke **8件**、nightly **10件**で、全8構成では**64／80件**です（固定1＋ランダム1／3＋変異5＋合否判定1）。`checks`は操作の検査完了数であり、ベースクロック数ではありません。
 
 ```sh
 python3 examples/local-spi/run.py --configuration mode0-div2 --demo-bug 4 --out artifacts/spi-intentional-failure

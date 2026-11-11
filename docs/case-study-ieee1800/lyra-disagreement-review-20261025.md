@@ -21,7 +21,7 @@ kirimasim の結果も並べています。ただし、Lyra と kirimasim はフ
 | 内部エラー・クラッシュ | 10 | Lyra 側の問題 |
 | 違法な設計を別の場所で拒否 | 5 | Lyra 側の問題 |
 
-期待出力を誤りと判断したテストは、ありませんでした。
+この見直しの時点では、期待出力を誤りと判断したテストはありませんでした。ただし、`ch4/test_reactive_region_set_order`についての判断は誤りで、期待出力は4.5と矛盾していました（下の表と[M111](header-vpi-tests-and-matching-20261023.md)を参照）。
 
 ## 見つかったテストの不備：判定の正規表現が書式に依存している
 
@@ -50,12 +50,12 @@ kirimasim と Lyra は clang の書式（`ファイル:行: error: …`）で、
 | テスト | 根拠 | 判断 |
 | --- | --- | --- |
 | `ch11/test_conditional_real_shortreal_branch_promotion` | 11.4.11、6.12 | shortreal は単精度なので 16777216.0。Lyra と kirimasim は倍精度のまま |
-| `ch4/test_reactive_region_set_order` | 4.5 | active 領域の集合を先に処理するので、module 側が先に記録する |
+| `ch4/test_reactive_region_set_order` | 4.5、4.4.2.8、24.3 | **当時の判断は誤りでした。** programの中のノンブロッキング代入はRe-NBA領域で更新され、4.5の参照アルゴリズムはreactive領域の集合が空になるまでActive領域へ戻りません。そのため、この更新で起きたprogram側のプロセスが先に記録し、module側は後になります。Lyraの出力が規格どおりで、期待出力が誤っていました（[M111](header-vpi-tests-and-matching-20261023.md)と同じ指摘）。上流は2026-10-31（`f0908394`）に期待出力を訂正しました |
 | `ch6/test_string_atoreal_scan_rules` | 6.16.10、5.7.2 | 実数定数の下線は使えるので 10.25 |
 | `atoi("-12")` などを含む4本 | 6.16.9 | atoi は符号を解釈しないので 0。kirimasim は期待どおり |
 | `ch19/test_option_member_defaults` | 19.7.1 | カバーグループで設定した type option のうち、real_interval だけはカバーポイントの既定値になる |
 | `ch11/test_stream_item_order_struct_union_object_assoc` ほか1本 | 11.4.14.1 | ビットストリーム型でない構造体・共用体・クラスも、要素ごとに並べる規則がある。slang の「bit-stream type でない」は厳しすぎる |
-| `ch11/test_concatenation_pattern_string_operand_and_replication` | 11.4.12.2 | string のオペランドがあれば、ほかは暗黙に string へ変換される |
+| `ch11/test_concatenation_pattern_string_operand_and_replication` | 11.4.12.2 | 11.4.12.2は暗黙の変換を述べますが、6.16は整数値から文字列へのキャストを要求します。規格内で記述が分かれるため、上流は2026-10-31（`f0908394`）にテストへ`string'()`を加え、どちらの読みでも合法にしました |
 | interconnect の3本 | 6.6.8、23.3.3.7.2 | interconnect は端子の接続と net_alias に使える |
 
 config の12本は Lyra が config を、タイミングチェックの28本は Lyra がタイミングチェックを実装していないための不一致です。

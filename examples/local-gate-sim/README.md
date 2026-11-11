@@ -108,7 +108,7 @@ Pythonの期待値モデルは、仕様をサイクル単位で書いたもの�
 Yosysは[共通フォーマル手順](../local-formal-common/README.md)の固定版を使います。`simcells.v`は、`--yosys`で指定したYosysに付属するもの（YoWASP版ならそのパッケージ、ほかは`yosys-config --datdir`）を自動で探します。見つからない場合は`--cell-library`で指定します。
 
 ```sh
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-gate-sim/run.py --out artifacts/gate-sim
 python3 examples/local-gate-sim/run.py --profile nightly --out artifacts/gate-sim-nightly
 python3 -m unittest discover -s examples/local-gate-sim/tests -v

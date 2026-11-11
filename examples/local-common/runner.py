@@ -107,6 +107,9 @@ def run(plugin, args):
             execution = PROCESS.execute(command, log, args.timeout, directory)
         output = log.read_text(errors='replace')
         status, message = PROCESS.classify(case, execution, output)
+        # The waveform is part of the evidence of a run that passed or was detected.
+        if status in ('pass', 'detected') and not has_waveform(directory / 'wave.vcd'):
+            status, message = 'error', 'waveform missing or without its definitions'
         counts = {}
         if status == 'pass':
             message = f"{case['checks']} checked vectors"
@@ -160,13 +163,22 @@ def run(plugin, args):
     return 0 if success else 1
 
 
+def has_waveform(path):
+    """True when the file is a VCD whose header was written to its end."""
+    if not path.is_file():
+        return False
+    with path.open(errors='replace') as stream:
+        return any('$enddefinitions' in line for line in stream)
+
+
 def main(plugin):
     parser = argparse.ArgumentParser(description=plugin.__doc__)
     parser.add_argument('--configuration', choices=['all', *plugin.CONFIGS], default='all')
     parser.add_argument('--profile', choices=('smoke', 'nightly'), default='smoke')
     parser.add_argument('--seed', type=int, default=17)
     parser.add_argument('--iterations', type=int, help='random operations per seed; see example README')
-    parser.add_argument('--demo-bug', type=int, choices=(0, 1, 2, 3, 4), default=0)
+    # Four mutants unless the example says otherwise with MUTANTS.
+    parser.add_argument('--demo-bug', type=int, choices=range(getattr(plugin, 'MUTANTS', 4) + 1), default=0)
     parser.add_argument('--iverilog', default='iverilog')
     parser.add_argument('--vvp', default='vvp')
     parser.add_argument('--requirements', type=Path, default=Path(plugin.__file__).parent / 'requirements.json')

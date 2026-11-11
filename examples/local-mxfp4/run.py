@@ -118,7 +118,7 @@ def run(args):
         log=(evidence.out/(name+'.log')).read_text()
         counts=expected_counts(rows)
         expected=f"RATIONAL PASS checks={counts['checks']} bdp={counts['bdp']} encoder={counts['encoder']}"
-        ok=not execution['error'] and execution['returncode']==0 and log.count(expected)==1
+        ok=not execution['error'] and execution['returncode']==0 and len(re.findall('^'+re.escape(expected)+'$',log,re.M))==1
         evidence.check(name,ok,dict(expected_counts=counts,execution=execution));executions[name]=execution
         if ok: passed.add(name)
         if name=='rational-ftz': rational_out=dict(rows=rows,binary=binary)

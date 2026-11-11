@@ -103,6 +103,9 @@ module divider #(parameter W = 32, MUTATION = 0) (
             if ($past(rst_n && out_valid && !out_ready && !flush))
                 ap_hold: assert(out_valid && $stable(out_quotient) && $stable(out_remainder));
             if (out_valid && !$past(out_valid)) ap_latency: assert(f_age == (f_short ? 1 : W + 1));
+            // A result that was taken is gone, and input is accepted exactly when nothing is in progress or waiting.
+            if ($past(rst_n && out_valid && out_ready)) ap_release: assert(!out_valid);
+            ap_ready: assert(in_ready == (rst_n && !flush && !f_pending && !out_valid));
             // Every accepted division that is not flushed or reset produces its result.
             if (f_pending && f_age == (f_short ? 1 : W + 1)) ap_completion: assert(out_valid);
             if (out_valid) begin

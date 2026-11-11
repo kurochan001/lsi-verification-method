@@ -28,8 +28,11 @@ ILLEGAL = [0x00000000, 0xffffffff, 0x02000033, 0x7c002073, 0x0000100f, 0x0000407
 # the interrupt is taken right after MRET. SETUP clears x23.
 HANDLER = [('jal', 0, 'main'), 'handler:',
            ('csrrs', 20, 'mcause', 0), ('csrrs', 21, 'mepc', 0), ('csrrs', 22, 'mtval', 0),
-           ('blt', 20, 0, 'interrupt'), ('addi', 21, 21, 4), ('csrrw', 0, 'mepc', 21), ('sw', 23, IRQ_ADDRESS, 0), ('mret',),
-           'interrupt:', ('sw', 0, IRQ_ADDRESS, 0), ('mret',), 'main:']
+           ('blt', 20, 0, 'interrupt'), ('addi', 21, 21, 4), ('csrrw', 0, 'mepc', 21), ('sw', 23, IRQ_ADDRESS, 0),
+           # Three words after each MRET sits a jump that a predictor would follow: the return must win.
+           ('mret',), ('addi', 0, 0, 0), ('addi', 0, 0, 0), ('jal', 0, 'lost'),
+           'interrupt:', ('sw', 0, IRQ_ADDRESS, 0), ('mret',), ('addi', 0, 0, 0), ('addi', 0, 0, 0), ('jal', 0, 'lost'),
+           'lost:', ('ebreak',), 'main:']
 SETUP = [('addi', 10, 0, ISS.BASE), ('addi', 1, 0, 4), ('csrrw', 0, 'mtvec', 1), ('addi', 23, 0, 0),
          ('lui', 2, 1), ('addi', 2, 2, -2048), ('csrrw', 0, 'mie', 2), ('csrrsi', 0, 'mstatus', 8)]
 
@@ -67,12 +70,15 @@ def trap_vectors(program, data, wait):
 
 def directed_program():
     return HANDLER + SETUP + [
-        ('ecall',), ('addi', 3, 0, 1),                                    # an environment call, then on
+        # an environment call with predictable jumps right behind it: the trap cancels the fetches they started
+        ('ecall',), ('jal', 0, 'past1'), 'past1:', ('jal', 0, 'past2'), 'past2:', ('jal', 0, 'past3'), 'past3:', ('addi', 3, 0, 1),
         *[('word', w) for w in ILLEGAL[:5]],                              # illegal words are skipped
         ('addi', 4, 0, 0x55), ('sw', 4, 0, 10),
         ('lw', 5, 2, 10), ('lh', 5, 1, 10), ('sw', 4, 2, 10), ('sh', 4, 3, 10), ('lw', 6, 0, 10), ('add', 19, 6, 6),  # misaligned; memory unchanged
         ('csrrw', 7, 'mscratch', 4), ('csrrs', 8, 'mscratch', 0), ('add', 9, 8, 8),          # CSR value at once
         ('csrrc', 0, 'mscratch', 4), ('csrrwi', 7, 'mscratch', 7), ('csrrs', 8, 'mscratch', 0),
+        # a CSR write whose source was loaded, or read from a CSR, by the instruction before
+        ('lw', 6, 0, 10), ('csrrw', 7, 'mscratch', 6), ('csrrs', 8, 'mscratch', 0), ('csrrw', 9, 'mscratch', 8), ('csrrs', 8, 'mscratch', 0),
         ('addi', 11, 0, 1), ('sw', 11, IRQ_ADDRESS, 0), ('addi', 12, 0, 2),  # interrupt before addi x12
         ('csrrci', 0, 'mstatus', 8), ('sw', 11, IRQ_ADDRESS, 0), ('addi', 13, 0, 3), ('addi', 14, 0, 4),
         ('csrrsi', 0, 'mstatus', 8), ('addi', 15, 0, 5),                 # enabling takes it before addi x15
@@ -84,6 +90,8 @@ def directed_program():
         ('csrrw', 0, 'mcause', 11), ('csrrs', 15, 'mcause', 0), ('csrrw', 0, 'mtval', 11), ('csrrs', 17, 'mtval', 0),
         ('addi', 18, 0, 0x80), ('csrrc', 0, 'mstatus', 18), ('csrrs', 19, 'mstatus', 0),  # only MPIE clears
         ('lui', 18, 0xfffff), ('addi', 18, 18, 0x7ff), ('csrrw', 0, 'mie', 18), ('csrrs', 19, 'mie', 0), ('csrrw', 0, 'mie', 2),  # mie holds MEIE alone
+        # an interrupt before an illegal word and before a misaligned load: mtval is 0, not their trap value
+        ('addi', 11, 0, 1), ('sw', 11, IRQ_ADDRESS, 0), ('word', ILLEGAL[2]), ('sw', 11, IRQ_ADDRESS, 0), ('lw', 5, 2, 10),
         ('addi', 23, 0, 1), ('ecall',), ('addi', 23, 0, 0),              # the handler raises the line: taken after MRET, before addi x23
         ('csrrs', 16, 'mip', 0), ('csrrs', 17, 'mcause', 0), ('add', 18, 17, 0),
         ('ebreak',)]

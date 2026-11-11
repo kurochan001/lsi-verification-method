@@ -7,6 +7,7 @@ import sys
 
 HERE=Path(__file__).resolve().parent
 NAME='local-spi'
+MUTANTS=5
 TOP='spi_tb'
 CONFIGS={f'mode{mode}-div{half}':dict(CPOL=mode//2,CPHA=mode%2,HALF_DIV=half)
          for mode in range(4) for half in (2,4)}
@@ -32,7 +33,7 @@ def make_cases(args,parameters):
     for seed in range(args.seed,args.seed+(3 if args.profile=='nightly' else 1)):
         result.append(dict(id=f'random-seed{seed}',seed=seed,vectors=random_vectors(seed,args.iterations),
                            mutation=args.demo_bug,expected_failure=None,category='functional'))
-    for mutation,label in ((1,'SPI_MOSI'),(2,'SPI_RX'),(3,'SPI_CS'),(4,'SPI_CLOCK')):
+    for mutation,label in zip(range(1,MUTANTS+1),('SPI_MOSI','SPI_RX','SPI_CS','SPI_CLOCK','SPI_RX'),strict=True):
         result.append(dict(id=f'detect-mutation{mutation}',vectors=baseline,mutation=mutation,
                            expected_failure=label,category='mutation'))
     for case in result:

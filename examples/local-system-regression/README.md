@@ -47,7 +47,7 @@ python3 examples/local-system-regression/run.py --stage simulation --profile nig
 全7例を実行する場合は、[フォーマル用の一時仮想環境](../local-formal-common/README.md)を準備してactivateします。
 
 ```sh
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-system-regression/run.py --out artifacts/system-all
 ```
 
@@ -71,7 +71,7 @@ python3 examples/local-system-regression/run.py --out artifacts/system-all
 python3 -m unittest discover -s examples/local-system-regression/tests -v
 ```
 
-この親ランナーの確認4件は、子の成功フラグだけでは結果欠落・失敗を隠せないこと、実行Python不在、既存出力先の保護を確認します。
+この親ランナーの確認6件は、子の成功フラグだけでは結果欠落・失敗を隠せないこと、実行Python不在、既存出力先の保護に加え、シミュレーションの時間上限が子へ渡ること、不正な値を子の起動前に拒否すること、結果IDの重複・欠落を拒否することを確認します。
 
 各例の制限を読み、デジタルモデルと物理検証、BMCと非有界証明、到達性と正しさを区別して使ってください。商用VIP、CDC／RDC、UPF、合成・STAの実行結果を示す教材ではありません。
 

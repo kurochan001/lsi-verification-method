@@ -374,6 +374,9 @@ def directed_program():
         ('lw', 6, 20, 10), ('jalr', 0, ('abs', 'j4'), 6), ('addi', 7, 0, 99), 'j4:',
         # a loop that branches backward three times
         ('addi', 6, 0, 3), 'loop:', ('addi', 6, 6, -1), ('bne', 6, 0, 'loop'),
+        # a load and a store whose base was written by the instruction before, and by the one before that
+        ('addi', 6, 10, 4), ('lw', 7, 0, 6), ('addi', 6, 10, 8), ('sw', 4, 0, 6), ('lw', 7, 8, 10),
+        ('addi', 8, 0, 3), ('addi', 6, 10, 12), ('addi', 8, 0, 4), ('lw', 7, 0, 6),
         ('ebreak',)]
 
 

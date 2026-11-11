@@ -48,7 +48,7 @@ python3 examples/local-failure-reduction/run.py --profile nightly --seed 42
 python3 -m unittest discover -s examples/local-failure-reduction/tests -v
 ```
 
-smokeは25操作、nightlyは101操作を縮小します。縮小対象には不具合を確実に再現する1操作を含め、seedで周辺の履歴を変えます。自然発生した未知の不具合を発見する能力の評価ではありません。
+smokeは25操作、nightlyは101操作を縮小します。縮小対象には不具合を確実に再現する1操作を含め、seedで周辺の履歴を変えます。ただし、この変異はどのbeat 1個でも再現するので、縮小結果は常に1操作になり、挿入した操作そのものが残るとは限りません。削除を採用しない分岐は、セルフテストのPythonの述語で確かめます。自然発生した未知の不具合を発見する能力の評価ではありません。
 
 `original.json`・`reproducer.json`・`search.json`に元の操作列、再現列、試行と採否を保存します。全試行のベクトル、実行ログ、VCD、ビルド結果、ソースSHA-256も残ります。6個の合格条件をJUnitへ出力し、探索中の実行数は`executions.json`で別に数えます。
 

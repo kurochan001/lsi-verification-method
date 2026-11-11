@@ -51,7 +51,8 @@ module axi4_formal #(parameter MEM_BYTES=16,MUTATION=0,CHECK_DATA=0,AUXILIARY=1,
    if(rst_n && $past(rst_n && rvalid && !rready))ap_r_hold:assert(rvalid && {rid,rdata,rresp,rlast}==$past({rid,rdata,rresp,rlast}));
    cp_two_write:cover(rst_n && write_credit==2);
    cp_two_read:cover(rst_n && read_credit==2);
-   cp_w_first:cover(rst_n && wvalid && write_credit==0 && !awvalid);
+   // W offered before its AW is held off: the RAM takes a W beat only after the address.
+   cp_w_first:cover(rst_n && wvalid && !wready && write_credit==0 && !awvalid);
    cp_b_stall:cover(rst_n && bvalid && !bready);
    cp_r_stall:cover(rst_n && rvalid && !rready);
    cp_burst:cover(rst_n && rvalid && rready && expected_last && read_length[rh]==1);

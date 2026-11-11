@@ -28,7 +28,8 @@ module spi_master #(
         ticks<=RELOAD;
         if(edges<16) begin
           sclk<=!sclk;edges<=edges+1;
-          if((CPHA==0 && edges%2==0) || (CPHA==1 && edges%2==1))
+          // Mutation 5 samples MISO on the other edge of each bit.
+          if((CPHA==0 && edges%2==(MUTATION==5 ? 1:0)) || (CPHA==1 && edges%2==(MUTATION==5 ? 0:1)))
             rx_shift<={rx_shift[6:0],miso};
           if(CPHA==1 && edges%2==0) mosi<=tx_latched[7-edges/2];
           if(CPHA==0 && edges%2==1 && edges<15) mosi<=tx_latched[6-edges/2];

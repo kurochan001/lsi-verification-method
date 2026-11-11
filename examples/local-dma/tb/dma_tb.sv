@@ -35,13 +35,13 @@ module dma_tb;
    oldar={araddr,arlen,arid};oldaw={awaddr,awlen,awid};oldw={wdata,wstrb,wlast};
    if(arvalid && arready)begin
     if(araddr[11:0]+4*(arlen+1)>4096 || arlen>3)fail("DMA_BOUNDARY");
-    if(araddr!==v[0]+4*read_addresses || arid!=1)fail("DMA_ADDRESS");
+    if(araddr!==v[0]+4*read_addresses || arid!==1)fail("DMA_ADDRESS");
     read_addresses=read_addresses+arlen+1;read_bursts=read_bursts+1;
     if(araddr==4096 || araddr+4*(arlen+1)==4096)$display("COVER boundary/source-split");
    end
    if(awvalid && awready)begin
     if(awaddr[11:0]+4*(awlen+1)>4096 || awlen>3)fail("DMA_BOUNDARY");
-    if(awaddr!==v[1]+4*write_addresses || awid!=2)fail("DMA_ADDRESS");
+    if(awaddr!==v[1]+4*write_addresses || awid!==2)fail("DMA_ADDRESS");
     write_addresses=write_addresses+awlen+1;current_wlen=awlen;current_wbeat=0;write_bursts=write_bursts+1;
     if(awaddr==4096 || awaddr+4*(awlen+1)==4096)$display("COVER boundary/destination-split");
    end

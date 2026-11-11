@@ -7,10 +7,36 @@ import sys
 import tempfile
 import unittest
 import venv
+import xml.etree.ElementTree as ET
 from types import SimpleNamespace
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from local_test_support import EXAMPLES,load_example,read_json,run_example
+
+
+class ClassifyTests(unittest.TestCase):
+    """The verdict of one run, from its exit code and its log alone."""
+    def setUp(self):
+        self.classify=load_example('local-irq-cdc').classify
+
+    def verdict(self,log,returncode,expected=None):
+        return self.classify(dict(checks=5,expected_failure=expected),dict(error=None,returncode=returncode),log)[0]
+
+    def test_a_normal_run_passes_only_with_one_exact_completion_line_and_exit_zero(self):
+        good='RESULT PASS checks=5\n'
+        self.assertEqual(self.verdict(good,0),'pass')
+        for name,log,returncode in (('nonzero exit',good,1),('with a checker failure',good+'CHECK_FAIL X\n',0),('wrong count','RESULT PASS checks=4\n',0),
+                                    ('twice',good+good,0),('nothing','',0),('not at the line start','x RESULT PASS checks=5\n',0)):
+            with self.subTest(name):self.assertEqual(self.verdict(log,returncode),'error')
+        self.assertEqual(self.verdict('CHECK_FAIL X\n',1),'fail')
+        self.assertEqual(self.classify(dict(checks=5,expected_failure=None),dict(error='timeout',returncode=None),good)[0],'error')
+
+    def test_a_mutant_is_detected_only_by_its_own_label_alone(self):
+        self.assertEqual(self.verdict('CHECK_FAIL X\n',1,'X'),'detected')
+        self.assertEqual(self.verdict('RESULT PASS checks=5\n',0,'X'),'fail')
+        for name,log,returncode in (('another label','CHECK_FAIL Y\n',1),('one of two labels','CHECK_FAIL X\nCHECK_FAIL Y\n',1),('exit zero','CHECK_FAIL X\n',0),
+                                    ('also completed','CHECK_FAIL X\nRESULT PASS checks=5\n',1),('crash without a label','',1)):
+            with self.subTest(name):self.assertEqual(self.verdict(log,returncode,'X'),'error')
 
 
 @unittest.skipUnless(shutil.which('iverilog') and shutil.which('vvp'),'Icarus required')
@@ -38,7 +64,16 @@ class RunnerTest(unittest.TestCase):
     def assert_rejected(self,process):
         self.assertEqual(process.returncode,1,process.stdout+process.stderr)
         self.assertFalse(read_json(self.out/'summary.json')['success'])
-        self.assertTrue((self.out/'junit.xml').exists())
+        suite=ET.parse(self.out/'junit.xml').getroot()
+        self.assertGreater(int(suite.get('failures'))+int(suite.get('errors')),0)
+        self.assertTrue(suite.findall('.//failure')+suite.findall('.//error'))
+
+    def test_a_run_without_its_waveform_is_an_error(self):
+        vvp=self.wrapper(f'p=subprocess.run([{shutil.which("vvp")!r},*sys.argv[1:]])\n'
+                         'import os\n[os.remove(a[6:]) for a in sys.argv if a.startswith("+WAVE=")]\nsys.exit(p.returncode)')
+        self.assert_rejected(self.run_cli('--vvp',vvp))
+        results=[read_json(p) for p in self.out.glob('*/result.json')]
+        self.assertTrue(results);self.assertTrue(all(r['status']=='error' and 'waveform' in r['message'] for r in results))
 
     def test_missing_compiler(self):
         self.assert_rejected(self.run_cli('--iverilog',str(self.directory/'absent')))

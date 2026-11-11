@@ -748,25 +748,25 @@
     },
     "local-divider/divider/default": {
       "target_sha256": "d289faac650a008c650cc4cde398df6da775951e33d4861d436d811769832bfa",
-      "source_sha256": {"examples/local-divider/rtl/divider.sv": "59a1b73d263653d2b9885a07ce50c09672224b2276c9f729b4567739e2dccc56"},
+      "source_sha256": {"examples/local-divider/rtl/divider.sv": "e8c201eb521befa48e03ff5e18e6749d6c3d2f3d82941c7d43b6b8a63f0d506c"},
       "diagnostics": [
       ]
     },
     "local-divider/divider/W=4": {
       "target_sha256": "3a21f01ceb273b0419bf2132502ad4af1f925b638d01de6e8c38e18cd48f3a0e",
-      "source_sha256": {"examples/local-divider/rtl/divider.sv": "59a1b73d263653d2b9885a07ce50c09672224b2276c9f729b4567739e2dccc56"},
+      "source_sha256": {"examples/local-divider/rtl/divider.sv": "e8c201eb521befa48e03ff5e18e6749d6c3d2f3d82941c7d43b6b8a63f0d506c"},
       "diagnostics": [
       ]
     },
     "local-divider/divider/W=8": {
       "target_sha256": "d8cb75de1b08afdab6d6016670df72a54c931f8cac0a415f3273a89d3e53ea18",
-      "source_sha256": {"examples/local-divider/rtl/divider.sv": "59a1b73d263653d2b9885a07ce50c09672224b2276c9f729b4567739e2dccc56"},
+      "source_sha256": {"examples/local-divider/rtl/divider.sv": "e8c201eb521befa48e03ff5e18e6749d6c3d2f3d82941c7d43b6b8a63f0d506c"},
       "diagnostics": [
       ]
     },
     "local-divider/divider/W=32": {
       "target_sha256": "c31aee65da13d0f58fd8134563383fd748576e24572c3d4d592fadfc9883e982",
-      "source_sha256": {"examples/local-divider/rtl/divider.sv": "59a1b73d263653d2b9885a07ce50c09672224b2276c9f729b4567739e2dccc56"},
+      "source_sha256": {"examples/local-divider/rtl/divider.sv": "e8c201eb521befa48e03ff5e18e6749d6c3d2f3d82941c7d43b6b8a63f0d506c"},
       "diagnostics": [
       ]
     },
@@ -1442,7 +1442,7 @@
     },
     "local-axi-reorder/reorder/default": {
       "target_sha256": "f96e9d33a1e1be0488b402193e79b7d1d40932bd73bc9d1ad4d329d64c925c00",
-      "source_sha256": {"examples/local-axi-reorder/rtl/reorder.sv": "f07ab7fe93a0c894b7eba22ad3efb8ada90c511c8776aa0fb1285a3e1fc743cf", "examples/local-axi4/rtl/axi4_ram.sv": "18ddf740e71af8804dea5e292c3b773e5834fe35916c063c3d84529e9cea1eb5"},
+      "source_sha256": {"examples/local-axi-reorder/rtl/reorder.sv": "0a88bb4b4673dfa4e0b3dc18c385bc1b8acc89fc734848fcb268265cb7159db3", "examples/local-axi4/rtl/axi4_ram.sv": "18ddf740e71af8804dea5e292c3b773e5834fe35916c063c3d84529e9cea1eb5"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 12, "file": "examples/local-axi4/rtl/axi4_ram.sv", "line": 74, "message": "Blocking assignment '=' in sequential logic process", "rule": "BLKSEQ", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。 幅・符号・時刻単位の修正差分と残った指摘を再照合し、既知の扱いを維持。", "reason": "BLKSEQの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（2026-11-01の幅・符号修正後の機械支援レビュー。人の承認ではない）"},
         {"count": 1, "diagnostic": {"column": 12, "file": "examples/local-axi4/rtl/axi4_ram.sv", "line": 93, "message": "Blocking assignment '=' in sequential logic process", "rule": "BLKSEQ", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。 幅・符号・時刻単位の修正差分と残った指摘を再照合し、既知の扱いを維持。", "reason": "BLKSEQの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（2026-11-01の幅・符号修正後の機械支援レビュー。人の承認ではない）"},
@@ -1453,7 +1453,7 @@
     },
     "local-axi-reorder/reorder/SLOTS=2": {
       "target_sha256": "3b3bd8ba832bd5a5f1e44bd552dbfae28aae703fdc66d7df678b2daf1f54e9a8",
-      "source_sha256": {"examples/local-axi-reorder/rtl/reorder.sv": "f07ab7fe93a0c894b7eba22ad3efb8ada90c511c8776aa0fb1285a3e1fc743cf", "examples/local-axi4/rtl/axi4_ram.sv": "18ddf740e71af8804dea5e292c3b773e5834fe35916c063c3d84529e9cea1eb5"},
+      "source_sha256": {"examples/local-axi-reorder/rtl/reorder.sv": "0a88bb4b4673dfa4e0b3dc18c385bc1b8acc89fc734848fcb268265cb7159db3", "examples/local-axi4/rtl/axi4_ram.sv": "18ddf740e71af8804dea5e292c3b773e5834fe35916c063c3d84529e9cea1eb5"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 12, "file": "examples/local-axi4/rtl/axi4_ram.sv", "line": 74, "message": "Blocking assignment '=' in sequential logic process", "rule": "BLKSEQ", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。 幅・符号・時刻単位の修正差分と残った指摘を再照合し、既知の扱いを維持。", "reason": "BLKSEQの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（2026-11-01の幅・符号修正後の機械支援レビュー。人の承認ではない）"},
         {"count": 1, "diagnostic": {"column": 12, "file": "examples/local-axi4/rtl/axi4_ram.sv", "line": 93, "message": "Blocking assignment '=' in sequential logic process", "rule": "BLKSEQ", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。 幅・符号・時刻単位の修正差分と残った指摘を再照合し、既知の扱いを維持。", "reason": "BLKSEQの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（2026-11-01の幅・符号修正後の機械支援レビュー。人の承認ではない）"},
@@ -1464,7 +1464,7 @@
     },
     "local-axi-reorder/reorder/SLOTS=4": {
       "target_sha256": "c1cb2d9668c0054012e21f83ac5fdb0e33519347e9ed73ef27b807f9e7f64342",
-      "source_sha256": {"examples/local-axi-reorder/rtl/reorder.sv": "f07ab7fe93a0c894b7eba22ad3efb8ada90c511c8776aa0fb1285a3e1fc743cf", "examples/local-axi4/rtl/axi4_ram.sv": "18ddf740e71af8804dea5e292c3b773e5834fe35916c063c3d84529e9cea1eb5"},
+      "source_sha256": {"examples/local-axi-reorder/rtl/reorder.sv": "0a88bb4b4673dfa4e0b3dc18c385bc1b8acc89fc734848fcb268265cb7159db3", "examples/local-axi4/rtl/axi4_ram.sv": "18ddf740e71af8804dea5e292c3b773e5834fe35916c063c3d84529e9cea1eb5"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 12, "file": "examples/local-axi4/rtl/axi4_ram.sv", "line": 74, "message": "Blocking assignment '=' in sequential logic process", "rule": "BLKSEQ", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。 幅・符号・時刻単位の修正差分と残った指摘を再照合し、既知の扱いを維持。", "reason": "BLKSEQの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（2026-11-01の幅・符号修正後の機械支援レビュー。人の承認ではない）"},
         {"count": 1, "diagnostic": {"column": 12, "file": "examples/local-axi4/rtl/axi4_ram.sv", "line": 93, "message": "Blocking assignment '=' in sequential logic process", "rule": "BLKSEQ", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。 幅・符号・時刻単位の修正差分と残った指摘を再照合し、既知の扱いを維持。", "reason": "BLKSEQの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（2026-11-01の幅・符号修正後の機械支援レビュー。人の承認ではない）"},
@@ -1724,55 +1724,55 @@
     },
     "local-spi/spi_master/default": {
       "target_sha256": "d4ff940743123390976456434cfeb1f157f657f04f29cea483a255b4b98cb540",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=2": {
       "target_sha256": "f75d4d6a8e533602554ed4d35f4acb55a5158497a0e8ae45375245b93566d043",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=0/CPOL=0/HALF_DIV=4": {
       "target_sha256": "26c4f27a55b8d0fa2f063b241c9b4fbec8c20172d6f5385c5962f2faaf3fbbf8",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=2": {
       "target_sha256": "677bd925db1f3b155e72117f1111378f5e7080315adc3437efe838f56f2d263a",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=0/CPOL=1/HALF_DIV=4": {
       "target_sha256": "198e455d42244c2c1fc684f4092a2b84ab3eb4e14210f809de7e7a2f6da79307",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=2": {
       "target_sha256": "a1cba222da73b5cc44eda1705c91581122420892a2dab244fccd6b762f91d902",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=1/CPOL=0/HALF_DIV=4": {
       "target_sha256": "f5c8e418ff26be5d7bd9a73522336a87f6796b9a907cc1df8698da5fd974a6d4",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=2": {
       "target_sha256": "5fac7e89ab988fa151210a5ea67f6397a01b9bc6a0be32a91d8815ae5e685f79",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },
     "local-spi/spi_master/CPHA=1/CPOL=1/HALF_DIV=4": {
       "target_sha256": "4dacbe370f9f0e2d8503635a32b88721d5d9e7314df78669610ec5d0fae3afad",
-      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "59ac794761c1cc423dbebaed24e9d02b14ced462eff914437c6f5b022536936b"},
+      "source_sha256": {"examples/local-spi/rtl/spi_master.sv": "7ea2987e27bfce034d61623952d09882f989cc3c10aa91f1dd7ff381e446685b"},
       "diagnostics": [
       ]
     },

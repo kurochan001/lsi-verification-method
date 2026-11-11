@@ -167,6 +167,11 @@ class Plan:
         self.write(0x003, 0x99999999)
         self.read_step(0x000)
         self.step(rst=0)
+        # MATCH is compared on its low 16 bits: the high half of this value must not stop a match on 2.
+        self.write(0x108, 0xabcd0002)
+        self.write(0x100, 3)
+        self.idle(2)
+        self.read_step(0x10c)
         self.write(0x000, 0x0badf00d)
         self.read_step(0x000)
 

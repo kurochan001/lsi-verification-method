@@ -65,7 +65,7 @@ coreの4例は、`--simulation-timeout`で各ビルド・シミュレーショ�
 
 ## セルフテスト
 
-4回路各5、UVMカウンター判定4、レジスタ契約・コンパイラー6、witness変換4、集約4の計38件です。レジスタ生成の6件だけはSystemRDL用Pythonで実行してください。
+4回路各5、UVMカウンター判定5、レジスタ契約・コンパイラー6、witness変換4、集約6の計41件です。レジスタ生成の6件だけはSystemRDL用Pythonで実行してください。
 
 ```sh
 python3 -m unittest discover -s examples/local-soc-regression/tests -v

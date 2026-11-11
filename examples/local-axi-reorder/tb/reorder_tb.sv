@@ -32,7 +32,8 @@ module reorder_tb;
  repeat(20)tick();release_enable=1;
  for(position=0;position<SLOTS;position=position+1)begin
  transaction=(v[6]>>(2*position))&3;bready=0;
- while(!bvalid)tick();repeat(3)tick();
+ // A response already shown must stay when release_enable falls, so drop it while the response waits.
+ while(!bvalid)tick();tick();release_enable=0;repeat(2)tick();release_enable=1;
  if(bid!==((v[0]>>(2*transaction))&3))fail("AXIO_BID");if(bresp!==2'b00)fail("AXIO_RESP");
  if(transaction!=position)$display("COVER response/b-reorder");bready=1;tick();bready=0;
  end release_enable=0;
@@ -43,7 +44,7 @@ module reorder_tb;
  for(position=0;position<SLOTS;position=position+1)begin
  transaction=(v[6]>>(2*position))&3;
  for(beat=0;beat<=((v[1]>>(2*transaction))&3);beat=beat+1)begin
- rready=0;while(!rvalid)tick();if(v[4])repeat(3)tick();
+ rready=0;while(!rvalid)tick();if(v[4])begin tick();release_enable=0;repeat(2)tick();release_enable=1;end
  if(rid!==((v[0]>>(2*transaction))&3))fail("AXIO_RID");if(rresp!==2'b00)fail("AXIO_RESP");
  base=256+32*transaction+4*beat;if(rdata!=={expected_memory[base+3],expected_memory[base+2],expected_memory[base+1],expected_memory[base]})fail("AXIO_DATA");
  if(rlast!==(beat==((v[1]>>(2*transaction))&3)))fail("AXIO_LAST");rready=1;tick();rready=0;

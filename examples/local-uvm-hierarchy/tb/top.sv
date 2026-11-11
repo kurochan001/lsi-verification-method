@@ -9,12 +9,16 @@ module top;
   wire select1=bus.paddr[7:4]==(layout ? 0:4);
   wire s0=select0 || (mutation==3 && select1);
   wire s1=select1 && mutation!=3;
-  assign bank0.rst_n=bus.rst_n;assign bank1.rst_n=bus.rst_n;
-  assign bank0.psel=bus.psel && s0;assign bank1.psel=bus.psel && s1;
-  assign bank0.penable=bus.penable;assign bank1.penable=bus.penable;
-  assign bank0.pwrite=bus.pwrite;assign bank1.pwrite=bus.pwrite;
-  assign bank0.paddr={4'b0,bus.paddr[3:0]};assign bank1.paddr={4'b0,bus.paddr[3:0]};
-  assign bank0.pwdata=bus.pwdata;assign bank1.pwdata=bus.pwdata;
+  // The interface variables have initial values, so they are driven from a process: a continuous
+  // assignment to a variable that also has an initializer is not legal.
+  always_comb begin
+    bank0.rst_n=bus.rst_n;bank1.rst_n=bus.rst_n;
+    bank0.psel=bus.psel && s0;bank1.psel=bus.psel && s1;
+    bank0.penable=bus.penable;bank1.penable=bus.penable;
+    bank0.pwrite=bus.pwrite;bank1.pwrite=bus.pwrite;
+    bank0.paddr={4'b0,bus.paddr[3:0]};bank1.paddr={4'b0,bus.paddr[3:0]};
+    bank0.pwdata=bus.pwdata;bank1.pwdata=bus.pwdata;
+  end
   wire [31:0] rdata[3],cfg[3];wire [3:0] pending[3];wire ready[3],error_response[3];
   apb_regs #(.WAIT_CYCLES(1)) ip0(clk,bank0.rst_n,bank0.psel,bank0.penable,bank0.pwrite,bank0.paddr,bank0.pwdata,bank0.events,bank0.pready,bank0.pslverr,bank0.prdata,bank0.config_value,bank0.pending);
   for(genvar m=0;m<3;m++)begin: variants

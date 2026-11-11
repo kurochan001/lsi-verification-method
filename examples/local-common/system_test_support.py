@@ -18,13 +18,13 @@ class SystemContract:
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out';result=run_example(self.EXAMPLE,out,'--iterations','3')
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
-            assert_evidence(self,out,p.CONFIGS,self.GOALS,6*len(p.CONFIGS))
+            assert_evidence(self,out,p.CONFIGS,self.GOALS,(2+getattr(p,'MUTANTS',4))*len(p.CONFIGS),mutants=getattr(p,'MUTANTS',4))
 
     def test_demo_faults_make_normal_regression_fail(self):
         if not (shutil.which('iverilog') and shutil.which('vvp')):self.skipTest('Icarus required')
         p=load_example(self.EXAMPLE);configuration=next(iter(p.CONFIGS))
         with tempfile.TemporaryDirectory() as tmp:
-            for fault in range(1,5):
+            for fault in range(1,getattr(p,'MUTANTS',4)+1):
                 with self.subTest(fault=fault):
                     out=Path(tmp)/str(fault)
                     result=run_example(self.EXAMPLE,out,'--configuration',configuration,'--iterations','2','--demo-bug',str(fault))

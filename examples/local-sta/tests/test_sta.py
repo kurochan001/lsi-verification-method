@@ -40,7 +40,7 @@ class StaTests(unittest.TestCase):
     @unittest.skipUnless(STA.exists(),'build OpenSTA as described in README')
     def test_real_sta_two_corners_and_all_negative_cases(self):
         with tempfile.TemporaryDirectory() as tmp:
-            out=Path(tmp)/'out';r=run_example('local-sta',out,'--sta',os.path.relpath(STA,P.ROOT))
+            out=Path(tmp)/'out';r=run_example('local-sta',out,'--sta',os.path.relpath(STA))
             self.assertEqual(r.returncode,0,r.stdout+r.stderr)
             s=json.loads((out/'summary.json').read_text());self.assertTrue(s['success']);self.assertTrue(s['evidence_ok'])
             self.assertEqual(len(s['results']),10);self.assertEqual(sum(r['status']=='detected' for r in s['results']),8)

@@ -27,7 +27,7 @@ class SpiTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out';p=run_example('local-spi',out)
             self.assertEqual(p.returncode,0,p.stdout+p.stderr)
-            assert_evidence(self,out,SPI.CONFIGS,16,48)
+            assert_evidence(self,out,SPI.CONFIGS,16,(2+SPI.MUTANTS)*len(SPI.CONFIGS),mutants=SPI.MUTANTS)
             for name in SPI.CONFIGS:
                 counts=read_json(out/f'{name}-boundaries/result.json')['counts']
                 self.assertEqual(counts,dict(transfers=7,aborts=1))
@@ -36,7 +36,7 @@ class SpiTest(unittest.TestCase):
     @unittest.skipUnless(shutil.which('iverilog') and shutil.which('vvp'),'Icarus required')
     def test_demo_faults_cannot_pass_as_normal_rtl(self):
         with tempfile.TemporaryDirectory() as tmp:
-            for mutation in range(1,5):
+            for mutation in range(1,SPI.MUTANTS+1):
                 with self.subTest(mutation=mutation):
                     out=Path(tmp)/f'm{mutation}'
                     p=run_example('local-spi',out,'--configuration','mode0-div2','--iterations','2','--demo-bug',str(mutation))

@@ -34,9 +34,11 @@ module stream_dma_tb;
  #1;
  if(hold_m && (!m_valid || {m_last,m_keep,m_data}!==saved_m))fail("STREAM_HOLD");hold_m=m_valid&&!m_ready;saved_m={m_last,m_keep,m_data};
  if(hold_s && (!s_valid || {s_last,s_keep,s_data}!==saved_s))fail("STREAM_SOURCE");hold_s=s_valid&&!s_ready;saved_s={s_last,s_keep,s_data};
- if(arvalid && arready)begin if(araddr!=v[1]+4*reads || arlen!=0 || arid!=1)fail("STREAM_AR");reads=reads+1;end
- if(awvalid && awready)begin if(awaddr!=v[1]+4*write_addresses || awlen!=0 || awid!=2)fail("STREAM_AW");write_addresses=write_addresses+1;end
+ if(arvalid && arready)begin if(araddr!==v[1]+4*reads || arlen!==0 || arid!==1)fail("STREAM_AR");reads=reads+1;end
+ if(awvalid && awready)begin if(awaddr!==v[1]+4*write_addresses || awlen!==0 || awid!==2)fail("STREAM_AW");write_addresses=write_addresses+1;end
  if(wvalid && wready)begin if(wdata!==payload(writes) || wstrb!==mask(writes) || !wlast)fail("STREAM_MEMORY");if(w_first && write_addresses==writes)$display("COVER write/w-before-aw");writes=writes+1;end
+ // done must not come before the last B handshake: every write accepted so far has its response by then.
+ if(done && write_responses!==writes)fail("STREAM_RESPONSE");
  accepted_r=rvalid && rready;accepted_b=bvalid && bready;
  if(s_valid && s_ready)sent=sent+1;
  if(f_valid && !f_ready)$display("COVER stream/held");

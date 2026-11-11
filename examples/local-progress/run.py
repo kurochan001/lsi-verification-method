@@ -10,7 +10,7 @@ SCOPE='Unbounded safety and finite response bounds under a bounded-ready assumpt
 COVERS={'cp_contention','cp_stall','cp_done0','cp_done1','cp_wait','cp_reset_pending','cp_recovery'}
 def properties(parameters,case):
     p=case['parameters']
-    return {'assert':{'ap_owner','ap_exclusive','ap_hold'}|({'ap_completion','ap_accept'} if p['CHECK_DEADLINES'] else set())|
+    return {'assert':{'ap_owner','ap_exclusive','ap_requested','ap_hold'}|({'ap_completion','ap_accept'} if p['CHECK_DEADLINES'] else set())|
              ({'ai_ledger','ai_owner','ai_counter','ai_state','ai_nonnegative'} if p['AUXILIARY'] else set())|({'ai_timing','ai_fair_counter'} if p['AUXILIARY'] and p['FAIR'] else set()),
             'assume':{'as_initial_reset','as_hold0','as_hold1'}|({'as_receiver_fair'} if p['FAIR'] else set())|({'as_no_receiver'} if p['FORCE_STALL'] else set()),'cover':COVERS}
 def plan(bound,demo_bug):

@@ -117,7 +117,7 @@ read -formal -sv conn_check.sv
 [共通フォーマル手順](../local-formal-common/README.md)の固定版ツールを使います。
 
 ```sh
-. /tmp/lsi-bus-formal-venv/bin/activate
+. artifacts/toolchains/formal-venv/bin/activate
 python3 examples/local-connectivity/run.py
 python3 examples/local-connectivity/generate.py --check
 python3 -m unittest discover -s examples/local-connectivity/tests -v

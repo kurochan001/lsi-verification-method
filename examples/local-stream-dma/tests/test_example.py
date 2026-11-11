@@ -22,6 +22,6 @@ class ExampleTests(SystemContract,unittest.TestCase):
     def test_completion_without_b_response_is_rejected(self):
         result=simulate_vectors(P,[P.row(1,512,4)],replacements={'stream_dma.sv':[('state<=RESP;','finish(0);')]})
         self.assertNotEqual(result.returncode,0,result.stdout)
-        self.assertIn('CHECK_FAIL STREAM_COUNT',result.stdout)
+        self.assertIn('CHECK_FAIL STREAM_RESPONSE',result.stdout)
 
 if __name__=='__main__':unittest.main()

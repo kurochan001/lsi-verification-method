@@ -23,7 +23,9 @@ def vector(src=0,dst=256,words=8,seed=17,fault=0,abort=0,reset=0,mask=0):
 def boundary_vectors():
     return [vector(words=0),vector(words=1),vector(words=7),vector(src=4092,dst=512,words=6),
             vector(src=64,dst=4092,words=6),vector(fault=1),vector(fault=2),vector(abort=1),vector(abort=2),
-            vector(reset=1),vector(mask=1),vector(src=3),vector(dst=4),vector(src=8188,words=2)]
+            vector(reset=1),vector(mask=1),vector(src=3),vector(dst=4),vector(src=8188,words=2),
+            # The largest length and one more, and a destination that runs past the end.
+            vector(words=32),vector(words=33),vector(dst=8188,words=2)]
 def random_vectors(seed,iterations):
     rng=random.Random(seed);rows=[]
     for _ in range(iterations):

@@ -39,6 +39,10 @@ def vectors(seed,iterations,parameters,boundary=False):
         for i in range(2*d+3):p.cycle(valid=1,channel=c,data=c*80+i)
     for _ in range(3):p.cycle()
     p.drain()
+    # The channel that round robin prefers has data queued and no credit left: it must not send.
+    for i in range(d+1):p.cycle(valid=1,channel=0,data=0x60+i)
+    p.cycle(valid=1,channel=1,data=0x70);p.cycle();p.cycle();p.cycle()
+    p.drain()
     for i in range(16):p.cycle(valid=1,channel=i%2,data=i,returns=sum(1<<c for c in range(2) if p.outstanding[c]>0))
     p.drain();p.cycle(valid=1,data=99);p.cycle();p.cycle(rst=0);p.cycle(valid=1,channel=1,data=55);p.drain()
     p.cycle(valid=1,data=7);p.cycle(returns=1);p.drain() # excess return on the same edge as a send

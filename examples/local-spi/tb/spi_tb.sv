@@ -45,7 +45,8 @@ module spi_tb;
         edge_count=(tick-1)/HALF_DIV;
         if(CPHA==0) begin
           rx_index=edge_count/2;if(rx_index>7) rx_index=7;
-          miso=rx[7-rx_index];
+          // The bit is valid up to the leading edge only: a master that samples on the trailing edge reads its inverse.
+          miso=edge_count%2==0 ? rx[7-rx_index] : !rx[7-rx_index];
         end else if(edge_count>=1) begin
           rx_index=(edge_count-1)/2;if(rx_index>7) rx_index=7;
           miso=rx[7-rx_index];
