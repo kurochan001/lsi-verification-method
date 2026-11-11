@@ -66,9 +66,10 @@ def main():
     a=p.parse_args()
     if not 1<=a.jobs<=16 or not math.isfinite(a.timeout) or a.timeout<=0 or a.out.exists():p.error('valid jobs, finite positive timeout and fresh --out required')
     a.python=Q.executable(a.python)
-    previous=signal.signal(signal.SIGTERM,Q.P.interrupted)
+    previous={sig:signal.signal(sig,Q.P.interrupted) for sig in (signal.SIGTERM,signal.SIGINT)}
     try:return run(a)
     except Q.P.RunInterrupted as exc:return 128+exc.signum
     except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as exc:print('SELFTEST_ERROR',exc,file=sys.stderr);return 1
-    finally:signal.signal(signal.SIGTERM,previous)
+    finally:
+        for sig,handler in previous.items():signal.signal(sig,handler)
 if __name__=='__main__':sys.exit(main())

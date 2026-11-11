@@ -100,7 +100,7 @@ analysis portの`write()`は、同じ観測を複数の接続先へ渡すfunctio
 | 9 | [移行ガイド](uvm-migration-guide.md)と[適用手順](uvm-verification.md) | 手元の要求・旧資産へ対応付け、必須構成・検出力・未確認を記録。 |
 | 10 | [公開CPU・IP・VIPの参照例13件](open-source-dv-environments.md) | CPUに加え、PULP AXI・LiteDRAM・Corundum・NVDLA・Caliptra等の計画・環境・比較を読む。UVM・SVクラス・cocotb・Migen等の経路、固定版・ツール条件と確認範囲を記録する。 |
 
-設定・データ・readyの協調、複数IPのRALサブマップ、複数クロック・個別resetは、それぞれの実行例で確認できます。複数クロック例は固定した2種類のクロック条件と通知順序の範囲です。任意のクロック停止や物理CDC/RDCの安全性まで確認した結果には広げません。[実行済みの範囲と設計案](uvm-practical-design.md#7-実行済みの範囲と設計案を区別する)も参照してください。
+設定・データ・readyの協調、複数IPのRALサブマップ、複数クロック・個別resetは、それぞれの実行例で確認できます。複数クロック例は固定した3種類のクロック条件と通知順序の範囲です。任意のクロック停止や物理CDC/RDCの安全性まで確認した結果には広げません。[実行済みの範囲と設計案](uvm-practical-design.md#7-実行済みの範囲と設計案を区別する)も参照してください。
 
 ## 8. 症状から戻る確認点
 

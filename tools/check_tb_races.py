@@ -23,23 +23,39 @@ def strip_comments(text):
     return re.sub(r'//[^\n]*', '', re.sub(r'/\*.*?\*/', '', text, flags=re.S))
 
 
+def statement_end(text, start):
+    """Return where the statement that begins at `start` ends, following if/else, loops and case."""
+    position = start + len(text[start:]) - len(text[start:].lstrip())
+    rest = text[position:]
+    word = re.match(r'[A-Za-z_]\w*', rest)
+    word = word.group(0) if word else ''
+    if word == 'begin':
+        depth = 0
+        for token in re.finditer(r'\b(begin|end)\b', rest):
+            depth += 1 if token.group(1) == 'begin' else -1
+            if depth == 0:
+                return position + token.end()
+        return len(text)
+    if word in ('case', 'casez', 'casex'):
+        close = re.search(r'\bendcase\b', rest)
+        return position + close.end() if close else len(text)
+    if word in ('if', 'for', 'while', 'repeat', 'foreach'):
+        opening = rest.find('(')
+        depth = 0
+        for index in range(opening, len(rest)) if opening >= 0 else ():
+            depth += (rest[index] == '(') - (rest[index] == ')')
+            if depth == 0:
+                end = statement_end(text, position + index + 1)
+                follows = re.match(r'\s*else\b', text[end:]) if word == 'if' else None
+                return statement_end(text, end + follows.end()) if follows else end
+        return len(text)
+    semicolon = rest.find(';')
+    return position + semicolon + 1 if semicolon >= 0 else len(text)
+
+
 def clocked_blocks(text):
-    blocks = []
-    for match in CLOCKED.finditer(text):
-        tail = text[match.end():]
-        if tail.lstrip().startswith('begin'):
-            depth = 0
-            end = len(tail)
-            for token in re.finditer(r'\b(begin|end)\b', tail):
-                depth += 1 if token.group(1) == 'begin' else -1
-                if depth == 0:
-                    end = token.end()
-                    break
-            body = tail[:end]
-        else:
-            body = tail[:tail.find(';') + 1]
-        blocks.append((' '.join(match.group(1).split()), body))
-    return blocks
+    return [(' '.join(match.group(1).split()), text[match.end():statement_end(text, match.end())])
+            for match in CLOCKED.finditer(text)]
 
 
 def module_headers(paths):

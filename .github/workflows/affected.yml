@@ -159,6 +159,7 @@ jobs:
             artifacts/ci/**/coverage.json
             artifacts/ci/**/coverage.dat
             artifacts/ci/**/tools.json
+            artifacts/ci/**/preflight.json
             artifacts/ci/**/uvm-source.json
             artifacts/ci/**/oss-source.json
             artifacts/ci/**/systemc-source.json

@@ -51,6 +51,8 @@ module memory_order_tb;
   end
   if((|grant_w) && (|grant_r))$display("COVER concurrency/read-write");
   if(aw_seen==3 && address_w[0][13]==address_w[1][13])$display("COVER arbitration/contention");
+  // The model reads this ledger, so it runs here, after the update, and not in a block of its own.
+  order_model;
  end
  function [3:0] mask(input integer mode,input integer beat);
   begin case(mode)0:mask=15;1:mask=5;2:mask=0;default:mask=1<<(beat%4);endcase end
@@ -71,7 +73,7 @@ module memory_order_tb;
    for(integer lane=0;lane<4;lane=lane+1)if(keep[lane])golden[address+lane]=data[8*lane+:8];
    written_at[address/4]=clock_index;
   end endtask
- always @(posedge clk)if(rst_n)begin
+ task order_model;begin
   clock_index=clock_index+1;expected_ports=0;
   for(integer t=0;t<2;t=t+1)begin
    if(dut.s_rvalid[t]!==expected_valid[t])fail("ORDER_TIMING");
@@ -104,7 +106,7 @@ module memory_order_tb;
    end
   end
   if(rvalid!==expected_ports)fail("ORDER_READ");
- end
+ end endtask
  task automatic transfer(input integer m);
   integer base,op,address,beats,ident,seed,mode,awd,wd,stall,error,tick,wb,rb,blocked;
   reg aw_done,ar_done,finished;

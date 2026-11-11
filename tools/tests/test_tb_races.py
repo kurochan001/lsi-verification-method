@@ -32,6 +32,20 @@ class TestbenchRaceTests(unittest.TestCase):
         self.assertIn(('cycles','read by a net declaration'),self.reasons(
             'integer cycles=0;wire permit=cycles%3==2;\nalways @(posedge clk) begin\n  cycles=cycles+1;\nend\n'))
 
+    def test_a_block_without_its_own_begin_is_read_to_its_end(self):
+        # The shape of the races fixed on 2026-11-11: the block is one `if`, and the assignment is not its first statement.
+        reader='always @(posedge clk) if(count==3) done<=1;\n'
+        for name,block in {
+            'if begin':'always @(posedge clk) if(rst_n) begin seen<=1; count=count+1; end\n',
+            'else branch':'always @(posedge clk) if(!rst_n) seen<=0; else begin seen<=1; count=count+1; end\n',
+            'nested if':'always @(posedge clk) if(rst_n) if(go) begin seen<=1; count=count+1; end\n',
+            'loop':'always @(posedge clk) for(i=0;i<2;i=i+1) begin seen<=1; count=count+1; end\n',
+            'case':'always @(posedge clk) case(mode) 0: seen<=1; default: count=count+1; endcase\n',
+        }.items():
+            with self.subTest(name):self.assertEqual(self.reasons(block+reader),[('count','read by another block on the same edge')])
+        # What follows the statement is not part of the block.
+        self.assertEqual(self.reasons('always @(posedge clk) if(rst_n) seen<=1;\ninitial begin count=0; end\n'+reader),[])
+
     def test_safe_shapes_are_left_alone(self):
         for name,text in {
             'nonblocking':'always @(posedge clk) count<=count+1;\nwire full=count==3;\n',

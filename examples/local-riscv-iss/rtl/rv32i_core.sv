@@ -161,8 +161,12 @@ module rv32i_core #(parameter MUTATION = 0, PREDICT = 0, TRAPS = 0) (
     // Traps, MRET and CSR writes all take effect in MEM, where every older instruction has
     // finished and no younger one has changed memory or a CSR, so exceptions are precise. An
     // interrupt is taken before the first instruction to reach MEM once it is pending and
-    // enabled; mutation 14 ignores mstatus.MIE.
-    wire irq_take = TRAPS != 0 && mem_valid && irq && (st_mie || MUTATION == 14) && ie_meie;
+    // enabled; mutation 14 ignores mstatus.MIE. A data access that the memory has already seen
+    // cannot be withdrawn: a bus may have started it, and its answer would otherwise reach the
+    // next access. The interrupt then waits for that access to finish; mutation 17 does not wait.
+    reg dmem_pending;
+    wire irq_take = TRAPS != 0 && mem_valid && irq && (st_mie || MUTATION == 14) && ie_meie &&
+                    (!dmem_pending || MUTATION == 17);
     wire exc_take = TRAPS != 0 && mem_valid && mem_code != 4'd0;
     wire trap = irq_take || exc_take;
     wire mret_take = mem_valid && mem_mret && !trap;
@@ -226,7 +230,7 @@ module rv32i_core #(parameter MUTATION = 0, PREDICT = 0, TRAPS = 0) (
 
     always @(posedge clk) begin
         if (!rst_n) begin
-            pc <= 0; halted <= 0; wb_trap <= 0;
+            pc <= 0; halted <= 0; wb_trap <= 0; dmem_pending <= 0;
             id_valid <= 0; ex_valid <= 0; mem_valid <= 0; wb_valid <= 0;
             st_mie <= 0; st_mpie <= 0; ie_meie <= 0; tvec <= 0; epc <= 0; scratch <= 0; cause <= 0; tval <= 0;
             perf_ctrl <= 0; perf_flush <= 0;
@@ -234,6 +238,7 @@ module rv32i_core #(parameter MUTATION = 0, PREDICT = 0, TRAPS = 0) (
         end else if (!halted) begin
             if (wb_write) regs[wb_rd] <= wb_data;
             if (wb_valid && !wb_trap && wb_insn == EBREAK) halted <= 1;
+            dmem_pending <= dmem_valid && !dmem_ready;
             if (trap) begin
                 // The instruction in MEM leaves as a trap record (kind 3: cause, trap value) and
                 // everything younger is discarded. Mutation 15 lets a faulting load still write rd;

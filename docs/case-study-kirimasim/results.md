@@ -34,7 +34,7 @@ kirimasimの`main`の最新コミットを、[Kirimasim latest](https://github.c
 - **テストベンチ修正後：** DMAの2つのテストベンチの競合を直した後の結果です。この表のそれより下の行は、修正の前の結果です。
 - **修正前の失敗：** 2026-11-03にテストベンチを直す前の46／107、105／107は、[事例の第2節](README.md#2-実測結果)にあります。
 
-## 記録した最新の実行
+## 構成ごとの値を残した実行（`b279f56275cd`）
 
 `b279f56275cd`を、このリポジトリの`0dd92f8`でGitHub Actionsから実行した結果です。[手動の実行](https://github.com/kurochan001/lsi-verification-method/actions/runs/42312231158)は、キャッシュから戻した同じバイナリーで同じ値でした。Actionsの証跡は14日で消えるので、構成ごとの値を[JSON](results-20261107.json)に残しました。
 

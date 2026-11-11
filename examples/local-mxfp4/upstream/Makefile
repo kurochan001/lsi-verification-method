@@ -63,7 +63,7 @@ RTL_TOP := \
 REF := tb/mxfp4_ref_pkg.sv
 SVA := tb/mxfp4_bdp_sva.sv
 
-SUKIMASIM ?= /home/bamba/Work2/sukimasim/build/sukimasim
+SUKIMASIM ?= sukimasim
 
 # 抑制する警告と理由
 #   DECLFILENAME    : 1 ファイルに複数モジュールを置かない方針だが package 名は例外

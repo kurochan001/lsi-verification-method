@@ -43,7 +43,7 @@ artifacts/toolchains/full/python/bin/python tools/run_selftests.py \
   --jobs 2 --timeout 600 --out artifacts/all-selftests
 ```
 
-[`run_selftests.py`](run_selftests.py)は`examples/*/tests`と`tools/tests`を明示的に列挙し、各グループでunittestを起動します。`--scope tools`なら後者だけです。空のテスト、skip、失敗、時間切れ、結果の欠落を拒否します。全体の`tests.json`にグループとテスト件数、グループ別ログに実際の名前と結果を残します。シミュレータによる全例の動作確認とは別の検査です。
+[`run_selftests.py`](run_selftests.py)は`examples/*/tests`と`tools/tests`を明示的に列挙し、各グループでunittestを起動します。`--scope tools`なら後者だけです。空のテスト、skip、失敗、時間切れ、結果の欠落を拒否します。全体の`tests.json`にグループとテスト件数、グループ別ログに実際の名前と結果を残します。SIGTERMかSIGINT（Ctrl-C）を受けると、実行中のグループを止めて143か130を返します。シミュレータによる全例の動作確認とは別の検査です。
 
 テストコードに加え、Git管理済み・追加中で無視されていないリポジトリ入力全体のハッシュと一覧を固定します。参照モデル・RTL・要求・設定・文書などが実行中に変更・追加・削除された場合は、テストがすべて成功していても結果を採用しません。`--scope tools`でも、テストが例の実装や文書を参照するため、この入力範囲を維持します。指定した出力先と、Gitで無視した`artifacts/`・キャッシュ等の生成物は一覧へ含めません。
 

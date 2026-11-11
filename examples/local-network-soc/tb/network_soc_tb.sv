@@ -122,7 +122,7 @@ module network_soc_tb;
                     for(integer j=0;j<int'(dut.nic.tx_length);j=j+1)$fdisplay(ram_fd,"%08x",dut.memory.ram[(tx_base-4096)/4+j]);
                     $display("COVER cpu/build-and-check");
                 end
-                if(dut.paddr==4 && dut.pwdata[0])$display("COVER ownership/w1c-keeps-buffer");
+                if(dut.paddr==4 && dut.pwdata[0] && dut.nic.rx_owned && dut.nic.status[0])$display("COVER ownership/w1c-keeps-buffer");
             end
             if(dut.arvalid&&dut.arready)begin
                 if(ar_credit!=0 || dut.araddr!=32'(tx_base)+32'(4*rr) || dut.arlen!=0 || dut.arsize!=2 || dut.arburst!=1 || dut.arid!=0)fail("NET_SOC_AXI");ar_credit=1;

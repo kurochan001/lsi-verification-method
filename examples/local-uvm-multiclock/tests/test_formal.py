@@ -1,6 +1,7 @@
 """Prove on the real RTL what no clock pair in the simulation can show."""
 from pathlib import Path
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -67,6 +68,16 @@ class MailboxProofTests(unittest.TestCase):
         output,_=sby('prove',12,("src_seen<={src_seen[0],src_up};","src_seen<={src_seen[0],1'b0};"))
         self.assertIn('DONE (FAIL',output)
         self.assertIn('failed assertion',output)
+
+    def test_the_goal_itself_fails_when_a_result_needs_no_request(self):
+        # The break above is caught by a helper. This one leaves every helper true, so only the goal can catch it.
+        output,_=sby('prove',12,("if(req_sync[1] && !ack && !present)begin","if(!ack && !present)begin"))
+        self.assertIn('DONE (FAIL',output)
+        lines=(HERE/'formal/mailbox_formal.sv').read_text().splitlines()
+        goal=[n for n,line in enumerate(lines,1) if 'assert(!present || src_seen[1])' in line]
+        self.assertEqual(len(goal),1)
+        failed=set(re.findall(r'failed assertion \S+ at mailbox_formal\.sv:(\d+)\.',output))
+        self.assertEqual(failed,{str(goal[0])})
 
 
 if __name__=='__main__':unittest.main()

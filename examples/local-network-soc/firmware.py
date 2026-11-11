@@ -117,9 +117,10 @@ def source(replies,max_frame=128,drops=0,scenario=0,rx_base=0x1000,tx_base=0x140
         # Mask 7 leaves DROP out of the IRQ: the status bit is set, no handler ran, and W1C clears it.
         p+=[('lw',1,4,12),('andi',1,1,8),('beq',1,0,'fail'),('bne',31,0,'fail'),('addi',1,0,8),('sw',1,4,12),('lw',1,4,12),('andi',1,1,8),('bne',1,0,'fail')]
     if scenario==5:
-        # Mask 8 unmasks DROP alone: the handler must run and clear it, within a bounded wait.
+        # Mask 8 unmasks DROP alone: the handler must run and clear it, within a bounded wait. DROP is
+        # then the only event the handler has seen, however its reads fell among the polls of the main loop.
         p+=[('addi',2,0,64),'drop_wait:',('lw',1,4,12),('andi',1,1,8),('beq',1,0,'drop_done'),('addi',2,2,-1),('bne',2,0,'drop_wait'),('jal',0,'fail'),
-            'drop_done:',('andi',1,31,8),('beq',1,0,'fail')]
+            'drop_done:',('addi',1,0,8),('bne',31,1,'fail')]
     p+=[*li(1,SUCCESS),('sw',1,0,16),('ebreak',),
         'fail:',*li(1,FAILURE),('sw',1,0,16),('ebreak',)]
     return p

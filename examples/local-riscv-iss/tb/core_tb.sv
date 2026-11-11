@@ -22,6 +22,7 @@ module core_tb;
     always #5 clk = ~clk;
     integer fd, n, i, rows = 0, expected = 0, retired = 0, loads = 0, stores = 0, cycles = 0, limit = 0;
     integer accesses = 0, waits = 0, waiting = 0, perf_rows = 0, lanes;
+    reg ready_now;
     reg [31:0] exp_ctrl = 0, exp_flush = 0, check_flush = 0;
     reg [31:0] v[0:10];
     reg [31:0] e_pc[0:N-1], e_insn[0:N-1], e_wdata[0:N-1], e_addr[0:N-1], e_data[0:N-1], e_tags[0:N-1];
@@ -100,11 +101,12 @@ module core_tb;
         if (dmem_valid === 1'b1) begin
             if (!waiting) begin waiting = 1; waits = wait_of[accesses]; end
             else if (waits) waits = waits - 1;
-            dmem_ready = waits == 0;
-            if (!dmem_ready && dmem_we) $display("COVER mem/wait-store");
-            if (!dmem_ready && !dmem_we) $display("COVER mem/wait-load");
+            ready_now = waits == 0;
+            dmem_ready <= ready_now;
+            if (!ready_now && dmem_we) $display("COVER mem/wait-store");
+            if (!ready_now && !dmem_we) $display("COVER mem/wait-load");
         end else begin  // no request, or one withdrawn by a trap: the next request starts afresh
-            dmem_ready = 1; waiting = 0;
+            dmem_ready <= 1; waiting = 0;
         end
     end
     always @(posedge clk) if (running && dmem_valid === 1'b1 && dmem_ready) begin
@@ -133,7 +135,7 @@ module core_tb;
             if (retired != expected) fail("ISS_END");
             $display("PERF cycles=%0d ctrl=%0d flush=%0d", cycles, perf_ctrl, perf_flush);
             if (perf_rows && (perf_ctrl !== exp_ctrl || (check_flush && perf_flush !== exp_flush))) fail("ISS_PERF");
-            running = 0;
+            running <= 0;
         end else if (cycles > limit) fail("ISS_END");
     end
 endmodule

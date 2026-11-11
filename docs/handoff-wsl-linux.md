@@ -152,7 +152,7 @@ kirimasimは、macOSで使ったものと同じコミットから構築します
 
 ```sh
 git clone https://github.com/kurochan001/kirimasim.git ~/kirimasim
-git -C ~/kirimasim checkout d73d8922dfa20e19ccb9411adbe42a6d258bb49d
+git -C ~/kirimasim checkout 97d5b0001e7ca759ae8f928c6217690a119d1700
 ( cd ~/kirimasim && cmake --preset dev && cmake --build --preset dev )
 
 "$PYF" tools/run_kirimasim_examples.py \
@@ -186,7 +186,7 @@ macOSの結果は次のとおりです。件数はOSに依存しないはずな�
 | 検査 | macOSの結果 |
 | --- | --- |
 | 文書検査 | 461判定がすべて合格（この資料を含む） |
-| セルフテスト | 130グループ、1,211件、skipなし（`summary.json`の予定は132判定） |
+| セルフテスト | 130グループ、1,213件、skipなし（`summary.json`の予定は132判定） |
 | 全例smoke | 108／108 |
 | 全例nightly | 108／108 |
 | kirimasim | 107／107。lowering 938回、シミュレーション2,371回、全起動の終了コード0が2,499回・1が810回（loweringを含む）、異常終了0回 |
@@ -233,7 +233,11 @@ kirimasimだけが失敗するなら、同じ例をIcarusでも実行します�
 
 `05e957f`のQualityとAffected（`42285207844`）は合格しました。Affectedは全例108／108のsmokeを実行し、比較基準は`6e87b32`でした。文書だけの`b18e36b`では、比較基準は`05e957f`で、回路は0件でした。
 
-`0dd92f8`では、Nightly（`42310539185`）が全セルフテストと全例108／108のnightlyに合格し、Kirimasim latest（`42308647137`）が`b279f56275cd`で107／107に合格しました。今の状態は次で確認します。
+`0dd92f8`では、Nightly（`42310539185`）が全セルフテストと全例108／108のnightlyに合格し、Kirimasim latest（`42308647137`）が`b279f56275cd`で107／107に合格しました。
+
+`d22ce24`のNightlyは、形式証明のテストがPATH上の`yosys`を見つけられず、3回失敗しました（`42418277397`・`42529177368`・`42737039795`）。修正した`db8e657`では、定期実行のNightly（`42923645700`）が合格しています。Kirimasim latestの定期実行は、2026-11-11までの4回とも合格しました（最新は`42927683689`、kirimasim `7de185f776a1`）。[記録](../PROVENANCE.md#nightly-formal-fix-20261110)があります。
+
+今の状態は次で確認します。
 
 ```sh
 gh run list --workflow nightly.yml --limit 3

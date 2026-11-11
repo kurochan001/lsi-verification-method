@@ -94,7 +94,11 @@ class QualityEvidenceTests(unittest.TestCase):
         self.assertFalse(S.evaluate(dict(error=None,returncode=1),'Ran 1 test in 0s\nOK\n')['success'])
 
 class SelftestRunnerTests(unittest.TestCase):
-    def test_sigterm_stops_the_running_groups(self):
+    def test_sigterm_and_sigint_stop_the_running_groups(self):
+        for stop in (signal.SIGTERM,signal.SIGINT):
+            with self.subTest(stop=stop.name):self.stops_the_running_groups(stop)
+
+    def stops_the_running_groups(self,stop):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);pidfile=root/'group.pid';fake=root/'fake-python'
             fake.write_text(f'#!/bin/sh\necho $$ > "{pidfile}.tmp"\nmv "{pidfile}.tmp" "{pidfile}"\nexec sleep 60\n');fake.chmod(0o755)
@@ -103,7 +107,7 @@ class SelftestRunnerTests(unittest.TestCase):
             deadline=time.monotonic()+60
             while not pidfile.exists() and time.monotonic()<deadline:time.sleep(.02)
             pid=int(pidfile.read_text())
-            process.terminate();self.assertEqual(process.wait(timeout=30),128+signal.SIGTERM)
+            process.send_signal(stop);self.assertEqual(process.wait(timeout=30),128+stop)
             deadline=time.monotonic()+5;alive=True
             while alive and time.monotonic()<deadline:
                 try:os.kill(pid,0);time.sleep(.02)

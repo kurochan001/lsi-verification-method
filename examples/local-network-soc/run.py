@@ -7,6 +7,7 @@ HERE=Path(__file__).resolve().parent
 spec=importlib.util.spec_from_file_location('network_soc_support',HERE.parent/'local-network-echo/support.py');S=importlib.util.module_from_spec(spec);spec.loader.exec_module(S)
 E=S.E;M=S.MODEL;F=S.load('network_firmware',HERE/'firmware.py')
 CONFIGS={'bytes96-fast':dict(MAX_FRAME=96,WAIT_CYCLES=0),'bytes128-wait':dict(MAX_FRAME=128,WAIT_CYCLES=2)}
+WAITING='bytes128-wait'
 SOURCES=[*sorted((HERE/'rtl').glob('*.sv')),*sorted((HERE.parent/'local-network-echo/rtl').glob('*.sv')),
     *[HERE.parent/'local-image-soc/rtl'/n for n in ('cpu_ahb.sv','image_fabric.sv','image_memory.sv')],
     HERE.parent/'local-riscv-iss/rtl/rv32i_core.sv',HERE.parent/'local-riscv-decoder/rtl/rv32i_decoder.sv',HERE/'tb/network_soc_tb.sv']
@@ -16,7 +17,7 @@ def run(a):
     seeds=list(range(a.seed,a.seed+(3 if a.profile=='nightly' else 1)))
     names=['arp-udp','boundaries','reject','overflow','rx-error','tx-error','rx-error-mid','rx-error-last','tx-error-mid','tx-error-last','relocated','w1c-race','drop-irq','bus-errors','reset-rx','reset-dma-tx','reset-wire-tx','detect-rom-compare',*[f'random-{s}' for s in seeds],*[f'mutation-{i}' for i in range(1,6)]]
     e=E.Evidence('local-network-soc',a,[Path(__file__),HERE/'firmware.py',HERE.parent/'local-network-echo/model.py',HERE.parent/'local-network-echo/support.py',HERE/'requirements.json',*SOURCES],dict(configurations=CONFIGS,seeds=seeds),
-        ['toolchain',*[cfg+'/'+name for cfg in CONFIGS for name in [*names,'coverage']],'source-freshness'])
+        ['toolchain',*[cfg+'/'+name for cfg in CONFIGS for name in [*names,*(['mutation-6'] if cfg==WAITING else []),'coverage']],'source-freshness'])
     sim=S.Simulator(e,'network_soc_tb',SOURCES)
     probes={n:E.P.execute([getattr(a,n),'-V'],e.out/(n+'-version.log'),a.timeout,e.out) for n in ('iverilog','vvp')}
     E.P.write_json(e.out/'tools.json',probes);e.check('toolchain',all(not r['error'] and r['returncode']==0 for r in probes.values()),probes)
@@ -58,6 +59,8 @@ def run(a):
         for i,label in enumerate(('NET_SOC_RX_ORDER','NET_SOC_AXI','NET_SOC_OWNERSHIP','NET_SOC_TX_ORDER'),1):
             execute(f'mutation-{i}',[M.arp(),M.udp(b'ownership')],mutation=i,label=label)
         execute('mutation-5',M.invalid_frames(limit),mutation=5,label='NET_SOC_COMPLETION',drop_irq=True)
+        # An interrupt that abandons a load on the bus: only a bus with wait cycles answers it late enough to matter.
+        if cfg==WAITING:execute('mutation-6',M.invalid_frames(limit),mutation=6,label='NET_SOC_COMPLETION',drop_irq=True)
         hits=set(g for r in sim.records if r['id'].startswith(cfg+'/') for g in r['coverage']);coverage[cfg]=dict(required=sorted(goals),hit=sorted(hits),missing=sorted(goals-hits));e.check(cfg+'/coverage',not goals-hits,coverage[cfg])
     sim.save();E.P.write_json(e.out/'coverage.json',coverage);S.fresh(e);return e.finish()
 

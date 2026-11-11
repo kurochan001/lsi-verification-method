@@ -1940,7 +1940,7 @@ Kirimasim latestの2回は、どちらもlowering 936回、実シミュレーシ
 
 次の点は未確認です。
 
-- Kirimasim latestの定期起動は、まだ一度も動いていません。
+- Kirimasim latestの定期起動は、まだ一度も動いていません。（追記：その後の定期起動は、2026-11-11までの4回とも合格しました。`42421603869`・`42531904707`・`42739526680`・`42927683689`です。）
 - kirimasimの変更による失敗はまだ起きていないので、[切り分けの手順](tools/CI.md#kirimasimの最新版)は実際の失敗で試していません。
 - kirimasimへのコミットそのものでは起動しません。次の定期実行までは、最新のコミットを試していない期間があります。
 
@@ -1957,7 +1957,7 @@ READMEから辿れる[実行結果のページ](docs/case-study-kirimasim/result
 
 次の点は未確認です。
 
-- Summaryの新しい表は、Actionsでまだ出していません。pushした後の実行で分かります。
+- Summaryの新しい表は、Actionsでまだ出していません。pushした後の実行で分かります。（追記：その後の実行では、Summaryに表が出ています。`42358356916`で確かめました。）
 - ページの表は自動では更新しません。自動で更新するには、ワークフローに書き込み権限を与えるか、GitHub Pagesを有効にする必要があるので、今回は入れていません。今の状態はバッジと実行の一覧で確認します。
 
 <a id="testbench-race-fix-20261107"></a>
@@ -2000,7 +2000,7 @@ READMEから辿れる[実行結果のページ](docs/case-study-kirimasim/result
 
 kirimasimはこの上限で止まるときに`--error-limit=`を案内しますが、そのオプションは受け付けません。[#112](https://github.com/kurochan001/kirimasim/issues/112)として報告しました。
 
-pushした後の最初の実行（[`42330580132`](https://github.com/kurochan001/lsi-verification-method/actions/runs/42330580132）、`bfa9e79`）は、予想と違う結果でした。`main`の先頭の`4bb954f2b205`をGCC 13.3.0でビルドすると、UVMライブラリの解析は通過し、`local-uvm`のloweringは`examples/local-uvm/tb/uvm_apb_pkg.sv:69`で止まりました。107構成のsmokeも107／107 PASSです。`60c26d7c8113`からの3コミットは、記録とテスト生成器の変更だけです。
+pushした後の最初の実行（[`42330580132`](https://github.com/kurochan001/lsi-verification-method/actions/runs/42330580132)、`bfa9e79`）は、予想と違う結果でした。`main`の先頭の`4bb954f2b205`をGCC 13.3.0でビルドすると、UVMライブラリの解析は通過し、`local-uvm`のloweringは`examples/local-uvm/tb/uvm_apb_pkg.sv:69`で止まりました。107構成のsmokeも107／107 PASSです。`60c26d7c8113`からの3コミットは、記録とテスト生成器の変更だけです。
 
 同じ`4bb954f2b205`をmacOSのAppleClangでビルドすると解析で止まり、#110の最小例も再現しました。UVMは同じアーカイブのソースで、macOS側の188ファイルのハッシュも一致します。したがって、確かめた範囲では#110はmacOSのビルドだけの問題で、「今はUVMの解析で止まる」という最初の記述はLinuxについて誤りでした。[#110にコメント](https://github.com/kurochan001/kirimasim/issues/110#issuecomment-6701653360)で報告しました。
 
@@ -2064,3 +2064,41 @@ GitHub ActionsのNightly verification `42737039795`（および同じ失敗を�
 テストは`YOSYS`・`SMTBMC`・`WITNESS`を`yowasp-yosys`・`yowasp-yosys-smtbmc`・`yowasp-yosys-witness`へ明示的に向け、生成物がない場合はsbyの標準出力・標準エラーを失敗メッセージへ含めるようにしました。無接頭辞のYosysを含めないCI相当のPATHで`local-uvm-multiclock`の14テストが成功し、通常のPATHでも同じ14テストが成功しました。GitHub Actionsの再実行はまだ行っていません。
 
 （2026-11-11追記）修正を含む`db8e657`で、定期実行のNightly verification `42923645700`が合格しました。全セルフテストはスキップを不合格にするので、形式証明3件と画像SoCの同一エッジのテストは、Linuxで実際に実行されて通っています。nightlyの全例108と、その報告の検査も合格です。失敗していたNightlyは、`42418277397`・`42529177368`・`42737039795`の3回です。同じ日の定期実行のKirimasim latest `42927683689`（kirimasim `7de185f776a1`）も合格で、UVMの状態は変わらず、`local-uvm`のloweringは同じ連想配列で止まります。
+
+<a id="repository-review-20261111"></a>
+
+## リポジトリのレビューと修正（2026-11-11）
+
+`c6a2831`を、ツールとCI、2026-11-07以降に変更した6例、文書の整合の3つに分けてレビューしました。指摘は1件ずつ再現するか、該当箇所を読んで確かめてから直しました。
+
+### 見つけて直した問題
+
+| 問題 | 直し方 |
+| --- | --- |
+| バスへ出したロードが応答を待っている間に割り込みを受け付けると、コアはそのロードを取り下げますが、[`cpu_ahb`](examples/local-image-soc/rtl/cpu_ahb.sv)は取り下げられたアクセスを最後まで実行し、その応答をハンドラーの最初のロードへ返していました。NIC SoCの`bytes128-wait/drop-irq`では、ハンドラーがSTATUSとしてDROP_COUNTの値を読み、それをW1Cへ書いていました | [コア](examples/local-riscv-iss/rtl/rv32i_core.sv)は、データメモリへ出したアクセスが終わるまで割り込みを待ちます。コアの変異17はこの待ちを省きます |
+| 上の誤りを、NIC SoCのファームウェアは通していました。ハンドラーが見た状態にDROPのビットが含まれることだけを要求していたためです | DROPだけであることを要求します。修正前のRTLでは`bytes128-wait/drop-irq`が失敗することを確かめました。NIC SoCの変異6（コアの変異17）を加え、待ちのある構成で`NET_SOC_COMPLETION`として検出します。JUnitは53／57件です |
+| NIC SoCの`ownership/w1c-keeps-buffer`は、バッファを所有していなくても数えていました | 所有中で、RX_DONEが立っているときだけ数えます |
+| [`check_tb_races.py`](tools/check_tb_races.py)は、`always @(posedge clk) if(...) begin … end`の形のブロックを最初の`;`までしか読んでいませんでした。この形は114ベンチに17ブロックあり、「0件」はその分だけ空でした | 文全体（if／else、ループ、case）を読みます。テストを1件加えました |
+| 直した検出器が、2つのテストベンチで7件を見つけました。[`memory_order_tb.sv`](examples/local-memory-order/memory_order_tb.sv)は、同じ端の2つのブロックの間で、`=`で書いた台帳をもう一方が読んでいました。[`core_tb.sv`](examples/local-riscv-iss/tb/core_tb.sv)は、停止の端の`running`を同じ端の別ブロックが読んでいました | 前者は、モデルをタスクにして台帳の更新の後に呼びます。後者は、`running`と`dmem_ready`をノンブロッキング代入にしました。検出は0件です |
+| 複数クロックの形式証明で、鎖を壊すテストは補助の不変条件で失敗していて、目標のアサーションが失敗しうることは示していませんでした | 補助をすべて満たしたまま目標だけを破る壊し方のテストを加え、失敗したアサーションが目標の行だけであることを確かめます |
+| [`run_selftests.py`](tools/run_selftests.py)はSIGINTを扱わず、Ctrl-Cでは実行中のグループが終わるまで待っていました | SIGTERMと同じように止めて130を返します。テストは両方の信号で実行します |
+| NightlyとAffectedの証跡に`preflight.json`が含まれていませんでした | アップロードの一覧に加えました |
+| 文書の件数と状態が古くなっていました。例の一覧のJUnit件数、複数クロックのクロック条件の数、セルフテストの合計、WSL引き継ぎ文書のkirimasimの版とCIの状態、実行結果のページの見出し、この文書の壊れたリンク1件と「まだ」のままの2項目です | 現在の値に直し、追記しました |
+| 取り込んだ[`Makefile`](examples/local-mxfp4/upstream/Makefile)に、取り込み元の作業環境の絶対パスが残っていました | 実行ファイル名だけにしました。この例のランナーは、この変数を使いません |
+
+### 確認
+
+macOS arm64で実行しました。
+
+- コアを共有する6例（`local-riscv-iss`・`local-riscv-traps`・`local-branch-predictor`・`local-load-store`・`local-image-soc`・`local-network-soc`）と`local-memory-order`は、smokeとnightlyで合格しました。
+- lintは、警告の内容が変わらないことを確かめて、変更した2ファイルのハッシュだけを基準へ反映しました。
+- 全セルフテストは130グループ・1,213件（skipなし）のうち、129グループが合格しました。`tools/tests`は202件です。不合格は`local-spice-cosim`の1件で、このマシンに残っているngspiceの準備物が動かないためです。変更を退避した状態でも同じ失敗になるので、今回の変更によるものではありませんが、このグループは手元では確かめていません。
+- 文書検査は461判定で合格し、`check_tb_races.py`は114ベンチで0件です。
+
+### 直していないことと、未確認のこと
+
+- Nightlyは、文書検査が失敗すると、後ろのセルフテストと全例を実行しません。ジョブは失敗になるので見逃しにはなりませんが、その夜の回路の結果は得られません。ワークフローの構成の変更になるので、今回は変えていません。
+- 全例のsmokeとnightly、Linux、kirimasimでは実行していません。pushした後のActionsで分かります。
+- 取り下げたアクセスの問題は、割り込み線がストアの完了で変わる単体のコアの例では起きません。待ちの途中の割り込みを確かめているのは、NIC SoCの1シナリオと変異1件だけです。画像SoCには、この状況を狙うシナリオはありません。
+- `local-vci-soclib`は、レビューでは実行していません。変異4と5は読んで確かめただけです。
+- レビューは、`tools/verification_plan.py`などの一部のツール、2026-11-07より前から変わっていない例、`docs/method/`の大半を、通読していません。
