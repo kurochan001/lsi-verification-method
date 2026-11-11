@@ -15,14 +15,21 @@ class FirmwareTests(unittest.TestCase):
 
     def test_all_scenarios_fit_rom_and_success_cases_compare_every_pixel(self):
         frames=S.MODEL.random_frames(7,5,17,2);gold=[S.MODEL.sobel(f,7,5) for f in frames]
-        for scenario in range(9):
+        for scenario in range(10):
             binary=FW.program(frames,gold,scenario,(7,5))
             self.assertLessEqual(len(binary),1024)
             reads=sum((word&0x707f)==0x2003 and ((word>>15)&31)==11 for word in binary)
             self.assertEqual(reads,0 if scenario in (1,2) else 70)
 
+    def test_only_the_slow_wait_loads_through_apb_while_it_waits(self):
+        frames=S.MODEL.random_frames(7,5,17,1);gold=[S.MODEL.sobel(f,7,5) for f in frames]
+        shape_load=0x01462403  # lw x8,20(x12): SHAPE, in a register nothing else uses
+        self.assertEqual(FW.ISA.assemble([('lw',8,20,12)]),[shape_load])
+        for scenario in range(10):
+            with self.subTest(scenario=scenario):self.assertEqual(FW.program(frames,gold,scenario,(7,5)).count(shape_load),int(scenario==9))
+
     def test_invalid_program_inputs_are_rejected(self):
-        for frames,expected,scenario in (([],[],0),([[0]],[],0),([[0]],[[0,1]],0),([[256]],[[0]],0),([[0]],[[0]],9)):
+        for frames,expected,scenario in (([],[],0),([[0]],[],0),([[0]],[[0,1]],0),([[256]],[[0]],0),([[0]],[[0]],10)):
             with self.subTest(frames=frames,scenario=scenario),self.assertRaises(ValueError):FW.program(frames,expected,scenario)
 
     def test_relocated_buffers_touch_and_end_at_the_top_of_ram(self):

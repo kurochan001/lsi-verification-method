@@ -14,7 +14,7 @@ module image_soc #(parameter W=5,H=5,WAIT_CYCLES=0,MUTATION=0,parameter ROM_FILE
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)cpu_release<=0;else cpu_release<={cpu_release[0],1'b1};
     end
-    rv32i_core #(.TRAPS(1)) cpu(
+    rv32i_core #(.TRAPS(1),.MUTATION(MUTATION==5 ? 17:0)) cpu(
         .clk(clk),.rst_n(cpu_release[1]),.irq(irq),.imem_addr(imem_addr),.imem_data(imem_data),
         .dmem_valid(cpu_valid),.dmem_we(cpu_write),.dmem_addr(cpu_addr),.dmem_wdata(cpu_wdata),.dmem_be(cpu_be),
         .dmem_rdata(cpu_rdata),.dmem_ready(cpu_ready),.ret_valid(ret_valid),.ret_pc(ret_pc),.ret_insn(ret_insn),

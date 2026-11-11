@@ -2,7 +2,7 @@
   "schema_version":1,
   "revision":1,
   "requirements":[
-    {"id":"SOC-BOOT","description":"CPUがROM命令を実行し割り込みハンドラーから復帰して画素を比較する","goals":["boot/rom","boot/rom-data","firmware/interrupt","firmware/mret","firmware/pixel-check"]},
+    {"id":"SOC-BOOT","description":"CPUがROM命令を実行し割り込みハンドラーから復帰して画素を比較する","goals":["boot/rom","boot/rom-data","firmware/interrupt","firmware/mret","firmware/pixel-check","irq/waits-for-access"]},
     {"id":"SOC-BUSES","description":"AHBの二相転送、APBのsetup/accessと待ち、AXIの保持を確認する","goals":["bus/ahb-address","bus/ahb-wait","bus/apb-setup","bus/apb-wait","bus/axi-backpressure","reg/shape-read"]},
     {"id":"SOC-DMA","description":"共有RAM上の画像をINCRバーストで転送し最終B応答後に通知する","goals":["dma/read-burst","dma/write-burst","dma/tail-burst","ram/cpu-dma-contention","ram/cpu-store-contention","config/relocated","completion/last-b-response","completion/irq","frame/restart"]},
     {"id":"SOC-ERROR","description":"不正設定・アクセス・DMA応答エラーを成功扱いにしない","goals":["config/rejected","config/unaligned","config/range","config/overlap","config/destination","config/below-ram","config/overlap-either","bus/apb-error","bus/ahb-error","bus/unmapped-error","dma/read-error","dma/write-error","dma/read-error-single","dma/write-error-single"]},

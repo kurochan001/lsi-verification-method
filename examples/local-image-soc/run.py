@@ -12,13 +12,13 @@ CONFIGS={'w5h5-wait0':dict(W=5,H=5,WAIT_CYCLES=0),'w7h5-wait2':dict(W=7,H=5,WAIT
 SOURCES=[HERE.parent/'local-riscv-decoder/rtl/rv32i_decoder.sv',HERE.parent/'local-riscv-iss/rtl/rv32i_core.sv',
          HERE.parent/'local-conv-window/rtl/conv_window.sv',HERE.parent/'local-image-sobel/rtl/sobel_stream.sv',
          *sorted((HERE/'rtl').glob('*.sv')),HERE/'tb/image_soc_tb.sv']
-SCENARIOS={'read-error':1,'write-error':2,'invalid-config':3,'bus-errors':4,'reset-read':5,'reset-write':6,'relocated-up':7,'relocated-down':8}
+SCENARIOS={'irq-during-read':9,'read-error':1,'write-error':2,'invalid-config':3,'bus-errors':4,'reset-read':5,'reset-write':6,'relocated-up':7,'relocated-down':8}
 SINGLE={'read-error-mid':1,'read-error-last':1,'write-error-mid':2,'write-error-last':2}
 
 
 def run(a):
     seeds=list(range(a.seed,a.seed+(3 if a.profile=='nightly' else 1)))
-    names=['boot',*[f'random-{s}' for s in seeds],*SCENARIOS,*SINGLE,*[f'mutation-{i}' for i in range(1,5)]]
+    names=['boot',*[f'random-{s}' for s in seeds],*SCENARIOS,*SINGLE,*[f'mutation-{i}' for i in range(1,6)]]
     ids=['toolchain',*[f'{cfg}/{n}' for cfg in CONFIGS for n in [*names,'coverage']],'source-freshness']
     inputs=[Path(__file__),HERE/'firmware.py',HERE/'requirements.json',Path(S.__file__),S.HERE/'model.py',
             HERE.parent/'local-riscv-iss/iss.py',*SOURCES]
@@ -41,6 +41,7 @@ def run(a):
         for name,scenario in SINGLE.items():execute(cfg+'/'+name,parameters,frames[:1],a.seed,scenario=scenario,fault=faults[name])
         for mutation,label in ((1,'SOC_AHB'),(2,'SOC_APB'),(3,'SOC_PIXEL'),(4,'SOC_COMPLETION')):
             execute(cfg+f'/mutation-{mutation}',parameters,frames[:1],a.seed,mutation=mutation,label=label)
+        execute(cfg+'/mutation-5',parameters,frames,a.seed,mutation=5,label='SOC_CPU_HOLD',scenario=9)
         hit=set(g for r in sim.records if r['id'].startswith(cfg+'/') for g in r['coverage'])
         coverage[cfg]=dict(required=sorted(goals),hit=sorted(hit),missing=sorted(goals-hit));e.check(cfg+'/coverage',not goals-hit,coverage[cfg])
     sim.save();E.P.write_json(e.out/'coverage.json',coverage);S.fresh(e);return e.finish()

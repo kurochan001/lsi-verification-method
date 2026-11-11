@@ -32,7 +32,7 @@ def buffers(scenario,pixels):
 
 
 def program(frames,expected,scenario=0,shape=None):
-    if scenario not in range(9) or not frames or len(frames)!=len(expected) or any(not a or len(a)!=len(b) or len(a)!=len(frames[0]) for a,b in zip(frames,expected)) or any(type(v) is not int or not 0<=v<=255 for frame in [*frames,*expected] for v in frame):
+    if scenario not in range(10) or not frames or len(frames)!=len(expected) or any(not a or len(a)!=len(b) or len(a)!=len(frames[0]) for a,b in zip(frames,expected)) or any(type(v) is not int or not 0<=v<=255 for frame in [*frames,*expected] for v in frame):
         raise ValueError('complete source and expected frames required')
     p=[('jal',0,'main'),'handler:',('lw',28,4,12),('addi',31,28,0),('sw',28,4,12),('mret',),'main:']
     source,destination=buffers(scenario,len(frames[0]))
@@ -63,7 +63,7 @@ def program(frames,expected,scenario=0,shape=None):
             # Configuration cannot be changed while busy; the old value must survive.
             p+=li(1,0xdead0000)+[('sw',1,8,12),('lw',2,8,12),('bne',2,10,'fail'),('sw',1,12,12),('lw',2,12,12),('bne',2,11,'fail'),
                 ('sw',0,16,12),('lw',2,16,12),('addi',3,0,1),('bne',2,3,'fail'),('addi',1,0,1),('sw',1,0,12)]
-        p+=wait(f'frame{frame}',4 if scenario in (1,2) else 2)
+        p+=wait(f'frame{frame}',4 if scenario in (1,2) else 2,scenario==9)
         if scenario not in (1,2):
             for i,pixel in enumerate(golden):p+=[('lw',4,4*i,11),*li(5,SENTINEL|pixel),('bne',4,5,'fail')]
     p+=li(1,SUCCESS)+[('sw',1,0,16),('ebreak',),'fail:',*li(1,FAILURE),('sw',1,0,16),('ebreak',)]
@@ -78,6 +78,8 @@ INVALID=(('unaligned',0x1001,0x1400),('range',0x1ffc,0x1400),('overlap',0x1000,0
          ('overlap_src',0x1000,0x1004),('overlap_dst',0x1004,0x1000))
 
 
-def wait(label,status):
-    return [label+':',('lw',6,0,15),('addi',6,6,1),('sw',6,0,15),('beq',31,0,label),
+def wait(label,status,slow=False):
+    """Count in RAM until the handler has run. A slow wait also loads SHAPE through APB, so that the
+    interrupt arrives while a load is still on the bus: the handler must still read STATUS, not that answer."""
+    return [label+':',*([('lw',8,20,12)] if slow else []),('lw',6,0,15),('addi',6,6,1),('sw',6,0,15),('beq',31,0,label),
             ('addi',7,0,status),('bne',31,7,'fail')]

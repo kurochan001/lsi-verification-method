@@ -19,7 +19,8 @@ module image_soc_tb;
     reg [72:0] held_ahb;
     reg [3:0] held_b;
     reg ar_hold=0,aw_hold=0,w_hold=0,r_hold=0,apb_hold=0,ahb_hold=0,b_hold=0;
-    reg irq_old=0,reset_done=0,error_first=0;
+    reg irq_old=0,reset_done=0,error_first=0,cpu_hold=0;
+    reg [32:0] cpu_held;
     integer invalid_seen=0,fault,src_base,dst_base,expected_apb,expected_ahb,apb_errors=0,ahb_errors=0,b_count=0,cpu_stores=0;
     integer frames,seed,scenario,cycles=0,pixels=0,completed=0,irqs=0,cpu_checks=0;
     integer rd_pixels=0,wr_pixels=0,issued=0,addressed=0,rleft=0,wleft=0,bcredit=0;
@@ -32,7 +33,7 @@ module image_soc_tb;
     task clear_epoch;
         begin
             pixels=0;completed=0;irqs=0;cpu_checks=0;rd_pixels=0;wr_pixels=0;issued=0;addressed=0;rleft=0;wleft=0;bcredit=0;apb_errors=0;ahb_errors=0;b_count=0;cpu_stores=0;
-            ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;apb_hold=0;ahb_hold=0;b_hold=0;irq_old=0;invalid_seen=0;error_first=0;
+            ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;apb_hold=0;ahb_hold=0;b_hold=0;irq_old=0;invalid_seen=0;error_first=0;cpu_hold=0;
             for(integer j=0;j<256;j=j+1)cpu_mask[j]=0;
         end
     endtask
@@ -165,6 +166,11 @@ module image_soc_tb;
                 end
             end
             irq_old=irq;
+            // The adapter cannot take an access back from the bus, so the CPU must hold one until it is answered.
+            // An interrupt is the one event that could make the CPU drop it.
+            if(cpu_hold && (!dut.cpu_valid || {dut.cpu_write,dut.cpu_addr}!==cpu_held))fail("SOC_CPU_HOLD");
+            if(cpu_hold && dut.cpu_valid && irq && dut.cpu.st_mie && dut.cpu.ie_meie)$display("COVER irq/waits-for-access");
+            cpu_hold=dut.cpu_valid && !dut.cpu_ready;cpu_held={dut.cpu_write,dut.cpu_addr};
             if(dut.cpu_valid && dut.cpu_ready)begin
                 if(dut.cpu_write && dut.cpu_be!=15)fail("SOC_CPU_ACCESS");
                 if(!dut.cpu_write && dut.cpu_addr<32'h1000)$display("COVER boot/rom-data");
