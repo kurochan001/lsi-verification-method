@@ -300,6 +300,13 @@ class WorkflowTests(unittest.TestCase):
         full='\n'.join(s.get('run','') for s in nightly['jobs']['full']['steps'])
         self.assertIn('--profile nightly',full);self.assertIn('tools/run_selftests.py',full)
         self.assertNotIn('--check-tools',full)
+        # One failed check must not hide the results of the later ones; each needs only the diagnosed environment.
+        independent="${{ !cancelled() && steps.environment.outcome == 'success' }}"
+        for workflow,job,prepare,gates in ((nightly,'full','Prepare and diagnose full environment',('All local selftests, without skips','All example matrices and formal tasks')),
+                                           (quality,'documents','Prepare and diagnose document environment',('Check repository tools',))):
+            steps={s.get('name'):s for s in workflow['jobs'][job]['steps']}
+            self.assertEqual(steps[prepare]['id'],'environment')
+            for gate in gates:self.assertEqual(steps[gate]['if'],independent)
         affected=yaml.load((ROOT/'.github/workflows/affected.yml').read_text(),Loader=yaml.BaseLoader)
         steps=affected['jobs']['affected']['steps'];commands='\n'.join(s.get('run','') for s in steps)
         self.assertIn('--base "$CHANGE_BASE" --run --profile smoke',commands)

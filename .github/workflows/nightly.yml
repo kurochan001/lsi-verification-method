@@ -61,6 +61,7 @@ jobs:
         if: steps.ngspice.outputs.cache-hit != 'true'
         run: python tools/setup_ngspice.py --jobs 2 --out artifacts/ci-ngspice
       - name: Prepare and diagnose full environment
+        id: environment
         run: python tools/setup_environment.py --profile full --tool-bin "$PWD/artifacts/ci-native/install/bin" --oss-home "$PWD/artifacts/ci-oss/oss-cad-suite" --ngspice-home "$PWD/artifacts/ci-ngspice/install" --out artifacts/ci-env
       - name: Save diagnosed native tools before verification
         if: steps.native.outputs.cache-hit != 'true'
@@ -82,13 +83,16 @@ jobs:
           key: ${{ steps.ngspice.outputs.cache-primary-key }}
       - name: Check documents and diagrams
         run: artifacts/ci-env/python/bin/python tools/check_docs.py --out artifacts/ci/docs
+      # A failed check does not stop the later ones: each needs only the environment, and any failure fails the job.
       - name: All local selftests, without skips
+        if: ${{ !cancelled() && steps.environment.outcome == 'success' }}
         env:
           COCOTB_PYTHON: ${{ github.workspace }}/artifacts/ci-env/python/bin/python
         run: |
           export PATH="$PWD/artifacts/ci-native/install/bin:$PWD/artifacts/ci-env/formal/bin:$PWD/artifacts/ci-ngspice/install/bin:$PATH"
           artifacts/ci-env/python/bin/python tools/run_selftests.py --jobs 2 --timeout 600 --out artifacts/ci/selftests
       - name: All example matrices and formal tasks
+        if: ${{ !cancelled() && steps.environment.outcome == 'success' }}
         run: >-
           artifacts/ci-env/python/bin/python tools/run_regression.py
           --profile nightly --jobs 2 --job-timeout 10800 --command-timeout 60

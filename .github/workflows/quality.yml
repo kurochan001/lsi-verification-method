@@ -25,10 +25,13 @@ jobs:
           cache: npm
           cache-dependency-path: tools/docs/package-lock.json
       - name: Prepare and diagnose document environment
+        id: environment
         run: python tools/setup_environment.py --profile docs --out artifacts/ci-env
       - name: Check documents and diagrams
         run: artifacts/ci-env/python/bin/python tools/check_docs.py --out artifacts/ci/docs
+      # A failed document check does not stop this one, and either failure fails the job.
       - name: Check repository tools
+        if: ${{ !cancelled() && steps.environment.outcome == 'success' }}
         run: artifacts/ci-env/python/bin/python tools/run_selftests.py --scope tools --out artifacts/ci/tool-selftests
       - name: Preserve results, including failures
         if: always()
