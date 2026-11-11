@@ -2048,10 +2048,12 @@ macOS arm64で、全例のsmokeとnightlyが108／108、全セルフテストが
 
 次の点は未確認です。
 
-- Linuxでの実行。pushした後のActionsで分かります。形式証明と画像SoCのテストは全セルフテストに含まれるので、Nightlyで実行されます。
+- Linuxでの実行。pushした後のActionsで分かります。形式証明と画像SoCのテストは全セルフテストに含まれるので、Nightlyで実行されます。（追記：最初の3回のNightlyは形式証明のテストで失敗しました。修正後に合格しています。[下の節](#nightly-formal-fix-20261110)を見てください。）
 - kirimasimのnightlyは、macOSのビルドでの実行だけです。Actionsでは実行していません。Icarusとの出力の照合もしていません。
 - 形式証明は論理モデルの上の証明です。物理的なメタスタビリティは含みません。
 - クロック条件2は1つの比率です。全比率の試験ではありません。`check_tb_races.py`はテキスト検索で、全数を保証しません。
+
+<a id="nightly-formal-fix-20261110"></a>
 
 ## Nightlyの複数クロック形式検証の修正（2026-11-10）
 
@@ -2060,3 +2062,5 @@ GitHub ActionsのNightly verification `42737039795`（および同じ失敗を�
 原因は、テストが`yowasp-sby`を直接起動し、その内部がPATH上の`yosys`・`yosys-smtbmc`を探していたことです。ローカル環境にはシステムのYosysがあるため成功しましたが、CIのセルフテスト手順は`yowasp-yosys`などのラッパーだけをPATHへ置いており、無接頭辞の`yosys`がありませんでした。そのため`sby`の`prep`が完了せず、生成物がありませんでした。
 
 テストは`YOSYS`・`SMTBMC`・`WITNESS`を`yowasp-yosys`・`yowasp-yosys-smtbmc`・`yowasp-yosys-witness`へ明示的に向け、生成物がない場合はsbyの標準出力・標準エラーを失敗メッセージへ含めるようにしました。無接頭辞のYosysを含めないCI相当のPATHで`local-uvm-multiclock`の14テストが成功し、通常のPATHでも同じ14テストが成功しました。GitHub Actionsの再実行はまだ行っていません。
+
+（2026-11-11追記）修正を含む`db8e657`で、定期実行のNightly verification `42923645700`が合格しました。全セルフテストはスキップを不合格にするので、形式証明3件と画像SoCの同一エッジのテストは、Linuxで実際に実行されて通っています。nightlyの全例108と、その報告の検査も合格です。失敗していたNightlyは、`42418277397`・`42529177368`・`42737039795`の3回です。同じ日の定期実行のKirimasim latest `42927683689`（kirimasim `7de185f776a1`）も合格で、UVMの状態は変わらず、`local-uvm`のloweringは同じ連想配列で止まります。
