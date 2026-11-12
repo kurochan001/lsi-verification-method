@@ -49,7 +49,8 @@ def vectors(program, data, wait, required=ISS.WORD_ONLY, traps=False):
     """Rows for the bench. wait(index, trace, i) gives the wait cycles of each data access;
     required lists the instructions that the every-instruction goal needs."""
     words = ISS.assemble(program)
-    trace = ISS.tag(ISS.execute(words, data, traps=traps))
+    final = []
+    trace = ISS.tag(ISS.execute(words, data, traps=traps, memory=final))
     if len(words) > IMEM_WORDS or len(trace) > RETIRE_LIMIT:
         raise ValueError(f'program of {len(words)} words retiring {len(trace)} instructions exceeds the bench')
     before = stale_values(trace)
@@ -68,6 +69,8 @@ def vectors(program, data, wait, required=ISS.WORD_ONLY, traps=False):
     number = {name: i for i, name in enumerate(ISS.NAMES)}  # an unknown word gets 63, which no goal needs
     rows += [[3, r.pc, r.insn, r.rd, r.wdata, r.kind, r.addr, r.data, r.tags, number.get(ISS.name_of(r.insn), 63),
               waits[i]] for i, r in enumerate(trace)]
+    # The data memory as the ISS left it: a store that no later load reads is still compared.
+    rows += [[5, i, d] + [0] * 8 for i, d in enumerate(final)]
     return rows
 
 

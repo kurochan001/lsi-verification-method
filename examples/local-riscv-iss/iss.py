@@ -192,10 +192,11 @@ class Machine:
         return self.tvec
 
 
-def execute(words, data, limit=100000, traps=False):
+def execute(words, data, limit=100000, traps=False, memory=None):
     """Run from address 0 to EBREAK. With traps, illegal instructions, ECALL and misaligned
     accesses trap to mtvec, CSR instructions and MRET work, and an interrupt pending on the line
-    with mstatus.MIE and mie.MEIE set is taken before the next instruction."""
+    with mstatus.MIE and mie.MEIE set is taken before the next instruction. A list passed as
+    memory receives the data memory as the program left it."""
     regs, pc, mem, trace = [0] * 32, 0, list(data), []
     m = Machine()
 
@@ -217,6 +218,8 @@ def execute(words, data, limit=100000, traps=False):
         nxt, value, record = (pc + 4) & MASK, None, Retired(pc, insn, 0, 0, 0)
         if insn == EBREAK:
             trace.append(record)
+            if memory is not None:
+                memory[:] = mem
             return trace
         if traps:
             csr = op == 0x73 and f3 & 3 and (insn >> 20) in CSRS.values()

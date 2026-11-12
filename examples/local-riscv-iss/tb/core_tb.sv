@@ -15,7 +15,8 @@ module core_tb;
     wire [1:0] ret_mem;
     wire [31:0] perf_ctrl, perf_flush;
     wire [3:0] dmem_be;
-    reg [31:0] imem[0:IMEM-1], dmem[0:DMEM-1];
+    reg [31:0] imem[0:IMEM-1], dmem[0:DMEM-1], e_mem[0:DMEM-1];
+    integer mem_rows = 0;
     wire [31:0] imem_data = imem[imem_addr[15:2]];
     wire [31:0] dmem_rdata = dmem_ready ? dmem[dmem_addr[9:2]] : 32'hdeadbeef;
     rv32i_core #(.MUTATION(MUTATION), .PREDICT(PREDICT), .TRAPS(TRAPS)) dut(.*);
@@ -83,6 +84,7 @@ module core_tb;
                     expected = expected + 1;
                 end
                 4: begin exp_ctrl = v[1]; exp_flush = v[2]; check_flush = v[3]; perf_rows = perf_rows + 1; end
+                5: begin if (v[1] >= DMEM) $fatal(1, "row %0d does not fit the bench memories", rows); e_mem[v[1]] = v[2]; mem_rows = mem_rows + 1; end
                 default: $fatal(1, "bad row type");
             endcase
         end
@@ -90,6 +92,9 @@ module core_tb;
         repeat (2) @(negedge clk);
         rst_n = 1; running = 1;
         wait (!running);
+        // Every word of the data memory, so that a store nothing reads back is checked too.
+        if (mem_rows != DMEM) fail("ISS_MEM");
+        for (i = 0; i < DMEM; i = i + 1) if (dmem[i] !== e_mem[i]) fail("ISS_MEM");
         $display("COUNT retired=%0d", retired);
         $display("COUNT loads=%0d", loads);
         $display("COUNT stores=%0d", stores);
