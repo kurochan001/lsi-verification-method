@@ -5,7 +5,7 @@
 //   (GEMM の 16 PE を含む)。このファイルをコンパイル対象に加えるだけでよい。
 //
 //   実行にはアサーション有効化オプションが要る
-//   (Verilator は --assert、sukimasim は -assert)。
+//   (Verilator は --assert、Ghost は -assert)。
 // -----------------------------------------------------------------------------
 module mxfp4_bdp_sva
   import mxfp4_pkg::*;
@@ -49,7 +49,7 @@ module mxfp4_bdp_sva
   // 逆向き: out_valid が立つときは LAT サイクル前に last が入っていたこと。
   //
   // $past の第 1 引数には中間信号を渡すこと。式 ($past(in_valid && last, LAT))
-  // を直接渡すと sukimasim 0.9.9.2 は 1 tick 余分に遅れた値を返す
+  // を直接渡すと Ghost 0.9.9.2 は 1 tick 余分に遅れた値を返す
   // (IEEE 1800-2023 §16.9.3 は expression1 に任意の式を許し、k 番目の
   // strictly prior なティックのサンプル値を返すと規定しているので LRM 違反)。
   // 単一信号を渡す形なら両シミュレータとも規定どおりに動く。

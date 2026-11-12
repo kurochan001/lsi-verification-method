@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // tb_top
-//   仕様書 9.1 節のクラスベーステストベンチ。UVM 非依存だが、sukimasim の
+//   仕様書 9.1 節のクラスベーステストベンチ。UVM 非依存だが、Ghost の
 //   言語機能検証を兼ねてクラス・mailbox・制約付きランダム・covergroup・SVA を
 //   意図的に使用する (仕様書 10 章の対応表)。
 //
@@ -14,8 +14,8 @@
 //     └─ SVA                 … 9.5 節 (tb/mxfp4_bdp_sva.sv から bind)
 //
 //   covergroup は `MXFP4_COVERAGE` が定義されているときだけ有効になる
-//   (Verilator は covergroup 未対応のため)。sukimasim では
-//     sukimasim -assert +define+MXFP4_COVERAGE -top tb_top ...
+//   (Verilator は covergroup 未対応のため)。Ghost では
+//     Ghost -assert +define+MXFP4_COVERAGE -top tb_top ...
 //   で実行する。
 //
 //   [仕様書 9.4 節からの修正 — サンプルタイミング]

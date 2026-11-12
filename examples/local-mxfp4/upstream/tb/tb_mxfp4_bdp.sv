@@ -5,7 +5,7 @@
 //
 //   本 TB はプレーン SystemVerilog (class / covergroup / SVA 非依存) で書いて
 //   あり、Icarus Verilog・Verilator でも実行できる。仕様書 9.1 節のクラス
-//   ベース TB (mailbox / 制約付きランダム / covergroup / SVA) は sukimasim 向け
+//   ベース TB (mailbox / 制約付きランダム / covergroup / SVA) は Ghost 向け
 //   の拡張として別途用意する。
 // -----------------------------------------------------------------------------
 `timescale 1ns/1ps
