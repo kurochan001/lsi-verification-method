@@ -66,9 +66,11 @@ def judge(case,execution,status,log,traces,properties):
     return 'error','FAIL lacks intended property and trace evidence'
 
 def run(plugin,args):
-    out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     configs=plugin.CONFIGS if args.configuration=='all' else {args.configuration:plugin.CONFIGS[args.configuration]}
-    cases=[c for c in plugin.plan(args.bound,args.demo_bug) if args.task=='all' or c['id']==args.task];inputs=[Path(__file__),Path(plugin.__file__),PROCESS_PATH,*plugin.SOURCES,
+    cases=[c for c in plugin.plan(args.bound,args.demo_bug) if args.task=='all' or c['id']==args.task]
+    # A run with nothing planned would pass with nothing checked.
+    if not configs or not cases or len({c['id'] for c in cases})!=len(cases):raise ValueError('empty or duplicate task plan')
+    out=args.out.resolve();out.mkdir(parents=True,exist_ok=False);inputs=[Path(__file__),Path(plugin.__file__),PROCESS_PATH,*plugin.SOURCES,
         HERE.parent/'local-bus-formal/tools-requirements.txt',HERE.parent/'local-fifo-formal/tools-requirements.txt']
     versions={}
     for name in ('yowasp-yosys','z3-solver','yowasp-runtime','wasmtime'):

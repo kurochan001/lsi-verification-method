@@ -1,6 +1,8 @@
+import contextlib
 import copy
 import hashlib
 import importlib.util
+import io
 import json
 from pathlib import Path
 import subprocess
@@ -85,6 +87,58 @@ class ReportTests(unittest.TestCase):
     def test_successful_row_needs_a_zero_returncode(self):
         good=self.campaign('good');jobs=json.loads((good/'manifest.json').read_text())['jobs'];rows=json.loads((good/'summary.json').read_text())['results'];rows[0]['returncode']=1
         T.R.save(good,jobs,rows,True,True);r=self.report(good);self.assertFalse(r['success']);self.assertEqual(r['results'][0]['status'],'fail')
+    def test_a_row_recorded_as_failed_is_not_adopted_despite_a_zero_returncode(self):
+        good=self.campaign('good');jobs=json.loads((good/'manifest.json').read_text())['jobs'];rows=json.loads((good/'summary.json').read_text())['results'];rows[0].update(success=False,message='child reported failure')
+        T.R.save(good,jobs,rows,True,True);r=self.report(good);self.assertFalse(r['success'])
+        self.assertEqual((r['results'][0]['status'],r['results'][0]['selected'],r['results'][0]['reason']),('fail',None,'child reported failure'))
+        attempt=r['results'][0]['history'][0];self.assertEqual((attempt['returncode'],attempt['raw_success'],attempt['success']),(0,False,False))
+    def test_error_or_skipped_nodes_in_the_campaign_junit_are_rejected(self):
+        good=self.campaign('good');p=good/'junit.xml';original=p.read_bytes()
+        for kind in ('error','skipped'):
+            for name in ('campaign-integrity','local-fixture'):
+                suite=T.ET.fromstring(original);T.ET.SubElement(next(c for c in suite.iter('testcase') if c.get('name')==name),kind);T.ET.ElementTree(suite).write(p)
+                with self.subTest(kind,name=name),self.assertRaisesRegex(ValueError,'campaign JUnit inventory differs'):self.report(good)
+        p.write_bytes(original);self.assertTrue(self.report(good)['success'])
+    def test_campaign_job_outside_the_plan_is_rejected(self):
+        good=self.campaign('good');p=good/'manifest.json';m=json.loads(p.read_text());m['jobs'].append(dict(m['jobs'][0],id='unplanned'));p.write_text(json.dumps(m))
+        with self.assertRaisesRegex(ValueError,'campaign has jobs outside the selected plan'):self.report(good)
+    def test_duplicate_or_unplanned_result_rows_are_rejected(self):
+        good=self.campaign('good');p=good/'summary.json';summary=json.loads(p.read_text());row=summary['results'][0]
+        for name,rows in (('duplicate',[row,row]),('unplanned',[row,dict(row,id='unplanned')]),('only unplanned',[dict(row,id='unplanned')])):
+            p.write_text(json.dumps(dict(summary,results=rows)))
+            with self.subTest(name),self.assertRaisesRegex(ValueError,'duplicate/unplanned campaign results'):self.report(good)
+    def test_campaign_source_snapshot_must_match_the_current_plan_sources(self):
+        good=self.campaign('good');p=good/'manifest.json';original=json.loads(p.read_text())
+        for name,change,reason in (('hash',lambda h:h.update({'tools/run_regression.py':'0'*64}),'stale source: tools/run_regression.py'),('missing',lambda h:h.pop('tools/run_regression.py'),'source inventory differs'),
+                                   ('extra',lambda h:h.update({'rtl.sv':T.digest(self.root/'rtl.sv')}),'source inventory differs')):
+            m=copy.deepcopy(original);change(m['source_sha256']);p.write_text(json.dumps(m));r=self.report(good)
+            with self.subTest(name):
+                self.assertFalse(r['success']);self.assertEqual((r['results'][0]['status'],r['results'][0]['reason']),('fail',reason));self.assertEqual(r['campaigns'][0]['source_error'],reason)
+    def test_invalid_command_limits_and_output_arguments_are_rejected(self):
+        good=self.campaign('good');p=good/'manifest.json';original=json.loads(p.read_text());limit=original['jobs'][0]['command'].index('--timeout')+1
+        def rejected(message,edit):
+            m=copy.deepcopy(original);edit(m['jobs'][0]['command']);p.write_text(json.dumps(m))
+            with self.subTest(message,command=m['jobs'][0]['command'][-4:]),self.assertRaisesRegex(ValueError,message):self.report(good)
+        for value in ('0','-1','nan','inf','-inf'):rejected('invalid command limit',lambda c:c.__setitem__(limit,value))
+        rejected('invalid command limit',lambda c:c.extend(['--timeout','30']))
+        rejected('missing command argument',lambda c:c.append('--build-timeout'))
+        rejected('duplicate output argument',lambda c:c.extend(['--out',c[c.index('--out')+1]]))
+        rejected('job output argument differs',lambda c:c.__setitem__(c.index('--out')+1,str(self.root/'elsewhere')))
+        rejected('job output argument differs',lambda c:c.__delitem__(slice(c.index('--out'),c.index('--out')+2)))
+        p.write_text(json.dumps(original));self.assertTrue(self.report(good)['success'])
+    def test_cli_rejects_a_plan_or_an_implementation_that_changes_while_reporting(self):
+        plan=self.root/'plan.json';plan.write_text(json.dumps(self.plan));real=T.digest;calls=[]
+        report=lambda *args:dict(schema_version=1,success=True,complete=True,planned=0,results=[],campaigns=[],errors=[],input_sha256={})
+        def edit_plan(*args):plan.write_text(plan.read_text()+'\n');return report()
+        def changing(path):
+            calls.append(Path(path)==Path(T.__file__));return 'changed' if sum(calls)>1 and calls[-1] else real(path)
+        def cli(name,**patches):
+            out=self.root/name;argv=['regression_report.py','--plan',str(plan),'--campaign',str(self.root/'campaign'),'--out',str(out)]
+            with patch.object(sys,'argv',argv),patch.multiple(T,**patches),contextlib.redirect_stdout(io.StringIO()):code=T.main()
+            summary=json.loads((out/'summary.json').read_text());return code,summary['success'],summary['errors'],len(list(T.ET.parse(out/'junit.xml').iter('failure')))
+        self.assertEqual(cli('unchanged',build_report=report),(0,True,[],0))
+        self.assertEqual(cli('plan',build_report=edit_plan),(1,False,['plan changed while reporting'],1))
+        self.assertEqual(cli('implementation',build_report=report,digest=changing),(1,False,['report implementation changed during execution'],1))
     def test_campaign_profile_must_match_the_plan(self):
         good=self.campaign('good');p=good/'manifest.json';m=json.loads(p.read_text());m['profile']='smoke';p.write_text(json.dumps(m))
         r=self.report(good);self.assertFalse(r['success']);self.assertIn('profile',r['results'][0]['reason'])

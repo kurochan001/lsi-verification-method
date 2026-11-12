@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -146,6 +147,42 @@ class RunnerTest(unittest.TestCase):
 
     def test_duplicate_counts(self):
         self.assert_rejected(self.run_cli('--vvp',self.filter_vvp('output+"COUNT timer_expiries=1\\n"')))
+
+    def test_a_copy_of_a_correct_count_line_is_still_a_duplicate(self):
+        self.assert_rejected(self.run_cli('--vvp',self.filter_vvp('output+"".join(re.findall(r"(?m)^COUNT .*\\n",output)[:1])')))
+        results=[read_json(p) for p in self.out.glob('*/result.json') if read_json(p)['category']=='functional']
+        self.assertTrue(results);self.assertTrue(all((r['status'],r['message'])==('error','missing, duplicate or incorrect completion counts') for r in results),results)
+        self.assertEqual(read_json(self.out/'summary.json')['functional_pass'],0)
+
+    def test_a_crashed_mutant_run_is_an_error_that_fails_the_regression(self):
+        # Only the first mutant's simulation crashes: every normal run and all coverage stay complete.
+        vvp=self.wrapper('if sys.argv[1].endswith("-m1.vvp"):print("unrelated crash");sys.exit(2)\n'
+                         f'raise SystemExit(subprocess.call([{shutil.which("vvp")!r},*sys.argv[1:]]))')
+        process=self.run_cli('--vvp',vvp)
+        self.assertEqual(process.returncode,1,process.stdout+process.stderr)
+        results={p.parent.name:read_json(p) for p in self.out.glob('*/result.json')}
+        self.assertEqual([k for k,r in results.items() if r['status'] not in ('pass','detected')],['width4-detect-mutation1'])
+        self.assertEqual(results['width4-detect-mutation1']['status'],'error')
+        summary=read_json(self.out/'summary.json')
+        self.assertFalse(summary['success']);self.assertTrue(summary['complete']);self.assertEqual(summary['mutations_detected'],3)
+        self.assertTrue(read_json(self.out/'coverage.json')['width4']['success'])
+        suite=ET.parse(self.out/'junit.xml').getroot()
+        self.assertEqual((suite.get('failures'),suite.get('errors')),('0','1'))
+        self.assertEqual([c.get('name') for c in suite if c.find('error') is not None],['width4-detect-mutation1'])
+        self.assertEqual(suite.findall('.//failure'),[])
+
+    def test_an_empty_or_duplicate_plan_is_refused_before_anything_is_written(self):
+        runner=str(EXAMPLES/'local-common/runner.py')
+        for name,cases in (('empty','[]'),('duplicate','[dict(id="same",vectors=[[0]],mutation=0,category="functional",expected_failure=None,counts={})]*2')):
+            stub=self.directory/(name+'.py');out=self.directory/(name+'-out')
+            stub.write_text('"""Plugin stub whose plan is '+name+'."""\nimport importlib.util,sys\nNAME="stub";TOP="stub_tb";CONFIGS=dict(only={});ITERATIONS=dict(smoke=1,nightly=1);SOURCES=[]\n'
+                            f'def make_cases(args,parameters):return {cases}\n'
+                            f'spec=importlib.util.spec_from_file_location("stub_runner",{runner!r});m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\nsys.exit(m.main(sys.modules[__name__]))\n')
+            process=subprocess.run([sys.executable,str(stub),'--requirements',str(EXAMPLES/'local-timer-watchdog/requirements.json'),'--out',str(out)],capture_output=True,text=True,timeout=30)
+            with self.subTest(name):
+                self.assertEqual(process.returncode,1,process.stdout+process.stderr)
+                self.assertIn('RUNNER_ERROR empty or duplicate execution plan',process.stderr)
+                self.assertFalse(out.exists())
 
     def test_missing_normal_coverage_is_not_filled_by_mutations(self):
         expression='re.sub(r"^COVER .*\\n", "", output, flags=re.M) if sys.argv[1].endswith("-m0.vvp") else output'

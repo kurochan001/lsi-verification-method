@@ -75,4 +75,4 @@ python3 examples/local-axi4-formal/run.py --configuration bytes16 --task data-bm
 python3 -m unittest discover -s examples/local-formal-common/tests -v
 ```
 
-判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合、`prepare`の手順がSBYの設定へ入ること、帰納ステップの反例の扱いを確認する14テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。
+判定・欠落・タイムアウト・意図しない違反・環境条件を外した予定反例・プロパティ数・ツール不在・出力先保護、`PARAMETER_MODULE`での照合、`prepare`の手順がSBYの設定へ入ること、帰納ステップの反例の扱い、状態ファイルの欠落、未検出の変異、合格しなかった実行のcoverを数えないこと、空の計画の拒否を確認する24テストです。実際の証明を実行するコマンドとは別です。[SBYの一次資料](https://yosyshq.readthedocs.io/projects/sby/en/stable/verilog.html)を参照し、運用・判定方式は本教材用に作成しました。
