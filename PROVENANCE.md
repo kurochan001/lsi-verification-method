@@ -2171,3 +2171,11 @@ macOS arm64で実行しました。
 - RISC-Vのテストベンチは、ストアのバス上の値と、停止時のデータメモリを比べていません。後のロードが読まないストアの誤りは見えません。（追記：同じ日に、停止時のデータメモリの全256ワードを、ISSが残したメモリと比べるようにしました（`ISS_MEM`）。ISSとの比較を使う4例がsmokeで合格しています。固定の命令列には、後のロードが読まないストアが1つあります。テストベンチでこのワードへの書込みを落とすと、比較がないときは固定の命令列が合格し、比較があると`ISS_MEM`で不合格になることを確かめました。コアに入れた誤りでは、この比較だけが捕まえるものは見つかっていません。）
 - `local-descriptor-dma`のPROGRAM中の中断と、`local-mbist`の最後の読出しの比較は、試されていないままです。
 - レビューが詳しく読まなかったファイルが残っています。`local-apb-irq-coverage`・`local-apb-uart`・`local-arbiter`のランナーの後半、`local-mxfp4`のRTLの大半、`local-liveness`の証明（手元にツールがなく実行していません）、`simulator-differences.md`の約400行の個別の記述などです。
+
+### Actionsでの結果（2026-11-12追記）
+
+この節の変更は、`fc00b39`・`e36f87c`・`728d63c`の3つのコミットです。3つとも、pushで起動したQuality、Affected verification、Kirimasim latestに合格しました。`fc00b39`と`728d63c`のAffected verificationは、全108例のsmokeを実行しています。
+
+`728d63c`では、定期実行のNightly verification `43130080782`も合格しました。全セルフテスト（スキップがあれば不合格）、nightlyの全108例、その報告の検査を含みます。上で「手元では実行していない」とした全例のsmokeとnightly、Linuxでの実行は、これで確かめられました。同じ日の定期実行のKirimasim latest `43134667106`（kirimasim `cae3134e4c1a`）も107／107で合格です。UVMの状態は変わらず、`local-uvm`のloweringは未対応のままです。
+
+kirimasimでのnightlyは、Actionsでは実行していません。Icarusとの出力の照合もしていません。
