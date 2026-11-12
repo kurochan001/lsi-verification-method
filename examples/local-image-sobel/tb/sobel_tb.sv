@@ -36,7 +36,7 @@ module sobel_tb;
             if(out_valid && stall<3) begin out_ready=0;stall=stall+1;end
             else out_ready=rng[4:3]!=0;
             #1;
-            if($isunknown({in_ready,out_valid})) fail("IMAGE_CONTROL");
+            if((^{in_ready,out_valid})===1'bx) fail("IMAGE_CONTROL");
             if(held && (!out_valid || {out_last,out_pixel}!==held_payload)) fail("IMAGE_HOLD");
             if(out_valid) begin
                 if(out_last !== (pixels%N==N-1)) fail("IMAGE_LAST");

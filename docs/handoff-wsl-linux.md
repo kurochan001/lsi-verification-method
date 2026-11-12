@@ -186,7 +186,7 @@ macOSの結果は次のとおりです。件数はOSに依存しないはずな�
 | 検査 | macOSの結果 |
 | --- | --- |
 | 文書検査 | 461判定がすべて合格（この資料を含む） |
-| セルフテスト | 130グループ、1,262件、skipなし（`summary.json`の予定は132判定） |
+| セルフテスト | 130グループ、1,263件、skipなし（`summary.json`の予定は132判定） |
 | 全例smoke | 108／108 |
 | 全例nightly | 108／108 |
 | kirimasim | 107／107。lowering 938回、シミュレーション2,371回、全起動の終了コード0が2,499回・1が810回（loweringを含む）、異常終了0回 |
@@ -246,7 +246,7 @@ gh run list --workflow kirimasim.yml --limit 3
 
 ## 作業の約束
 
-Claude Codeのメモリーは別のマシンへ引き継がれないので、ここに書きます。
+Claude Codeのメモリーは別のマシンへ引き継がれないので、ここに書きます。Claude Codeが作業の最初に読む[CLAUDE.md](../CLAUDE.md)にも、同じ約束の要点を置いています。
 
 - 報告は日本語で行います。
 - pushは「コミットしてmainにpush」と言われたときだけ行います。ブランチやpull requestは作らず、mainへ直接pushします。

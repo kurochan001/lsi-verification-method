@@ -20,6 +20,7 @@ module image_soc_tb;
     reg [3:0] held_b;
     reg ar_hold=0,aw_hold=0,w_hold=0,r_hold=0,apb_hold=0,ahb_hold=0,b_hold=0;
     reg irq_old=0,reset_done=0,error_first=0,cpu_hold=0;
+    integer irq_gate=0;
     reg [32:0] cpu_held;
     integer invalid_seen=0,fault,src_base,dst_base,expected_apb,expected_ahb,apb_errors=0,ahb_errors=0,b_count=0,cpu_stores=0;
     integer frames,seed,scenario,cycles=0,pixels=0,completed=0,irqs=0,cpu_checks=0;
@@ -33,7 +34,7 @@ module image_soc_tb;
     task clear_epoch;
         begin
             pixels=0;completed=0;irqs=0;cpu_checks=0;rd_pixels=0;wr_pixels=0;issued=0;addressed=0;rleft=0;wleft=0;bcredit=0;apb_errors=0;ahb_errors=0;b_count=0;cpu_stores=0;
-            ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;apb_hold=0;ahb_hold=0;b_hold=0;irq_old=0;invalid_seen=0;error_first=0;cpu_hold=0;
+            ar_hold=0;aw_hold=0;w_hold=0;r_hold=0;apb_hold=0;ahb_hold=0;b_hold=0;irq_old=0;invalid_seen=0;error_first=0;cpu_hold=0;irq_gate=0;
             for(integer j=0;j<256;j=j+1)cpu_mask[j]=0;
         end
     endtask
@@ -61,17 +62,28 @@ module image_soc_tb;
         while(!halted)begin
             rng={rng[30:0],rng[31]^rng[21]^rng[1]^rng[0]};
             memory_allow={rng[8:7]!=0,rng[6:5]!=0,rng[4:3]!=0,rng[2:1]!=0,rng[0]||rng[9]};
+            // Scenario 9 does not leave the overlap to the seed: the last pixel waits until the CPU is held on a
+            // RAM access, and the CPU stays held there until the interrupt has been up for one cycle.
+            if(scenario==9)begin
+                if(irq_gate==0 && wr_pixels==N-1)begin
+                    memory_allow[4:3]=0;
+                    if(cpu_hold && cpu_held[31:12]==20'h1)irq_gate=1;
+                end else if(irq_gate==1)begin
+                    memory_allow[4]=0;
+                    if(irq && irq_old)irq_gate=2;
+                end else if(irq_gate==2 && wr_pixels<N-1)irq_gate=0;
+            end
             // FAULT<0 hits every response; otherwise only that read beat or write burst answers SLVERR.
             read_error=scenario==1 && (fault<0 || rd_pixels==fault);write_error=scenario==2 && (fault<0 || b_count==fault);
             #1;
-            if($isunknown({halted,bus_fault,irq,busy,done,error,dut.hready,dut.hresp,dut.arvalid,dut.awvalid,dut.wvalid,dut.rvalid,dut.bvalid}))fail("SOC_UNKNOWN");
-            if($isunknown({dut.htrans,dut.cpu_valid,dut.cpu_ready}))fail("SOC_UNKNOWN");
-            if(dut.htrans[1] && $isunknown({dut.haddr,dut.hwrite,dut.hsize,dut.hburst}))fail("SOC_UNKNOWN");
-            if(dut.arvalid && $isunknown({dut.araddr,dut.arlen,dut.arsize,dut.arburst,dut.arid}))fail("SOC_UNKNOWN");
-            if(dut.awvalid && $isunknown({dut.awaddr,dut.awlen,dut.awsize,dut.awburst,dut.awid}))fail("SOC_UNKNOWN");
-            if(dut.wvalid && $isunknown({dut.wdata,dut.wstrb,dut.wlast}))fail("SOC_UNKNOWN");
-            if(dut.rvalid && $isunknown({dut.rdata,dut.rid,dut.rresp,dut.rlast}))fail("SOC_UNKNOWN");
-            if(dut.bvalid && $isunknown({dut.bid,dut.bresp}))fail("SOC_UNKNOWN");
+            if((^{halted,bus_fault,irq,busy,done,error,dut.hready,dut.hresp,dut.arvalid,dut.awvalid,dut.wvalid,dut.rvalid,dut.bvalid})===1'bx)fail("SOC_UNKNOWN");
+            if((^{dut.htrans,dut.cpu_valid,dut.cpu_ready})===1'bx)fail("SOC_UNKNOWN");
+            if(dut.htrans[1] && (^{dut.haddr,dut.hwrite,dut.hsize,dut.hburst})===1'bx)fail("SOC_UNKNOWN");
+            if(dut.arvalid && (^{dut.araddr,dut.arlen,dut.arsize,dut.arburst,dut.arid})===1'bx)fail("SOC_UNKNOWN");
+            if(dut.awvalid && (^{dut.awaddr,dut.awlen,dut.awsize,dut.awburst,dut.awid})===1'bx)fail("SOC_UNKNOWN");
+            if(dut.wvalid && (^{dut.wdata,dut.wstrb,dut.wlast})===1'bx)fail("SOC_UNKNOWN");
+            if(dut.rvalid && (^{dut.rdata,dut.rid,dut.rresp,dut.rlast})===1'bx)fail("SOC_UNKNOWN");
+            if(dut.bvalid && (^{dut.bid,dut.bresp})===1'bx)fail("SOC_UNKNOWN");
             if(ahb_hold && {dut.haddr,dut.hwdata,dut.hwrite,dut.htrans,dut.hsize,dut.hburst}!==held_ahb)fail("SOC_AHB_HOLD");
             ahb_hold=!dut.hready;held_ahb={dut.haddr,dut.hwdata,dut.hwrite,dut.htrans,dut.hsize,dut.hburst};
             if(dut.htrans[1] && dut.hready)begin
@@ -82,7 +94,7 @@ module image_soc_tb;
             if(dut.hresp && dut.hready && !error_first)fail("SOC_AHB_RESPONSE");
             error_first=dut.hresp && !dut.hready;
             if(dut.psel)begin
-                if($isunknown({dut.penable,dut.pwrite,dut.paddr,dut.pready,dut.pslverr}))fail("SOC_UNKNOWN");
+                if((^{dut.penable,dut.pwrite,dut.paddr,dut.pready,dut.pslverr})===1'bx)fail("SOC_UNKNOWN");
                 if(dut.paddr!==dut.cpu_addr[7:0] || dut.pwrite!==dut.cpu_write || (dut.pwrite && dut.pwdata!==dut.cpu_wdata))fail("SOC_APB");
                 if(!dut.penable)$display("COVER bus/apb-setup");
             end

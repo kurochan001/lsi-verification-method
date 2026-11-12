@@ -18,7 +18,7 @@
 <circle cx="170" cy="250" r="44" stroke="#243746" stroke-width="2.5" fill="white"/>
 <text x="170" y="239" font-size="27" text-anchor="middle" fill="#243746" font-weight="400">+</text>
 <text x="170" y="280" font-size="27" text-anchor="middle" fill="#243746" font-weight="400">−</text>
-<text x="170" y="197" font-size="20" text-anchor="middle" fill="#243746" font-weight="400">Vdrive</text>
+<text x="226" y="257" font-size="20" text-anchor="start" fill="#243746" font-weight="400">Vdrive</text>
 <line x1="170" y1="294" x2="170" y2="424" stroke="#243746" stroke-width="2.5" fill="none"/>
 <line x1="510" y1="160" x2="510" y2="260" stroke="#243746" stroke-width="2.5" fill="none"/>
 <line x1="483" y1="260" x2="537" y2="260" stroke="#243746" stroke-width="2.5" fill="none"/>

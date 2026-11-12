@@ -40,7 +40,7 @@ module network_tb;
                 rx_frames=0;tx_frames=0;tx_bytes=0;rx_index=0;tx_index=0;held=0;head_hold=0;stall=0;
                 old_full=0;old_long=0;old_rejected=0;reason_index=0;
             end else begin
-                if($isunknown({tx_valid,occupancy,accepted,full_drops,long_drops,rejected,transmitted}))fail("NET_UNKNOWN");
+                if((^{tx_valid,occupancy,accepted,full_drops,long_drops,rejected,transmitted})===1'bx)fail("NET_UNKNOWN");
                 if(held && (!tx_valid || {tx_last,tx_data}!==held_payload))fail("NET_HOLD");
                 if(head_hold && (!dut.frame_valid || {dut.frame_error,dut.frame_length,dut.frame_data}!==held_head))fail("NET_QUEUE_HOLD");
                 held=tx_valid && !tx_ready;held_payload={tx_last,tx_data};

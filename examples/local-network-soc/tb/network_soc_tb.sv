@@ -64,7 +64,7 @@ module network_soc_tb;
             // FAULT<0 hits every response; otherwise only that beat of the frame answers SLVERR.
             read_error=scenario==2 && (fault<0 || rr==fault);write_error=scenario==1 && (fault<0 || wb==fault);
             #1;events_before=dut.nic.events;
-            if($isunknown({halted,bus_fault,irq,tx_valid,dut.awvalid,dut.wvalid,dut.bvalid,dut.arvalid,dut.rvalid,dut.hready,dut.hresp,dut.nic.rx_owned}))fail("NET_SOC_UNKNOWN");
+            if((^{halted,bus_fault,irq,tx_valid,dut.awvalid,dut.wvalid,dut.bvalid,dut.arvalid,dut.rvalid,dut.hready,dut.hresp,dut.nic.rx_owned})===1'bx)fail("NET_SOC_UNKNOWN");
             if(bus_fault && scenario!=6)fail("NET_SOC_CPU_BUS");
             if(tx_hold && (!tx_valid || {tx_last,tx_data}!==held_tx))fail("NET_SOC_TX_HOLD");
             if(ar_hold && (!dut.arvalid || {dut.araddr,dut.arlen,dut.arsize,dut.arburst,dut.arid}!==held_ar))fail("NET_SOC_AXI_HOLD");

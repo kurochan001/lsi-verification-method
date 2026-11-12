@@ -339,6 +339,7 @@
     "examples/local-image-soc/run.py",
     "examples/local-image-soc/tb/dma_status_tb.sv",
     "examples/local-image-soc/tb/image_soc_tb.sv",
+    "examples/local-image-soc/tests/test_seed_independent.py",
     "examples/local-image-soc/tests/test_soc.py",
     "examples/local-image-soc/tests/test_status_race.py",
     "examples/local-interconnect/requirements.json",
