@@ -510,7 +510,7 @@ IEEE 1800ケーススタディには、記録時点と複製元のディレク�
 
 ## Qiita・mxfp4の仕様と回路の取り込み（2026-10-30）
 
-[Qiita設計仕様記事](https://qiita.com/sukimaengineer/items/ead428dd5487ae3cd7da)と[mxfp4リポジトリ](https://github.com/kurochan001/mxfp4)から、`examples/local-mxfp4/`を追加しました。取り込み元は`347edbb8e45454e84945a13c1815e08937feff3f`に固定し、仕様書Rev.1.0〜1.3・付録・図・RTL・SV/UVM検証環境・再現ケース・Makefileなど106ファイルを保存しています。元ファイルのSHA-256と取得元は`upstream.json`へ記録しました。取り込み元にLICENSEファイルはなく、元ファイルへ新たなライセンス表記は追加していません。
+[Qiita設計仕様記事](https://qiita.com/sukimaengineer/items/ead428dd5487ae3cd7da)とmxfp4リポジトリ（非公開）から、`examples/local-mxfp4/`を追加しました。取り込み元は`347edbb8e45454e84945a13c1815e08937feff3f`に固定し、仕様書Rev.1.0〜1.3・付録・図・RTL・SV/UVM検証環境・再現ケース・Makefileなど106ファイルを保存しています。元ファイルのSHA-256と取得元は`upstream.json`へ記録しました。（追記：取り込み元が公開されていないため、2026-11-13にRTLとプレーンSVのテストベンチの28ファイルへ絞りました。[対応の記録](#external-review-20261113)を参照してください。）取り込み元にLICENSEファイルはなく、元ファイルへ新たなライセンス表記は追加していません。
 
 記事の説明だけから作り始めた試作は採用せず、実装済みのRev.1.3を基準にしました。MXFP4のブロック内積・4×4 GEMM・FP32からの量子化、FIFO、near/far、gradual underflow、3/4スケーリングを実行できます。付録BのFP16/MXFP8拡張は仕様のみで、元のRTLには実装されていません。付録AのUVM環境も取り込みましたが、今回の成功にUVM・sukimasim・商用シミュレータの実行は含めていません。
 
@@ -2084,7 +2084,7 @@ GitHub ActionsのNightly verification `42737039795`（および同じ失敗を�
 | [`run_selftests.py`](tools/run_selftests.py)はSIGINTを扱わず、Ctrl-Cでは実行中のグループが終わるまで待っていました | SIGTERMと同じように止めて130を返します。テストは両方の信号で実行します |
 | NightlyとAffectedの証跡に`preflight.json`が含まれていませんでした | アップロードの一覧に加えました |
 | 文書の件数と状態が古くなっていました。例の一覧のJUnit件数、複数クロックのクロック条件の数、セルフテストの合計、WSL引き継ぎ文書のkirimasimの版とCIの状態、実行結果のページの見出し、この文書の壊れたリンク1件と「まだ」のままの2項目です | 現在の値に直し、追記しました |
-| 取り込んだ[`Makefile`](examples/local-mxfp4/upstream/Makefile)に、取り込み元の作業環境の絶対パスが残っていました | 実行ファイル名だけにしました。この例のランナーは、この変数を使いません |
+| 取り込んだ`Makefile`（2026-11-13に除きました）に、取り込み元の作業環境の絶対パスが残っていました | 実行ファイル名だけにしました。この例のランナーは、この変数を使いません |
 
 ### 確認
 
@@ -2193,9 +2193,10 @@ kirimasimでのnightlyは、Actionsでは実行していません。Icarusとの
 - **RTLの書き方（指摘7）**：そろえずに、方針を[READMEの注意](README.md#注意)へ書きました。`` `timescale``のないRTLは97ではなく80ファイルでした（107ファイル中）。
 - **細かい点（指摘8）**：2つの図（`spice-rc-loop.svg`、`observation-order.svg`）の文字の重なりを直し、描画して確かめました。mxfp4の取り込みの記録から作業者視点の表現を除きました。
 
+- **非公開のmxfp4の内容（指摘1）**：`examples/local-mxfp4/upstream/`の106ファイルを、ランナーが使うRTL 17ファイルとプレーンSVのテストベンチ11ファイルの28ファイルに絞りました。仕様書・図・UVM環境・再現ケース・README・Makefileの78ファイルを除いています。Makefileが行っていた7回のlintは、同じ対象・オプションで[ランナー](examples/local-mxfp4/run.py)が実行します。非公開のリポジトリへのリンクは、リンクでない記述に変えました。除いたファイルは、このコミットより前の履歴には残っています。履歴は書き換えていません。
+
 対応していない指摘は次のとおりです。
 
-- 非公開のmxfp4の内容が`examples/local-mxfp4/upstream/`にあること（指摘1）は、公開範囲の判断が必要なので、変更していません。
 - 1行に複数の文を詰めたコードの整形（指摘4）は、lintの基準の行番号と全例の再実行に関わるので、行っていません。
 - Cadenceの2つのURLは、こちらからも取得できず（HTTP 403）、確認できていません。Actionsの版を更新する仕組みは入れていません。
 

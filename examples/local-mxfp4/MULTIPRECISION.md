@@ -1,6 +1,6 @@
 # FP16／MXFP8／MXFP4のGEMMと量子化
 
-[付録B](upstream/docs/appendixB/mxfp4_appendixB_multiprecision.md)の案Aを基に、3モードのブロック内積、GEMM、FP32からの変換を実装しました。MXFP8はE4M3です。E5M2、BF16、乗算器のビット分割による共有は今後の拡張対象です。元のMXFP4回路とUVM環境は[upstream/](upstream/)に保持し、拡張RTLは[rtl/](rtl/)へ分けています。
+取り込み元の付録B（草案、非公開）の案Aを基に、3モードのブロック内積、GEMM、FP32からの変換を実装しました。MXFP8はE4M3です。E5M2、BF16、乗算器のビット分割による共有は今後の拡張対象です。元のMXFP4回路は[upstream/](upstream/)に保持し、拡張RTLは[rtl/](rtl/)へ分けています。
 
 ## 回路とデータ配置
 

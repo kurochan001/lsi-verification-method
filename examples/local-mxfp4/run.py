@@ -38,6 +38,12 @@ BENCHES={
     'bdp-nearfar':('tb_mxfp4_bdp',CORE,['-GUSE_NEARFAR=1'],['tb/mxfp4_bdp_sva.sv']),
 }
 WARN=['DECLFILENAME','PINCONNECTEMPTY','UNUSEDPARAM','UNUSEDSIGNAL','TIMESCALEMOD','SYNCASYNCNET','WIDTHTRUNC','WIDTHEXPAND']
+# The static checks of the design and of the assertions bound to it: top, modules, options.
+SVA_ON=['--assert','+define+MXFP4_ASSERT']
+LINT=[('mxfp4_gemm_top',CORE+['gemm_ctrl_fsm','mxfp4_gemm_top'],SVA_ON),('quant_encoder',ENC,[]),('quant_encoder',ENC,['-GUNBIASED_34=1']),
+      ('mxfp4_bdp_fifo',CORE+['mxfp4_fifo','mxfp4_bdp_fifo'],SVA_ON),('mxfp4_bdp',CORE,[*SVA_ON,'-GGRADUAL_UF=1']),
+      ('mxfp4_fp32_add_nearfar',['mxfp4_pkg','mxfp4_lza','mxfp4_fp32_add_nearfar'],[]),
+      ('mxfp4_fp32_add_nearfar',['mxfp4_pkg','mxfp4_lza','mxfp4_fp32_add_nearfar'],['-GGRADUAL_UF=1'])]
 MP_CHECKS=['mp-lint','mp-bdp','mp-encoder','mp-gemm','mp-gemm-k1','mp-gemm-rect-k3','mp-reject-oracle']
 LOCAL_TOPS={'tb_multiprecision','tb_mp_encoder','tb_mp_gemm'}
 
@@ -85,14 +91,18 @@ def run(args):
     rational_configs={'rational-ftz':(0,0,0),'rational-nearfar':(0,1,0),'rational-gradual':(1,0,0),'rational-scale34':(0,0,1)}
     core_ids=['lint',*BENCHES,*rational_configs,'reject-corrupt-oracle']
     check_ids=(core_ids if args.stage=='core' else MP_CHECKS if args.stage=='multiprecision' else core_ids+MP_CHECKS)+['requirements']
-    inputs=[UP/'Makefile']+[p for p in HERE.rglob('*') if p.is_file() and p.suffix in ('.py','.sv','.svh','.json') and '__pycache__' not in p.parts]
+    inputs=[p for p in HERE.rglob('*') if p.is_file() and p.suffix in ('.py','.sv','.svh','.json') and '__pycache__' not in p.parts]
     evidence=E.Evidence('local-mxfp4',args,inputs,dict(upstream=json.loads((HERE/'upstream.json').read_text())['commit'],stage=args.stage,benches=list(BENCHES),rational_configs=rational_configs),check_ids)
     executions={}
     tool=E.P.execute([args.verilator,'--version'],evidence.out/'verilator-version.log',args.timeout,evidence.out)
     E.P.write_json(evidence.out/'tools.json',{'verilator':tool})
     if args.stage!='multiprecision':
-        lint=E.P.execute(['make','-C',str(UP),'lint','VERILATOR='+args.verilator],evidence.out/'lint.log',args.build_timeout,evidence.out)
-        evidence.check('lint',not lint['error'] and lint['returncode']==0 and not tool['error'] and tool['returncode']==0,lint)
+        lint=[]
+        for index,(top,modules,options) in enumerate(LINT):
+            command=[args.verilator,'--lint-only','-Wall',*['-Wno-'+w for w in WARN[:-2]],*options,'--top-module',top,*[str(UP/'rtl'/(m+'.sv')) for m in modules]]
+            if '--assert' in options:command.append(str(UP/'tb/mxfp4_bdp_sva.sv'))
+            lint.append(E.P.execute(command,evidence.out/f'lint-{index}.log',args.build_timeout,evidence.out))
+        evidence.check('lint',all(not r['error'] and r['returncode']==0 for r in [tool,*lint]),lint)
     sizes=(dict(N_ADD=2000,N_R1=256,N_R2A=32,N_R2E=8,N_R3=16,N_GEMM=8,N_SERIES=32,N_ENC=16,N_FLOW=100,N_Q34=64,N_GUF=500,N_NF=2000)
            if args.profile=='smoke' else dict(N_ADD=300000,N_R1=100000,N_R2A=20000,N_R2E=200,N_R3=20000,N_GEMM=500,N_SERIES=5000,N_ENC=1000,N_FLOW=1000,N_Q34=20000,N_GUF=50000,N_NF=200000))
     seed_args=['+verilator+seed+'+str(args.seed),*[f'+{k}={v}' for k,v in sizes.items()]]
