@@ -86,8 +86,11 @@
 
 ## CDC・クロック・リセット・低電力
 
+分野全体の検証項目は、[非同期検証の手順](../docs/method/asynchronous-verification.md)から確認できます。[リコンバージェンス](../docs/method/asynchronous-verification.md#reconvergence)、[非同期FIFO](../docs/method/asynchronous-verification.md#async-fifo)、複数ビット・パルス転送、RDC、静的解析・遅延注入・物理評価を区別し、以下の実行例で確認できる範囲へ対応付けています。
+
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
+| [IRQ・CDCの再収束](local-irq-cdc/README.md) | 2経路の相対遅延9組×両極性、再収束時の早期受理・欠落・重複、動作中リセットとX検出 | Icarus |
 | [非同期FIFO](local-async-fifo/README.md) | クロック比・位相・ジッター、同期段数、参照キュー、同期遅延を含むフラグ | Icarus |
 | [非同期APBブリッジ](local-cdc-bridge/README.md) | 要求／応答FIFOとAPBの接続、片側リセット時の全体破棄 | Icarus |
 | [CDCハンドシェイク](local-cdc-handshake/README.md) | 複数ビットの4相req/ack、パルス同期、リセットの非同期アサート・同期デアサート | Icarus |

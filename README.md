@@ -8,6 +8,8 @@
 
 # LSI検証手法
 
+[用語集](docs/glossary.md) ／ [FAQ・よくある質問](docs/faq.md)
+
 LSIの仕様から検証を計画し、刺激・観測・期待値の比較・カバレッジ・証跡を対応付けて、検証の完了を判断するためのリポジトリです。検証手順書、ローカルで動くRTLと検証環境、記録の雛形、手法の適用事例、実プロジェクトのDV環境を読む参照例を収録しています。
 
 **公開プロジェクトのDV環境を学ぶ参照例を13件収録しています。** [CPU・演算IP・メモリー・バス・NIC・セキュリティIPの一覧](#公開プロジェクトの参照例13件)から、各資料へ進めます。
@@ -21,6 +23,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 目的 | 入口 |
 | --- | --- |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
+| 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
 | 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
@@ -120,6 +123,7 @@ flowchart TD
 | [仕様書から検証項目を作る実例](docs/method/spec-to-test-items-walkthrough.md) | 割り込みの短い仕様から、仕様課題・条件表・検証項目・期待値・観測点へ展開する完成例 |
 | [項目表と実行証跡を自動照合する](docs/method/verification-plan-automation.md) | 出典・要求・項目・テスト・構成・checker・目標と結果を結び付け、未対応や古い証跡を拒否する |
 | [検証領域の抜けを点検する](docs/method/verification-gap-review.md) | lint、リセット・X、CDC/RDC、性能、低電力、保護、統合、物理・製造 |
+| [非同期検証：CDC・RDC・リコンバージェンス・非同期FIFO](docs/method/asynchronous-verification.md) | 交差の棚卸し、同期構造、相対到着と再収束、Grayポインターとフラグ、リセット・停止復帰、物理評価との分担 |
 | [機能間の相互作用とクロス検証](docs/method/feature-interaction-verification.md) | 同時動作・順序・中断と復帰、因子・制約・重点目標。[提案](docs/feature-interaction-coverage-proposal.md)／[記録](docs/templates/interaction-coverage-plan.md)も収録 |
 | [クロス検証の条件を選ぶ実例](docs/method/cross-test-selection-walkthrough.md) | 必須条件の選び方、通常2因子と重点的な高次クロス、未選択条件、実績と費用に基づく追加選択 |
 | [検証規模を削減する](docs/method/verification-reduction.md) | 境界・代表構成・組合せ・テストの削減、目標と検出力を維持する根拠 |
@@ -172,6 +176,7 @@ flowchart TD
 | 学びたいこと | 入口となる資料・例 | 見るポイント |
 | --- | --- | --- |
 | 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
+| 非同期転送と再収束を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[IRQ・CDC](examples/local-irq-cdc/README.md)／[非同期FIFO](examples/local-async-fifo/README.md) | 経路ごとの到着差、早期受理・欠落・重複、Grayポインター、同期遅延付きfull／empty、リセット・復帰 |
 | 制御演算と時間関係を結合して確認する | [ロボティクスの手順](docs/method/robotics-verification.md)／[単体I/O](examples/local-motion-io/README.md)／[閉ループ制御](examples/local-motion-control/README.md) | 相補PWM、Gray復号、PIの飽和、プラントとの追従、演算期限・取消、停止と再開 |
 | 冗長化・故障の封じ込め・復旧を検証する | [航空宇宙の手順](docs/method/aerospace-verification.md)／[TMR](examples/local-tmr/README.md)／[FDIR](examples/local-fdir/README.md) | 故障モデル、単一故障と保証外、異常とcommitの競合、ackと復帰の区別、全メモリ再走査 |
 | ネットワーク・パケット処理を検証する | [検証手順](docs/method/network-verification.md)／[Ethernet・ARP・UDP IP](examples/local-network-echo/README.md)／[CPU付きNIC](examples/local-network-soc/README.md) | 停止できないRX、全フレーム破棄、FCS・チェックサム、DMA所有権とIRQ、CPUの返信生成 |
@@ -232,6 +237,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="fifo通信仲裁"></a>[FIFO・通信・仲裁](examples/README.md#fifo通信仲裁) | FIFO、ready/valid、UART・SPI・I²C、再送・パケットスイッチ |
 | <a id="割り込みタイマー周辺機能の結合"></a>[割り込み・タイマー・周辺機能の結合](examples/README.md#割り込みタイマー周辺機能の結合) | 割り込み、タイマー、ウォッチドッグ、周辺回路の接続 |
 | <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序 |
+| [非同期検証（CDC/RDC）](docs/method/asynchronous-verification.md) | 同期構造、リコンバージェンス、複数ビット・パルス転送、非同期FIFO、リセット交差、遅延注入と物理制約 |
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |

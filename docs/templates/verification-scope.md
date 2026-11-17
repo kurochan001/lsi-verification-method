@@ -38,7 +38,7 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- | --- |
 | SCOPE-STATIC | lint・構成別エラボレーション | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
 | SCOPE-RESET-X | リセット・初期化・X伝搬 | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
-| SCOPE-CDC-RDC | クロック・リセット境界 | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
+| SCOPE-CDC-RDC | [非同期検証・クロック・リセット境界](../method/asynchronous-verification.md) | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
 | SCOPE-PROTOCOL-DATA | プロトコル・データ整合性 | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
 | SCOPE-FAULT-RECOVERY | 異常・故障・復帰 | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
 | SCOPE-PERFORMANCE | 性能・負荷・進行性 | 未記入 | 未確定 | 未記入 | 未定 | 未登録 |
