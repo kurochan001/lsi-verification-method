@@ -2,6 +2,8 @@
 
 画像処理では、演算式だけでなく、画素の位置、行とフレームの境界、保持している履歴、転送と完了の時点を仕様へ分けます。この資料は、[Sobel単体IP](../../examples/local-image-sobel/README.md)から[CPU付き小規模SoC](../../examples/local-image-soc/README.md)へ進むための案内です。
 
+処理途中でクロックが変わる構成は、[非同期FIFO付き画像パイプライン](../../examples/local-video-async/README.md)で試せます。カラーキー、YCbCr→RGB、アルファ合成、固定タイミング表示を別ドメインにし、画素とSOF/EOLの一括転送、供給速度とprefill、表示underflow、協調リセットを確認します。
+
 ## 1. 画像とストリームの契約を定める
 
 最初に、次の条件を要求と期待値へ対応付けます。データ幅やパディングが違えば同じ「Sobel」でも出力は変わります。

@@ -36,7 +36,7 @@ flowchart TD
 | 記憶の保護 | [SECDED](../../examples/local-ecc/README.md)／[ECCメモリ](../../examples/local-ecc-memory/README.md) | 訂正・検出・保証外の誤訂正、書戻し、スクラブの競合 |
 | 比較と封じ込め | [ロックステップ監視](../../examples/local-lockstep-monitor/README.md) | 不一致、安全出力、復帰後の再同期 |
 | 期限監視 | [タイマー・ウォッチドッグ](../../examples/local-timer-watchdog/README.md) | 期限、kickとの競合、通知、リセット要求 |
-| 冗長化と修復 | [TMRレジスタ](../../examples/local-tmr/README.md) | 単一系統のマスク、不一致、修復、複数系統・共通原因の限界 |
+| 冗長化と修復 | [TMRレジスタ](../../examples/local-tmr/README.md) | 通常レジスタとの比較、SEUと持続するstuck-at、単一系統のマスク、不一致、修復、複数系統・共通原因の限界 |
 | 機器制御の結合 | [FDIRサブシステム](../../examples/local-fdir/README.md) | 致命的異常とcommitの競合、取消、原因の保持、保守修復、再走査 |
 | 通信とコマンド | [ネットワーク分野](../../examples/README.md#ネットワークパケット処理)／[再送リンク](../../examples/local-retry-link/README.md) | 境界、連番、重複、破棄、取消。宇宙・航空の特定規格への適合は別に計画する |
 

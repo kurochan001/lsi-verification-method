@@ -657,10 +657,13 @@
     "examples/local-tlb/tests/test_example.py",
     "examples/local-tmr/model.py",
     "examples/local-tmr/requirements.json",
+    "examples/local-tmr/rtl/plain_register.sv",
     "examples/local-tmr/rtl/tmr_register.sv",
     "examples/local-tmr/run.py",
     "examples/local-tmr/support.py",
+    "examples/local-tmr/tb/tmr_compare_tb.sv",
     "examples/local-tmr/tb/tmr_tb.sv",
+    "examples/local-tmr/tests/test_comparison.py",
     "examples/local-tmr/tests/test_tmr.py",
     "examples/local-topk/rtl/topk_select.sv",
     "examples/local-topk/run.py",
@@ -758,6 +761,22 @@
     "examples/local-vci-soclib/upstream/soclib/lib/vci_target_fsm/src/caba/vci/vci_target_fsm.cpp",
     "examples/local-vci-soclib/upstream/soclib/module/internal_component/vci_ram/caba/source/include/vci_ram.h",
     "examples/local-vci-soclib/upstream/soclib/module/internal_component/vci_ram/caba/source/src/vci_ram.cpp",
+    "examples/local-video-async/compare.py",
+    "examples/local-video-async/model.py",
+    "examples/local-video-async/requirements.json",
+    "examples/local-video-async/rtl/video_async_fifo.sv",
+    "examples/local-video-async/rtl/video_async_pipeline.sv",
+    "examples/local-video-async/rtl/video_blend.sv",
+    "examples/local-video-async/rtl/video_csc.sv",
+    "examples/local-video-async/rtl/video_display.sv",
+    "examples/local-video-async/rtl/video_key.sv",
+    "examples/local-video-async/rtl/video_reset_sync.sv",
+    "examples/local-video-async/run.py",
+    "examples/local-video-async/tb/arithmetic_tb.sv",
+    "examples/local-video-async/tb/fifo_tb.sv",
+    "examples/local-video-async/tb/pipeline_tb.sv",
+    "examples/local-video-async/tb/video_fifo_checker.sv",
+    "examples/local-video-async/tests/test_video.py",
     "examples/local-width-converter/requirements.json",
     "examples/local-width-converter/rtl/axi_width64to32.sv",
     "examples/local-width-converter/run.py",
@@ -857,6 +876,7 @@
       "local-uvm-coordination",
       "local-uvm-multiclock",
       "local-uvm-outstanding",
+      "local-video-async",
       "local-width-converter"
     ],
     "local-access-control": [
@@ -1476,6 +1496,9 @@
       "local-uvm"
     ],
     "local-vci-soclib": [
+      "local-exploration-common"
+    ],
+    "local-video-async": [
       "local-exploration-common"
     ],
     "local-width-converter": [

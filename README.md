@@ -26,6 +26,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 合成向けRTLを書く | [RTLの記述ルール](docs/method/synthesizable-rtl-guidelines.md) — ラッチ・多重駆動、代入、幅・符号、クロック・リセット、メモリ推論、合成結果の確認 |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
+| 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
 | DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md) |
 | 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
@@ -187,6 +188,7 @@ flowchart TD
 | 冗長化・故障の封じ込め・復旧を検証する | [航空宇宙の手順](docs/method/aerospace-verification.md)／[TMR](examples/local-tmr/README.md)／[FDIR](examples/local-fdir/README.md) | 故障モデル、単一故障と保証外、異常とcommitの競合、ackと復帰の区別、全メモリ再走査 |
 | ネットワーク・パケット処理を検証する | [検証手順](docs/method/network-verification.md)／[Ethernet・ARP・UDP IP](examples/local-network-echo/README.md)／[CPU付きNIC](examples/local-network-soc/README.md) | 停止できないRX、全フレーム破棄、FCS・チェックサム、DMA所有権とIRQ、CPUの返信生成 |
 | ラインメモリ付き画像処理を検証する | [画像処理の手順](docs/method/image-processing-verification.md)／[Sobel IP](examples/local-image-sobel/README.md) | 端・角・フレーム境界、符号と飽和、待ち、全画素の独立比較 |
+| 画像パイプラインのクロック境界と表示を検証する | [非同期FIFO付き画像処理](examples/local-video-async/README.md) | YCbCr・alpha、画素とSOF/EOLの一括転送、固定表示、帯域・蓄積量、異常と協調リセット |
 | CPU・メモリ・バス・IPを接続して検証する | [小規模画像処理SoC](examples/local-image-soc/README.md) | ROM起動、AHB-Lite／APB／AXI4、DMA、最終応答とIRQ、CPUによる全画素確認 |
 | 仕様書から検証項目を洗い出す | [項目表の完成例](docs/method/spec-to-test-items-walkthrough.md) | 曖昧さの確認、状態・境界・競合・順序、刺激と期待値の書き分け |
 | クロス条件の爆発に対処する | [条件の選定例](docs/method/cross-test-selection-walkthrough.md)／[APBでの実行例](examples/local-apb-irq-coverage/README.md) | 必須・代表化・未確定の判断、高次条件・順序・ストレスの保持、未達からの追加 |

@@ -122,15 +122,306 @@
     "examples/local-systolic-array/rtl/systolic_array.sv",
     "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
     "examples/local-tlb/rtl/sv32_tlb.sv",
+    "examples/local-tmr/rtl/plain_register.sv",
     "examples/local-tmr/rtl/tmr_register.sv",
     "examples/local-topk/rtl/topk_select.sv",
     "examples/local-uart/rtl/uart.sv",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
     "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
     "examples/local-uvm-outstanding/rtl/tagged_reorder.sv",
+    "examples/local-video-async/rtl/video_async_fifo.sv",
+    "examples/local-video-async/rtl/video_async_pipeline.sv",
+    "examples/local-video-async/rtl/video_blend.sv",
+    "examples/local-video-async/rtl/video_csc.sv",
+    "examples/local-video-async/rtl/video_display.sv",
+    "examples/local-video-async/rtl/video_key.sv",
+    "examples/local-video-async/rtl/video_reset_sync.sv",
     "examples/local-width-converter/rtl/axi_width64to32.sv"
   ],
   "targets": [
+    {
+      "id": "local-video-async/video_reset_sync/default",
+      "file": "examples/local-video-async/rtl/video_reset_sync.sv",
+      "top": "video_reset_sync",
+      "sources": [
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_async_fifo/default",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_key/default",
+      "file": "examples/local-video-async/rtl/video_key.sv",
+      "top": "video_key",
+      "sources": [
+        "examples/local-video-async/rtl/video_key.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_csc/default",
+      "file": "examples/local-video-async/rtl/video_csc.sv",
+      "top": "video_csc",
+      "sources": [
+        "examples/local-video-async/rtl/video_csc.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_blend/default",
+      "file": "examples/local-video-async/rtl/video_blend.sv",
+      "top": "video_blend",
+      "sources": [
+        "examples/local-video-async/rtl/video_blend.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_display/default",
+      "file": "examples/local-video-async/rtl/video_display.sv",
+      "top": "video_display",
+      "sources": [
+        "examples/local-video-async/rtl/video_display.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_async_pipeline/default",
+      "file": "examples/local-video-async/rtl/video_async_pipeline.sv",
+      "top": "video_async_pipeline",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv",
+        "examples/local-video-async/rtl/video_async_pipeline.sv",
+        "examples/local-video-async/rtl/video_blend.sv",
+        "examples/local-video-async/rtl/video_csc.sv",
+        "examples/local-video-async/rtl/video_display.sv",
+        "examples/local-video-async/rtl/video_key.sv",
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=32/DEPTH=4",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 32,
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=32/DEPTH=8",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 32,
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=58/DEPTH=4",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 58,
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=58/DEPTH=8",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 58,
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=26/DEPTH=128",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 26,
+        "DEPTH": 128
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=26/DEPTH=4",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 26,
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=26/DEPTH=8",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 26,
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-video-async/video_async_fifo/DATA_W=26/DEPTH=16",
+      "file": "examples/local-video-async/rtl/video_async_fifo.sv",
+      "top": "video_async_fifo",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv"
+      ],
+      "parameters": {
+        "DATA_W": 26,
+        "DEPTH": 16
+      }
+    },
+    {
+      "id": "local-video-async/video_display/W=2/H=2/DEPTH=4",
+      "file": "examples/local-video-async/rtl/video_display.sv",
+      "top": "video_display",
+      "sources": [
+        "examples/local-video-async/rtl/video_display.sv"
+      ],
+      "parameters": {
+        "W": 2,
+        "H": 2,
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-video-async/video_async_pipeline/DISPLAY=0",
+      "file": "examples/local-video-async/rtl/video_async_pipeline.sv",
+      "top": "video_async_pipeline",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv",
+        "examples/local-video-async/rtl/video_async_pipeline.sv",
+        "examples/local-video-async/rtl/video_blend.sv",
+        "examples/local-video-async/rtl/video_csc.sv",
+        "examples/local-video-async/rtl/video_display.sv",
+        "examples/local-video-async/rtl/video_key.sv",
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {
+        "DISPLAY": 0
+      }
+    },
+    {
+      "id": "local-video-async/video_async_pipeline/W=13/H=5/D0=4/D1=4/D2=8/DISPLAY=0",
+      "file": "examples/local-video-async/rtl/video_async_pipeline.sv",
+      "top": "video_async_pipeline",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv",
+        "examples/local-video-async/rtl/video_async_pipeline.sv",
+        "examples/local-video-async/rtl/video_blend.sv",
+        "examples/local-video-async/rtl/video_csc.sv",
+        "examples/local-video-async/rtl/video_display.sv",
+        "examples/local-video-async/rtl/video_key.sv",
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {
+        "W": 13,
+        "H": 5,
+        "D0": 4,
+        "D1": 4,
+        "D2": 8,
+        "DISPLAY": 0
+      }
+    },
+    {
+      "id": "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=0",
+      "file": "examples/local-video-async/rtl/video_async_pipeline.sv",
+      "top": "video_async_pipeline",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv",
+        "examples/local-video-async/rtl/video_async_pipeline.sv",
+        "examples/local-video-async/rtl/video_blend.sv",
+        "examples/local-video-async/rtl/video_csc.sv",
+        "examples/local-video-async/rtl/video_display.sv",
+        "examples/local-video-async/rtl/video_key.sv",
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {
+        "W": 17,
+        "H": 9,
+        "D0": 4,
+        "D1": 8,
+        "D2": 16,
+        "DISPLAY": 0
+      }
+    },
+    {
+      "id": "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=1",
+      "file": "examples/local-video-async/rtl/video_async_pipeline.sv",
+      "top": "video_async_pipeline",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv",
+        "examples/local-video-async/rtl/video_async_pipeline.sv",
+        "examples/local-video-async/rtl/video_blend.sv",
+        "examples/local-video-async/rtl/video_csc.sv",
+        "examples/local-video-async/rtl/video_display.sv",
+        "examples/local-video-async/rtl/video_key.sv",
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {
+        "W": 17,
+        "H": 9,
+        "D0": 4,
+        "D1": 8,
+        "D2": 16,
+        "DISPLAY": 1
+      }
+    },
+    {
+      "id": "local-video-async/video_async_pipeline/W=2/H=2/D0=4/D1=4/D2=4/DISPLAY=1",
+      "file": "examples/local-video-async/rtl/video_async_pipeline.sv",
+      "top": "video_async_pipeline",
+      "sources": [
+        "examples/local-video-async/rtl/video_async_fifo.sv",
+        "examples/local-video-async/rtl/video_async_pipeline.sv",
+        "examples/local-video-async/rtl/video_blend.sv",
+        "examples/local-video-async/rtl/video_csc.sv",
+        "examples/local-video-async/rtl/video_display.sv",
+        "examples/local-video-async/rtl/video_key.sv",
+        "examples/local-video-async/rtl/video_reset_sync.sv"
+      ],
+      "parameters": {
+        "W": 2,
+        "H": 2,
+        "D0": 4,
+        "D1": 4,
+        "D2": 4,
+        "DISPLAY": 1
+      }
+    },
     {
       "id": "local-address-map/address_map/default",
       "file": "examples/local-address-map/rtl/address_map.sv",
@@ -3459,6 +3750,59 @@
       }
     },
     {
+      "id": "local-tmr/plain_register/default",
+      "file": "examples/local-tmr/rtl/plain_register.sv",
+      "top": "plain_register",
+      "sources": [
+        "examples/local-tmr/rtl/plain_register.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-tmr/plain_register/WIDTH=1",
+      "file": "examples/local-tmr/rtl/plain_register.sv",
+      "top": "plain_register",
+      "sources": [
+        "examples/local-tmr/rtl/plain_register.sv"
+      ],
+      "parameters": {
+        "WIDTH": 1
+      }
+    },
+    {
+      "id": "local-tmr/plain_register/WIDTH=8",
+      "file": "examples/local-tmr/rtl/plain_register.sv",
+      "top": "plain_register",
+      "sources": [
+        "examples/local-tmr/rtl/plain_register.sv"
+      ],
+      "parameters": {
+        "WIDTH": 8
+      }
+    },
+    {
+      "id": "local-tmr/tmr_register/WIDTH=1",
+      "file": "examples/local-tmr/rtl/tmr_register.sv",
+      "top": "tmr_register",
+      "sources": [
+        "examples/local-tmr/rtl/tmr_register.sv"
+      ],
+      "parameters": {
+        "WIDTH": 1
+      }
+    },
+    {
+      "id": "local-tmr/tmr_register/WIDTH=32",
+      "file": "examples/local-tmr/rtl/tmr_register.sv",
+      "top": "tmr_register",
+      "sources": [
+        "examples/local-tmr/rtl/tmr_register.sv"
+      ],
+      "parameters": {
+        "WIDTH": 32
+      }
+    },
+    {
       "id": "local-tmr/tmr_register/default",
       "file": "examples/local-tmr/rtl/tmr_register.sv",
       "top": "tmr_register",
@@ -3807,6 +4151,33 @@
     }
   ],
   "examples": {
+    "local-video-async": {
+      "scope": "dut",
+      "targets": [
+        "local-video-async/video_reset_sync/default",
+        "local-video-async/video_async_fifo/default",
+        "local-video-async/video_key/default",
+        "local-video-async/video_csc/default",
+        "local-video-async/video_blend/default",
+        "local-video-async/video_display/default",
+        "local-video-async/video_async_pipeline/default",
+        "local-video-async/video_async_fifo/DATA_W=32/DEPTH=4",
+        "local-video-async/video_async_fifo/DATA_W=32/DEPTH=8",
+        "local-video-async/video_async_fifo/DATA_W=58/DEPTH=4",
+        "local-video-async/video_async_fifo/DATA_W=58/DEPTH=8",
+        "local-video-async/video_async_fifo/DATA_W=26/DEPTH=128",
+        "local-video-async/video_async_fifo/DATA_W=26/DEPTH=4",
+        "local-video-async/video_async_fifo/DATA_W=26/DEPTH=8",
+        "local-video-async/video_async_fifo/DATA_W=26/DEPTH=16",
+        "local-video-async/video_display/W=2/H=2/DEPTH=4",
+        "local-video-async/video_async_pipeline/DISPLAY=0",
+        "local-video-async/video_async_pipeline/W=13/H=5/D0=4/D1=4/D2=8/DISPLAY=0",
+        "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=0",
+        "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=1",
+        "local-video-async/video_async_pipeline/W=2/H=2/D0=4/D1=4/D2=4/DISPLAY=1"
+      ],
+      "reason": "4クロックの画素演算・非同期FIFO・表示とストリーム構成を静的検査します"
+    },
     "local-access-control": {
       "scope": "dut",
       "targets": [
@@ -5385,10 +5756,16 @@
       "targets": [
         "local-tmr/tmr_register/default",
         "local-tmr/tmr_register/WIDTH=8",
-        "local-tmr/tmr_register/WIDTH=16"
+        "local-tmr/tmr_register/WIDTH=16",
+        "local-tmr/plain_register/default",
+        "local-tmr/plain_register/WIDTH=1",
+        "local-tmr/plain_register/WIDTH=8",
+        "local-tmr/tmr_register/WIDTH=1",
+        "local-tmr/tmr_register/WIDTH=32"
       ],
-      "reason": "TMR制御レジスタの多数決・不一致検出・修復を8/16ビットで静的検査"
+      "reason": "通常レジスタとTMRの1/8/32ビット比較、および従来の8/16ビット構成を静的検査"
     },
+
     "local-fdir": {
       "scope": "shared-dut",
       "targets": [

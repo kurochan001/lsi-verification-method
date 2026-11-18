@@ -1864,6 +1864,19 @@
       ]
     },
     {
+      "id": "local-video-async",
+      "script": "examples/local-video-async/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
       "id": "local-width-converter",
       "script": "examples/local-width-converter/run.py",
       "kind": "simulation",

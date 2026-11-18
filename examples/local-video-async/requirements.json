@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id":"VIDEO-MATH","description":"カラーキー、符号付きYCbCr変換、straight alphaを独立整数モデルと照合します","goals":["math/key","math/csc","math/blend"]},
+    {"id":"VIDEO-FIFO","description":"非同期FIFOの受理データ、停止保持、周回、同時刻のエッジを確認します","goals":["fifo/order","fifo/backpressure","fifo/wrap","fifo/same-edge"]},
+    {"id":"VIDEO-STREAM","description":"画素と制御情報を一括転送し、待ちやリセットで世代を混ぜません","goals":["stream/metadata","stream/stalls","reset/busy"]},
+    {"id":"VIDEO-DISPLAY","description":"固定表示タイミング、開始前の蓄積、供給速度差、異常と復帰を確認します","goals":["display/fixed","display/prefill","display/slow","clock/change-safe","display/underflow"]}
+  ]
+}
