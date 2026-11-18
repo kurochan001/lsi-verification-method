@@ -2169,6 +2169,37 @@
     "local-e2e-guard/e2e_guard/default": {"target_sha256": "4e6ffe4b1a834ebf5057c0d708620d9edf6a26db9639f2cebe2db873068e9a8c", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"}, "diagnostics": []},
     "local-e2e-guard/e2e_guard/DATA_ID=13769": {"target_sha256": "e3f9cf986fe35bdfbe4cdff6bed3d4868326f916c7e4aeb156bd9bd4d7106155", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"}, "diagnostics": []},
     "local-automotive-ecu/automotive_ecu/default": {"target_sha256": "eb78c9e97a4fd5781e8f7fa1f1fb3a781fad09b5be06c41b27b951aacab22ab5", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770", "examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a"}, "diagnostics": []},
-    "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5": {"target_sha256": "8e0f9461e686a24c5523b55dd643d5566ff45d2807cc50a12f69f676e18207d3", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770", "examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a"}, "diagnostics": []}
+    "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5": {"target_sha256": "8e0f9461e686a24c5523b55dd643d5566ff45d2807cc50a12f69f676e18207d3", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770", "examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a"}, "diagnostics": []},
+    "local-lbist/lbist/default": {
+      "target_sha256": "12cf3214775c92358eba5146f4a22cd3995e6b684682fcf78175a76a81faf8d2",
+      "source_sha256": {
+        "examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345",
+        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
+      },
+      "diagnostics": []
+    },
+    "local-lbist/lbist/PATTERNS=16": {
+      "target_sha256": "91581d13c91a5f71f43a008777ccad3687bfffe0bbfd6c44a35d02b4db622a70",
+      "source_sha256": {
+        "examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345",
+        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
+      },
+      "diagnostics": []
+    },
+    "local-lbist/lbist/PATTERNS=32": {
+      "target_sha256": "b34ce5901feeeed1524a33771ea1bdb4c3c6ee8f98e7650bb49e86f2309816f3",
+      "source_sha256": {
+        "examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345",
+        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
+      },
+      "diagnostics": []
+    },
+    "local-lbist/lbist_logic/default": {
+      "target_sha256": "98de0304bec2f81448d63c071515eb6483bed1b9359eb83790dbf0f7c7a56c84",
+      "source_sha256": {
+        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
+      },
+      "diagnostics": []
+    }
   }
 }

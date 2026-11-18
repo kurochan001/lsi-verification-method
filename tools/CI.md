@@ -7,7 +7,7 @@ GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と�
 | Quality | push、pull request、手動 | 全文書・Mermaid、toolsのセルフテスト、FIFO・APB・stream・ネイティブSVAのsmoke構成行列 |
 | Affected verification | push、pull request、手動 | [差分選択](AFFECTED.md#ciの比較基準)した例のsmokeと履歴監査。pushは同じブランチで最後に成功した実行からの差分を見る。不明な依存・共通入力変更は全例へ戻す。文書のみは回路0件と記録 |
 | Nightly verification | 毎日UTC 18:23（日本時間翌03:23）、手動 | 全文書、skipなしの全セルフテスト、全例のnightly、全フォーマル・STA・lint、保存結果の履歴照合 |
-| Kirimasim latest | 毎日UTC 19:07（日本時間翌04:07）、mainへのpush（例と実行ツールの変更）、手動 | [kirimasim](https://github.com/kurochan001/kirimasim)の`main`の最新コミットで、[Icarus向け80例・107構成](../docs/case-study-kirimasim/README.md)のsmokeを実行 |
+| Kirimasim latest | 毎日UTC 19:07（日本時間翌04:07）、mainへのpush（例と実行ツールの変更）、手動 | [kirimasim](https://github.com/kurochan001/kirimasim)の`main`の最新コミットで、[Icarus向け81例・108構成](../docs/case-study-kirimasim/README.md)のsmokeを実行 |
 
 スケジュールはmainのワークフローを使います。GitHub側の混雑等で開始が遅れる場合があり、時刻どおりの開始を保証する仕組みではありません。2026-11-01から11-06までのNightlyは、予定の約3時間50分から6時間40分後に作成されました。`--profile nightly`というランナー引数自体には、定期起動の機能はありません。
 
@@ -31,7 +31,7 @@ Nightlyの文書検査、全セルフテスト、全例の実行は、環境の�
 
 各実行のSummaryには、[`kirimasim_results.py`](kirimasim_results.py)で作った例ごとの表を出します。記録した結果は[実行結果の一覧](../docs/case-study-kirimasim/results.md)にまとめています。
 
-Summaryの先頭には、kirimasimがUVMを処理できるかの確認も出します。[`kirimasim_uvm_check.py`](kirimasim_uvm_check.py)が、固定版のUVMライブラリの解析と`local-uvm`のloweringを試します。107構成の合否には影響せず、UVMの取得に失敗しても「未実行」と表示するだけです。`local-uvm`のloweringが通ると案内を出すので、[UVM例の実行](../docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を検討します。解析はLinuxのビルドで毎回通るので、案内の条件にしていません。通過してもメールなどの通知はなく、Summaryと実行の注釈に出るだけです。
+Summaryの先頭には、kirimasimがUVMを処理できるかの確認も出します。[`kirimasim_uvm_check.py`](kirimasim_uvm_check.py)が、固定版のUVMライブラリの解析と`local-uvm`のloweringを試します。選択した構成の合否には影響せず、UVMの取得に失敗しても「未実行」と表示するだけです。`local-uvm`のloweringが通ると案内を出すので、[UVM例の実行](../docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を検討します。解析はLinuxのビルドで毎回通るので、案内の条件にしていません。通過してもメールなどの通知はなく、Summaryと実行の注釈に出るだけです。
 
 kirimasimへのコミットそのものでは起動しません。kirimasimのpushごとに動かすには、kirimasim側にワークフローとトークンを追加する必要があります。
 

@@ -22,8 +22,11 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 
 | 目的 | 入口 |
 | --- | --- |
+| LSIの仕様書を書く | [設計意図・章立て・要求の書き方](docs/method/lsi-specification-writing.md)／[仕様書の記入用テンプレート](docs/templates/lsi-specification.md) |
+| 合成向けRTLを書く | [RTLの記述ルール](docs/method/synthesizable-rtl-guidelines.md) — ラッチ・多重駆動、代入、幅・符号、クロック・リセット、メモリ推論、合成結果の確認 |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
+| DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md) |
 | 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
@@ -119,6 +122,8 @@ flowchart TD
 
 | 資料 | 主な内容 |
 | --- | --- |
+| [検証しやすいLSI仕様書の書き方](docs/method/lsi-specification-writing.md) | 設計意図と規定の区別、機能別の章立て、受理・期待値・観測時点、境界・競合・復帰、図表と変更管理。[仕様書の雛形](docs/templates/lsi-specification.md)も用意 |
+| [合成向けRTLのルール](docs/method/synthesizable-rtl-guidelines.md) | 合成対象と実装依存の区別、順序・組合せ回路、ビット幅、FSM、クロック・リセット、RAM、推論結果の確認 |
 | [仕様から検証へ](docs/method/spec-to-verification-method.md) | 要求の抽出、検証方式の選定、独立レビュー、完了条件 |
 | [仕様書から検証項目を作る実例](docs/method/spec-to-test-items-walkthrough.md) | 割り込みの短い仕様から、仕様課題・条件表・検証項目・期待値・観測点へ展開する完成例 |
 | [項目表と実行証跡を自動照合する](docs/method/verification-plan-automation.md) | 出典・要求・項目・テスト・構成・checker・目標と結果を結び付け、未対応や古い証跡を拒否する |
@@ -177,6 +182,7 @@ flowchart TD
 | --- | --- | --- |
 | 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
 | 非同期転送と再収束を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[IRQ・CDC](examples/local-irq-cdc/README.md)／[非同期FIFO](examples/local-async-fifo/README.md) | 経路ごとの到着差、早期受理・欠落・重複、Grayポインター、同期遅延付きfull／empty、リセット・復帰 |
+| DFTの実行と故障検出を学ぶ | [DFTの手順](docs/method/dft-verification.md)／[LBIST](examples/local-lbist/README.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md) | パターン生成、署名圧縮、故障の分類、エイリアシング、テストモードと復帰 |
 | 制御演算と時間関係を結合して確認する | [ロボティクスの手順](docs/method/robotics-verification.md)／[単体I/O](examples/local-motion-io/README.md)／[閉ループ制御](examples/local-motion-control/README.md) | 相補PWM、Gray復号、PIの飽和、プラントとの追従、演算期限・取消、停止と再開 |
 | 冗長化・故障の封じ込め・復旧を検証する | [航空宇宙の手順](docs/method/aerospace-verification.md)／[TMR](examples/local-tmr/README.md)／[FDIR](examples/local-fdir/README.md) | 故障モデル、単一故障と保証外、異常とcommitの競合、ackと復帰の区別、全メモリ再走査 |
 | ネットワーク・パケット処理を検証する | [検証手順](docs/method/network-verification.md)／[Ethernet・ARP・UDP IP](examples/local-network-echo/README.md)／[CPU付きNIC](examples/local-network-soc/README.md) | 停止できないRX、全フレーム破棄、FCS・チェックサム、DMA所有権とIRQ、CPUの返信生成 |
@@ -238,6 +244,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="割り込みタイマー周辺機能の結合"></a>[割り込み・タイマー・周辺機能の結合](examples/README.md#割り込みタイマー周辺機能の結合) | 割り込み、タイマー、ウォッチドッグ、周辺回路の接続 |
 | <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序 |
 | [非同期検証（CDC/RDC）](docs/method/asynchronous-verification.md) | 同期構造、リコンバージェンス、複数ビット・パルス転送、非同期FIFO、リセット交差、遅延注入と物理制約 |
+| [DFT・製造テスト](docs/method/dft-verification.md) | 内部スキャン・ATPG、MBIST、LBISTのPRPG・MISRとエイリアシング、JTAG、テストモードと復帰 |
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
@@ -393,13 +400,13 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
 4. **テンプレートの実案件への適用**：検証領域の適用範囲、サインオフ、[不具合票](docs/templates/verification-issue.md)、[AIへの依頼・採否](docs/templates/ai-verification-request.md)の雛形を、実際の担当・構成・証跡へ対応付けて見直します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
-5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない80例が対象です。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
+5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。LBIST追加後の自動選択計画は81例・108構成で、過去の記録は80例・107構成の実測です。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
 
 ### 注意
 
 各例は教材として対象を限定しています。例えば、AXIの例で規格全体への適合、論理CDCモデルで物理的なメタスタビリティ、架空LibertyのSTAで実チップのタイミングを確認したとは扱いません。製品へ適用する際は、仕様・構成と必要な解析・試験を追加して判断します。
 
-- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（107ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
+- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（109ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
 - 規格や仕様書の本文は、このリポジトリに入れません。要求は自分の言葉で整理し、出典の版・節・段落を明記します。
 - 機密の仕様書を扱う場合は、AIを使える環境と範囲を先に決めます。
 - AIによるレビューは、人の承認ではありません。台帳と報告に、担当者と方法を明記します。

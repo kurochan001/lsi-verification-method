@@ -1081,6 +1081,19 @@
       ]
     },
     {
+      "id": "local-lbist",
+      "script": "examples/local-lbist/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
       "id": "local-lint",
       "script": "examples/local-lint/run.py",
       "kind": "aggregate",

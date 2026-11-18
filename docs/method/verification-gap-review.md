@@ -47,6 +47,7 @@
 | SCOPE-SECURITY / SYSTEM-SW | [RISC-VのPMP判定](../../examples/local-riscv-pmp/README.md) | 4エントリーの縮小モデルで領域・優先順位・アクセス全体の包含・権限・ロックを確認。コアのCSR・例外への組込みは対象外 |
 | SCOPE-PROTOCOL-DATA / SYSTEM-SW | [キャッシュコヒーレンシ](../../examples/local-cache-coherence/README.md) | 2クライアントの最新値・無効化・dirtyデータの受渡し・追出し。中央で1要求ずつ処理し、分散通信やCPUのメモリ整合性モデルは対象外 |
 | SCOPE-PHYSICAL（DFTのデジタル部分） | [内部スキャンとATPG](../../examples/local-scan-atpg/README.md) | シフト・キャプチャと指定14単一縮退故障の分類、13検出可能故障の観測。物理スキャン挿入や製造テストのサインオフは対象外 |
+| SCOPE-PHYSICAL（ロジック自己テストのデジタル部分） | [LBIST](../../examples/local-lbist/README.md) | PRPG・MISR、規定パターン数と署名、8出力縮退故障、エイリアシング、中断と通常出力の隔離。実スキャン・OCC・at-speed・テスト電力は対象外 |
 
 同日には、仮想記憶・情報の流れ・タイミング解析、順序制御と再送を補う次の例も追加しました。
 

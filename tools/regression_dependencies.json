@@ -359,6 +359,13 @@
     "examples/local-jtag-tap/run.py",
     "examples/local-jtag-tap/tb/jtag_tap_tb.sv",
     "examples/local-jtag-tap/tests/test_example.py",
+    "examples/local-lbist/model.py",
+    "examples/local-lbist/requirements.json",
+    "examples/local-lbist/rtl/lbist.sv",
+    "examples/local-lbist/rtl/lbist_logic.sv",
+    "examples/local-lbist/run.py",
+    "examples/local-lbist/tb/lbist_tb.sv",
+    "examples/local-lbist/tests/test_example.py",
     "examples/local-lint/fixtures/implicit.sv",
     "examples/local-lint/fixtures/latch.sv",
     "examples/local-lint/fixtures/unconnected.sv",
@@ -810,6 +817,7 @@
       "local-interconnect",
       "local-irq-cdc",
       "local-jtag-tap",
+      "local-lbist",
       "local-liveness",
       "local-lockstep-monitor",
       "local-mbist",
@@ -1163,6 +1171,9 @@
     ],
     "local-irq-cdc": [],
     "local-jtag-tap": [
+      "local-common"
+    ],
+    "local-lbist": [
       "local-common"
     ],
     "local-lint": [
