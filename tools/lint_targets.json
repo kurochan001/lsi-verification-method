@@ -101,6 +101,11 @@
     "examples/local-power/rtl/power_island.sv",
     "examples/local-priority-irq/rtl/priority_irq.sv",
     "examples/local-progress/rtl/bounded_server.sv",
+    "examples/local-ram-ports/rtl/ram_1r1w.sv",
+    "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+    "examples/local-ram-ports/rtl/ram_ports_top.sv",
+    "examples/local-ram-ports/rtl/ram_sp.sv",
+    "examples/local-ram-ports/rtl/ram_tdp.sv",
     "examples/local-recovery/rtl/timeout_guard.sv",
     "examples/local-reduction/rtl/reduction_irq.sv",
     "examples/local-requantize/rtl/requantize.sv",
@@ -139,6 +144,359 @@
     "examples/local-width-converter/rtl/axi_width64to32.sv"
   ],
   "targets": [
+    {
+      "id": "local-ram-ports/ram_address_adapter/BASE_ADDR=264",
+      "file": "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+      "top": "ram_address_adapter",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv"
+      ],
+      "parameters": {
+        "BASE_ADDR": 264
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/BASE_ADDR=264/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 1,
+        "BASE_ADDR": 264
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_address_adapter/default",
+      "file": "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+      "top": "ram_address_adapter",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-ram-ports/ram_sp/default",
+      "file": "examples/local-ram-ports/rtl/ram_sp.sv",
+      "top": "ram_sp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_sp.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-ram-ports/ram_1r1w/default",
+      "file": "examples/local-ram-ports/rtl/ram_1r1w.sv",
+      "top": "ram_1r1w",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-ram-ports/ram_tdp/default",
+      "file": "examples/local-ram-ports/rtl/ram_tdp.sv",
+      "top": "ram_tdp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/default",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-ram-ports/ram_address_adapter/DATA_W=64/DEPTH=8",
+      "file": "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+      "top": "ram_address_adapter",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_address_adapter/DEPTH=13",
+      "file": "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+      "top": "ram_address_adapter",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv"
+      ],
+      "parameters": {
+        "DEPTH": 13
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_sp/DATA_W=64/DEPTH=8",
+      "file": "examples/local-ram-ports/rtl/ram_sp.sv",
+      "top": "ram_sp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_sp.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_1r1w/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_1r1w.sv",
+      "top": "ram_1r1w",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_1r1w/RDW_MODE=2",
+      "file": "examples/local-ram-ports/rtl/ram_1r1w.sv",
+      "top": "ram_1r1w",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 2
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_1r1w/DATA_W=64/DEPTH=8/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_1r1w.sv",
+      "top": "ram_1r1w",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8,
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_tdp/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_tdp.sv",
+      "top": "ram_tdp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_tdp/RDW_MODE=2",
+      "file": "examples/local-ram-ports/rtl/ram_tdp.sv",
+      "top": "ram_tdp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 2
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_tdp/DATA_W=64/DEPTH=8/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_tdp.sv",
+      "top": "ram_tdp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8,
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_tdp/DEPTH=13/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_tdp.sv",
+      "top": "ram_tdp",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "DEPTH": 13,
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/KIND=0",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "KIND": 0
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=0",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "KIND": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "KIND": 1,
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=2",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "KIND": 1,
+        "RDW_MODE": 2
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/RDW_MODE=2",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "RDW_MODE": 2
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=0",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8,
+        "KIND": 0
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=1/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8,
+        "KIND": 1,
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "DEPTH": 8,
+        "RDW_MODE": 1
+      }
+    },
+    {
+      "id": "local-ram-ports/ram_ports_top/DEPTH=13/RDW_MODE=1",
+      "file": "examples/local-ram-ports/rtl/ram_ports_top.sv",
+      "top": "ram_ports_top",
+      "sources": [
+        "examples/local-ram-ports/rtl/ram_1r1w.sv",
+        "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+        "examples/local-ram-ports/rtl/ram_ports_top.sv",
+        "examples/local-ram-ports/rtl/ram_sp.sv",
+        "examples/local-ram-ports/rtl/ram_tdp.sv"
+      ],
+      "parameters": {
+        "DEPTH": 13,
+        "RDW_MODE": 1
+      }
+    },
     {
       "id": "local-video-async/video_reset_sync/default",
       "file": "examples/local-video-async/rtl/video_reset_sync.sv",
@@ -4151,6 +4509,39 @@
     }
   ],
   "examples": {
+    "local-ram-ports": {
+      "scope": "dut",
+      "targets": [
+        "local-ram-ports/ram_address_adapter/default",
+        "local-ram-ports/ram_sp/default",
+        "local-ram-ports/ram_1r1w/default",
+        "local-ram-ports/ram_tdp/default",
+        "local-ram-ports/ram_ports_top/default",
+        "local-ram-ports/ram_address_adapter/DATA_W=64/DEPTH=8",
+        "local-ram-ports/ram_address_adapter/DEPTH=13",
+        "local-ram-ports/ram_sp/DATA_W=64/DEPTH=8",
+        "local-ram-ports/ram_1r1w/RDW_MODE=1",
+        "local-ram-ports/ram_1r1w/RDW_MODE=2",
+        "local-ram-ports/ram_1r1w/DATA_W=64/DEPTH=8/RDW_MODE=1",
+        "local-ram-ports/ram_tdp/RDW_MODE=1",
+        "local-ram-ports/ram_tdp/RDW_MODE=2",
+        "local-ram-ports/ram_tdp/DATA_W=64/DEPTH=8/RDW_MODE=1",
+        "local-ram-ports/ram_tdp/DEPTH=13/RDW_MODE=1",
+        "local-ram-ports/ram_ports_top/KIND=0",
+        "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=0",
+        "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=1",
+        "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=2",
+        "local-ram-ports/ram_ports_top/RDW_MODE=1",
+        "local-ram-ports/ram_ports_top/RDW_MODE=2",
+        "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=0",
+        "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=1/RDW_MODE=1",
+        "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/RDW_MODE=1",
+        "local-ram-ports/ram_ports_top/DEPTH=13/RDW_MODE=1",
+        "local-ram-ports/ram_address_adapter/BASE_ADDR=264",
+        "local-ram-ports/ram_ports_top/BASE_ADDR=264/RDW_MODE=1"
+      ],
+      "reason": "RAMの3種類のポート構成、32/64ビット、読書き衝突モード、深さ13とWord/Byte変換を静的検査します"
+    },
     "local-video-async": {
       "scope": "dut",
       "targets": [

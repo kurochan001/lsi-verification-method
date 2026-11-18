@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id":"RAM-ACCESS","description":"対応するポートで同期読み書きを行い、無効なポート操作を拒否します","goals":["access/read","access/write","port/rejected","timing/idle-hold","timing/registered-response"]},
+    {"id":"RAM-ADDRESS","description":"WordとByteのアドレス単位、整列、範囲、先頭と末尾を照合します","goals":["address/word","address/byte","address/misaligned","address/range","bounds/first","bounds/last"]},
+    {"id":"RAM-DATA","description":"Byte enableとゼロマスク、リセット後の保持を確認します","goals":["data/partial","data/zero-mask","reset/retained"]},
+    {"id":"RAM-CONCURRENT","description":"同時アクセス、読書き衝突モード、二重書き込み拒否を確認します","goals":["concurrent/read-write","concurrent/two-read","concurrent/two-write","collision/read-write","collision/write-reject","rdw/read-first","rdw/write-first","rdw/no-change"]}
+  ]
+}

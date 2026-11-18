@@ -1302,6 +1302,19 @@
       ]
     },
     {
+      "id": "local-ram-ports",
+      "script": "examples/local-ram-ports/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
       "id": "local-recovery",
       "script": "examples/local-recovery/run.py",
       "kind": "simulation",

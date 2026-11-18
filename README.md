@@ -24,6 +24,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | --- | --- |
 | LSIの仕様書を書く | [設計意図・章立て・要求の書き方](docs/method/lsi-specification-writing.md)／[仕様書の記入用テンプレート](docs/templates/lsi-specification.md) |
 | 合成向けRTLを書く | [RTLの記述ルール](docs/method/synthesizable-rtl-guidelines.md) — ラッチ・多重駆動、代入、幅・符号、クロック・リセット、メモリ推論、合成結果の確認 |
+| RAMのポート構成とアドレス単位を検証する | [Single port・1R1W・True dual portの実行例](examples/local-ram-ports/README.md)／[Word・Byteアドレスの不具合検出](examples/local-ram-ports/README.md#word-byte) |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
 | 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
@@ -184,6 +185,7 @@ flowchart TD
 | 一つのIPで検証全体を実践する | [総合演習](docs/method/verification-capstone.md)／[仕様変更の実行例](examples/local-spec-change/README.md) | 要求・項目・判定・到達・版・変更の影響・完了または保留の判断 |
 | 非同期転送と再収束を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[IRQ・CDC](examples/local-irq-cdc/README.md)／[非同期FIFO](examples/local-async-fifo/README.md) | 経路ごとの到着差、早期受理・欠落・重複、Grayポインター、同期遅延付きfull／empty、リセット・復帰 |
 | DFTの実行と故障検出を学ぶ | [DFTの手順](docs/method/dft-verification.md)／[LBIST](examples/local-lbist/README.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md) | パターン生成、署名圧縮、故障の分類、エイリアシング、テストモードと復帰 |
+| RAMの構成とWord／Byte変換を検証する | [RAMのポート比較](examples/local-ram-ports/README.md) | 32／64ビット、Byte enable、範囲・整列、同期読み出し、衝突、同じ経路の読み戻しの限界 |
 | 制御演算と時間関係を結合して確認する | [ロボティクスの手順](docs/method/robotics-verification.md)／[単体I/O](examples/local-motion-io/README.md)／[閉ループ制御](examples/local-motion-control/README.md) | 相補PWM、Gray復号、PIの飽和、プラントとの追従、演算期限・取消、停止と再開 |
 | 冗長化・故障の封じ込め・復旧を検証する | [航空宇宙の手順](docs/method/aerospace-verification.md)／[TMR](examples/local-tmr/README.md)／[FDIR](examples/local-fdir/README.md) | 故障モデル、単一故障と保証外、異常とcommitの競合、ackと復帰の区別、全メモリ再走査 |
 | ネットワーク・パケット処理を検証する | [検証手順](docs/method/network-verification.md)／[Ethernet・ARP・UDP IP](examples/local-network-echo/README.md)／[CPU付きNIC](examples/local-network-soc/README.md) | 停止できないRX、全フレーム破棄、FCS・チェックサム、DMA所有権とIRQ、CPUの返信生成 |

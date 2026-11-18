@@ -510,6 +510,16 @@
     "examples/local-progress/rtl/bounded_server.sv",
     "examples/local-progress/run.py",
     "examples/local-progress/tests/test_plan.py",
+    "examples/local-ram-ports/model.py",
+    "examples/local-ram-ports/requirements.json",
+    "examples/local-ram-ports/rtl/ram_1r1w.sv",
+    "examples/local-ram-ports/rtl/ram_address_adapter.sv",
+    "examples/local-ram-ports/rtl/ram_ports_top.sv",
+    "examples/local-ram-ports/rtl/ram_sp.sv",
+    "examples/local-ram-ports/rtl/ram_tdp.sv",
+    "examples/local-ram-ports/run.py",
+    "examples/local-ram-ports/tb/ram_ports_tb.sv",
+    "examples/local-ram-ports/tests/test_ram.py",
     "examples/local-recovery/requirements.json",
     "examples/local-recovery/rtl/timeout_guard.sv",
     "examples/local-recovery/run.py",
@@ -851,6 +861,7 @@
       "local-power",
       "local-priority-irq",
       "local-progress",
+      "local-ram-ports",
       "local-recovery",
       "local-reduction",
       "local-requantize",
@@ -1335,6 +1346,9 @@
     ],
     "local-progress": [
       "local-formal-common"
+    ],
+    "local-ram-ports": [
+      "local-exploration-common"
     ],
     "local-recovery": [
       "local-common"

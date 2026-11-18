@@ -296,6 +296,12 @@ flowchart TD
 | --- | --- |
 | lint | 記述上の問題や疑わしい構造を静的に検査する手法。警告の解消・除外理由を管理し、動作検証と併用する |
 | 合成可能なRTL | 採用する合成フローでハードウェアへ変換できるRTL。シミュレーションで実行できる範囲とは異なり、対象技術・言語・パラメーターを固定して確認する。[記述ルール](method/synthesizable-rtl-guidelines.md) |
+| Single port RAM／1RW | 読み書き共用の1ポートを持つRAM。どのエッジで受理し、書き込み中の出力をどう扱うかを定める。[比較例](../examples/local-ram-ports/README.md) |
+| 1R1W RAM／Simple dual port | 読み出し専用と書き込み専用の2ポートを持つRAM。同一番地の読書き、Byte enable、クロック条件を確認する。「2PRAM」等の呼称だけで能力を推測しない |
+| True dual port RAM／2RW | 両ポートで読み書きできるRAM。同時読書きと二重書き込みの衝突契約を確認する。Dual portとDual clockは別の軸 |
+| Wordアドレス／Byteアドレス | ワードを1単位とする番地／バイトを1単位とする番地。ワード幅、領域のベース、整列、範囲、変換回数を照合する。[不具合検出例](../examples/local-ram-ports/README.md#word-byte) |
+| Byte enable／byte strobe | ワード内の更新するバイトを指定するマスク。レーン順、データの配置、未選択バイトの保持、ゼロマスクを確認する |
+| Read-during-write（RDW） | 同じワードを読み書きする状況。READ_FIRSTの対象番地の旧値、WRITE_FIRSTの更新後の値、NO_CHANGEの直前出力の保持を区別し、実マクロの許可条件を確認する |
 | STA（Static Timing Analysis） | クロック・入出力・例外などの制約の下でタイミングを静的に解析する手法。機能シミュレーションの合格だけでは代用できない |
 | DFT（Design for Test） | 製造後に回路の故障を検査しやすくする設計。scan、メモリテスト、テストモードなどを含む |
 | LBIST（Logic Built-In Self-Test） | ロジックの組込み自己テスト。回路内の刺激生成・応答観測・合否判定を使う。[実行例](../examples/local-lbist/README.md)はPRPG・MISRによる簡略な並列方式で、スキャン挿入を含まない |
