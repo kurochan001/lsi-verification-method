@@ -37,6 +37,10 @@ module tmr_compare_tb;
     integer lane, bit_index, action;
     integer phase_id=0;
     reg stuck_active=0, stuck_fixed=0;
+    // What lane 0 holds while its bit 0 is stuck: the fixed bit, and above it what the fault-free
+    // lane 1 holds, since both lanes take the same writes and repairs.
+    wire [WIDTH-1:0] stuck_vote=(vote_only.q1 & ~WIDTH'(1)) | WIDTH'(stuck_fixed);
+    wire [WIDTH-1:0] stuck_repair=(auto_repair.q1 & ~WIDTH'(1)) | WIDTH'(stuck_fixed);
     string wave, phase="startup", target="none", fault_kind="none";
 
     task check(input logic ok, input string configuration, input string label);
@@ -228,7 +232,8 @@ module tmr_compare_tb;
         limit_trials=limit_trials+1;
         $display("EXPECTED_LIMITATION three_lanes_same_error wrong data with mismatch=0");
 
-        // Constant bit-select force models stuck-at, not a repeated XOR pulse.
+        // A force models stuck-at, not a repeated XOR pulse. IEEE 1800-2023 10.6.2 does not allow a
+        // force on a bit-select of a variable, so the whole lane is forced to stuck_vote/stuck_repair.
         // It overrides procedural updates while active. Release leaves a variable's
         // forced value in storage until the next procedural assignment updates it.
         for (integer stuck_value=0; stuck_value<2; stuck_value=stuck_value+1) begin
@@ -239,11 +244,7 @@ module tmr_compare_tb;
             data_word={WIDTH{1'b1}}; data_word[0]=!stuck_value;
             write_clean(data_word);
             @(negedge clk); write_en=0; stuck_active=1; stuck_fixed=1'(stuck_value);
-            if (stuck_value==0) begin
-                force vote_only.q0[0]=1'b0; force auto_repair.q0[0]=1'b0;
-            end else begin
-                force vote_only.q0[0]=1'b1; force auto_repair.q0[0]=1'b1;
-            end
+            force vote_only.q0=stuck_vote; force auto_repair.q0=stuck_repair;
             #1;
             check_tmr(0,golden^WIDTH'(1),golden,golden,golden,1,0);
             check_tmr(1,golden^WIDTH'(1),golden,golden,golden,1,0);
@@ -258,7 +259,7 @@ module tmr_compare_tb;
             check_tmr(0,golden^WIDTH'(1),golden,golden,golden,1,0);
             check_tmr(1,golden^WIDTH'(1),golden,golden,golden,1,0);
             @(negedge clk); write_en=0;
-            release vote_only.q0[0]; release auto_repair.q0[0];
+            release vote_only.q0; release auto_repair.q0;
             stuck_active=0;
             #1;
             check_tmr(0,golden^WIDTH'(1),golden,golden,golden,1,0);

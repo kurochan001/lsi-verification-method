@@ -2218,6 +2218,16 @@ macOS arm64で、この例のsmokeとnightly、seedを変えた5回のsmoke、�
 
 確かめていないことは、例のREADMEの「確認範囲」に書きました。遅延は架空のライブラリの定数で、配線の遅延は0、コーナーは1つです。
 
+<a id="tmr-force-20261120"></a>
+
+## TMRの比較テストベンチの`force`の修正（2026-11-20）
+
+`aae9fdf`のKirimasim latestは、`local-tmr`の比較の3構成がコンパイルエラーになり、109／110で不合格でした。[比較テストベンチ](examples/local-tmr/tb/tmr_compare_tb.sv)が、変数のビット選択へ`force`をかけていたためです。IEEE 1800-2023の10.6.2はこれを認めておらず、kirimasimはエラーにし、Icarus Verilogは受け付けます。kirimasimのバグではないので、Issueは発行していません。
+
+系統0の変数全体へ`force`をかけるように直しました。与える値は、bit 0が固定値、上位ビットが故障のない系統1の値です。macOS arm64のIcarus Verilogで、この例のsmokeとnightly、セルフテスト、`check_tb_races.py`、文書検査が合格しました。kirimasimでは手元で実行しておらず、Actionsで確かめます。
+
+同じ実行では、UVMのダウンロードのSHA-256も一致しませんでした。2026-11-20に同じURLから取得し直すと、記録した値と一致しました。配布物は変わっておらず、そのときの取得の失敗と判断しています。
+
 <a id="readme-history-20261101"></a>
 
 ## READMEから移した追加の経緯（2026-11-01〜2026-11-02）
