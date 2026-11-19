@@ -25,8 +25,10 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | LSIの仕様書を書く | [設計意図・章立て・要求の書き方](docs/method/lsi-specification-writing.md)／[仕様書の記入用テンプレート](docs/templates/lsi-specification.md) |
 | 合成向けRTLを書く | [RTLの記述ルール](docs/method/synthesizable-rtl-guidelines.md) — ラッチ・多重駆動、代入、幅・符号、クロック・リセット、メモリ推論、合成結果の確認 |
 | RAMのポート構成とアドレス単位を検証する | [Single port・1R1W・True dual portの実行例](examples/local-ram-ports/README.md)／[Word・Byteアドレスの不具合検出](examples/local-ram-ports/README.md#word-byte) |
+| RAMを使う発展例を動かす | [4教材の入口・まとめて回帰](examples/local-memory-common/README.md)／[ECC付き部分書込み](examples/local-ecc-rmw/README.md)／[画像ダブルバッファ](examples/local-video-double-buffer/README.md)／[同期RAM型非同期FIFO](examples/local-sync-ram-fifo/README.md)／[非整列・エンディアン](examples/local-unaligned-memory/README.md) |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
+| PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
 | 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
 | DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md) |
 | 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |

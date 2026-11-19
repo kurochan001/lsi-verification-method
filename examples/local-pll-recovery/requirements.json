@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PLL-LOCK",
+      "summary": "Withhold release during startup chatter and recover from a lock loss while edges continue.",
+      "goals": [
+        "lock/absent",
+        "lock/chatter",
+        "lock/acquired",
+        "lock/lost-running",
+        "lock/reacquired"
+      ]
+    },
+    {
+      "id": "PLL-MONITOR",
+      "summary": "Detect a stopped generated clock even with LOCKED high and resume after clocks return.",
+      "goals": [
+        "clock/stopped-locked",
+        "clock/restarted"
+      ]
+    },
+    {
+      "id": "PLL-RESET",
+      "summary": "Assert reset without generated clock edges and deassert on the second safe local edge.",
+      "goals": [
+        "reset/while-stopped",
+        "reset/released-synchronously"
+      ]
+    }
+  ]
+}

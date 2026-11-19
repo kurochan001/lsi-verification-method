@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PWM-EVENT",
+      "summary": "Issue one event at the up-count compare and suppress the down-count match.",
+      "goals": [
+        "trigger/up",
+        "trigger/down-suppressed",
+        "trigger/disabled"
+      ]
+    },
+    {
+      "id": "PWM-UPDATE",
+      "summary": "Commit legal duty and sample settings at the boundary and reject invalid values.",
+      "goals": [
+        "config/apply",
+        "config/defer",
+        "config/reject"
+      ]
+    },
+    {
+      "id": "PWM-DUTY",
+      "summary": "Honor the 0% and 100% settings and clear PWM when disabled.",
+      "goals": [
+        "duty/zero",
+        "duty/full",
+        "enable/force-low"
+      ]
+    },
+    {
+      "id": "PWM-ADC",
+      "summary": "Preserve sample timing and expose ADC backpressure and rejected triggers.",
+      "goals": [
+        "adc/overrun",
+        "adc/hold",
+        "adc/reset-cancel"
+      ]
+    }
+  ]
+}

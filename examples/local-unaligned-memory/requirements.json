@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SPLIT-DATA",
+      "summary": "Map each accepted byte value to the requested endian and byte address.",
+      "goals": [
+        "access/read",
+        "access/write",
+        "endian/mapped"
+      ]
+    },
+    {
+      "id": "SPLIT-BOUNDARY",
+      "summary": "Split a cross-word request, and reject an invalid range or size before any native access.",
+      "goals": [
+        "split/cross-word",
+        "bounds/rejected"
+      ]
+    },
+    {
+      "id": "SPLIT-ERROR",
+      "summary": "A failed second word or a reset preserves only already committed writes.",
+      "goals": [
+        "error/partial",
+        "reset/partial"
+      ]
+    },
+    {
+      "id": "SPLIT-RESPONSE",
+      "summary": "Keep response data and status stable under backpressure.",
+      "goals": [
+        "response/stall"
+      ]
+    }
+  ]
+}

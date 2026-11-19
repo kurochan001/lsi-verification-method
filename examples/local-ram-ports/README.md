@@ -2,6 +2,8 @@
 
 Single port、1 Read/1 Write、True dual portのSystemVerilog実行例です。ポートの使い分けだけでなく、**WordアドレスとByteアドレスの変換、Byte enable、同一番地の衝突、同期読み出しのタイミング**を自己判定します。[アドレスマップ](../local-address-map/README.md)や[ロード・ストア](../local-load-store/README.md)と併せて使えます。
 
+次の教材として、[ECC付き部分書込み・画像ダブルバッファ・同期RAM型FIFO・非整列アクセスの4例](../local-memory-common/README.md)を用意しています。
+
 ## 実行方法
 
 Python 3、Icarus Verilog、vvpを使い、リポジトリのルートから実行します。外部Pythonパッケージは不要です。出力先は毎回新しくします。

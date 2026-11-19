@@ -5,6 +5,7 @@
   "rtl_files": [
     "examples/local-access-control/rtl/protected_regs.sv",
     "examples/local-activation/rtl/pwl_activation.sv",
+    "examples/local-adc-conversion/rtl/adc_capture.sv",
     "examples/local-address-map/rtl/address_map.sv",
     "examples/local-ahb/rtl/ahb_regs.sv",
     "examples/local-apb-irq/rtl/apb_irq.sv",
@@ -42,6 +43,7 @@
     "examples/local-dsp/rtl/fir2.sv",
     "examples/local-e2e-guard/rtl/e2e_guard.sv",
     "examples/local-ecc-memory/rtl/ecc_memory.sv",
+    "examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv",
     "examples/local-ecc/rtl/secded.sv",
     "examples/local-equivalence/rtl/fifo_pair.sv",
     "examples/local-fdir/rtl/fdir_node.sv",
@@ -99,9 +101,11 @@
     "examples/local-packet-crc/rtl/crc.sv",
     "examples/local-packet-switch/rtl/packet_switch.sv",
     "examples/local-performance-monitor/rtl/perf_monitor.sv",
+    "examples/local-pll-recovery/rtl/pll_guard.sv",
     "examples/local-power/rtl/power_island.sv",
     "examples/local-priority-irq/rtl/priority_irq.sv",
     "examples/local-progress/rtl/bounded_server.sv",
+    "examples/local-pwm-adc/rtl/pwm_adc_trigger.sv",
     "examples/local-ram-ports/rtl/ram_1r1w.sv",
     "examples/local-ram-ports/rtl/ram_address_adapter.sv",
     "examples/local-ram-ports/rtl/ram_ports_top.sv",
@@ -125,6 +129,9 @@
     "examples/local-stream-dma/rtl/stream_dma.sv",
     "examples/local-stream/rtl/stream_buffer.sv",
     "examples/local-sv32/rtl/sv32_walk.sv",
+    "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+    "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+    "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
     "examples/local-systolic-array/rtl/systolic_array.sv",
     "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
     "examples/local-tlb/rtl/sv32_tlb.sv",
@@ -132,6 +139,8 @@
     "examples/local-tmr/rtl/tmr_register.sv",
     "examples/local-topk/rtl/topk_select.sv",
     "examples/local-uart/rtl/uart.sv",
+    "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+    "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
     "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
     "examples/local-uvm-outstanding/rtl/tagged_reorder.sv",
@@ -142,6 +151,7 @@
     "examples/local-video-async/rtl/video_display.sv",
     "examples/local-video-async/rtl/video_key.sv",
     "examples/local-video-async/rtl/video_reset_sync.sv",
+    "examples/local-video-double-buffer/rtl/video_double_buffer.sv",
     "examples/local-width-converter/rtl/axi_width64to32.sv"
   ],
   "targets": [
@@ -4470,10 +4480,51 @@
         "ADC_BITS": 10
       }
     },
-    {"id": "local-e2e-guard/e2e_guard/default", "file": "examples/local-e2e-guard/rtl/e2e_guard.sv", "top": "e2e_guard", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv"], "parameters": {}},
-    {"id": "local-e2e-guard/e2e_guard/DATA_ID=13769", "file": "examples/local-e2e-guard/rtl/e2e_guard.sv", "top": "e2e_guard", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv"], "parameters": {"DATA_ID": 13769}},
-    {"id": "local-automotive-ecu/automotive_ecu/default", "file": "examples/local-automotive-ecu/rtl/automotive_ecu.sv", "top": "automotive_ecu", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv", "examples/local-automotive-ecu/rtl/automotive_ecu.sv"], "parameters": {}},
-    {"id": "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5", "file": "examples/local-automotive-ecu/rtl/automotive_ecu.sv", "top": "automotive_ecu", "sources": ["examples/local-e2e-guard/rtl/e2e_guard.sv", "examples/local-automotive-ecu/rtl/automotive_ecu.sv"], "parameters": {"DATA_ID": 13769, "WINDOW_MIN": 5, "WINDOW_MAX": 13, "FRESH_MAX": 19}},
+    {
+      "id": "local-e2e-guard/e2e_guard/default",
+      "file": "examples/local-e2e-guard/rtl/e2e_guard.sv",
+      "top": "e2e_guard",
+      "sources": [
+        "examples/local-e2e-guard/rtl/e2e_guard.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-e2e-guard/e2e_guard/DATA_ID=13769",
+      "file": "examples/local-e2e-guard/rtl/e2e_guard.sv",
+      "top": "e2e_guard",
+      "sources": [
+        "examples/local-e2e-guard/rtl/e2e_guard.sv"
+      ],
+      "parameters": {
+        "DATA_ID": 13769
+      }
+    },
+    {
+      "id": "local-automotive-ecu/automotive_ecu/default",
+      "file": "examples/local-automotive-ecu/rtl/automotive_ecu.sv",
+      "top": "automotive_ecu",
+      "sources": [
+        "examples/local-e2e-guard/rtl/e2e_guard.sv",
+        "examples/local-automotive-ecu/rtl/automotive_ecu.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5",
+      "file": "examples/local-automotive-ecu/rtl/automotive_ecu.sv",
+      "top": "automotive_ecu",
+      "sources": [
+        "examples/local-e2e-guard/rtl/e2e_guard.sv",
+        "examples/local-automotive-ecu/rtl/automotive_ecu.sv"
+      ],
+      "parameters": {
+        "DATA_ID": 13769,
+        "WINDOW_MIN": 5,
+        "WINDOW_MAX": 13,
+        "FRESH_MAX": 19
+      }
+    },
     {
       "id": "local-lbist/lbist/default",
       "file": "examples/local-lbist/rtl/lbist.sv",
@@ -4516,6 +4567,323 @@
       "sources": [
         "examples/local-lbist/rtl/lbist_logic.sv"
       ]
+    },
+    {
+      "id": "local-ecc-rmw/ecc_rmw_ram/default",
+      "file": "examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv",
+      "top": "ecc_rmw_ram",
+      "sources": [
+        "examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-ecc-rmw/ecc_rmw_ram/DATA_W=64",
+      "file": "examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv",
+      "top": "ecc_rmw_ram",
+      "sources": [
+        "examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64
+      }
+    },
+    {
+      "id": "local-unaligned-memory/byte_word_ram/default",
+      "file": "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+      "top": "byte_word_ram",
+      "sources": [
+        "examples/local-unaligned-memory/rtl/byte_word_ram.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-unaligned-memory/byte_word_ram/DATA_W=64",
+      "file": "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+      "top": "byte_word_ram",
+      "sources": [
+        "examples/local-unaligned-memory/rtl/byte_word_ram.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64
+      }
+    },
+    {
+      "id": "local-unaligned-memory/unaligned_memory/default",
+      "file": "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
+      "top": "unaligned_memory",
+      "sources": [
+        "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+        "examples/local-unaligned-memory/rtl/unaligned_memory.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1",
+      "file": "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
+      "top": "unaligned_memory",
+      "sources": [
+        "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+        "examples/local-unaligned-memory/rtl/unaligned_memory.sv"
+      ],
+      "parameters": {
+        "BIG_ENDIAN": 1
+      }
+    },
+    {
+      "id": "local-unaligned-memory/unaligned_memory/DATA_W=64",
+      "file": "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
+      "top": "unaligned_memory",
+      "sources": [
+        "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+        "examples/local-unaligned-memory/rtl/unaligned_memory.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64
+      }
+    },
+    {
+      "id": "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1/DATA_W=64",
+      "file": "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
+      "top": "unaligned_memory",
+      "sources": [
+        "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
+        "examples/local-unaligned-memory/rtl/unaligned_memory.sv"
+      ],
+      "parameters": {
+        "DATA_W": 64,
+        "BIG_ENDIAN": 1
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/memory_reset_sync/default",
+      "file": "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+      "top": "memory_reset_sync",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_dual_clock_ram/default",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+      "top": "sync_dual_clock_ram",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+      "top": "sync_dual_clock_ram",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv"
+      ],
+      "parameters": {
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_dual_clock_ram/READ_LATENCY=2",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+      "top": "sync_dual_clock_ram",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv"
+      ],
+      "parameters": {
+        "READ_LATENCY": 2
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/READ_LATENCY=2/WIDTH=8",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+      "top": "sync_dual_clock_ram",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv"
+      ],
+      "parameters": {
+        "WIDTH": 8,
+        "DEPTH": 4,
+        "READ_LATENCY": 2
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/WIDTH=1",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+      "top": "sync_dual_clock_ram",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv"
+      ],
+      "parameters": {
+        "WIDTH": 1,
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_ram_async_fifo/default",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
+      "top": "sync_ram_async_fifo",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
+      "top": "sync_ram_async_fifo",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv"
+      ],
+      "parameters": {
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_ram_async_fifo/READ_LATENCY=2",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
+      "top": "sync_ram_async_fifo",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv"
+      ],
+      "parameters": {
+        "READ_LATENCY": 2
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/READ_LATENCY=2/WIDTH=8",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
+      "top": "sync_ram_async_fifo",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv"
+      ],
+      "parameters": {
+        "WIDTH": 8,
+        "DEPTH": 4,
+        "READ_LATENCY": 2
+      }
+    },
+    {
+      "id": "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/WIDTH=1",
+      "file": "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
+      "top": "sync_ram_async_fifo",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
+        "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv"
+      ],
+      "parameters": {
+        "WIDTH": 1,
+        "DEPTH": 4
+      }
+    },
+    {
+      "id": "local-video-double-buffer/video_double_buffer/default",
+      "file": "examples/local-video-double-buffer/rtl/video_double_buffer.sv",
+      "top": "video_double_buffer",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-video-double-buffer/rtl/video_double_buffer.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-video-double-buffer/video_double_buffer/HEIGHT=3/WIDTH=7",
+      "file": "examples/local-video-double-buffer/rtl/video_double_buffer.sv",
+      "top": "video_double_buffer",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-video-double-buffer/rtl/video_double_buffer.sv"
+      ],
+      "parameters": {
+        "WIDTH": 7,
+        "HEIGHT": 3
+      }
+    },
+    {
+      "id": "local-video-double-buffer/video_double_buffer/HEIGHT=1/WIDTH=1",
+      "file": "examples/local-video-double-buffer/rtl/video_double_buffer.sv",
+      "top": "video_double_buffer",
+      "sources": [
+        "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
+        "examples/local-video-double-buffer/rtl/video_double_buffer.sv"
+      ],
+      "parameters": {
+        "WIDTH": 1,
+        "HEIGHT": 1
+      }
+    },
+    {
+      "id": "local-adc-conversion/adc_capture/default",
+      "file": "examples/local-adc-conversion/rtl/adc_capture.sv",
+      "top": "adc_capture",
+      "sources": [
+        "examples/local-adc-conversion/rtl/adc_capture.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750",
+      "file": "examples/local-adc-conversion/rtl/adc_capture.sv",
+      "top": "adc_capture",
+      "sources": [
+        "examples/local-adc-conversion/rtl/adc_capture.sv"
+      ],
+      "parameters": {
+        "ACQUIRE": 1,
+        "CONVERT": 1,
+        "LSB_UV": 750
+      }
+    },
+    {
+      "id": "local-pll-recovery/pll_guard/default",
+      "file": "examples/local-pll-recovery/rtl/pll_guard.sv",
+      "top": "pll_guard",
+      "sources": [
+        "examples/local-pll-recovery/rtl/pll_guard.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-pll-recovery/pll_guard/LOCK_CYCLES=7/TIMEOUT=16",
+      "file": "examples/local-pll-recovery/rtl/pll_guard.sv",
+      "top": "pll_guard",
+      "sources": [
+        "examples/local-pll-recovery/rtl/pll_guard.sv"
+      ],
+      "parameters": {
+        "LOCK_CYCLES": 7,
+        "TIMEOUT": 16
+      }
+    },
+    {
+      "id": "local-pwm-adc/pwm_adc_trigger/default",
+      "file": "examples/local-pwm-adc/rtl/pwm_adc_trigger.sv",
+      "top": "pwm_adc_trigger",
+      "sources": [
+        "examples/local-pwm-adc/rtl/pwm_adc_trigger.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-pwm-adc/pwm_adc_trigger/HALF_PERIOD=5",
+      "file": "examples/local-pwm-adc/rtl/pwm_adc_trigger.sv",
+      "top": "pwm_adc_trigger",
+      "sources": [
+        "examples/local-pwm-adc/rtl/pwm_adc_trigger.sv"
+      ],
+      "parameters": {
+        "HALF_PERIOD": 5
+      }
     }
   ],
   "examples": {
@@ -6174,7 +6542,6 @@
       ],
       "reason": "通常レジスタとTMRの1/8/32ビット比較、および従来の8/16ビット構成を静的検査"
     },
-
     "local-fdir": {
       "scope": "shared-dut",
       "targets": [
@@ -6245,8 +6612,22 @@
       ],
       "reason": "ngspice RC回路を駆動するヒステリシス制御RTLのADC幅構成を静的検査"
     },
-    "local-e2e-guard": {"scope": "dut", "targets": ["local-e2e-guard/e2e_guard/default", "local-e2e-guard/e2e_guard/DATA_ID=13769"], "reason": "車載向け通信保護と窓・通信期限監視の教材構成を静的検査"},
-    "local-automotive-ecu": {"scope": "dut", "targets": ["local-automotive-ecu/automotive_ecu/default", "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5"], "reason": "車載向け通信保護と窓・通信期限監視の教材構成を静的検査"},
+    "local-e2e-guard": {
+      "scope": "dut",
+      "targets": [
+        "local-e2e-guard/e2e_guard/default",
+        "local-e2e-guard/e2e_guard/DATA_ID=13769"
+      ],
+      "reason": "車載向け通信保護と窓・通信期限監視の教材構成を静的検査"
+    },
+    "local-automotive-ecu": {
+      "scope": "dut",
+      "targets": [
+        "local-automotive-ecu/automotive_ecu/default",
+        "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5"
+      ],
+      "reason": "車載向け通信保護と窓・通信期限監視の教材構成を静的検査"
+    },
     "local-lbist": {
       "scope": "dut",
       "targets": [
@@ -6256,6 +6637,79 @@
         "local-lbist/lbist_logic/default"
       ],
       "reason": "LBIST制御・PRPG・MISRと組合せDUTを通常構成で検査"
+    },
+    "local-ecc-rmw": {
+      "scope": "dut",
+      "targets": [
+        "local-ecc-rmw/ecc_rmw_ram/default",
+        "local-ecc-rmw/ecc_rmw_ram/DATA_W=64"
+      ],
+      "reason": "32/64-bit SECDED byte-write RMW controller and synchronous memory."
+    },
+    "local-unaligned-memory": {
+      "scope": "dut",
+      "targets": [
+        "local-unaligned-memory/byte_word_ram/default",
+        "local-unaligned-memory/byte_word_ram/DATA_W=64",
+        "local-unaligned-memory/unaligned_memory/default",
+        "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1",
+        "local-unaligned-memory/unaligned_memory/DATA_W=64",
+        "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1/DATA_W=64"
+      ],
+      "reason": "32/64-bit byte-enabled memory and both-endian unaligned splitter."
+    },
+    "local-sync-ram-fifo": {
+      "scope": "dut",
+      "targets": [
+        "local-sync-ram-fifo/memory_reset_sync/default",
+        "local-sync-ram-fifo/sync_dual_clock_ram/default",
+        "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4",
+        "local-sync-ram-fifo/sync_dual_clock_ram/READ_LATENCY=2",
+        "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/READ_LATENCY=2/WIDTH=8",
+        "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/WIDTH=1",
+        "local-sync-ram-fifo/sync_ram_async_fifo/default",
+        "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4",
+        "local-sync-ram-fifo/sync_ram_async_fifo/READ_LATENCY=2",
+        "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/READ_LATENCY=2/WIDTH=8",
+        "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/WIDTH=1"
+      ],
+      "reason": "Synchronous RAM FIFO, local reset synchronizer, one/two read stages and 1/8/32-bit widths."
+    },
+    "local-video-double-buffer": {
+      "scope": "dut",
+      "targets": [
+        "local-sync-ram-fifo/memory_reset_sync/default",
+        "local-video-double-buffer/video_double_buffer/default",
+        "local-video-double-buffer/video_double_buffer/HEIGHT=3/WIDTH=7",
+        "local-video-double-buffer/video_double_buffer/HEIGHT=1/WIDTH=1"
+      ],
+      "reason": "Dual-clock frame ownership, synchronous framebuffer and fixed display timing, including 1x1."
+    },
+    "local-adc-conversion": {
+      "scope": "dut",
+      "targets": [
+        "local-adc-conversion/adc_capture/default",
+        "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750"
+      ],
+      "reason": "ADC acquisition, conversion timing and 8-bit quantization."
+    },
+    "local-pll-recovery": {
+      "scope": "dut",
+      "targets": [
+        "local-pll-recovery/pll_guard/default",
+        "local-pll-recovery/pll_guard/LOCK_CYCLES=7/TIMEOUT=16"
+      ],
+      "reason": "PLL lock qualification, clock watchdog and synchronized reset release."
+    },
+    "local-pwm-adc": {
+      "scope": "dut",
+      "targets": [
+        "local-pwm-adc/pwm_adc_trigger/default",
+        "local-pwm-adc/pwm_adc_trigger/HALF_PERIOD=5",
+        "local-adc-conversion/adc_capture/default",
+        "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750"
+      ],
+      "reason": "Center-aligned PWM and ADC trigger generation."
     }
   },
   "blackbox_sources": {

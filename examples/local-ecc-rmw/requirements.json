@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ECC-RMW-BYTES",
+      "summary": "Merge only enabled bytes and return the fault-free word; a zero mask is a no-op.",
+      "goals": [
+        "access/read",
+        "access/partial",
+        "access/zero-mask"
+      ]
+    },
+    {
+      "id": "ECC-RMW-FAULT",
+      "summary": "Repair one flipped codeword bit, and reject an uncorrectable old word without changing it.",
+      "goals": [
+        "fault/corrected",
+        "fault/uncorrectable",
+        "scrub/completed"
+      ]
+    },
+    {
+      "id": "ECC-RMW-SERIAL",
+      "summary": "Serialize foreground writes and scrubbing without losing either byte update.",
+      "goals": [
+        "race/foreground",
+        "race/queued-write"
+      ]
+    },
+    {
+      "id": "ECC-RMW-LIFECYCLE",
+      "summary": "Retain responses under stalls and abort an uncommitted RMW on reset.",
+      "goals": [
+        "reset/abort",
+        "response/stall"
+      ]
+    }
+  ]
+}

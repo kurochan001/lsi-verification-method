@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DBUF-OWNERSHIP",
+      "summary": "Publish complete frames and wait for ownership acknowledgement while holding input packets.",
+      "goals": [
+        "input/backpressure",
+        "frame/published"
+      ]
+    },
+    {
+      "id": "DBUF-DISPLAY",
+      "summary": "Swap only at frame start, match every pixel and sync cycle, and repeat a complete frame when late.",
+      "goals": [
+        "frame/boundary-swap",
+        "frame/repeated"
+      ]
+    },
+    {
+      "id": "DBUF-RESET",
+      "summary": "Discard partial old-generation frames and restart on a new SOF after coordinated reset.",
+      "goals": [
+        "reset/pending",
+        "reset/new-generation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ADC-TIME",
+      "summary": "Sample only at the acquisition deadline, then complete at the conversion deadline.",
+      "goals": [
+        "adc/start",
+        "adc/capture"
+      ]
+    },
+    {
+      "id": "ADC-CODE",
+      "summary": "Quantize at code thresholds and saturate outside the voltage range.",
+      "goals": [
+        "code/low-clamp",
+        "code/high-clamp",
+        "code/threshold"
+      ]
+    },
+    {
+      "id": "ADC-FLOW",
+      "summary": "Flag rejected start events, hold results and discard pending state on reset.",
+      "goals": [
+        "flow/overrun",
+        "flow/hold",
+        "reset/cancel"
+      ]
+    }
+  ]
+}

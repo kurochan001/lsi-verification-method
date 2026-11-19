@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SRFIFO-ORDER",
+      "summary": "Deliver each accepted write exactly once and in order across wraps and empty/full states.",
+      "goals": [
+        "fifo/full",
+        "fifo/empty",
+        "pointer/wrap"
+      ]
+    },
+    {
+      "id": "SRFIFO-PREFETCH",
+      "summary": "Reserve space for pending synchronous reads and hold output while stalled.",
+      "goals": [
+        "ram/prefetch",
+        "flow/stall",
+        "flow/resume"
+      ]
+    },
+    {
+      "id": "SRFIFO-RESET",
+      "summary": "Discard queued and in-flight data on coordinated reset and restart with new-generation writes.",
+      "goals": [
+        "reset/pending",
+        "reset/new-generation"
+      ]
+    }
+  ]
+}

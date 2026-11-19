@@ -73,6 +73,8 @@
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [Single port・1R1W・True dual port RAM](local-ram-ports/README.md) | 32／64ビット、Word／Byteアドレス、Byte enable、範囲・整列、同期読み出し、読書き衝突の3モード、二重書き込み拒否、12変異の検出 | Icarus |
+| [非整列アクセスとエンディアン](local-unaligned-memory/README.md) | 32／64ビット、両エンディアン、ワード境界での分割、Byte enable、後半エラーの残存範囲、途中リセット | Icarus＋Python |
+| [ECC付きRAMの部分書込み](local-ecc-rmw/README.md) | ワードECCとByte enable、訂正後のRead-Modify-Write、次要求・スクラブとの競合、訂正不能と保持 | Icarus＋Python |
 | [APB＋AXI4＋割り込みのDMA](local-dma/README.md) | 設定からコピー・完了通知まで、境界分割、中断、エラー | Icarus |
 | [複数マスター接続](local-interconnect/README.md) | 2×2 AXI4の応答先、ID、仲裁、競合 | Icarus |
 | [同一領域のアクセス競合](local-memory-order/README.md) | 複数マスターの読書き・書込み同士の競合を、書込み反映と読出しデータ取込みの時刻に基づいて照合 | Icarus |
@@ -93,9 +95,11 @@
 | --- | --- | --- |
 | [IRQ・CDCの再収束](local-irq-cdc/README.md) | 2経路の相対遅延9組×両極性、再収束時の早期受理・欠落・重複、動作中リセットとX検出 | Icarus |
 | [非同期FIFO](local-async-fifo/README.md) | クロック比・位相・ジッター、同期段数、参照キュー、同期遅延を含むフラグ | Icarus |
+| [同期RAM型の非同期FIFO](local-sync-ram-fifo/README.md) | 読出し1／2段、先読みの予約と出力保持、消費後の領域解放、幅1／8／32、同時エッジと協調リセット | Icarus |
 | [非同期APBブリッジ](local-cdc-bridge/README.md) | 要求／応答FIFOとAPBの接続、片側リセット時の全体破棄 | Icarus |
 | [CDCハンドシェイク](local-cdc-handshake/README.md) | 複数ビットの4相req/ack、パルス同期、リセットの非同期アサート・同期デアサート | Icarus |
 | [クロック停止とリセット](local-clock-reset/README.md) | 処理の排出・停止・再開、停止中のリセット、同期解除 | Icarus |
+| [PLLのロック待ち・停止検出・復帰](local-pll-recovery/README.md) | 独立した常時動作クロックによる監視、短いロック通知、ロック喪失、クロック停止、2段同期解除 | Icarus |
 | [低電力制御](local-power/README.md) | 排出・隔離・状態保持・復帰のRTL動作モデル（UPF実行は対象外） | Icarus |
 | [複数クロックと個別リセットの上位UVM](local-uvm-multiclock/README.md) | 片側リセット、解除順序、時刻順の観測、取消・古い応答・復帰、3種類のクロック条件 | UVM |
 
@@ -192,6 +196,14 @@ DFTの題材は、[スキャン・ATPG・MBIST・LBIST・JTAGの検証手順](..
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [RC電圧制御とSPICE](local-spice-cosim/README.md) | ngspiceで解く線形RC回路とRTLの閉ループ、ADC／DAC接続、時刻同期、解析解、回路定数・接続・制御の故障注入 | Verilator＋C++17＋ngspice共有ライブラリー |
+| [ADCの取り込み・量子化・変換完了](local-adc-conversion/README.md) | 8bitの全遷移境界、取り込み時刻、変換遅延、再要求、結果保持とリセット | Icarus＋Python |
+| [中央揃えPWMからのADC起動](local-pwm-adc/README.md) | 上りの比較位置でだけ起動、周期境界での設定反映、0／100%、ADCの結果待ちとoverrun | Icarus＋Python |
+
+PLL・ADC・PWMの3教材をまとめて実行できます。各ケースの `wave.vcd` と判定結果を保存します。
+
+```sh
+python3 tools/run_regression.py --example local-pll-recovery --example local-adc-conversion --example local-pwm-adc --profile nightly --jobs 3 --out artifacts/pll-adc-pwm-nightly
+```
 
 ## 画像処理
 
@@ -202,6 +214,7 @@ DFTの題材は、[スキャン・ATPG・MBIST・LBIST・JTAGの検証手順](..
 | [畳み込みのラインバッファ](local-conv-window/README.md) | 2ライン分の履歴、3×3窓、端・角、ストライド、フレーム排出 | Icarus |
 | [ラインメモリ付きSobel IP](local-image-sobel/README.md) | ゼロパディング、符号付き演算と飽和、全画素比較、待ち、連続フレーム、処理中リセット | Icarus |
 | [非同期FIFO付き画像パイプライン](local-video-async/README.md) | 4クロックのカラーキー・YCbCr→RGB・アルファ合成・表示、全画素とSOF/EOL、prefill、供給速度差、underflowと協調リセット | Icarus |
+| [画像のダブルバッファ](local-video-double-buffer/README.md) | 2面RAMの描画・表示の所有権、フレーム先頭での切替え、前フレーム再表示、途中リセット、PPMと全同期信号の比較 | Icarus＋Python |
 | [CPU付き画像処理SoC](local-image-soc/README.md) | ROM起動、共有RAM、AHB-Lite／APB／AXI4、DMA、エラー・再起動、最終B応答とIRQ、CPUの結果確認 | Icarus |
 
 ## プロセッサ
@@ -301,19 +314,19 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`を読解し、I/O修正をC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | [Caliptra](reference-caliptra/README.md) | 暗号・鍵管理IP、SHA-512の期待ベクトル・予測器・比較器、zeroizeと機能カバレッジ | 固定ソース・接続・商用VIPを含む依存を確認。RTL・UVM・セキュリティ評価は未実施 |
 
-13件は上流を読む参照例で、下記の134登録項目・112ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
+13件は上流を読む参照例で、下記の141登録項目・119ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は60例・129構成、各検証例が出力するJUnit件数の合計はsmoke 909件／nightly 1167件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は63例・135構成、各検証例が出力するJUnit件数の合計はsmoke 953件／nightly 1223件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-現在の統合計画は、134登録項目・112ルートジョブです。nightly対応の個別例に加え、集約7本、全12フォーマル例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて13行、`aggregate`は共通lintの2行を含めて9行です。証明専用例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。画像処理の3例は独立したランナーで、単体IPのJUnitは18／22件、SoCは44／48件、非同期FIFO付きパイプラインは20／22件です。ネットワークの新2例も独立したランナーで、単体IPは30／34件、SoCは54／58件です。RAMのポート比較は38／62件です。TMRとFDIRも独立したランナーで、JUnitはそれぞれ17／27件、56／60件です。モーションI/Oは28／32件、閉ループ制御は48／52件です。VCI・SoCLibは23／27件、C++参照モデルは22／26件、SPICE協調は25／29件です。E2E通信保護は24／28件、小規模ECUは30／34件です。いずれもsmoke／nightlyの順です。
+現在の統合計画は、141登録項目・119ルートジョブです。nightly対応の個別例に加え、集約7本、全12フォーマル例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて13行、`aggregate`は共通lintの2行を含めて9行です。証明専用例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。画像処理の3例は独立したランナーで、単体IPのJUnitは18／22件、SoCは44／48件、非同期FIFO付きパイプラインは20／22件です。ネットワークの新2例も独立したランナーで、単体IPは30／34件、SoCは54／58件です。RAMのポート比較は38／62件です。RAMの発展4例は、ECC付き部分書込み10／14件、非整列アクセス14／22件、同期RAM型非同期FIFO18／30件、画像ダブルバッファ12／18件です。[4例をまとめて回帰する入口](local-memory-common/README.md)も用意しています。TMRとFDIRも独立したランナーで、JUnitはそれぞれ17／27件、56／60件です。モーションI/Oは28／32件、閉ループ制御は48／52件です。VCI・SoCLibは23／27件、C++参照モデルは22／26件、SPICE協調は25／29件です。E2E通信保護は24／28件、小規模ECUは30／34件です。PLL・ADC・PWMの3例は共通ランナーで、合計44／56件です。いずれもsmoke／nightlyの順です。
 
-共通lintの対象は140 RTLファイル・141モジュール・380構成です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
+共通lintの対象は150 RTLファイル・151モジュール・408構成です。RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
 
 各例の既定計画には正常動作・変異・診断があり、予定した反例や未到達の識別も成功と判定します。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果・親判定・lint・セルフテストを分けた実行数、設定、残る制限は[最新のレビューと確認記録](../PROVENANCE.md#verification-gaps-20261107)を参照してください。
 
