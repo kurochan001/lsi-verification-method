@@ -310,6 +310,16 @@
     "examples/local-gate-sim/run.py",
     "examples/local-gate-sim/tb/arbiter_tb.sv",
     "examples/local-gate-sim/tests/test_example.py",
+    "examples/local-gate-timing/cells/cells.v",
+    "examples/local-gate-timing/cells/teaching.lib",
+    "examples/local-gate-timing/requirements.json",
+    "examples/local-gate-timing/rtl/mc_scale.sv",
+    "examples/local-gate-timing/run.py",
+    "examples/local-gate-timing/sta/check.tcl",
+    "examples/local-gate-timing/sta/constraints.tcl",
+    "examples/local-gate-timing/sta/probe.tcl",
+    "examples/local-gate-timing/tb/mc_tb.sv",
+    "examples/local-gate-timing/tests/test_example.py",
     "examples/local-generated-ral/run.py",
     "examples/local-generated-ral/sim_main.cpp",
     "examples/local-generated-ral/tb/front_pkg.sv",
@@ -840,6 +850,7 @@
       "local-fdir",
       "local-fifo",
       "local-gate-sim",
+      "local-gate-timing",
       "local-i2c",
       "local-image-sobel",
       "local-image-soc",
@@ -1175,6 +1186,9 @@
     "local-gate-sim": [
       "local-common"
     ],
+    "local-gate-timing": [
+      "local-common"
+    ],
     "local-generated-ral": [
       "local-exploration-common",
       "local-register-spec",
@@ -1247,6 +1261,7 @@
       "local-equivalence",
       "local-fifo",
       "local-gate-sim",
+      "local-gate-timing",
       "local-i2c",
       "local-interconnect",
       "local-irq-cdc",

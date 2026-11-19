@@ -981,6 +981,21 @@
       ]
     },
     {
+      "id": "local-gate-timing",
+      "script": "examples/local-gate-timing/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "yowasp-yosys",
+        "sta"
+      ]
+    },
+    {
       "id": "local-generated-ral",
       "script": "examples/local-generated-ral/run.py",
       "kind": "simulation",

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "GT-PRODUCT",
+      "summary": "The result is the product of the two operands, for a zero operand, for an operand of one and for the largest operands.",
+      "goals": [
+        "operand/zero",
+        "operand/one",
+        "operand/largest"
+      ]
+    },
+    {
+      "id": "GT-CFG",
+      "summary": "cfg, taken with the operands, doubles the product; it may change in the start cycle or while idle.",
+      "goals": [
+        "cfg/plain",
+        "cfg/doubled",
+        "cfg/changed-at-start",
+        "cfg/changed-while-idle"
+      ]
+    },
+    {
+      "id": "GT-FLOW",
+      "summary": "An operation may start right after the previous one or after idle cycles.",
+      "goals": [
+        "flow/back-to-back",
+        "flow/idle-gap"
+      ]
+    },
+    {
+      "id": "GT-RESET",
+      "summary": "A reset during an operation ends it without done.",
+      "goals": [
+        "reset/mid-operation"
+      ]
+    }
+  ]
+}

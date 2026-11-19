@@ -259,7 +259,7 @@ python3 examples/local-ai-regression/run.py --stage simulation --profile nightly
 
 ## 検証手法を補う4例
 
-[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)の3例は本共通ランナーを使います。[接続性のフォーマル検査](../local-connectivity/README.md)は[共通フォーマル手順](../local-formal-common/README.md)を使います。
+[合成後ネットリストのシミュレーション](../local-gate-sim/README.md)、[多サイクル除算器](../local-divider/README.md)、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)の3例は本共通ランナーを使います。後から加えた[遅延つきのゲートレベルシミュレーション](../local-gate-timing/README.md)も本共通ランナーを使い、`iverilog_options`フックで構成ごとのコンパイルオプション（SDFの遅延）を渡します。[接続性のフォーマル検査](../local-connectivity/README.md)は[共通フォーマル手順](../local-formal-common/README.md)を使います。
 
 | 検証例 | 構成 | JUnit（smoke／nightly） | 目標 | セルフテスト |
 | --- | --- | --- | --- | --- |
@@ -271,6 +271,7 @@ python3 examples/local-ai-regression/run.py --stage simulation --profile nightly
 
 - `build_sources(args, configuration, parameters, mutation, directory)`：構成と変異ごとに、コンパイルするソースの一覧と、その準備の実行結果を返します。合成後ネットリストの例は、ここでYosysを実行してネットリストを作ります。準備が失敗すると、そのビルドを使うケースはエラーになり、準備のログを案内します。成功した場合は、準備の結果と、実際にコンパイルした全ソースのSHA-256を`builds.json`に記録します。マニフェストは実行前に作るため、生成するファイルのハッシュはこちらに残します。
 - `add_arguments(parser)`：例ごとのオプション（`--yosys`、`--cell-library`など）を追加します。
+- `iverilog_options(parameters)`：構成ごとに、`iverilog`へ追加するオプションを返します。遅延つきのゲートレベルシミュレーションの例が、SDFつきの構成だけに`-gspecify`などを渡すために使います。
 
 除算器の例は、シミュレーションの`run.py`とは別に、フォーマルの`formal.py`（4・8ビット、12件のJUnit）を持ちます。3例を加えた共通シミュレーションは45例・98構成、JUnit 692／888件です。
 

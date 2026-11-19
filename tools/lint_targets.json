@@ -48,6 +48,7 @@
     "examples/local-fdir/rtl/protected_store.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
+    "examples/local-gate-timing/rtl/mc_scale.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
     "examples/local-image-sobel/rtl/sobel_stream.sv",
     "examples/local-image-soc/rtl/cpu_ahb.sv",
@@ -1400,6 +1401,15 @@
       "parameters": {},
       "sources": [
         "examples/local-gate-sim/rtl/burst_arbiter.sv"
+      ]
+    },
+    {
+      "id": "local-gate-timing/mc_scale/default",
+      "file": "examples/local-gate-timing/rtl/mc_scale.sv",
+      "top": "mc_scale",
+      "parameters": {},
+      "sources": [
+        "examples/local-gate-timing/rtl/mc_scale.sv"
       ]
     },
     {
@@ -5224,6 +5234,13 @@
       ],
       "reason": "自身のDUTと共有RTLを構成別に静的検査"
     },
+    "local-gate-timing": {
+      "scope": "dut",
+      "targets": [
+        "local-gate-timing/mc_scale/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
     "local-generated-ral": {
       "scope": "workflow",
       "targets": [],
@@ -5394,6 +5411,7 @@
         "local-mbist/mbist/default",
         "local-mbist/mbist/DEPTH=8",
         "local-mbist/mbist/DEPTH=16",
+        "local-gate-timing/mc_scale/default",
         "local-mxfp4/mp_add/default",
         "local-mxfp4/mp_bdp/default",
         "local-mxfp4/mp_encoder/default",

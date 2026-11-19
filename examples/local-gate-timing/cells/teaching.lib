@@ -1,0 +1,143 @@
+/* SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ * Synthetic teaching library; no foundry or measured cell data.
+ * Every delay is one constant: it depends neither on the input slope nor on the load. */
+library(teaching_gates) {
+ delay_model : table_lookup;
+ time_unit : "1ns"; voltage_unit : "1V"; current_unit : "1mA";
+ capacitive_load_unit(1,pf); leakage_power_unit : "1nW";
+ nom_process : 1; nom_voltage : 1; nom_temperature : 25;
+ input_threshold_pct_rise : 50; input_threshold_pct_fall : 50;
+ output_threshold_pct_rise : 50; output_threshold_pct_fall : 50;
+ slew_lower_threshold_pct_rise : 20; slew_upper_threshold_pct_rise : 80;
+ slew_lower_threshold_pct_fall : 20; slew_upper_threshold_pct_fall : 80;
+ lu_table_template(delays) {
+  variable_1 : input_net_transition; variable_2 : total_output_net_capacitance;
+  index_1("0.01,0.1"); index_2("0.01,0.1");
+ }
+ lu_table_template(checks) {
+  variable_1 : constrained_pin_transition; variable_2 : related_pin_transition;
+  index_1("0.01,0.1"); index_2("0.01,0.1");
+ }
+ cell(BUF) {
+  area : 1;
+  pin(A) { direction : input; capacitance : 0.01; }
+  pin(Y) { direction : output; function : "A"; max_capacitance : 1;
+   timing() { related_pin : "A"; timing_sense : positive_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.10,0.10","0.10,0.10"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.10,0.10","0.10,0.10"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(INV) {
+  area : 1;
+  pin(A) { direction : input; capacitance : 0.01; }
+  pin(Y) { direction : output; function : "!A"; max_capacitance : 1;
+   timing() { related_pin : "A"; timing_sense : negative_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.08,0.08","0.08,0.08"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.08,0.08","0.08,0.08"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(NAND2) {
+  area : 1;
+  pin(A) { direction : input; capacitance : 0.01; }
+  pin(B) { direction : input; capacitance : 0.01; }
+  pin(Y) { direction : output; function : "!(A&B)"; max_capacitance : 1;
+   timing() { related_pin : "A"; timing_sense : negative_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.10,0.10","0.10,0.10"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.10,0.10","0.10,0.10"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+   timing() { related_pin : "B"; timing_sense : negative_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.10,0.10","0.10,0.10"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.10,0.10","0.10,0.10"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(NOR2) {
+  area : 1;
+  pin(A) { direction : input; capacitance : 0.01; }
+  pin(B) { direction : input; capacitance : 0.01; }
+  pin(Y) { direction : output; function : "!(A|B)"; max_capacitance : 1;
+   timing() { related_pin : "A"; timing_sense : negative_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.12,0.12","0.12,0.12"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.12,0.12","0.12,0.12"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+   timing() { related_pin : "B"; timing_sense : negative_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.12,0.12","0.12,0.12"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.12,0.12","0.12,0.12"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(XOR2) {
+  area : 2;
+  pin(A) { direction : input; capacitance : 0.01; }
+  pin(B) { direction : input; capacitance : 0.01; }
+  pin(Y) { direction : output; function : "A^B"; max_capacitance : 1;
+   timing() { related_pin : "A"; timing_sense : non_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.18,0.18","0.18,0.18"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.18,0.18","0.18,0.18"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+   timing() { related_pin : "B"; timing_sense : non_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.18,0.18","0.18,0.18"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.18,0.18","0.18,0.18"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(CKDLY) {
+  area : 1;
+  dont_use : true; dont_touch : true;
+  pin(A) { direction : input; capacitance : 0.01; }
+  pin(Y) { direction : output; function : "A"; max_capacitance : 1;
+   timing() { related_pin : "A"; timing_sense : positive_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.25,0.25","0.25,0.25"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.25,0.25","0.25,0.25"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(DFF) {
+  area : 4;
+  ff(IQ,IQN) { clocked_on : "CLK"; next_state : "D"; }
+  pin(CLK) { direction : input; clock : true; capacitance : 0.01; }
+  pin(D) { direction : input; capacitance : 0.01;
+   timing() { related_pin : "CLK"; timing_type : setup_rising;
+    rise_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.2,0.2","0.2,0.2"); } fall_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.2,0.2","0.2,0.2"); }
+   }
+   timing() { related_pin : "CLK"; timing_type : hold_rising;
+    rise_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.1,0.1","0.1,0.1"); } fall_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.1,0.1","0.1,0.1"); }
+   }
+  }
+  pin(Q) { direction : output; function : "IQ"; max_capacitance : 1;
+   timing() { related_pin : "CLK"; timing_type : rising_edge; timing_sense : non_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.3,0.3","0.3,0.3"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.3,0.3","0.3,0.3"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+ cell(DFFE) {
+  area : 5;
+  ff(IQ,IQN) { clocked_on : "CLK"; next_state : "(D&E)|(IQ&!E)"; }
+  pin(CLK) { direction : input; clock : true; capacitance : 0.01; }
+  pin(D) { direction : input; capacitance : 0.01;
+   timing() { related_pin : "CLK"; timing_type : setup_rising;
+    rise_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.2,0.2","0.2,0.2"); } fall_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.2,0.2","0.2,0.2"); }
+   }
+   timing() { related_pin : "CLK"; timing_type : hold_rising;
+    rise_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.1,0.1","0.1,0.1"); } fall_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.1,0.1","0.1,0.1"); }
+   }
+  }
+  pin(E) { direction : input; capacitance : 0.01;
+   timing() { related_pin : "CLK"; timing_type : setup_rising;
+    rise_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.2,0.2","0.2,0.2"); } fall_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.2,0.2","0.2,0.2"); }
+   }
+   timing() { related_pin : "CLK"; timing_type : hold_rising;
+    rise_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.1,0.1","0.1,0.1"); } fall_constraint(checks) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.1,0.1","0.1,0.1"); }
+   }
+  }
+  pin(Q) { direction : output; function : "IQ"; max_capacitance : 1;
+   timing() { related_pin : "CLK"; timing_type : rising_edge; timing_sense : non_unate;
+    cell_rise(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.3,0.3","0.3,0.3"); } cell_fall(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.3,0.3","0.3,0.3"); }
+    rise_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); } fall_transition(delays) { index_1("0.01,0.1"); index_2("0.01,0.1"); values("0.02,0.02","0.02,0.02"); }
+   }
+  }
+ }
+}

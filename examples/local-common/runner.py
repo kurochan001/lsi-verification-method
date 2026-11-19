@@ -82,6 +82,8 @@ def run(plugin, args):
             command = [args.iverilog, '-g2012', '-s', plugin.TOP, '-o', str(out / (key + '.vvp')),
                        f'-P{plugin.TOP}.MUTATION={mutation}']
             command += [f'-P{plugin.TOP}.{name}={value}' for name, value in parameters.items()]
+            if hasattr(plugin, 'iverilog_options'):  # e.g. path delays for a netlist with an SDF file
+                command += plugin.iverilog_options(parameters)
             command += [str(p) for p in sources]
             builds[key] = PROCESS.execute(command, out / (key + '-build.log'), args.timeout, out)
             if prepared is not None:  # record what was compiled, including generated and external files

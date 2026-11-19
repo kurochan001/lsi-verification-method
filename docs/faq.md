@@ -216,6 +216,7 @@ CIが成功していても、MR（GitHubではPR）がDraftならマージはブ
 | フォーマル証明・反例 | [FIFO](../examples/local-fifo-formal/README.md)、[命令デコーダ](../examples/local-riscv-decoder/README.md)、[分割証明](../examples/local-compositional-formal/README.md) | 固定版Yosys・SBY・Z3の環境 |
 | 仕様生成・ソフトウェア連携 | [SystemRDL](../examples/local-register-spec/README.md)、[Cドライバー](../examples/local-c-driver/README.md)、[cocotb](../examples/local-cocotb/README.md) | 各例に指定した生成器・コンパイラー・Pythonパッケージと実行系 |
 | タイミング制約・解析結果 | [STA](../examples/local-sta/README.md) | OpenSTAと例に含む説明用モデル |
+| 合成後の論理と遅延 | [ネットリスト](../examples/local-gate-sim/README.md)、[SDFつき](../examples/local-gate-timing/README.md) | Icarus Verilog、固定版Yosys。SDFつきの例はOpenSTAも使用 |
 | 失敗解析・AI提案のレビュー | [切り分け実習](../examples/local-failure-triage/README.md)、[保存提案の演習](../examples/local-ai-review/README.md) | Verilator、C++20、make。AI APIは不要 |
 
 `tools/verification_plan.py`、`run_regression.py`、`regression_report.py`、`run_lint.py`は、本リポジトリ単独で使う入口です。これに対して`tools/matching_kit/`・`generators/`・`reference/`は、ケーススタディ由来の台帳・テスト・依存ファイルを前提とする参照ツールです。`tools`全体を同じ扱いにせず、[独立ツールと参照ツールの区分](../tools/README.md)を確認してください。

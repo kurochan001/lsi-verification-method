@@ -396,6 +396,12 @@
       "diagnostics": [
       ]
     },
+    "local-gate-timing/mc_scale/default": {
+      "target_sha256": "f6f88dbb7e327fddddb1466d52d1447a0af765cbef8a2d3e5927a585e1692676",
+      "source_sha256": {"examples/local-gate-timing/rtl/mc_scale.sv": "172ffc9dee02f1e6c17e366c7ab0455072243e89fd6bff42c0d86e43a79a275e"},
+      "diagnostics": [
+      ]
+    },
     "local-gate-sim/burst_arbiter/default": {
       "target_sha256": "464d972d907462db865cb8a25c7ba5c7f4e31eaa206f7db69ce81a2be712af38",
       "source_sha256": {"examples/local-gate-sim/rtl/burst_arbiter.sv": "d0534cdc182872eb399a3e627b21766fde69695a648ccf7c43979501c35a90a0"},
