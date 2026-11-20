@@ -1,0 +1,100 @@
+{
+ "schema_version": 1,
+ "revision": 1,
+ "tools": {
+  "yosys": "0.70",
+  "z3": "4.15.3"
+ },
+ "exclusions": [
+  {
+   "item": "cu-line-l26-default",
+   "target": "command-unit",
+   "class": "unreachable",
+   "source_sha256": "e7f31b15e26e2f5ac564b7b2a4ca14e177d3f4bb963b66f9950968c9fcd35db3",
+   "expression_sha256": "07e5174f5c60a9a79918d206cb06c58f36c6390bad6350d72d842d8ad53fd0d7",
+   "proof": {
+    "task": "prove-cu-line-l26-default",
+    "mode": "prove",
+    "engine": "smtbmc z3",
+    "depth": 10,
+    "result": "k-induction"
+   },
+   "assumptions": [
+    "as_initial_reset"
+   ],
+   "helpers": [],
+   "reason": "The case lists all four values of the two state bits before the default item.",
+   "reviewed": "2026-11-20",
+   "expires": "When the RTL, the expression of the item, an assumption, a helper or a tool version changes.",
+   "point_id": "{\"S\":\"26\",\"h\":\"TOP.command_unit\",\"l\":\"26\",\"n\":\"5\",\"o\":\"case\",\"page\":\"v_line/command_unit\",\"t\":\"line\"}"
+  },
+  {
+   "item": "cu-fsm-arc-default-idle",
+   "target": "command-unit",
+   "class": "unreachable",
+   "source_sha256": "e7f31b15e26e2f5ac564b7b2a4ca14e177d3f4bb963b66f9950968c9fcd35db3",
+   "expression_sha256": "07e5174f5c60a9a79918d206cb06c58f36c6390bad6350d72d842d8ad53fd0d7",
+   "proof": {
+    "task": "prove-cu-fsm-arc-default-idle",
+    "mode": "prove",
+    "engine": "smtbmc z3",
+    "depth": 10,
+    "result": "k-induction"
+   },
+   "assumptions": [
+    "as_initial_reset"
+   ],
+   "helpers": [],
+   "reason": "The arc belongs to the default item, which no value of the two state bits selects.",
+   "reviewed": "2026-11-20",
+   "expires": "When the RTL, the expression of the item, an assumption, a helper or a tool version changes.",
+   "point_id": "{\"Ff\":\"default\",\"Fg\":\"default\",\"Ft\":\"IDLE\",\"Fv\":\"command_unit.state\",\"h\":\"TOP.TOP\",\"l\":\"18\",\"n\":\"4\",\"o\":\"command_unit.state::default->IDLE\",\"page\":\"v_fsm_arc/$root\",\"t\":\"fsm_arc\"}"
+  },
+  {
+   "item": "gu-guard",
+   "target": "guarded-unit",
+   "class": "unreachable",
+   "source_sha256": "bfdcf325b157af18f31f96b2834f0a188ab2bdefc754b29c3e6a10d7d1cb3217",
+   "expression_sha256": "8943e8eaa3f58b44f3edc7112349ed5ca5cf17691ba8149db66ead2266011a69",
+   "proof": {
+    "task": "prove-gu-guard",
+    "mode": "prove",
+    "engine": "smtbmc z3",
+    "depth": 10,
+    "result": "k-induction"
+   },
+   "assumptions": [
+    "as_initial_reset"
+   ],
+   "helpers": [
+    "ah_held_in_range"
+   ],
+   "reason": "The hold counter stops at LIMIT-1; the range is proved as a helper in the same task, not assumed.",
+   "reviewed": "2026-11-20",
+   "expires": "When the RTL, the expression of the item, an assumption, a helper or a tool version changes."
+  },
+  {
+   "item": "gu-test",
+   "target": "guarded-unit",
+   "class": "conditional",
+   "source_sha256": "bfdcf325b157af18f31f96b2834f0a188ab2bdefc754b29c3e6a10d7d1cb3217",
+   "expression_sha256": "f4f5301836a1950f42e9062e72a529f96b43aa77f080d2be21c6d4012712c18b",
+   "proof": {
+    "task": "prove-gu-test",
+    "mode": "prove",
+    "engine": "smtbmc z3",
+    "depth": 10,
+    "result": "k-induction"
+   },
+   "assumptions": [
+    "as_functional_mode",
+    "as_initial_reset"
+   ],
+   "helpers": [],
+   "reason": "test_mode is tied low in the functional mode. The exclusion does not hold for the test mode.",
+   "reviewed": "2026-11-20",
+   "expires": "When the RTL, the expression of the item, an assumption, a helper or a tool version changes.",
+   "scope": "functional mode"
+  }
+ ]
+}

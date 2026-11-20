@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "targets": {
+    "good": {
+      "flops": {"a_clk": 6, "b_clk": 8},
+      "asynchronous_reset_flops": 14,
+      "synchronizers": [
+        {"source": "a_level", "source_domain": "a_clk", "sink": "b_level_sync", "sink_domain": "b_clk", "bits": 1, "stages": 2},
+        {"source": "a_toggle", "source_domain": "a_clk", "sink": "b_toggle_sync", "sink_domain": "b_clk", "bits": 1, "stages": 2},
+        {"source": "b_busy", "source_domain": "b_clk", "sink": "a_busy_sync", "sink_domain": "a_clk", "bits": 1, "stages": 2}
+      ],
+      "unsynchronized": [],
+      "findings": {},
+      "open": []
+    },
+    "no-sync": {
+      "flops": {"a_clk": 1, "b_clk": 1},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [],
+      "unsynchronized": [
+        {"source": "a_q", "sink": "b_q", "paths": 1}
+      ],
+      "findings": {
+        "NO_SYNC a_q->b_q": 1
+      },
+      "open": ["NO_SYNC a_q->b_q"]
+    },
+    "comb-before-sync": {
+      "flops": {"a_clk": 2, "b_clk": 2},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [],
+      "unsynchronized": [
+        {"source": "a_x", "sink": "b_sync", "paths": 1},
+        {"source": "a_y", "sink": "b_sync", "paths": 1}
+      ],
+      "findings": {
+        "COMB_BEFORE_SYNC a_x,a_y->b_sync": 1
+      },
+      "open": ["COMB_BEFORE_SYNC a_x,a_y->b_sync"]
+    },
+    "fanout-before-sync": {
+      "flops": {"a_clk": 1, "b_clk": 4},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [
+        {"source": "a_q", "source_domain": "a_clk", "sink": "b_enable_sync", "sink_domain": "b_clk", "bits": 1, "stages": 2},
+        {"source": "a_q", "source_domain": "a_clk", "sink": "b_start_sync", "sink_domain": "b_clk", "bits": 1, "stages": 2}
+      ],
+      "unsynchronized": [],
+      "findings": {
+        "FANOUT_BEFORE_SYNC a_q->b_enable_sync,b_start_sync": 1
+      },
+      "open": ["FANOUT_BEFORE_SYNC a_q->b_enable_sync,b_start_sync"]
+    },
+    "reconvergence": {
+      "flops": {"a_clk": 2, "b_clk": 5},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [
+        {"source": "a_last", "source_domain": "a_clk", "sink": "b_last_sync", "sink_domain": "b_clk", "bits": 1, "stages": 2},
+        {"source": "a_request", "source_domain": "a_clk", "sink": "b_request_sync", "sink_domain": "b_clk", "bits": 1, "stages": 2}
+      ],
+      "unsynchronized": [],
+      "findings": {
+        "RECONVERGENCE b_last_sync,b_request_sync->b_final": 1
+      },
+      "open": ["RECONVERGENCE b_last_sync,b_request_sync->b_final"]
+    },
+    "multibit": {
+      "flops": {"a_clk": 3, "b_clk": 6},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [
+        {"source": "a_count", "source_domain": "a_clk", "sink": "b_meta", "sink_domain": "b_clk", "bits": 3, "stages": 2}
+      ],
+      "unsynchronized": [],
+      "findings": {
+        "MULTIBIT_SEPARATE_SYNC a_count->b_meta": 3
+      },
+      "open": ["MULTIBIT_SEPARATE_SYNC a_count->b_meta"]
+    },
+    "reset-release": {
+      "flops": {"clk": 3},
+      "asynchronous_reset_flops": 3,
+      "synchronizers": [],
+      "unsynchronized": [],
+      "findings": {
+        "RESET_RELEASE one_stage->ready_reg": 1,
+        "RESET_RELEASE rst_n->q_reg": 1
+      },
+      "open": ["RESET_RELEASE one_stage->ready_reg", "RESET_RELEASE rst_n->q_reg"]
+    },
+    "cdc-handshake-sync2": {
+      "flops": {"dst_clk": 8, "src_clk": 12},
+      "asynchronous_reset_flops": 20,
+      "synchronizers": [
+        {"source": "ack", "source_domain": "dst_clk", "sink": "ack_sync", "sink_domain": "src_clk", "bits": 1, "stages": 2},
+        {"source": "req", "source_domain": "src_clk", "sink": "req_sync", "sink_domain": "dst_clk", "bits": 1, "stages": 2},
+        {"source": "toggle", "source_domain": "src_clk", "sink": "pulse_sync", "sink_domain": "dst_clk", "bits": 1, "stages": 2}
+      ],
+      "unsynchronized": [
+        {"source": "data_reg", "sink": "dst_data", "paths": 8},
+        {"source": "rst_n", "sink": "data_reg", "paths": 8},
+        {"source": "rst_n", "sink": "req", "paths": 1},
+        {"source": "rst_n", "sink": "src_ready", "paths": 1}
+      ],
+      "findings": {
+        "NO_SYNC data_reg->dst_data": 8,
+        "NO_SYNC rst_n->data_reg": 8,
+        "NO_SYNC rst_n->req": 1,
+        "NO_SYNC rst_n->src_ready": 1,
+        "RESET_RELEASE rst_n->ack_sync": 2,
+        "RESET_RELEASE rst_n->data_reg": 8,
+        "RESET_RELEASE rst_n->req": 1,
+        "RESET_RELEASE rst_n->toggle": 1
+      },
+      "open": []
+    },
+    "cdc-handshake-sync3": {
+      "flops": {"dst_clk": 11, "src_clk": 13},
+      "asynchronous_reset_flops": 24,
+      "synchronizers": [
+        {"source": "ack", "source_domain": "dst_clk", "sink": "ack_sync", "sink_domain": "src_clk", "bits": 1, "stages": 3},
+        {"source": "req", "source_domain": "src_clk", "sink": "req_sync", "sink_domain": "dst_clk", "bits": 1, "stages": 3},
+        {"source": "toggle", "source_domain": "src_clk", "sink": "pulse_sync", "sink_domain": "dst_clk", "bits": 1, "stages": 3}
+      ],
+      "unsynchronized": [
+        {"source": "data_reg", "sink": "dst_data", "paths": 8},
+        {"source": "rst_n", "sink": "data_reg", "paths": 8},
+        {"source": "rst_n", "sink": "req", "paths": 1},
+        {"source": "rst_n", "sink": "src_ready", "paths": 1}
+      ],
+      "findings": {
+        "NO_SYNC data_reg->dst_data": 8,
+        "NO_SYNC rst_n->data_reg": 8,
+        "NO_SYNC rst_n->req": 1,
+        "NO_SYNC rst_n->src_ready": 1,
+        "RESET_RELEASE rst_n->ack_sync": 3,
+        "RESET_RELEASE rst_n->data_reg": 8,
+        "RESET_RELEASE rst_n->req": 1,
+        "RESET_RELEASE rst_n->toggle": 1
+      },
+      "open": []
+    },
+    "async-fifo-depth4-sync2": {
+      "flops": {"rclk": 22, "wclk": 45},
+      "asynchronous_reset_flops": 35,
+      "synchronizers": [
+        {"source": "rgray", "source_domain": "rclk", "sink": "rsync", "sink_domain": "wclk", "bits": 3, "stages": 2},
+        {"source": "wgray", "source_domain": "wclk", "sink": "wsync", "sink_domain": "rclk", "bits": 3, "stages": 2}
+      ],
+      "unsynchronized": [
+        {"source": "memory", "sink": "rd_data", "paths": 32},
+        {"source": "rst_n", "sink": "memory", "paths": 32}
+      ],
+      "findings": {
+        "MULTIBIT_SEPARATE_SYNC rgray->rsync": 3,
+        "MULTIBIT_SEPARATE_SYNC wgray->wsync": 3,
+        "NO_SYNC memory->rd_data": 8,
+        "NO_SYNC rst_n->memory": 32,
+        "RECONVERGENCE rsync->full": 1,
+        "RECONVERGENCE wsync->empty": 1,
+        "RESET_RELEASE rst_n->empty": 1,
+        "RESET_RELEASE rst_n->full": 1,
+        "RESET_RELEASE rst_n->rbin": 3,
+        "RESET_RELEASE rst_n->rd_data": 8,
+        "RESET_RELEASE rst_n->rd_valid": 1,
+        "RESET_RELEASE rst_n->rgray": 3,
+        "RESET_RELEASE rst_n->rsync": 6,
+        "RESET_RELEASE rst_n->wbin": 3,
+        "RESET_RELEASE rst_n->wgray": 3,
+        "RESET_RELEASE rst_n->wsync": 6
+      },
+      "open": []
+    },
+    "async-fifo-depth8-sync3": {
+      "flops": {"rclk": 30, "wclk": 85},
+      "asynchronous_reset_flops": 51,
+      "synchronizers": [
+        {"source": "rgray", "source_domain": "rclk", "sink": "rsync", "sink_domain": "wclk", "bits": 4, "stages": 3},
+        {"source": "wgray", "source_domain": "wclk", "sink": "wsync", "sink_domain": "rclk", "bits": 4, "stages": 3}
+      ],
+      "unsynchronized": [
+        {"source": "memory", "sink": "rd_data", "paths": 64},
+        {"source": "rst_n", "sink": "memory", "paths": 64}
+      ],
+      "findings": {
+        "MULTIBIT_SEPARATE_SYNC rgray->rsync": 4,
+        "MULTIBIT_SEPARATE_SYNC wgray->wsync": 4,
+        "NO_SYNC memory->rd_data": 8,
+        "NO_SYNC rst_n->memory": 64,
+        "RECONVERGENCE rsync->full": 1,
+        "RECONVERGENCE wsync->empty": 1,
+        "RESET_RELEASE rst_n->empty": 1,
+        "RESET_RELEASE rst_n->full": 1,
+        "RESET_RELEASE rst_n->rbin": 4,
+        "RESET_RELEASE rst_n->rd_data": 8,
+        "RESET_RELEASE rst_n->rd_valid": 1,
+        "RESET_RELEASE rst_n->rgray": 4,
+        "RESET_RELEASE rst_n->rsync": 12,
+        "RESET_RELEASE rst_n->wbin": 4,
+        "RESET_RELEASE rst_n->wgray": 4,
+        "RESET_RELEASE rst_n->wsync": 12
+      },
+      "open": []
+    },
+    "irq-cdc-receiver": {
+      "flops": {"clk": 2},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [],
+      "unsynchronized": [],
+      "findings": {
+        "RECONVERGENCE a,b->accepted_toggle": 1,
+        "RECONVERGENCE a,b->pulse": 1
+      },
+      "open": []
+    },
+    "irq-cdc-pending": {
+      "flops": {"clk": 1},
+      "asynchronous_reset_flops": 0,
+      "synchronizers": [],
+      "unsynchronized": [],
+      "findings": {},
+      "open": []
+    }
+  }
+}

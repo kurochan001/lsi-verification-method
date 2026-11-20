@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "note": "Power intent of this teaching example. It is a table of this repository, not UPF.",
+  "scope": "pd_tb.dut",
+  "settle_parameter": "SETTLE",
+  "domains": {
+    "a": {
+      "instance": "u_a",
+      "power": "u_ctrl.pwr_a",
+      "isolate": "u_ctrl.iso_a",
+      "reset_n": "u_ctrl.rst_a_n",
+      "requires": [],
+      "registers": [
+        {"name": "acc", "width": 8, "reset": 0, "retained": true},
+        {"name": "scratch", "width": 8, "reset": 0, "retained": false},
+        {"name": "fired", "width": 1, "reset": 0, "retained": false}
+      ],
+      "outputs": [
+        {"name": "a_sum", "width": 8, "isolation": "zero"},
+        {"name": "a_idle_n", "width": 1, "isolation": "one"},
+        {"name": "a_last", "width": 8, "isolation": "hold"}
+      ]
+    },
+    "b": {
+      "instance": "u_b",
+      "power": "u_ctrl.pwr_b",
+      "isolate": "u_ctrl.iso_b",
+      "reset_n": "u_ctrl.rst_b_n",
+      "requires": ["a"],
+      "registers": [
+        {"name": "mode", "width": 4, "reset": 0, "retained": true},
+        {"name": "count", "width": 8, "reset": 0, "retained": false}
+      ],
+      "outputs": [
+        {"name": "b_count", "width": 8, "isolation": "zero"},
+        {"name": "b_mode", "width": 4, "isolation": "hold"}
+      ]
+    }
+  },
+  "states": {
+    "all-off": {"a": 0, "b": 0},
+    "a-only": {"a": 1, "b": 0},
+    "all-on": {"a": 1, "b": 1}
+  },
+  "transitions": {
+    "a-up": ["all-off", "a-only"],
+    "a-down": ["a-only", "all-off"],
+    "b-up": ["a-only", "all-on"],
+    "b-down": ["all-on", "a-only"]
+  },
+  "crossings": [
+    {"from": "a", "to": "b", "signal": "a_sum_raw[0]", "isolation": "none"}
+  ],
+  "always_on_outputs": [
+    {"name": "op_ready", "width": 1},
+    {"name": "a_on", "width": 1},
+    {"name": "b_on", "width": 1},
+    {"name": "busy", "width": 1},
+    {"name": "pwr_a", "width": 1},
+    {"name": "pwr_b", "width": 1}
+  ]
+}

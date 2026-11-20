@@ -2397,3 +2397,9 @@ macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-41
 | [演算データパス](docs/method/arithmetic-datapath-verification.md) | FIR、除算器、活性化、再量子化、MXFP4、SHA-256、CRC | ビット一致・許容誤差・統計の使い分け。統計的な判定の例はまだない |
 
 [README](README.md#目的から資料を選ぶ)の目的別の表に8行、分野別の表に8行を加え、[検証例一覧](examples/README.md)の該当する7節と、[検証計画の抜けの点検](docs/method/verification-gap-review.md#1-適用する検証領域を先に決める)の領域表からリンクしました。引用した外部URL 32件は、2026-11-20に応答を確かめました（ArmのAMBA仕様の4件は、自動取得を拒否する403でした）。規格の本文は写していません。文書検査は486項目で合格しました。
+
+### バッチB以降：9つの検証例
+
+[検証例一覧](examples/README.md)に、CDC／RDCの構造解析、クロックゲート・切替・奇数分周、複数電源領域、活動率からの電力見積り、RTLとネットリストの等価性、未達カバレッジの到達不能証明、遷移故障、メモリの修復、モード・コーナー別のSTAを加えました。
+
+macOS arm64で、9例の個別smokeと統合ランナーでのnightly 9ジョブが合格しました。nightlyでは各例のJUnit 238件と構成・ソースのハッシュを照合し、結果を `artifacts/field-examples-integrated-nightly/` に保存しました。追加したRTLのlint 28構成に警告はありませんでした。共通の登録表は152項目・130ルートジョブです。kirimasim向けの新しい自動選択計画は94例・121構成です。各例のモデルの範囲と実装時に残る確認は、個別のREADMEに記載しています。

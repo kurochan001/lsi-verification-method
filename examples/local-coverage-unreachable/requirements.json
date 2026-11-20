@@ -1,0 +1,75 @@
+{
+ "schema_version": 1,
+ "revision": 1,
+ "requirements": [
+  {
+   "id": "UR-MEASURE",
+   "summary": "The unhit line, branch and FSM points of the base test are measured with Verilator and each one is tied to exactly one item.",
+   "goals": [
+    "measured-build",
+    "measured-baseline",
+    "measured-inventory"
+   ]
+  },
+  {
+   "id": "UR-CLASSIFY",
+   "summary": "Every item gets its class from a cover trace or an induction proof, as pinned in the item table.",
+   "goals": [
+    "classify-cu-*",
+    "classify-gu-deny",
+    "classify-gu-stall",
+    "classify-gu-guard",
+    "classify-gu-test"
+   ]
+  },
+  {
+   "id": "UR-REPLAY",
+   "summary": "The inputs of every cover trace of the measured unit hit the same point in simulation, and what stays unhit is exactly what the ledger excludes.",
+   "goals": [
+    "replay-cu-*",
+    "measured-closure"
+   ]
+  },
+  {
+   "id": "UR-BOUNDED",
+   "summary": "A miss within a bound, a bounded proof and an unfinished induction leave an item unclassified.",
+   "goals": [
+    "classify-gu-stall-shallow",
+    "classify-gu-guard-no-helper",
+    "bounded-pass-is-not-proof"
+   ]
+  },
+  {
+   "id": "UR-ASSUMPTION",
+   "summary": "An assumption that blocks required behaviour invalidates the proofs that use it; a contract assumption keeps all required behaviour reachable.",
+   "goals": [
+    "classify-gu-deny-overconstrained",
+    "goals-as_always_permitted",
+    "goals-as_functional_mode"
+   ]
+  },
+  {
+   "id": "UR-LEDGER",
+   "summary": "The exclusion ledger agrees with the proofs of this run; entries without proof, with stale hashes, without their assumptions, for reachable items, with bounded evidence or with invalid assumptions are rejected.",
+   "goals": [
+    "ledger-*"
+   ]
+  },
+  {
+   "id": "UR-EVIDENCE",
+   "summary": "Tool versions are recorded and the sources did not change during the run.",
+   "goals": [
+    "tools",
+    "source-identity"
+   ]
+  },
+  {
+   "id": "UR-CROSS",
+   "summary": "Nightly: the opposite task of every reachable item gives a counterexample.",
+   "goals": [
+    "cross-*"
+   ],
+   "nightly_only": true
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "waivers": [
+    {
+      "id": "W-HS-DATA",
+      "targets": [
+        "cdc-handshake-sync2",
+        "cdc-handshake-sync3"
+      ],
+      "disposition": "waived",
+      "findings": [
+        "NO_SYNC data_reg->dst_data"
+      ],
+      "reason": "data_regはreqを立てるサイクルにだけ書き換え、ackを同期して受け取るまで保持する。受信側は、同期したreqが立っている間だけdst_dataを使う。データそのものを同期しない4相ハンドシェイクの方式どおり",
+      "review": "送信側のRTLで、data_regの書込み条件がsrc_valid && src_ready（reqが0のときだけ成立）であることを読んだ。保持と受理は、local-cdc-handshakeのシミュレーションが確かめている",
+      "expires": {
+        "condition": "対象のRTLが変わったら失効する。交差一覧を取り直し、理由が今も成り立つかを確かめてから、ハッシュを更新する",
+        "source_sha256": {
+          "examples/local-cdc-handshake/rtl/cdc_handshake.sv": "5f9481cfa6f23be044612ac322ccde1eb002eb264cd41ced5dde077ca2ebd3b1"
+        }
+      }
+    },
+    {
+      "id": "D-HS-RESET",
+      "targets": [
+        "cdc-handshake-sync2",
+        "cdc-handshake-sync3"
+      ],
+      "disposition": "known-debt",
+      "findings": [
+        "NO_SYNC rst_n->data_reg",
+        "NO_SYNC rst_n->req",
+        "NO_SYNC rst_n->src_ready",
+        "RESET_RELEASE rst_n->ack_sync",
+        "RESET_RELEASE rst_n->data_reg",
+        "RESET_RELEASE rst_n->req",
+        "RESET_RELEASE rst_n->toggle"
+      ],
+      "reason": "送信側は、非同期のrst_nをそのままフリップフロップのリセットと、src_readyとイネーブルの論理に使っている。local-cdc-handshakeのREADMEは「送信側のデアサート同期は本例に含みません」と書いており、教材の既知の範囲外である。安全だという判断ではない",
+      "review": "rst_nの解除をsrc_clkに同期させる回路がRTLにないことを読んだ。製品では、送信側にもリセット同期器を置くか、rst_nがsrc_clkに同期して解除されることを制約と解析で確かめる",
+      "expires": {
+        "condition": "対象のRTLが変わったら失効する。交差一覧を取り直し、理由が今も成り立つかを確かめてから、ハッシュを更新する",
+        "source_sha256": {
+          "examples/local-cdc-handshake/rtl/cdc_handshake.sv": "5f9481cfa6f23be044612ac322ccde1eb002eb264cd41ced5dde077ca2ebd3b1"
+        }
+      }
+    },
+    {
+      "id": "W-FIFO-GRAY",
+      "targets": [
+        "async-fifo-depth4-sync2",
+        "async-fifo-depth8-sync3"
+      ],
+      "disposition": "waived",
+      "findings": [
+        "MULTIBIT_SEPARATE_SYNC rgray->rsync",
+        "MULTIBIT_SEPARATE_SYNC wgray->wsync",
+        "RECONVERGENCE rsync->full",
+        "RECONVERGENCE wsync->empty"
+      ],
+      "reason": "wgrayとrgrayはGray符号のポインターをレジスタから出しており、1クロックで変わるのは1ビットだけである。ビットごとに同期して比較しても、受け側が見る値は前の値か今の値のどちらかになる",
+      "review": "wgとrgが(n>>1)^nで作られ、レジスタの出力をそのまま同期器へ渡していることを読んだ。構造からはGray符号かどうかを判定していない。2進のまま渡す誤り（local-async-fifoの変異4）は、そちらのシミュレーションが検出する",
+      "expires": {
+        "condition": "対象のRTLが変わったら失効する。交差一覧を取り直し、理由が今も成り立つかを確かめてから、ハッシュを更新する",
+        "source_sha256": {
+          "examples/local-async-fifo/rtl/async_fifo.sv": "a412cdcc4c20ce7fe54c19e42206c5b89f003edd0a77f3d0010c64b7e6fb4293"
+        }
+      }
+    },
+    {
+      "id": "W-FIFO-MEMORY",
+      "targets": [
+        "async-fifo-depth4-sync2",
+        "async-fifo-depth8-sync3"
+      ],
+      "disposition": "waived",
+      "findings": [
+        "NO_SYNC memory->rd_data"
+      ],
+      "reason": "読出し側は、同期した書込みポインターから作るemptyが0のときだけメモリを読む。その番地への書込みは、ポインターが同期器を通るより前に終わっている",
+      "review": "rd_dataの取込み条件がread_ok（rd_en && !empty）であることを読んだ。データの順序と値は、local-async-fifoの参照キューとの比較が確かめている",
+      "expires": {
+        "condition": "対象のRTLが変わったら失効する。交差一覧を取り直し、理由が今も成り立つかを確かめてから、ハッシュを更新する",
+        "source_sha256": {
+          "examples/local-async-fifo/rtl/async_fifo.sv": "a412cdcc4c20ce7fe54c19e42206c5b89f003edd0a77f3d0010c64b7e6fb4293"
+        }
+      }
+    },
+    {
+      "id": "D-FIFO-RESET",
+      "targets": [
+        "async-fifo-depth4-sync2",
+        "async-fifo-depth8-sync3"
+      ],
+      "disposition": "known-debt",
+      "findings": [
+        "NO_SYNC rst_n->memory",
+        "RESET_RELEASE rst_n->empty",
+        "RESET_RELEASE rst_n->full",
+        "RESET_RELEASE rst_n->rbin",
+        "RESET_RELEASE rst_n->rd_data",
+        "RESET_RELEASE rst_n->rd_valid",
+        "RESET_RELEASE rst_n->rgray",
+        "RESET_RELEASE rst_n->rsync",
+        "RESET_RELEASE rst_n->wbin",
+        "RESET_RELEASE rst_n->wgray",
+        "RESET_RELEASE rst_n->wsync"
+      ],
+      "reason": "共通の非同期リセットを、両方のクロック領域のフリップフロップへそのまま使っている。メモリの書込みイネーブルにもrst_nが入る。local-async-fifoのREADMEは、リセット解除のrecovery／removalをモデル化せず、構造的なCDC/RDC解析が別に必要だと書いている。安全だという判断ではない",
+      "review": "どちらの領域にもリセット同期器がないことを読んだ。製品では、領域ごとにリセットを同期して解除する",
+      "expires": {
+        "condition": "対象のRTLが変わったら失効する。交差一覧を取り直し、理由が今も成り立つかを確かめてから、ハッシュを更新する",
+        "source_sha256": {
+          "examples/local-async-fifo/rtl/async_fifo.sv": "a412cdcc4c20ce7fe54c19e42206c5b89f003edd0a77f3d0010c64b7e6fb4293"
+        }
+      }
+    },
+    {
+      "id": "W-IRQ-AGREE",
+      "targets": [
+        "irq-cdc-receiver"
+      ],
+      "disposition": "waived",
+      "findings": [
+        "RECONVERGENCE a,b->accepted_toggle",
+        "RECONVERGENCE a,b->pulse"
+      ],
+      "reason": "aとbは同じトグルを別々に同期した2本で、届くサイクルがずれうる。この回路は、2本が一致したときだけ受理する。再収束を前提にした回路である",
+      "review": "受理の条件がa == b && a != accepted_toggleであることを読んだ。片方だけで受理する誤り（EARLY_A_ONLY）は、local-irq-cdcのシミュレーションが検出する。同期器はテストベンチ側にあり、この解析では端子の宣言として与えている",
+      "expires": {
+        "condition": "対象のRTLが変わったら失効する。交差一覧を取り直し、理由が今も成り立つかを確かめてから、ハッシュを更新する",
+        "source_sha256": {
+          "examples/local-irq-cdc/rtl/cdc_receiver.sv": "a00ec19b2cd63115f3c44bb2569767a841cec21d6929c01554d318dccb11bad5"
+        }
+      }
+    }
+  ]
+}

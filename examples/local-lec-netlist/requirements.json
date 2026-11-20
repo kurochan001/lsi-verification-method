@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "LEC-SYNTH",
+      "summary": "The synthesized netlist behaves as the RTL at every flop and output.",
+      "goals": ["rtl-vs-synth"]
+    },
+    {
+      "id": "LEC-SCAN-FUNCTIONAL",
+      "summary": "With scan_en held at 0 the netlist with scan behaves as the RTL, whatever scan_in does; without that assumption it does not.",
+      "goals": ["rtl-vs-scan-functional", "diagnose-scan-unconstrained"]
+    },
+    {
+      "id": "LEC-SCAN-SHIFT",
+      "summary": "With scan_en at 1 a bit given to scan_in leaves scan_out one clock per flop later.",
+      "goals": ["scan-shift", "detect-scan-chain-break"]
+    },
+    {
+      "id": "LEC-NEGATIVE",
+      "summary": "A reset of the wrong polarity, a wrong reset value and exchanged multiplexer inputs are reported at the flop they change.",
+      "goals": ["detect-reset-polarity", "detect-reset-value", "detect-scan-miswire"]
+    },
+    {
+      "id": "LEC-ECO",
+      "summary": "After the ECO the netlist behaves as the new RTL; against the old RTL only the alarm differs; a wrong gate in the ECO is reported.",
+      "goals": ["eco-new-specification", "eco-changed-range", "eco-kept-range", "detect-eco-wrong-gate"]
+    }
+  ]
+}

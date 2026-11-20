@@ -26,6 +26,16 @@
     "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
     "examples/local-cdc-bridge/rtl/packet_fifo.sv",
     "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
+    "examples/local-cdc-structural/rtl/cdc_comb_before_sync.sv",
+    "examples/local-cdc-structural/rtl/cdc_fanout_before_sync.sv",
+    "examples/local-cdc-structural/rtl/cdc_good.sv",
+    "examples/local-cdc-structural/rtl/cdc_multibit.sv",
+    "examples/local-cdc-structural/rtl/cdc_no_sync.sv",
+    "examples/local-cdc-structural/rtl/cdc_reconvergence.sv",
+    "examples/local-cdc-structural/rtl/cdc_reset_release.sv",
+    "examples/local-clock-gating/rtl/clock_gate.sv",
+    "examples/local-clock-gating/rtl/clock_switch.sv",
+    "examples/local-clock-gating/rtl/odd_divider.sv",
     "examples/local-clock-reset/rtl/clock_reset.sv",
     "examples/local-code-coverage/rtl/command_unit.sv",
     "examples/local-compositional-formal/rtl/blocks.sv",
@@ -33,6 +43,7 @@
     "examples/local-constant-time/rtl/constant_time_compare.sv",
     "examples/local-conv-window/rtl/conv_window.sv",
     "examples/local-counter-snapshot/rtl/counter.sv",
+    "examples/local-coverage-unreachable/rtl/guarded_unit.sv",
     "examples/local-cpp-reference/rtl/saturating_fir.sv",
     "examples/local-credit-link/rtl/credit_link.sv",
     "examples/local-descriptor-dma/rtl/descriptor_dma.sv",
@@ -64,9 +75,12 @@
     "examples/local-jtag-tap/rtl/jtag_tap.sv",
     "examples/local-lbist/rtl/lbist.sv",
     "examples/local-lbist/rtl/lbist_logic.sv",
+    "examples/local-lec-netlist/rtl/event_meter.sv",
     "examples/local-liveness/rtl/fair_arbiter.sv",
     "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
     "examples/local-mbist/rtl/mbist.sv",
+    "examples/local-memory-repair/rtl/fuse_bank.sv",
+    "examples/local-memory-repair/rtl/mem_repair.sv",
     "examples/local-motion-control/rtl/fixed_pi.sv",
     "examples/local-motion-control/rtl/motion_axis.sv",
     "examples/local-motion-io/rtl/quadrature_decoder.sv",
@@ -102,6 +116,10 @@
     "examples/local-packet-switch/rtl/packet_switch.sv",
     "examples/local-performance-monitor/rtl/perf_monitor.sv",
     "examples/local-pll-recovery/rtl/pll_guard.sv",
+    "examples/local-power-domains/rtl/pd_ctrl.sv",
+    "examples/local-power-domains/rtl/pd_domain_a.sv",
+    "examples/local-power-domains/rtl/pd_domain_b.sv",
+    "examples/local-power-domains/rtl/pd_top.sv",
     "examples/local-power/rtl/power_island.sv",
     "examples/local-priority-irq/rtl/priority_irq.sv",
     "examples/local-progress/rtl/bounded_server.sv",
@@ -138,6 +156,8 @@
     "examples/local-tmr/rtl/plain_register.sv",
     "examples/local-tmr/rtl/tmr_register.sv",
     "examples/local-topk/rtl/topk_select.sv",
+    "examples/local-transition-fault/rtl/TFSITE.sv",
+    "examples/local-transition-fault/rtl/tf_core.sv",
     "examples/local-uart/rtl/uart.sv",
     "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
     "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
@@ -4884,6 +4904,287 @@
       "parameters": {
         "HALF_PERIOD": 5
       }
+    },
+    {
+      "id": "local-cdc-structural/cdc_good/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_good.sv",
+      "top": "cdc_good",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_good.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cdc-structural/cdc_no_sync/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_no_sync.sv",
+      "top": "cdc_no_sync",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_no_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cdc-structural/cdc_comb_before_sync/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_comb_before_sync.sv",
+      "top": "cdc_comb_before_sync",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_comb_before_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cdc-structural/cdc_fanout_before_sync/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_fanout_before_sync.sv",
+      "top": "cdc_fanout_before_sync",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_fanout_before_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cdc-structural/cdc_reconvergence/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_reconvergence.sv",
+      "top": "cdc_reconvergence",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_reconvergence.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cdc-structural/cdc_multibit/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_multibit.sv",
+      "top": "cdc_multibit",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_multibit.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cdc-structural/cdc_reset_release/default",
+      "file": "examples/local-cdc-structural/rtl/cdc_reset_release.sv",
+      "top": "cdc_reset_release",
+      "sources": [
+        "examples/local-cdc-structural/rtl/cdc_reset_release.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-lec-netlist/event_meter/default",
+      "file": "examples/local-lec-netlist/rtl/event_meter.sv",
+      "top": "event_meter",
+      "sources": [
+        "examples/local-lec-netlist/rtl/event_meter.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-lec-netlist/event_meter/ALARM_AT=10",
+      "file": "examples/local-lec-netlist/rtl/event_meter.sv",
+      "top": "event_meter",
+      "sources": [
+        "examples/local-lec-netlist/rtl/event_meter.sv"
+      ],
+      "parameters": {
+        "ALARM_AT": 10
+      }
+    },
+    {
+      "id": "local-power-domains/pd_domain_a/default",
+      "file": "examples/local-power-domains/rtl/pd_domain_a.sv",
+      "top": "pd_domain_a",
+      "sources": [
+        "examples/local-power-domains/rtl/pd_domain_a.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-power-domains/pd_domain_b/default",
+      "file": "examples/local-power-domains/rtl/pd_domain_b.sv",
+      "top": "pd_domain_b",
+      "sources": [
+        "examples/local-power-domains/rtl/pd_domain_b.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-power-domains/pd_ctrl/default",
+      "file": "examples/local-power-domains/rtl/pd_ctrl.sv",
+      "top": "pd_ctrl",
+      "sources": [
+        "examples/local-power-domains/rtl/pd_ctrl.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-power-domains/pd_ctrl/SETTLE=4",
+      "file": "examples/local-power-domains/rtl/pd_ctrl.sv",
+      "top": "pd_ctrl",
+      "sources": [
+        "examples/local-power-domains/rtl/pd_ctrl.sv"
+      ],
+      "parameters": {
+        "SETTLE": 4
+      }
+    },
+    {
+      "id": "local-power-domains/pd_top/default",
+      "file": "examples/local-power-domains/rtl/pd_top.sv",
+      "top": "pd_top",
+      "sources": [
+        "examples/local-power-domains/rtl/pd_domain_a.sv",
+        "examples/local-power-domains/rtl/pd_domain_b.sv",
+        "examples/local-power-domains/rtl/pd_ctrl.sv",
+        "examples/local-power-domains/rtl/pd_top.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-power-domains/pd_top/SETTLE=4",
+      "file": "examples/local-power-domains/rtl/pd_top.sv",
+      "top": "pd_top",
+      "sources": [
+        "examples/local-power-domains/rtl/pd_domain_a.sv",
+        "examples/local-power-domains/rtl/pd_domain_b.sv",
+        "examples/local-power-domains/rtl/pd_ctrl.sv",
+        "examples/local-power-domains/rtl/pd_top.sv"
+      ],
+      "parameters": {
+        "SETTLE": 4
+      }
+    },
+    {
+      "id": "local-clock-gating/clock_gate/default",
+      "file": "examples/local-clock-gating/rtl/clock_gate.sv",
+      "top": "clock_gate",
+      "sources": [
+        "examples/local-clock-gating/rtl/clock_gate.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-clock-gating/clock_switch/default",
+      "file": "examples/local-clock-gating/rtl/clock_switch.sv",
+      "top": "clock_switch",
+      "sources": [
+        "examples/local-clock-gating/rtl/clock_switch.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-clock-gating/odd_divider/default",
+      "file": "examples/local-clock-gating/rtl/odd_divider.sv",
+      "top": "odd_divider",
+      "sources": [
+        "examples/local-clock-gating/rtl/odd_divider.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-clock-gating/odd_divider/DIV=5",
+      "file": "examples/local-clock-gating/rtl/odd_divider.sv",
+      "top": "odd_divider",
+      "sources": [
+        "examples/local-clock-gating/rtl/odd_divider.sv"
+      ],
+      "parameters": {
+        "DIV": 5
+      }
+    },
+    {
+      "id": "local-coverage-unreachable/guarded_unit/default",
+      "file": "examples/local-coverage-unreachable/rtl/guarded_unit.sv",
+      "top": "guarded_unit",
+      "sources": [
+        "examples/local-coverage-unreachable/rtl/guarded_unit.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-transition-fault/tf_core/default",
+      "file": "examples/local-transition-fault/rtl/tf_core.sv",
+      "top": "tf_core",
+      "sources": [
+        "examples/local-transition-fault/rtl/tf_core.sv",
+        "examples/local-transition-fault/rtl/TFSITE.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-transition-fault/TFSITE/default",
+      "file": "examples/local-transition-fault/rtl/TFSITE.sv",
+      "top": "TFSITE",
+      "sources": [
+        "examples/local-transition-fault/rtl/TFSITE.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-memory-repair/mem_repair/default",
+      "file": "examples/local-memory-repair/rtl/mem_repair.sv",
+      "top": "mem_repair",
+      "sources": [
+        "examples/local-memory-repair/rtl/mem_repair.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-memory-repair/mem_repair/ROWS=4/COLS=4/SR=1/SC=1",
+      "file": "examples/local-memory-repair/rtl/mem_repair.sv",
+      "top": "mem_repair",
+      "sources": [
+        "examples/local-memory-repair/rtl/mem_repair.sv"
+      ],
+      "parameters": {
+        "ROWS": 4,
+        "COLS": 4,
+        "SR": 1,
+        "SC": 1
+      }
+    },
+    {
+      "id": "local-memory-repair/mem_repair/ROWS=8/COLS=8/SR=2/SC=2",
+      "file": "examples/local-memory-repair/rtl/mem_repair.sv",
+      "top": "mem_repair",
+      "sources": [
+        "examples/local-memory-repair/rtl/mem_repair.sv"
+      ],
+      "parameters": {
+        "ROWS": 8,
+        "COLS": 8,
+        "SR": 2,
+        "SC": 2
+      }
+    },
+    {
+      "id": "local-memory-repair/fuse_bank/default",
+      "file": "examples/local-memory-repair/rtl/fuse_bank.sv",
+      "top": "fuse_bank",
+      "sources": [
+        "examples/local-memory-repair/rtl/fuse_bank.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-memory-repair/fuse_bank/WIDTH=7",
+      "file": "examples/local-memory-repair/rtl/fuse_bank.sv",
+      "top": "fuse_bank",
+      "sources": [
+        "examples/local-memory-repair/rtl/fuse_bank.sv"
+      ],
+      "parameters": {
+        "WIDTH": 7
+      }
+    },
+    {
+      "id": "local-memory-repair/fuse_bank/WIDTH=17",
+      "file": "examples/local-memory-repair/rtl/fuse_bank.sv",
+      "top": "fuse_bank",
+      "sources": [
+        "examples/local-memory-repair/rtl/fuse_bank.sv"
+      ],
+      "parameters": {
+        "WIDTH": 17
+      }
     }
   ],
   "examples": {
@@ -6728,6 +7029,86 @@
         "local-pll-recovery/pll_guard/LOCK_CYCLES=7/TIMEOUT=16"
       ],
       "reason": "Measure clocks in the testbench while reusing the PLL lock guard DUT."
+    },
+    "local-cdc-structural": {
+      "scope": "dut",
+      "targets": [
+        "local-cdc-structural/cdc_good/default",
+        "local-cdc-structural/cdc_no_sync/default",
+        "local-cdc-structural/cdc_comb_before_sync/default",
+        "local-cdc-structural/cdc_fanout_before_sync/default",
+        "local-cdc-structural/cdc_reconvergence/default",
+        "local-cdc-structural/cdc_multibit/default",
+        "local-cdc-structural/cdc_reset_release/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-lec-netlist": {
+      "scope": "dut",
+      "targets": [
+        "local-lec-netlist/event_meter/default",
+        "local-lec-netlist/event_meter/ALARM_AT=10"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-power-domains": {
+      "scope": "dut",
+      "targets": [
+        "local-power-domains/pd_domain_a/default",
+        "local-power-domains/pd_domain_b/default",
+        "local-power-domains/pd_ctrl/default",
+        "local-power-domains/pd_ctrl/SETTLE=4",
+        "local-power-domains/pd_top/default",
+        "local-power-domains/pd_top/SETTLE=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-clock-gating": {
+      "scope": "dut",
+      "targets": [
+        "local-clock-gating/clock_gate/default",
+        "local-clock-gating/clock_switch/default",
+        "local-clock-gating/odd_divider/default",
+        "local-clock-gating/odd_divider/DIV=5"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-coverage-unreachable": {
+      "scope": "dut",
+      "targets": [
+        "local-coverage-unreachable/guarded_unit/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-transition-fault": {
+      "scope": "dut",
+      "targets": [
+        "local-transition-fault/tf_core/default",
+        "local-transition-fault/TFSITE/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-memory-repair": {
+      "scope": "dut",
+      "targets": [
+        "local-memory-repair/mem_repair/default",
+        "local-memory-repair/mem_repair/ROWS=4/COLS=4/SR=1/SC=1",
+        "local-memory-repair/mem_repair/ROWS=8/COLS=8/SR=2/SC=2",
+        "local-memory-repair/fuse_bank/default",
+        "local-memory-repair/fuse_bank/WIDTH=7",
+        "local-memory-repair/fuse_bank/WIDTH=17"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sta-modes": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-power-estimate": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
     }
   },
   "blackbox_sources": {

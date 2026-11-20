@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CG-GATE",
+      "summary": "A gated clock pulse is passed whole or not at all, whenever the enable changes: while the clock is high or while it is low. No edge appears while the gate is closed.",
+      "goals": [
+        "gate/pass",
+        "gate/held-off",
+        "gate/change-while-high",
+        "gate/change-while-low"
+      ]
+    },
+    {
+      "id": "CG-SWITCH",
+      "summary": "With both clocks running, the switch changes in either direction without a short pulse and without both clocks enabled at once, also when the select changes while the output is high.",
+      "goals": [
+        "switch/a-to-b",
+        "switch/b-to-a",
+        "switch/select-while-high"
+      ]
+    },
+    {
+      "id": "CG-STOPPED",
+      "summary": "A stopped target leaves the output low until it runs again. A stopped selected clock cannot be left; the reset recovers the switch.",
+      "goals": [
+        "switch/target-stopped",
+        "switch/current-stopped",
+        "switch/reset-recovery"
+      ]
+    },
+    {
+      "id": "CG-DIVIDER",
+      "summary": "The odd divider has a period of DIV input periods and equal high and low times, also after a reset in the middle of a pulse.",
+      "goals": [
+        "divider/duty",
+        "divider/restart"
+      ]
+    }
+  ]
+}

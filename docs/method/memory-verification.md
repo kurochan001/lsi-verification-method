@@ -95,6 +95,7 @@ RAMのマクロを使う設計では、最初にマクロの契約を表にし�
 | ECCの符号 | [ECC](../../examples/local-ecc/README.md) | 組合せ回路。記憶は含まない |
 | ECCメモリとスクラブ | [ECCメモリ](../../examples/local-ecc-memory/README.md) | 動作モデル。実マクロの特性は対象外 |
 | MBIST | [MBIST](../../examples/local-mbist/README.md) | March C−。デジタルな故障の注入 |
+| メモリの修復 | [予備の行・列とヒューズ](../../examples/local-memory-repair/README.md) | 割当、修復不能の判定、ヒューズの再読込み、修復後の再試験 |
 | キャッシュ | [キャッシュとDMA](../../examples/local-cache-dma/README.md)、[キャッシュコヒーレンシ](../../examples/local-cache-coherence/README.md) | 見える値、2クライアントの一貫性 |
 | DRAM | [DRAMコマンド制御](../../examples/local-dram/README.md) | サイクル単位の教材用の間隔。PHYは対象外 |
 | FIFO | [FIFO](../../examples/local-fifo/README.md)、[FIFOのフォーマル](../../examples/local-fifo-formal/README.md)、[FIFOの等価性](../../examples/local-equivalence/README.md) | ランダム、証明、実装の比較 |
@@ -109,7 +110,6 @@ RAMのマクロを使う設計では、最初にマクロの契約を表にし�
 
 | 項目 | 内容 | 状態 |
 | --- | --- | --- |
-| メモリの修復 | 予備の行・列への割当、修復不能の判定、ヒューズのモデル、修復後の再試験 | 未着手 |
 | データの完全性のフォーマル証明 | 任意の1データを追跡して、欠落・重複・順序・内容を非有界に証明 | 未着手 |
 | バッファ管理 | 連結リスト型の複数キューとフリーリストの保存則 | 未着手 |
 | 一度だけ書ける記憶 | 書込み後のロック、多数決、書込み中の電源断 | 未着手 |

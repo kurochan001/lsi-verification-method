@@ -128,6 +128,7 @@ reset中のマスク、解除後のready条件、req/ack・FIFOの初期値、�
 
 | 入口 | 学べる範囲 | 補うべき範囲 |
 | --- | --- | --- |
+| [CDC／RDCの構造解析](../../examples/local-cdc-structural/README.md) | Yosysネットリストから交差を列挙し、同期器の欠落、複数ビット、再収束、リセット解除を分類 | 実装した回路のCDC／RDCサインオフ、制約の整合、同期器の物理特性 |
 | [IRQ・CDC](../../examples/local-irq-cdc/README.md) | 2経路の相対遅延と再収束、早期受理・欠落・重複、18目標 | 実同期器の物理特性、一般の関連制御・データの再収束 |
 | [非同期FIFO](../../examples/local-async-fifo/README.md) | Grayポインター、同期遅延付きフラグ、周回、クロック条件、共通リセット | 遷移ごとの影響注入、片側リセット、実メモリ・配置配線 |
 | [非同期FIFO付き画像処理](../../examples/local-video-async/README.md) | 画素と制御情報の対応、4クロック、固定表示の帯域・蓄積量、周期変更、underflowと協調リセット | メタスタビリティ、Grayバスの実装制約、PLL、物理表示インターフェース |

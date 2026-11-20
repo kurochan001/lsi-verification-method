@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "scope": "Synthetic cell-only delays, ideal clocks, no interconnect parasitics; a hand-written mux-scan netlist. Not a process signoff library and not the output of a scan insertion tool.",
+  "uncertainty": {"setup": 0.05, "hold": 0.01},
+  "clocks": {"aux": 3.1},
+  "modes": {
+    "func": {"scan_enable": 0, "period": 2.0, "short_period": 1.2},
+    "scan": {"scan_enable": 1, "period": 10.0, "short_period": 0.9}
+  },
+  "corners": {
+    "slow": {"BUF": 0.4, "MUX2": 0.3, "clk_to_q": 0.2, "setup": 0.2, "hold": 0.3},
+    "fast": {"BUF": 0.1, "MUX2": 0.1, "clk_to_q": 0.1, "setup": 0.1, "hold": 0.2}
+  },
+  "ports": {
+    "din": {"max": 0.6, "min": 0.4},
+    "scan_in": {"max": 0.4, "min": 0.3},
+    "scan_enable": {"max": 1.9, "min": 0.5},
+    "dout": {"max": 0.5, "min": 0.1},
+    "scan_out": {"max": 0.5, "min": 0.1},
+    "aout": {"max": 0.5, "min": 0.1}
+  },
+  "paths": {
+    "in": {"from": "din", "through": "m0/A", "to": "f0/D", "cells": ["MUX2"], "timed_in": ["func"], "kind": "mode"},
+    "logic": {"from": "f0/CLK", "through": "m1/A", "to": "f1/D", "cells": ["BUF", "BUF", "BUF", "MUX2"], "timed_in": ["func"], "kind": "mode"},
+    "stage": {"from": "f1/CLK", "through": "m2/A", "to": "f2/D", "cells": ["BUF", "MUX2"], "timed_in": ["func"], "kind": "mode"},
+    "sin": {"from": "scan_in", "through": "m0/B", "to": "f0/D", "cells": ["MUX2"], "timed_in": ["scan"], "kind": "mode"},
+    "link01": {"from": "f0/CLK", "through": "m1/B", "to": "f1/D", "cells": ["BUF", "MUX2"], "timed_in": ["scan"], "kind": "mode"},
+    "link12": {"from": "f1/CLK", "through": "m2/B", "to": "f2/D", "cells": ["BUF", "MUX2"], "timed_in": ["scan"], "kind": "mode"},
+    "link23": {"from": "f2/CLK", "through": "m3/B", "to": "f3/D", "cells": ["BUF", "MUX2"], "timed_in": ["scan"], "kind": "mode"},
+    "enable": {"from": "scan_enable", "through": "m0/S", "to": "f0/D", "cells": ["MUX2"], "timed_in": [], "kind": "mode"},
+    "out": {"from": "f2/CLK", "through": "-", "to": "dout", "cells": ["BUF"], "timed_in": ["func", "scan"], "kind": "mode"},
+    "sout": {"from": "f3/CLK", "through": "-", "to": "scan_out", "cells": ["BUF"], "timed_in": ["func", "scan"], "kind": "mode"},
+    "aout": {"from": "ga/CLK", "through": "-", "to": "aout", "cells": ["BUF"], "timed_in": ["func", "scan"], "kind": "mode", "clock": "aux"},
+    "cross_out": {"from": "f2/CLK", "through": "-", "to": "ga/D", "cells": [], "timed_in": [], "kind": "async"},
+    "cross_in": {"from": "ga/CLK", "through": "m3/A", "to": "f3/D", "cells": ["MUX2"], "timed_in": [], "kind": "async"}
+  },
+  "crossings": {
+    "cross_out": {"from": "f2/CLK", "to": "ga/D", "exists_in": ["func", "scan"]},
+    "cross_in": {"from": "ga/CLK", "to": "f3/D", "exists_in": ["func"]}
+  },
+  "expected": {
+    "func-slow": {"in": [0.85, 0.39], "logic": [0.05, 1.39], "stage": [0.85, 0.59], "out": [0.85, 0.69], "sout": [0.85, 0.69], "aout": [1.95, 0.69]},
+    "func-fast": {"in": [1.15, 0.29], "logic": [1.35, 0.29], "stage": [1.55, 0.09], "out": [1.25, 0.29], "sout": [1.25, 0.29], "aout": [2.35, 0.29]},
+    "scan-slow": {"sin": [9.05, 0.29], "link01": [8.85, 0.59], "link12": [8.85, 0.59], "link23": [8.85, 0.59], "out": [8.85, 0.69], "sout": [8.85, 0.69], "aout": [1.95, 0.69]},
+    "scan-fast": {"sin": [9.35, 0.19], "link01": [9.55, 0.09], "link12": [9.55, 0.09], "link23": [9.55, 0.09], "out": [9.25, 0.29], "sout": [9.25, 0.29], "aout": [2.35, 0.29]}
+  }
+}

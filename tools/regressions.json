@@ -2202,6 +2202,131 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-cdc-structural",
+      "script": "examples/local-cdc-structural/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-yosys"
+      ]
+    },
+    {
+      "id": "local-lec-netlist",
+      "script": "examples/local-lec-netlist/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-yosys"
+      ]
+    },
+    {
+      "id": "local-power-domains",
+      "script": "examples/local-power-domains/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-clock-gating",
+      "script": "examples/local-clock-gating/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-coverage-unreachable",
+      "script": "examples/local-coverage-unreachable/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "formal-timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator",
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-transition-fault",
+      "script": "examples/local-transition-fault/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "yowasp-yosys",
+        "sta"
+      ]
+    },
+    {
+      "id": "local-memory-repair",
+      "script": "examples/local-memory-repair/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-sta-modes",
+      "script": "examples/local-sta-modes/run.py",
+      "kind": "sta",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "sta"
+      ]
+    },
+    {
+      "id": "local-power-estimate",
+      "script": "examples/local-power-estimate/run.py",
+      "kind": "simulation",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "sta"
+      ]
     }
   ]
 }

@@ -1,0 +1,302 @@
+{
+ "schema_version": 1,
+ "revision": 1,
+ "targets": {
+  "command-unit": {
+   "source": "examples/local-code-coverage/rtl/command_unit.sv",
+   "top": "command_unit",
+   "parameters": {
+    "WIDTH": 8,
+    "MUTATION": 0
+   },
+   "measured": true,
+   "goals": {}
+  },
+  "guarded-unit": {
+   "source": "examples/local-coverage-unreachable/rtl/guarded_unit.sv",
+   "top": "guarded_unit",
+   "parameters": {
+    "WIDTH": 4
+   },
+   "measured": false,
+   "goals": {
+    "g_add": "rst_n && state==EXEC",
+    "g_deny": "rst_n && state==DENY",
+    "g_wait": "rst_n && state==RESP && !resp_ready",
+    "g_stall": "rst_n && stalled"
+   },
+   "goal_depth": 24
+  }
+ },
+ "assumptions": {
+  "as_initial_reset": {
+   "statement": "if(!f_past)as_initial_reset:assume(!rst_n);",
+   "implicit": true,
+   "source": "Reset is applied before use. The simulation harness also resets before it clears the counters.",
+   "blocks": []
+  },
+  "as_functional_mode": {
+   "statement": "as_functional_mode:assume(!test_mode);",
+   "implicit": false,
+   "source": "Contract of the functional mode: test_mode is tied low. The test mode has its own plan.",
+   "blocks": []
+  },
+  "as_always_permitted": {
+   "statement": "as_always_permitted:assume(enable && authorized);",
+   "implicit": false,
+   "source": "Negative control. Not a contract: denied requests are required behaviour.",
+   "blocks": [
+    "g_deny"
+   ]
+  }
+ },
+ "helpers": {
+  "ah_held_in_range": "held<LIMIT"
+ },
+ "items": [
+  {
+   "id": "cu-branch-l20-else",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "branch",
+    "l": "20",
+    "o": "else"
+   },
+   "expression": "rst_n && state==IDLE && req_valid && !(enable && authorized)",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "A request without permission goes to DENY."
+  },
+  {
+   "id": "cu-branch-l25-else",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "branch",
+    "l": "25",
+    "o": "else"
+   },
+   "expression": "rst_n && state==RESP && !resp_ready",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "The response waits for resp_ready."
+  },
+  {
+   "id": "cu-branch-l38-if",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "branch",
+    "l": "38",
+    "o": "if"
+   },
+   "expression": "rst_n && state==EXEC && saved_operation",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "The XOR operation is executed."
+  },
+  {
+   "id": "cu-branch-l43-if",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "branch",
+    "l": "43",
+    "o": "if"
+   },
+   "expression": "rst_n && state==DENY",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "The data path of a denied request."
+  },
+  {
+   "id": "cu-line-l24",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "line",
+    "l": "24"
+   },
+   "expression": "rst_n && state==DENY",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "The DENY item of the state case."
+  },
+  {
+   "id": "cu-line-l26-default",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "line",
+    "l": "26"
+   },
+   "expression": "rst_n && !(state==IDLE || state==EXEC || state==RESP || state==DENY)",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "unreachable",
+   "note": "The default item: the four items before it list every value of the two state bits."
+  },
+  {
+   "id": "cu-fsm-state-deny",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "fsm_state",
+    "o": "command_unit.state::DENY"
+   },
+   "expression": "state==DENY",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "The DENY state is visited."
+  },
+  {
+   "id": "cu-fsm-arc-deny-resp",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "fsm_arc",
+    "o": "command_unit.state::DENY->RESP"
+   },
+   "expression": "rst_n && state==DENY",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "DENY always moves to RESP."
+  },
+  {
+   "id": "cu-fsm-arc-resp-resp",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "fsm_arc",
+    "o": "command_unit.state::RESP->RESP"
+   },
+   "expression": "rst_n && state==RESP && !resp_ready",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "RESP holds while resp_ready is low."
+  },
+  {
+   "id": "cu-fsm-arc-default-idle",
+   "target": "command-unit",
+   "category": "measured",
+   "point": {
+    "t": "fsm_arc",
+    "o": "command_unit.state::default->IDLE"
+   },
+   "expression": "rst_n && !(state==IDLE || state==EXEC || state==RESP || state==DENY)",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "unreachable",
+   "note": "The arc the tool derives from the default item."
+  },
+  {
+   "id": "gu-deny",
+   "target": "guarded-unit",
+   "category": "labelled",
+   "expression": "rst_n && state==DENY",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "A denied request.",
+   "label": "GU_DENY"
+  },
+  {
+   "id": "gu-stall",
+   "target": "guarded-unit",
+   "category": "labelled",
+   "expression": "rst_n && state==RESP && !resp_ready && held==LIMIT-4'd1",
+   "depth": 24,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "reachable",
+   "note": "Twelve response cycles without resp_ready: needs more than a dozen steps.",
+   "label": "GU_STALL"
+  },
+  {
+   "id": "gu-guard",
+   "target": "guarded-unit",
+   "category": "labelled",
+   "expression": "rst_n && state==RESP && held>=LIMIT",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [
+    "ah_held_in_range"
+   ],
+   "expected": "unreachable",
+   "note": "The defensive check of the hold counter. Induction needs the range of the counter as a proved helper.",
+   "label": "GU_GUARD"
+  },
+  {
+   "id": "gu-test",
+   "target": "guarded-unit",
+   "category": "labelled",
+   "expression": "rst_n && state==IDLE && req_valid && test_mode",
+   "depth": 10,
+   "assumptions": [
+    "as_functional_mode"
+   ],
+   "helpers": [],
+   "expected": "conditional",
+   "note": "The test pattern. Excluded for the functional mode only.",
+   "label": "GU_TEST"
+  },
+  {
+   "id": "gu-stall-shallow",
+   "target": "guarded-unit",
+   "category": "diagnostic",
+   "expression": "rst_n && state==RESP && !resp_ready && held==LIMIT-4'd1",
+   "depth": 8,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "unclassified",
+   "note": "Negative control: the bound of 8 steps is too small for GU_STALL. A bounded miss is not unreachability.",
+   "label": "GU_STALL"
+  },
+  {
+   "id": "gu-guard-no-helper",
+   "target": "guarded-unit",
+   "category": "diagnostic",
+   "expression": "rst_n && state==RESP && held>=LIMIT",
+   "depth": 10,
+   "assumptions": [],
+   "helpers": [],
+   "expected": "unclassified",
+   "note": "Negative control: without the helper, induction does not finish. The item stays unclassified.",
+   "label": "GU_GUARD"
+  },
+  {
+   "id": "gu-deny-overconstrained",
+   "target": "guarded-unit",
+   "category": "diagnostic",
+   "expression": "rst_n && state==DENY",
+   "depth": 10,
+   "assumptions": [
+    "as_always_permitted"
+   ],
+   "helpers": [],
+   "expected": "invalid",
+   "note": "Negative control: an assumption that every request is permitted makes GU_DENY look unreachable.",
+   "label": "GU_DENY"
+  }
+ ]
+}

@@ -151,6 +151,29 @@
     "examples/local-cdc-handshake/run.py",
     "examples/local-cdc-handshake/tb/cdc_handshake_tb.sv",
     "examples/local-cdc-handshake/tests/test_example.py",
+    "examples/local-cdc-structural/cdc_check.py",
+    "examples/local-cdc-structural/generator.py",
+    "examples/local-cdc-structural/ledger.json",
+    "examples/local-cdc-structural/requirements.json",
+    "examples/local-cdc-structural/rtl/cdc_comb_before_sync.sv",
+    "examples/local-cdc-structural/rtl/cdc_fanout_before_sync.sv",
+    "examples/local-cdc-structural/rtl/cdc_good.sv",
+    "examples/local-cdc-structural/rtl/cdc_multibit.sv",
+    "examples/local-cdc-structural/rtl/cdc_no_sync.sv",
+    "examples/local-cdc-structural/rtl/cdc_reconvergence.sv",
+    "examples/local-cdc-structural/rtl/cdc_reset_release.sv",
+    "examples/local-cdc-structural/run.py",
+    "examples/local-cdc-structural/targets.json",
+    "examples/local-cdc-structural/tests/test_cdc.py",
+    "examples/local-cdc-structural/waivers.json",
+    "examples/local-clock-gating/model.py",
+    "examples/local-clock-gating/requirements.json",
+    "examples/local-clock-gating/rtl/clock_gate.sv",
+    "examples/local-clock-gating/rtl/clock_switch.sv",
+    "examples/local-clock-gating/rtl/odd_divider.sv",
+    "examples/local-clock-gating/run.py",
+    "examples/local-clock-gating/tb/clock_gating_tb.sv",
+    "examples/local-clock-gating/tests/test_example.py",
     "examples/local-clock-reset/requirements.json",
     "examples/local-clock-reset/rtl/clock_reset.sv",
     "examples/local-clock-reset/run.py",
@@ -201,6 +224,12 @@
     "examples/local-counter-snapshot/tests/test_example.py",
     "examples/local-coverage-feedback/run.py",
     "examples/local-coverage-feedback/tests/test_feedback.py",
+    "examples/local-coverage-unreachable/exclusions.json",
+    "examples/local-coverage-unreachable/items.json",
+    "examples/local-coverage-unreachable/requirements.json",
+    "examples/local-coverage-unreachable/rtl/guarded_unit.sv",
+    "examples/local-coverage-unreachable/run.py",
+    "examples/local-coverage-unreachable/tests/test_unreachable.py",
     "examples/local-cpp-reference/harness.cpp",
     "examples/local-cpp-reference/model/reference.cpp",
     "examples/local-cpp-reference/model/reference.hpp",
@@ -387,6 +416,11 @@
     "examples/local-lbist/run.py",
     "examples/local-lbist/tb/lbist_tb.sv",
     "examples/local-lbist/tests/test_example.py",
+    "examples/local-lec-netlist/netlist.py",
+    "examples/local-lec-netlist/requirements.json",
+    "examples/local-lec-netlist/rtl/event_meter.sv",
+    "examples/local-lec-netlist/run.py",
+    "examples/local-lec-netlist/tests/test_example.py",
     "examples/local-lint/fixtures/implicit.sv",
     "examples/local-lint/fixtures/latch.sv",
     "examples/local-lint/fixtures/unconnected.sv",
@@ -417,6 +451,13 @@
     "examples/local-memory-order/requirements.json",
     "examples/local-memory-order/run.py",
     "examples/local-memory-order/tests/test_system.py",
+    "examples/local-memory-repair/model.py",
+    "examples/local-memory-repair/requirements.json",
+    "examples/local-memory-repair/rtl/fuse_bank.sv",
+    "examples/local-memory-repair/rtl/mem_repair.sv",
+    "examples/local-memory-repair/run.py",
+    "examples/local-memory-repair/tb/repair_tb.sv",
+    "examples/local-memory-repair/tests/test_example.py",
     "examples/local-motion-control/cases.py",
     "examples/local-motion-control/model.py",
     "examples/local-motion-control/requirements.json",
@@ -528,6 +569,26 @@
     "examples/local-pll-recovery/rtl/pll_guard.sv",
     "examples/local-pll-recovery/run.py",
     "examples/local-pll-recovery/tb/pll_guard_tb.sv",
+    "examples/local-power-domains/gen.py",
+    "examples/local-power-domains/model.py",
+    "examples/local-power-domains/power_intent.json",
+    "examples/local-power-domains/requirements.json",
+    "examples/local-power-domains/rtl/pd_ctrl.sv",
+    "examples/local-power-domains/rtl/pd_domain_a.sv",
+    "examples/local-power-domains/rtl/pd_domain_b.sv",
+    "examples/local-power-domains/rtl/pd_top.sv",
+    "examples/local-power-domains/run.py",
+    "examples/local-power-domains/tb/pd_tb.sv",
+    "examples/local-power-domains/tests/test_example.py",
+    "examples/local-power-estimate/contract.json",
+    "examples/local-power-estimate/design/bank.v",
+    "examples/local-power-estimate/design/cells.lib",
+    "examples/local-power-estimate/design/cells.v",
+    "examples/local-power-estimate/model.py",
+    "examples/local-power-estimate/power.tcl",
+    "examples/local-power-estimate/run.py",
+    "examples/local-power-estimate/tb/power_tb.sv",
+    "examples/local-power-estimate/tests/test_power.py",
     "examples/local-power/requirements.json",
     "examples/local-power/rtl/power_island.sv",
     "examples/local-power/run.py",
@@ -655,6 +716,14 @@
     "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
     "examples/local-spice-cosim/run.py",
     "examples/local-spice-cosim/tests/test_model.py",
+    "examples/local-sta-modes/check.tcl",
+    "examples/local-sta-modes/constraints.tcl",
+    "examples/local-sta-modes/contract.json",
+    "examples/local-sta-modes/design/fast.lib",
+    "examples/local-sta-modes/design/scan_core.v",
+    "examples/local-sta-modes/design/slow.lib",
+    "examples/local-sta-modes/run.py",
+    "examples/local-sta-modes/tests/test_sta_modes.py",
     "examples/local-sta/check.tcl",
     "examples/local-sta/contract.json",
     "examples/local-sta/design/constraints.tcl",
@@ -730,6 +799,15 @@
     "examples/local-topk/tb/topk_tb.sv",
     "examples/local-topk/tests/test_plan.py",
     "examples/local-topk/topk_formal.sv",
+    "examples/local-transition-fault/atpg.py",
+    "examples/local-transition-fault/cells/tf_site.v",
+    "examples/local-transition-fault/requirements.json",
+    "examples/local-transition-fault/rtl/TFSITE.sv",
+    "examples/local-transition-fault/rtl/tf_core.sv",
+    "examples/local-transition-fault/run.py",
+    "examples/local-transition-fault/sta/check.tcl",
+    "examples/local-transition-fault/tb/tf_tb.sv",
+    "examples/local-transition-fault/tests/test_example.py",
     "examples/local-uart/requirements.json",
     "examples/local-uart/rtl/uart.sv",
     "examples/local-uart/run.py",
@@ -882,6 +960,8 @@
       "local-cache-dma",
       "local-cdc-bridge",
       "local-cdc-handshake",
+      "local-cdc-structural",
+      "local-clock-gating",
       "local-clock-reset",
       "local-code-coverage",
       "local-compositional-formal",
@@ -889,6 +969,7 @@
       "local-constant-time",
       "local-conv-window",
       "local-counter-snapshot",
+      "local-coverage-unreachable",
       "local-cpp-reference",
       "local-credit-link",
       "local-descriptor-dma",
@@ -913,9 +994,11 @@
       "local-irq-cdc",
       "local-jtag-tap",
       "local-lbist",
+      "local-lec-netlist",
       "local-liveness",
       "local-lockstep-monitor",
       "local-mbist",
+      "local-memory-repair",
       "local-motion-control",
       "local-motion-io",
       "local-mxfp4",
@@ -926,6 +1009,7 @@
       "local-performance-monitor",
       "local-pll-recovery",
       "local-power",
+      "local-power-domains",
       "local-priority-irq",
       "local-progress",
       "local-pwm-adc",
@@ -952,6 +1036,7 @@
       "local-tlb",
       "local-tmr",
       "local-topk",
+      "local-transition-fault",
       "local-uart",
       "local-unaligned-memory",
       "local-uvm-coordination",
@@ -1101,6 +1186,15 @@
     "local-cdc-handshake": [
       "local-common"
     ],
+    "local-cdc-structural": [
+      "local-async-fifo",
+      "local-cdc-handshake",
+      "local-exploration-common",
+      "local-irq-cdc"
+    ],
+    "local-clock-gating": [
+      "local-common"
+    ],
     "local-clock-reset": [
       "local-common"
     ],
@@ -1133,6 +1227,9 @@
     "local-coverage-feedback": [
       "local-axis",
       "local-exploration-common"
+    ],
+    "local-coverage-unreachable": [
+      "local-code-coverage"
     ],
     "local-cpp-reference": [
       "local-native-common"
@@ -1287,6 +1384,9 @@
     "local-lbist": [
       "local-common"
     ],
+    "local-lec-netlist": [
+      "local-exploration-common"
+    ],
     "local-lint": [
       "@local-lint-targets",
       "local-access-control",
@@ -1387,6 +1487,9 @@
       "local-common",
       "local-interconnect"
     ],
+    "local-memory-repair": [
+      "local-common"
+    ],
     "local-motion-control": [
       "local-motion-io"
     ],
@@ -1431,6 +1534,12 @@
     ],
     "local-power": [
       "local-common"
+    ],
+    "local-power-domains": [
+      "local-common"
+    ],
+    "local-power-estimate": [
+      "local-irq-cdc"
     ],
     "local-priority-irq": [
       "local-common"
@@ -1525,6 +1634,9 @@
     "local-sta": [
       "local-irq-cdc"
     ],
+    "local-sta-modes": [
+      "local-irq-cdc"
+    ],
     "local-store-buffer": [
       "local-common"
     ],
@@ -1572,6 +1684,10 @@
     ],
     "local-topk": [
       "local-formal-common"
+    ],
+    "local-transition-fault": [
+      "local-common",
+      "local-gate-timing"
     ],
     "local-uart": [
       "local-irq-cdc"

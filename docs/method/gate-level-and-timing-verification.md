@@ -121,10 +121,15 @@ STAは期待値を持ちません。代わりに、「違反があれば報告�
 | --- | --- | --- |
 | lintと除外の台帳 | [共通lint](../../examples/local-lint/README.md) | Verilatorのlint。全例のRTL |
 | RTLどうしの等価性 | [FIFOの等価性](../../examples/local-equivalence/README.md) | SBYのmiter方式。合成後のネットリストは比較していない |
+| RTLとネットリストの等価性 | [合成・スキャン挿入・ECO後の比較](../../examples/local-lec-netlist/README.md) | 機能モードの仮定、誤りがあるフリップフロップの特定 |
 | ネットリストでだけ見える論理の食い違い | [合成後ネットリストのシミュレーション](../../examples/local-gate-sim/README.md) | 遅延なし。4種類の誤り |
 | SDFの遅延とタイミング検査 | [遅延つきのゲートレベルシミュレーション](../../examples/local-gate-timing/README.md) | 1コーナー。検査はセルモデルが行う |
 | STA | [OpenSTAの実行例](../../examples/local-sta/README.md) | 架空のLiberty。理想クロック。配線の寄生なし |
+| モード・コーナー別のSTA | [機能／スキャンとslow／fastの4通り](../../examples/local-sta-modes/README.md) | モード別の制約とsetup／hold。架空のLiberty |
 | スキャンと故障の検出 | [内部スキャンとATPG](../../examples/local-scan-atpg/README.md)、[LBIST](../../examples/local-lbist/README.md) | 手で書いたスキャン回路。縮退故障 |
+| 遷移故障 | [launch-on-capture](../../examples/local-transition-fault/README.md) | 実速度と低速の捕捉をSDFつきで比較 |
+| CDC／RDCの構造解析 | [交差の列挙と分類](../../examples/local-cdc-structural/README.md) | Yosysネットリストから抽出する限定したルール |
+| 活動率からの電力見積り | [VCDとOpenSTA](../../examples/local-power-estimate/README.md) | 架空のライブラリを使い、クロックゲートの効果を比較 |
 | 自動生成した変異の等価性 | [MCYによる検出力の比較](../../examples/local-auto-mutation/README.md) | 変異がもとの回路と等価かどうかの判定 |
 | 接続の証明 | [接続性のフォーマル検査](../../examples/local-connectivity/README.md) | SoCの配線 |
 
@@ -132,12 +137,7 @@ STAは期待値を持ちません。代わりに、「違反があれば報告�
 
 | 項目 | 内容 | 状態 |
 | --- | --- | --- |
-| RTLと合成後ネットリストの等価性 | スキャン挿入後を含む。機能モードの仮定、ECOの誤り、初期値・リセット極性の違い | 未着手 |
-| モードとコーナーのSTA | 機能・スキャンの2モード、slow・fastの2コーナー、クロックグループとフォルスパスの違い | 未着手 |
-| 遷移故障 | launch-on-captureの2パターン試験、実速度のキャプチャ | 未着手 |
-| CDCの構造解析 | ネットリストからのドメイン交差の列挙と分類 | 未着手 |
 | Libertyの値の出所 | トランジスタレベルの回路から遅延・セットアップ・ホールドを測る | 未着手 |
-| 電力の見積り | 活動率からの見積り | 未着手 |
 
 ## 8. 製品で追加する確認
 

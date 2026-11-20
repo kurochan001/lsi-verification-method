@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CS-DOMAIN",
+      "summary": "Every flop is assigned to a declared clock port, and flops with an asynchronous reset are counted; designs with one, two and three clocks are read.",
+      "goals": ["domain/single-clock", "domain/two-clocks", "domain/three-clocks", "domain/asynchronous-reset"]
+    },
+    {
+      "id": "CS-SYNCHRONIZER",
+      "summary": "A crossing through two or three directly connected flops is recognised as a synchroniser, also behind an inverter, and a two-stage reset synchroniser is accepted.",
+      "goals": ["sync/two-stages", "sync/three-stages", "sync/reset-synchronizer", "sync/clean-design"]
+    },
+    {
+      "id": "CS-RULES",
+      "summary": "Each of the six rules reports its negative example, and nothing else is reported there.",
+      "goals": ["rule/NO_SYNC", "rule/COMB_BEFORE_SYNC", "rule/FANOUT_BEFORE_SYNC", "rule/RECONVERGENCE",
+                "rule/MULTIBIT_SEPARATE_SYNC", "rule/RESET_RELEASE"]
+    },
+    {
+      "id": "CS-LEDGER",
+      "summary": "The crossings of three existing examples agree with the reviewed ledger, and every finding there is excused by a waiver that is still valid.",
+      "goals": ["ledger/cdc-handshake", "ledger/async-fifo", "ledger/irq-cdc", "waiver/waived", "waiver/known-debt"]
+    },
+    {
+      "id": "CS-WAIVER",
+      "summary": "A waiver that expired, that matches no finding, or that has no reason, is rejected.",
+      "goals": ["waiver/expired-rejected", "waiver/unused-rejected", "waiver/incomplete-rejected"]
+    },
+    {
+      "id": "CS-CHECKER",
+      "summary": "A checker with one rule switched off is noticed, and what the checker cannot read is an error, never a clean result.",
+      "goals": ["checker/rule-off-noticed", "checker/undeclared-port", "checker/undeclared-clock", "checker/build-failure"]
+    },
+    {
+      "id": "CS-RANDOM",
+      "summary": "Designs composed at random from the patterns give exactly the findings their construction predicts.",
+      "goals": ["random/all-patterns", "random/inverted-path"]
+    }
+  ]
+}

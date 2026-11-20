@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TF-CHAIN",
+      "summary": "The scan chain shifts a bit pattern through four flops unchanged.",
+      "goals": [
+        "scan/flush"
+      ]
+    },
+    {
+      "id": "TF-CAPTURE",
+      "summary": "Without a fault, the unloaded response is the next state after one capture clock, and the state after the next one after a launch and a capture clock; no flop sees a timing violation.",
+      "goals": [
+        "capture/single",
+        "capture/launch-on-capture",
+        "launch/node-rises",
+        "launch/node-falls"
+      ]
+    },
+    {
+      "id": "TF-STUCK",
+      "summary": "A node held at 0 or at 1 changes the unloaded response of the patterns chosen for it.",
+      "goals": [
+        "stuck/at-0-detected",
+        "stuck/at-1-detected"
+      ]
+    },
+    {
+      "id": "TF-TRANSITION",
+      "summary": "A node that is one period late in one direction is applied with a pattern that launches that transition; a fault that no pattern can detect is applied with every pattern and never changes the response.",
+      "goals": [
+        "transition/slow-to-rise-launched",
+        "transition/slow-to-fall-launched",
+        "transition/untestable-applied"
+      ]
+    }
+  ]
+}

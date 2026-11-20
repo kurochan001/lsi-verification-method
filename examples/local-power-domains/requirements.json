@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PD-STATE",
+      "summary": "Only the power states of the table appear, and the state changes only along its transitions.",
+      "goals": [
+        "state/all-off",
+        "state/a-only",
+        "state/all-on",
+        "transition/a-up",
+        "transition/a-down",
+        "transition/b-up",
+        "transition/b-down"
+      ]
+    },
+    {
+      "id": "PD-ISO",
+      "summary": "While a domain is isolated its outputs show the value of the table: 0, 1 or the last value.",
+      "goals": [
+        "iso/zero",
+        "iso/one",
+        "iso/hold-nonzero"
+      ]
+    },
+    {
+      "id": "PD-RETAIN",
+      "summary": "After power-up a retained register has its value from before; the others have their reset value before use.",
+      "goals": [
+        "retain/a-acc",
+        "retain/b-mode",
+        "reinit/a-scratch",
+        "reinit/b-count"
+      ]
+    },
+    {
+      "id": "PD-ORDER",
+      "summary": "B is powered only while A is: B goes down first and comes up last, and a request for B alone powers nothing.",
+      "goals": [
+        "order/sleep-both",
+        "order/wake-both",
+        "order/b-request-without-a"
+      ]
+    },
+    {
+      "id": "PD-FLOW",
+      "summary": "An operand taken in the cycle of a power-down request is kept; later operands are refused until the domain is on again; a started sequence runs to its end.",
+      "goals": [
+        "flow/op-with-sleep",
+        "flow/op-refused-in-transition",
+        "flow/op-refused-off",
+        "flow/wake-during-sleep"
+      ]
+    },
+    {
+      "id": "PD-RESET",
+      "summary": "A global reset turns both domains off and clears the retained values, whether the domains were on or off.",
+      "goals": [
+        "reset/while-on",
+        "reset/while-off"
+      ]
+    }
+  ]
+}

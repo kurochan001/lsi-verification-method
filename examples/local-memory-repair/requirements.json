@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "MR-TEST",
+      "summary": "The March test passes a fault-free array and finds stuck-at-0 and stuck-at-1 cells, also when the memory stalls.",
+      "goals": ["test/clean", "test/stuck0", "test/stuck1", "test/stall"]
+    },
+    {
+      "id": "MR-ALLOCATION",
+      "summary": "When spare rows and columns can cover every fault of the main array, the allocation covers them: with rows, with columns, with both, and with a row that only a spare row can repair.",
+      "goals": ["alloc/row", "alloc/column", "alloc/row-and-column", "alloc/must-repair"]
+    },
+    {
+      "id": "MR-UNREPAIRABLE",
+      "summary": "When no choice of spare rows and columns covers the faults, the result is unrepairable and no fuse is programmed.",
+      "goals": ["verdict/unrepairable-lines", "verdict/unrepairable-must"]
+    },
+    {
+      "id": "MR-SPARE",
+      "summary": "A spare row or column with a fault is not used; faults on spares alone need no repair.",
+      "goals": ["spare/bad-row", "spare/bad-column", "spare/only-spare-faults"]
+    },
+    {
+      "id": "MR-FUSE-REBOOT",
+      "summary": "Fuses are programmed once and only gain bits; a reset loads them, the test after the repair passes, and a later fault fails it without another repair.",
+      "goals": ["fuse/programmed", "reboot/required", "reboot/remap-loaded", "retest/pass", "retest/late-fault"]
+    },
+    {
+      "id": "MR-RESET",
+      "summary": "A reset in the middle of a test abandons it; the next test gives the same result.",
+      "goals": ["reset/mid-test"]
+    }
+  ]
+}

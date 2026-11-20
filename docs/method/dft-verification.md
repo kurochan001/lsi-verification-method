@@ -9,7 +9,9 @@ DFT（Design for Test）は、製造後や運用中に回路の故障を検査�
 | 題材 | 既存の実行例 | 主に確認すること |
 | --- | --- | --- |
 | 内部スキャン・ATPG | [4ビットチェーンとパターン生成](../../examples/local-scan-atpg/README.md) | ロード・キャプチャ・アンロード、シリアル順序、指定14故障の分類と検出可能な13故障 |
+| 遷移故障 | [実速度の捕捉](../../examples/local-transition-fault/README.md) | launch-on-captureの2パターン、SDFを使った実速度と低速の比較 |
 | MBIST | [March C−](../../examples/local-mbist/README.md) | メモリの読書き順序・方向、10N操作、固着・遷移等の限定モデル、最初の失敗位置 |
+| メモリの修復 | [予備の行・列とヒューズ](../../examples/local-memory-repair/README.md) | 修復可能性の判定、再起動後の番地の振替、修復後の再試験 |
 | LBIST | [PRPG・MISR・エイリアシング](../../examples/local-lbist/README.md) | seed・試験長・署名、8個の出力縮退故障、圧縮による見逃し、開始・完了・中断・通常出力の隔離 |
 | JTAG・境界走査 | [TAP・IR/DR・PRELOAD・EXTEST](../../examples/local-jtag-tap/README.md) | TAP遷移、命令とデータ、Capture/Shift/Update、出力保持と端子の制御・観測 |
 
