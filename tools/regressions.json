@@ -2175,6 +2175,33 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-pwm-spice",
+      "script": "examples/local-pwm-spice/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "lsi-ngspice-config"
+      ]
+    },
+    {
+      "id": "local-pll-clock-quality",
+      "script": "examples/local-pll-clock-quality/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
     }
   ]
 }

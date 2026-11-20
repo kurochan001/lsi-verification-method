@@ -519,6 +519,10 @@
     "examples/local-plan-traceability/run.py",
     "examples/local-plan-traceability/spec.md",
     "examples/local-plan-traceability/tests/test_runner.py",
+    "examples/local-pll-clock-quality/model.py",
+    "examples/local-pll-clock-quality/requirements.json",
+    "examples/local-pll-clock-quality/run.py",
+    "examples/local-pll-clock-quality/tb/pll_clock_quality_tb.sv",
     "examples/local-pll-recovery/model.py",
     "examples/local-pll-recovery/requirements.json",
     "examples/local-pll-recovery/rtl/pll_guard.sv",
@@ -543,6 +547,12 @@
     "examples/local-pwm-adc/rtl/pwm_adc_trigger.sv",
     "examples/local-pwm-adc/run.py",
     "examples/local-pwm-adc/tb/pwm_adc_tb.sv",
+    "examples/local-pwm-spice/model.py",
+    "examples/local-pwm-spice/requirements.json",
+    "examples/local-pwm-spice/run.py",
+    "examples/local-pwm-spice/solve.py",
+    "examples/local-pwm-spice/tb/pwm_spice_tb.sv",
+    "examples/local-pwm-spice/tests/test_cli.py",
     "examples/local-ram-ports/model.py",
     "examples/local-ram-ports/requirements.json",
     "examples/local-ram-ports/rtl/ram_1r1w.sv",
@@ -1412,6 +1422,10 @@
       "local-irq-cdc",
       "local-sva"
     ],
+    "local-pll-clock-quality": [
+      "local-common",
+      "local-pll-recovery"
+    ],
     "local-pll-recovery": [
       "local-common"
     ],
@@ -1427,6 +1441,11 @@
     "local-pwm-adc": [
       "local-adc-conversion",
       "local-common"
+    ],
+    "local-pwm-spice": [
+      "local-adc-conversion",
+      "local-memory-common",
+      "local-pwm-adc"
     ],
     "local-ram-ports": [
       "local-exploration-common"

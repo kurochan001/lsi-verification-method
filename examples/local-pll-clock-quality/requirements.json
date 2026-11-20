@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PLL-QUALITY-WINDOW",
+      "summary": "Measure a complete window while the lock guard has released the workload.",
+      "goals": ["window/ignored-unlocked", "window/complete"]
+    },
+    {
+      "id": "PLL-QUALITY-PULSE",
+      "summary": "Check high and low pulse widths separately at inclusive limits.",
+      "goals": ["bounds/high", "bounds/low"]
+    },
+    {
+      "id": "PLL-QUALITY-EDGE",
+      "summary": "Compare the period, phase error and difference between adjacent periods to their limits.",
+      "goals": ["bounds/period", "bounds/tie", "bounds/cycle-step"]
+    }
+  ]
+}

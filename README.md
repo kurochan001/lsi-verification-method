@@ -28,7 +28,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | RAMを使う発展例を動かす | [4教材の入口・まとめて回帰](examples/local-memory-common/README.md)／[ECC付き部分書込み](examples/local-ecc-rmw/README.md)／[画像ダブルバッファ](examples/local-video-double-buffer/README.md)／[同期RAM型非同期FIFO](examples/local-sync-ram-fifo/README.md)／[非整列・エンディアン](examples/local-unaligned-memory/README.md) |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
 | 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
-| PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
+| PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[PLL出力の周期・パルス幅・ジッター](examples/local-pll-clock-quality/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
 | 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
 | DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md) |
 | 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
@@ -42,7 +42,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
 | 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[PASS後の保持と実行頻度](docs/method/random-search-management.md#過去のpassを恒久除外の理由にしない)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
 | C++参照モデルでRTLを照合する | [検証手順](docs/method/cpp-reference-verification.md)／[ストリーミングFIR](examples/local-cpp-reference/README.md) |
-| SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md) |
+| SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md)／[PWM・RCとADCの取り込み時刻](examples/local-pwm-spice/README.md) |
 | VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[SoCLibのCABA RAM](examples/local-vci-soclib/README.md) |
 | 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
 | 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |

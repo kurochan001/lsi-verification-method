@@ -6710,6 +6710,24 @@
         "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750"
       ],
       "reason": "Center-aligned PWM and ADC trigger generation."
+    },
+    "local-pwm-spice": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-pwm-adc/pwm_adc_trigger/default",
+        "local-pwm-adc/pwm_adc_trigger/HALF_PERIOD=5",
+        "local-adc-conversion/adc_capture/default",
+        "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750"
+      ],
+      "reason": "Replay the existing PWM/ADC RTL through an ngspice plant without adding a new DUT."
+    },
+    "local-pll-clock-quality": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-pll-recovery/pll_guard/default",
+        "local-pll-recovery/pll_guard/LOCK_CYCLES=7/TIMEOUT=16"
+      ],
+      "reason": "Measure clocks in the testbench while reusing the PLL lock guard DUT."
     }
   },
   "blackbox_sources": {

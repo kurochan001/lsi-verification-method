@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PWM-SPICE-DRIVE",
+      "summary": "Check the carrier and its trigger per cycle and cover duty changes.",
+      "goals": ["pwm/trigger", "pwm/duty-step"]
+    },
+    {
+      "id": "PWM-SPICE-PLANT",
+      "summary": "Match the independent RC voltage solution on both charging and discharging intervals.",
+      "goals": ["analog/reference", "analog/charge-discharge"]
+    },
+    {
+      "id": "PWM-SPICE-ADC",
+      "summary": "Match every ADC result and distinguish two sampling phases on the same carrier.",
+      "goals": ["adc/one-per-period", "sample/phase-effect"]
+    }
+  ]
+}

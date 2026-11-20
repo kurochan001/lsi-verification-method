@@ -2,6 +2,8 @@
 
 中央揃えPWMのカウント位置から、ADCの変換開始イベントを作る教材です。[相補PWMとデッドタイムの例](../local-motion-io/README.md)に続いて、PWMによるサンプリング時刻の指定を学べます。ADCは[単体教材](../local-adc-conversion/README.md)のRTLと独立モデルを再利用します。実機でのPWMトリガーの設定例も参照できます。 [TIのePWMによるADC起動](https://software-dl.ti.com/C2000/docs/C2000_driverlib_api_guide/f2838x/build/html/modules/epwm.html)
 
+取り込み時刻によってADCコードがどう変わるかは、[PWMをRCに通すSPICE実習](../local-pwm-spice/README.md)で確認できます。
+
 ## 1周期の規則
 
 `HALF_PERIOD=5` なら、カウント値は `0, 1, 2, 3, 4, 5, 4, 3, 2, 1` です。周期は10クロックで、0と5はそれぞれ1回だけ通ります。比較値を2に設定すると、上りの2でだけ `adc_start` が成立します。下りの2では起動しません。ADCが電圧を取り込むのは、その開始イベントを受理してから `ACQUIRE` サイクル後です。

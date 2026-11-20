@@ -2342,3 +2342,23 @@ Verilator 5.052で共通lintの全402構成が成功し、新規22構成は警�
 macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-411-gca6b8d376`）で3例のsmoke 44件・nightly 56件が成功しました。各profileで13種類の意図的な誤実装を2構成ずつ検出しています。証跡は `artifacts/clock-adc-pwm-final-smoke/` と `artifacts/clock-adc-pwm-final-nightly/` に保存しました。ケース別のベクトル、ログ、`wave.vcd`、カバレッジ、JUnitを確認できます。
 
 3例を回帰登録し、PWMがADCを参照する依存関係も記録しました。共通lintはVerilator 5.052の全408構成で成功し、新規6構成の警告は0件です。確認はデジタル動作モデルと周辺RTLの範囲です。実PLLのジッター・ロック特性、実ADCの精度と整定、PWM出力段の電気特性、物理CDC/RDC、実機と他シミュレータは未確認です。
+
+<a id="pwm-spice"></a>
+
+## PWM・RCとADCの取り込み時刻の実習（2026-11-20）
+
+[実行例](examples/local-pwm-spice/README.md)は、PWMのRTL出力を観測し、実際のngspice共有ライブラリーで線形RCの電圧を求め、同じPWM設定で既存ADCのRTLへ電圧を再生します。時定数47µs／100µs、10µsクロックの2構成で全クロックの解析解と実測電圧を比較します。ADCのコードは取り込み時刻の電圧から独立に求め、変換の時刻・件数も照合します。
+
+macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-411-gca6b8d376`）・固定版ngspice 47で、smoke 15件とnightly 19件が合格しました。正のケースの最大電圧差は約7.16µVで、許容差0.5mV以内です。抵抗2倍と1クロック早い電圧再生を2構成ずつ検出しました。同じPWM波形に対して取り込みを40µs遅らせると、最後のコードは47µs構成で144から81へ、100µs構成で113から89へ変わりました。
+
+証跡は `artifacts/pwm-spice-final-smoke/` と `artifacts/pwm-spice-final-nightly/` に保存しました。nightlyは既存のADC・PWM＋ADC・SPICE協調と合わせて4ジョブを実行しました。`artifacts/pwm-spice-final-wave/` は相対パス指定・seed 42の実行で、参照・実測の比較CSV、回路、波形を含みます。相対パスで設定コマンドを指定するケースは、実ツールを使うセルフテストにも加えました。登録項目は142、全体回帰のルートジョブは120です。この例は既存RTLを再利用します。実ADCの入力負荷・サンプルホールド回路と実PWMの電力段は回路モデルの範囲外です。
+
+<a id="pll-clock-quality"></a>
+
+## PLL出力の周期・パルス幅・ジッターの測定実習（2026-11-20）
+
+[PLLクロックの測定実習](examples/local-pll-clock-quality/README.md)は既存のロック・停止監視RTLを再利用します。テストベンチが生成したクロックの実際のエッジ時刻から、High／Low幅・周期・公称周期を基準とするTIE・隣接周期の差を測ります。測定区間の開始時にロック・動作許可・リセット解除を確認し、区間の両エッジと全刺激行の数も照合します。
+
+macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-411-gca6b8d376`）で、20ns／34nsの2構成についてsmoke 16件とnightly 20件が成功しました。両構成で各7目標に到達し、短いHigh、短いLow、周期超過、蓄積する位相ずれ、隣接周期差の超過をそれぞれ検出しました。公称周期20nsの位相ずれケースでは、周期20.25ns・前周期との差0psのままTIEが1250psに達し、1000psの上限を超えました。そのときもロック・動作許可・リセット解除はHighでした。
+
+証跡は `artifacts/pll-quality-final-smoke/` と `artifacts/pll-quality-final-nightly/` に保存しました。nightlyではPLL復帰・PWMとRCの実習も同じ回帰で実行しました。VCDと実エッジのCSVを保存し、固定試験のHigh幅、Low幅、周期差、TIE、隣接周期差の境界値をCSVから再計算して照合しました。直接の負例実行も終了コード1と `PLL_TIE` を確認しています。登録表は143項目・121ルートジョブです。実PLLのジッター分布・位相ノイズ・電気特性の測定は未実施です。
