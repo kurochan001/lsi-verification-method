@@ -2327,6 +2327,134 @@
         "vvp",
         "sta"
       ]
+    },
+    {
+      "id": "local-riscv-formal",
+      "script": "examples/local-riscv-formal/run.py",
+      "kind": "formal",
+      "profile": true,
+      "options": [
+        "timeout",
+        "formal-timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-riscv-official-tests",
+      "script": "examples/local-riscv-official-tests/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "llvm-mc"
+      ]
+    },
+    {
+      "id": "local-riscv-priv",
+      "script": "examples/local-riscv-priv/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-riscv-debug",
+      "script": "examples/local-riscv-debug/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-riscv-atomic",
+      "script": "examples/local-riscv-atomic/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-rename-rob",
+      "script": "examples/local-rename-rob/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-rename-rob-formal",
+      "script": "examples/local-rename-rob/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-fp-adder",
+      "script": "examples/local-fp-adder/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-fp-adder-formal",
+      "script": "examples/local-fp-adder/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
     }
   ]
 }

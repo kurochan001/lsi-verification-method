@@ -1,8 +1,13 @@
-module jtag_tap #(parameter IDCODE=32'h12345679, MUTATION=0)(
+// EXT (default 0) lets a data register outside this module use the TAP (local-riscv-debug). The
+// port list stays the same: pin_in then carries, above the eight pins, the serial output of the
+// outside register (bit 8) and whether the current instruction selects it (bit 9); pin_out
+// carries, above the eight pins, the instruction (11:8) and the Capture-DR, Shift-DR and
+// Update-DR states (12, 13, 14).
+module jtag_tap #(parameter IDCODE=32'h12345679, MUTATION=0, EXT=0)(
     input wire tck, tms, tdi, trst_n,
-    input wire [7:0] pin_in,
+    input wire [(EXT != 0 ? 9 : 7):0] pin_in,
     output wire tdo,
-    output wire [7:0] pin_out
+    output wire [(EXT != 0 ? 14 : 7):0] pin_out
 );
     localparam TLR=0, RTI=1, SEL_DR=2, CAP_DR=3, SHIFT_DR=4, EXIT1_DR=5, PAUSE_DR=6,
                EXIT2_DR=7, UPD_DR=8, SEL_IR=9, CAP_IR=10, SHIFT_IR=11, EXIT1_IR=12,
@@ -19,7 +24,16 @@ module jtag_tap #(parameter IDCODE=32'h12345679, MUTATION=0)(
     reg [3:0] next_state;
 
     assign tdo = tdo_reg;
-    assign pin_out = ir == EXTEST ? bsr_update : pin_in;
+    assign pin_out[7:0] = ir == EXTEST ? bsr_update : pin_in[7:0];
+    wire ext_select, ext_tdo;
+    generate if (EXT != 0) begin : g_ext
+        assign ext_tdo = pin_in[8];
+        assign ext_select = pin_in[9];
+        assign pin_out[14:8] = {state == UPD_DR, state == SHIFT_DR, state == CAP_DR, ir};
+    end else begin : g_no_ext
+        assign ext_tdo = 1'b0;
+        assign ext_select = 1'b0;
+    end endgenerate
 
     always @* begin
         case (state)
@@ -53,7 +67,7 @@ module jtag_tap #(parameter IDCODE=32'h12345679, MUTATION=0)(
                 CAP_DR: begin
                     case (ir)
                         IDCODE_IR: id_shift <= IDCODE ^ (MUTATION == 1 ? 32'h1 : 32'h0);
-                        SAMPLE, EXTEST: bsr <= pin_in;
+                        SAMPLE, EXTEST: bsr <= pin_in[7:0];
                         default: bypass_reg <= 0;
                     endcase
                 end
@@ -84,6 +98,7 @@ module jtag_tap #(parameter IDCODE=32'h12345679, MUTATION=0)(
 
     always @(negedge tck or negedge trst_n) begin
         if (!trst_n) tdo_reg <= 0;
+        else if (state == SHIFT_DR && ext_select) tdo_reg <= ext_tdo;
         else if (state == SHIFT_DR) begin
             case (ir)
                 IDCODE_IR: tdo_reg <= id_shift[0];

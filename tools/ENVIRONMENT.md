@@ -132,3 +132,14 @@ python3 tools/setup_ngspice.py --check artifacts/toolchains/ngspice/install \
 full環境へ組み込む際は`setup_environment.py --profile full --ngspice-home .../install`を指定できます。`check_environment.py`と`run_regression.py`へは`--tool-bin .../install/bin`を追加します。例単独なら`--ngspice-config .../install/bin/lsi-ngspice-config`でも指定できます。
 
 ngspice本体と各ライセンスは外部の出力先へ保持し、バイナリーをGit管理には含めません。元コードを含む互換差分のModified BSD表示は[ngspice-47-LICENSE](patches/ngspice-47-LICENSE)へ保持しています。
+
+## RISC-Vの公開の試験プログラム
+
+[公開の試験プログラムの例](../examples/local-riscv-official-tests/README.md)は、riscv-testsとriscv-test-envの固定コミットのアーカイブを取得し、SHA-256を[固定情報](../examples/local-riscv-official-tests/riscv_tests.json)と照合します。取得物はリポジトリへ転載せず、`artifacts/`以下に置きます。
+
+```sh
+python3 examples/local-riscv-official-tests/setup_riscv_tests.py --out artifacts/toolchains/riscv-tests
+```
+
+統合ランナーはこの既定の場所を使います。取得していない状態でこの例を実行すると、準備のコマンドを案内して不合格で終わります。ビルドには、既に必須としている`llvm-mc`と、前処理用のCコンパイラー（clang、なければ`cc`）を使います。リンカーは使わず、この例の簡易リンクが配置と再配置を行います。LLVMの版は固定せず、実行時の版を証跡に記録します。
+

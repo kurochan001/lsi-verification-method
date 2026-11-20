@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "OT-SOURCE", "summary": "The tests are built from the pinned commits, unchanged, with recorded tool versions.", "checks": ["toolchain", "sources", "excluded-tests"], "minimum": 3},
+    {"id": "OT-BUILD", "summary": "Each of the 40 tests is preprocessed, assembled and linked without an unhandled relocation.", "checks": ["build-"], "minimum": 40},
+    {"id": "OT-ISS", "summary": "The repository's ISS runs each image to tohost = 1, in both of its modes.", "checks": ["iss-"], "minimum": 40},
+    {"id": "OT-CORE", "summary": "The core runs each image to tohost = 1 in three configurations and retires the same instructions as the ISS.", "checks": ["core-"], "minimum": 120},
+    {"id": "OT-ENV", "summary": "The reason for not using the upstream environment still holds.", "checks": ["upstream-env-blocked"], "minimum": 1},
+    {"id": "OT-NEGATIVE", "summary": "A wrong data word, a wrong relocation and mutations of the core are noticed as pinned.", "checks": ["detect-", "mutation-"], "minimum": 3}
+  ]
+}

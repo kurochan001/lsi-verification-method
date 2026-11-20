@@ -326,3 +326,17 @@ DRAMはコマンドピンを観測する時刻モニターと外部メモリモ�
 
 複数電源領域の例は、`build_sources`フックで、電源意図の表から生成したモジュールをビルドへ加えます。遷移故障の例は、[遅延つきのゲートレベルシミュレーション](../local-gate-timing/README.md)と同じく、合成・STA・SDFの準備を`build_sources`で行い、YosysとOpenSTAも使います。変異が4種類でない3例は`MUTANTS`で数を宣言しています。4例を加えた共通シミュレーションの計画は68例・145構成、JUnitはsmoke 1038件／nightly 1328件です。上の節に書いた件数は、それぞれの追加時点の値です。
 
+## プロセッサの追加5例
+
+2026-11-21に加えた次の5例も、本共通ランナーを使います。特権モードとデバッグの例は、[RISC-VコアとISSの比較](../local-riscv-iss/README.md)のコア・テストベンチ・ISSを共有し、`--demo-bug`はコアの変異18以降を選びます。
+
+| 検証例 | 構成 | JUnit（smoke／nightly） | 目標 | 変異 | セルフテスト |
+| --- | --- | --- | --- | --- | --- |
+| [特権モードとPMP](../local-riscv-priv/README.md) | `priv`・`priv-predict` | 18／22 | 25 | 6 | 15 |
+| [デバッグ](../local-riscv-debug/README.md) | `debug`・`debug-predict` | 18／22 | 29 | 6 | 11 |
+| [LR／SCとAMO](../local-riscv-atomic/README.md) | `word`・`pair` | 18／22 | 40 | 6 | 13 |
+| [リネーム・ROB](../local-rename-rob/README.md) | `rob4`・`free3-rob8` | 18／22 | 17 | 6 | 18 |
+| [浮動小数点の加算器](../local-fp-adder/README.md) | `small`・`binary32` | 30／34 | 25 | 7 | 15 |
+
+リネーム・ROBと浮動小数点の加算器は、除算器と同じく、フォーマルの`formal.py`（JUnit 16件、18件）を別に持ちます。5例を加えた共通シミュレーションの計画は73例・155構成、JUnitはsmoke 1140件／nightly 1450件です。
+

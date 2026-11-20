@@ -60,6 +60,7 @@
     "examples/local-fdir/rtl/fdir_node.sv",
     "examples/local-fdir/rtl/protected_store.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
+    "examples/local-fp-adder/rtl/fp_adder.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
@@ -131,10 +132,16 @@
     "examples/local-ram-ports/rtl/ram_tdp.sv",
     "examples/local-recovery/rtl/timeout_guard.sv",
     "examples/local-reduction/rtl/reduction_irq.sv",
+    "examples/local-rename-rob/rtl/rename_rob.sv",
     "examples/local-requantize/rtl/requantize.sv",
     "examples/local-retry-link/rtl/crc9.sv",
     "examples/local-retry-link/rtl/retry_receiver.sv",
     "examples/local-retry-link/rtl/retry_sender.sv",
+    "examples/local-riscv-atomic/rtl/atomic_mem.sv",
+    "examples/local-riscv-debug/rtl/debug_dtm.sv",
+    "examples/local-riscv-debug/rtl/debug_module.sv",
+    "examples/local-riscv-debug/rtl/debug_system.sv",
+    "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
     "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
     "examples/local-riscv-iss/rtl/rv32i_core.sv",
     "examples/local-riscv-pmp/rtl/pmp.sv",
@@ -5185,6 +5192,245 @@
       "parameters": {
         "WIDTH": 17
       }
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=0/PRIV=1/TRAPS=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-riscv-pmp/rtl/pmp.sv"
+      ],
+      "parameters": {
+        "PREDICT": 0,
+        "PRIV": 1,
+        "TRAPS": 1
+      }
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/PREDICT=2/PRIV=1/TRAPS=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-riscv-pmp/rtl/pmp.sv"
+      ],
+      "parameters": {
+        "PREDICT": 2,
+        "PRIV": 1,
+        "TRAPS": 1
+      }
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/DEBUG=1/TRAPS=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ],
+      "parameters": {
+        "DEBUG": 1,
+        "TRAPS": 1
+      }
+    },
+    {
+      "id": "local-riscv-iss/rv32i_core/DEBUG=1/PREDICT=2/TRAPS=1",
+      "file": "examples/local-riscv-iss/rtl/rv32i_core.sv",
+      "top": "rv32i_core",
+      "sources": [
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv"
+      ],
+      "parameters": {
+        "DEBUG": 1,
+        "PREDICT": 2,
+        "TRAPS": 1
+      }
+    },
+    {
+      "id": "local-jtag-tap/jtag_tap/EXT=1",
+      "file": "examples/local-jtag-tap/rtl/jtag_tap.sv",
+      "top": "jtag_tap",
+      "sources": [
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ],
+      "parameters": {
+        "EXT": 1
+      }
+    },
+    {
+      "id": "local-riscv-debug/debug_system/default",
+      "file": "examples/local-riscv-debug/rtl/debug_system.sv",
+      "top": "debug_system",
+      "sources": [
+        "examples/local-riscv-debug/rtl/debug_system.sv",
+        "examples/local-riscv-debug/rtl/debug_dtm.sv",
+        "examples/local-riscv-debug/rtl/debug_module.sv",
+        "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-riscv-debug/debug_system/PREDICT=2",
+      "file": "examples/local-riscv-debug/rtl/debug_system.sv",
+      "top": "debug_system",
+      "sources": [
+        "examples/local-riscv-debug/rtl/debug_system.sv",
+        "examples/local-riscv-debug/rtl/debug_dtm.sv",
+        "examples/local-riscv-debug/rtl/debug_module.sv",
+        "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ],
+      "parameters": {
+        "PREDICT": 2
+      }
+    },
+    {
+      "id": "local-riscv-debug/debug_module/default",
+      "file": "examples/local-riscv-debug/rtl/debug_module.sv",
+      "top": "debug_module",
+      "sources": [
+        "examples/local-riscv-debug/rtl/debug_module.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-riscv-debug/debug_module/CMD_CYCLES=8",
+      "file": "examples/local-riscv-debug/rtl/debug_module.sv",
+      "top": "debug_module",
+      "sources": [
+        "examples/local-riscv-debug/rtl/debug_module.sv"
+      ],
+      "parameters": {
+        "CMD_CYCLES": 8
+      }
+    },
+    {
+      "id": "local-riscv-debug/debug_dtm/default",
+      "file": "examples/local-riscv-debug/rtl/debug_dtm.sv",
+      "top": "debug_dtm",
+      "sources": [
+        "examples/local-riscv-debug/rtl/debug_dtm.sv",
+        "examples/local-jtag-tap/rtl/jtag_tap.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-riscv-debug/rv32i_debug_core/default",
+      "file": "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+      "top": "rv32i_debug_core",
+      "sources": [
+        "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-riscv-debug/rv32i_debug_core/PREDICT=2",
+      "file": "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+      "top": "rv32i_debug_core",
+      "sources": [
+        "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv"
+      ],
+      "parameters": {
+        "PREDICT": 2
+      }
+    },
+    {
+      "id": "local-riscv-atomic/atomic_mem/default",
+      "file": "examples/local-riscv-atomic/rtl/atomic_mem.sv",
+      "top": "atomic_mem",
+      "sources": [
+        "examples/local-riscv-atomic/rtl/atomic_mem.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-riscv-atomic/atomic_mem/GRAIN=1",
+      "file": "examples/local-riscv-atomic/rtl/atomic_mem.sv",
+      "top": "atomic_mem",
+      "sources": [
+        "examples/local-riscv-atomic/rtl/atomic_mem.sv"
+      ],
+      "parameters": {
+        "GRAIN": 1
+      }
+    },
+    {
+      "id": "local-rename-rob/rename_rob/default",
+      "file": "examples/local-rename-rob/rtl/rename_rob.sv",
+      "top": "rename_rob",
+      "sources": [
+        "examples/local-rename-rob/rtl/rename_rob.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-rename-rob/rename_rob/PREGS=10",
+      "file": "examples/local-rename-rob/rtl/rename_rob.sv",
+      "top": "rename_rob",
+      "sources": [
+        "examples/local-rename-rob/rtl/rename_rob.sv"
+      ],
+      "parameters": {
+        "PREGS": 10
+      }
+    },
+    {
+      "id": "local-rename-rob/rename_rob/PREGS=7/ROB=8",
+      "file": "examples/local-rename-rob/rtl/rename_rob.sv",
+      "top": "rename_rob",
+      "sources": [
+        "examples/local-rename-rob/rtl/rename_rob.sv"
+      ],
+      "parameters": {
+        "PREGS": 7,
+        "ROB": 8
+      }
+    },
+    {
+      "id": "local-fp-adder/fp_adder/default",
+      "file": "examples/local-fp-adder/rtl/fp_adder.sv",
+      "top": "fp_adder",
+      "sources": [
+        "examples/local-fp-adder/rtl/fp_adder.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fp-adder/fp_adder/EXP=4/FRAC=3",
+      "file": "examples/local-fp-adder/rtl/fp_adder.sv",
+      "top": "fp_adder",
+      "sources": [
+        "examples/local-fp-adder/rtl/fp_adder.sv"
+      ],
+      "parameters": {
+        "EXP": 4,
+        "FRAC": 3
+      }
+    },
+    {
+      "id": "local-fp-adder/fp_adder/EXP=5/FRAC=4",
+      "file": "examples/local-fp-adder/rtl/fp_adder.sv",
+      "top": "fp_adder",
+      "sources": [
+        "examples/local-fp-adder/rtl/fp_adder.sv"
+      ],
+      "parameters": {
+        "EXP": 5,
+        "FRAC": 4
+      }
     }
   ],
   "examples": {
@@ -7106,6 +7352,68 @@
       "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
     },
     "local-power-estimate": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-riscv-priv": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-riscv-iss/rv32i_core/PREDICT=0/PRIV=1/TRAPS=1",
+        "local-riscv-iss/rv32i_core/PREDICT=2/PRIV=1/TRAPS=1",
+        "local-riscv-decoder/rv32i_decoder/default",
+        "local-riscv-pmp/pmp/default"
+      ],
+      "reason": "既存DUTの再利用・集約。testbench等は各run.pyの実行で確認"
+    },
+    "local-riscv-debug": {
+      "scope": "dut",
+      "targets": [
+        "local-riscv-debug/debug_system/default",
+        "local-riscv-debug/debug_system/PREDICT=2",
+        "local-riscv-debug/debug_module/default",
+        "local-riscv-debug/debug_module/CMD_CYCLES=8",
+        "local-riscv-debug/debug_dtm/default",
+        "local-riscv-debug/rv32i_debug_core/default",
+        "local-riscv-debug/rv32i_debug_core/PREDICT=2",
+        "local-riscv-iss/rv32i_core/DEBUG=1/TRAPS=1",
+        "local-riscv-iss/rv32i_core/DEBUG=1/PREDICT=2/TRAPS=1",
+        "local-jtag-tap/jtag_tap/EXT=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-riscv-atomic": {
+      "scope": "dut",
+      "targets": [
+        "local-riscv-atomic/atomic_mem/default",
+        "local-riscv-atomic/atomic_mem/GRAIN=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-rename-rob": {
+      "scope": "dut",
+      "targets": [
+        "local-rename-rob/rename_rob/default",
+        "local-rename-rob/rename_rob/PREGS=10",
+        "local-rename-rob/rename_rob/PREGS=7/ROB=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-fp-adder": {
+      "scope": "dut",
+      "targets": [
+        "local-fp-adder/fp_adder/default",
+        "local-fp-adder/fp_adder/EXP=4/FRAC=3",
+        "local-fp-adder/fp_adder/EXP=5/FRAC=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-riscv-formal": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-riscv-official-tests": {
       "scope": "workflow",
       "targets": [],
       "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"

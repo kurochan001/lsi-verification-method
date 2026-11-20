@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DBG-TRANSPORT",
+      "summary": "The debug module is reached through the JTAG TAP: the identification code and dtmcs read as specified, and dmi carries reads and writes.",
+      "goals": ["dtm/idcode", "dtm/dtmcs"]
+    },
+    {
+      "id": "DBG-HALT",
+      "summary": "A halt request, before the first instruction or while the program runs, and an EBREAK with dcsr.ebreakm stop the hart before an instruction; dpc points at it, whatever the pipeline was doing.",
+      "goals": ["halt/before-first-instruction", "halt/request-while-running", "halt/ebreak", "halt/ebreak-again",
+                "halt/at-branch-flush", "halt/at-exception", "halt/at-interrupt", "halt/after-memory-wait"]
+    },
+    {
+      "id": "DBG-RESUME",
+      "summary": "A resume is acknowledged and continues at dpc, also after the debugger moved it; the retired instructions are those of an undisturbed run.",
+      "goals": ["resume/ack", "resume/dpc-moved"]
+    },
+    {
+      "id": "DBG-STEP",
+      "summary": "With dcsr.step the hart executes one instruction, or takes one exception, and stops again; no interrupt is taken during a step.",
+      "goals": ["step/sequential", "step/taken-branch", "step/load", "step/exception", "step/interrupt-masked",
+                "step/after-request"]
+    },
+    {
+      "id": "DBG-REGISTERS",
+      "summary": "While halted, abstract commands read and write the general registers, dcsr and dpc; x0 stays zero and a written value is what the program sees.",
+      "goals": ["reg/gpr-read", "reg/gpr-write-visible", "reg/x0", "reg/dcsr", "reg/dpc"]
+    },
+    {
+      "id": "DBG-ERRORS",
+      "summary": "A command the module does not have, a register the core does not have, a command while the hart runs and an access while a command runs set cmderr; the error stays, and blocks commands, until it is cleared.",
+      "goals": ["abstract/busy", "abstract/not-supported", "abstract/unknown-register", "abstract/running-hart",
+                "abstract/sticky-error", "abstract/clear"]
+    }
+  ]
+}

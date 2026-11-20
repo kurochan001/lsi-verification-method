@@ -318,6 +318,12 @@ flowchart TD
 | モードとコーナー（STA） | 動作モード（機能、スキャンなど）と、遅延の条件（slow、fastなど）の組。セットアップはslow、ホールドはfastで厳しくなり、モードを混ぜると偽の違反や経路の消失が起きる。[実行例](../examples/local-sta-modes/README.md) |
 | 到達不能の除外（カバレッジ） | 到達できないと証明した未達項目を分母から外すこと。有界検査で届かなかっただけの項目や、強すぎる仮定の下の証明は除外の根拠にしない。[実行例](../examples/local-coverage-unreachable/README.md) |
 | 活動率（電力見積り） | 信号が変化する頻度。シミュレーションの波形から取り込み、セルのエネルギーと合わせて平均電力を見積もる。[実行例](../examples/local-power-estimate/README.md)の数値は架空のライブラリのもの |
+| 公開の試験プログラム（riscv-tests） | 命令ごとの動作を自己判定するアセンブリの試験。自作のISSとコアが同じ誤解を共有していないかを、外部の基準で確かめる。[実行例](../examples/local-riscv-official-tests/README.md)は固定版を取得し、転載しない |
+| 特権モード／PMP | 命令が実行される権限の段階（機械モード、ユーザーモードなど）／物理メモリの保護。モードの遷移、アクセスフォルト、MPRVの実効特権を確認する。[コアへ統合した実行例](../examples/local-riscv-priv/README.md) |
+| デバッグモード／dcsr・dpc | 外部のデバッガーがコアを止めて状態を読み書きする動作状態／その原因・設定と、再開する番地を持つレジスタ。停止と例外・割り込みの重なりを確認する。[実行例](../examples/local-riscv-debug/README.md)は教材用の部分実装 |
+| LR／SC・AMO | 予約つきロードと条件つきストア（Load-Reserved／Store-Conditional）、読みと書きを不可分に行うメモリ操作（Atomic Memory Operation）。予約が無効になる条件と、SCが誤って成功しないことを確認する。[実行例](../examples/local-riscv-atomic/README.md) |
+| リネーム／フリーリスト／ROB | 論理レジスタを物理レジスタへ対応付ける表／空いている物理レジスタの一覧／命令を退出の順に保持するリオーダーバッファ（Reorder Buffer）。各物理レジスタがちょうど1か所に属するという保存則を確認する。[実行例](../examples/local-rename-rob/README.md) |
+| 丸めモード／例外フラグ（浮動小数点） | 正確な結果を表現できる値へ丸める向き／不正な演算・オーバーフロー・アンダーフロー・不正確を示すフラグ。丸めの中間点、subnormal、NaN、ゼロの符号で誤りが出やすい。[実行例](../examples/local-fp-adder/README.md) |
 | DRC／LVS | 物理レイアウトの設計ルール検査（Design Rule Check）／レイアウトと回路の接続対応の検査（Layout Versus Schematic）。論理の機能合格とは別の確認 |
 | ECO（Engineering Change Order） | 設計変更。振る舞いを維持する範囲と仕様を変える範囲を分け、リグレッション・等価性・物理などの影響を確認する |
 
@@ -494,7 +500,7 @@ flowchart TD
 | 用語 | 意味・検証で確認すること |
 | --- | --- |
 | ISS（Instruction Set Simulator） | 命令セットの動作をモデル化するシミュレーター。RTLとの比較ではISA・XLEN・CSR・例外・割り込み・メモリーの前提と、モデルの版・forkをそろえる |
-| RVFI（RISC-V Formal Interface） | 退役した命令やレジスター・メモリーの更新情報等を出力する検証インターフェース。フォーマルに加え、シミュレーションでのISS比較にも使われる。実装ごとの拡張・比較順序も確認する |
+| RVFI（RISC-V Formal Interface） | 退役した命令やレジスター・メモリーの更新情報等を出力する検証インターフェース。フォーマルに加え、シミュレーションでのISS比較にも使われる。実装ごとの拡張・比較順序も確認する。[小さく写した実行例](../examples/local-riscv-formal/README.md)は、退出信号をこの形に整理してフォーマルに検査する |
 | RISCV-DV | RISC-Vの命令列を生成する検証基盤。SVによる生成器とPythonの実行制御を含む。CPUのRTLを動かすツールと、選んだ生成器の実行条件を分けて確認する |
 | タンデム検証（Tandem Verification） | RTLの命令退役情報等を参照モデルの実行と対応付けて比較する方式。比較する状態・例外・割り込みの同期条件を定め、実装のサイクル一致とは区別する |
 | DVSim | OpenTitan等で使うEDAフローの実行・結果集計ツール。実行設定からテスト・seed・ツールを選ぶ。計画メタデータだけを照会するTestplantoolとは役割が異なる |

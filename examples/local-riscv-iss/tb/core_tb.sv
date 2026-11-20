@@ -5,10 +5,15 @@
 // tags, operation index, wait cycles for its memory access), 4 optional expected counters
 // (branches and jumps, flushes, whether flushes are checked).
 module core_tb;
-    parameter MUTATION = 0, PREDICT = 0, TRAPS = 0;
+    parameter MUTATION = 0, PREDICT = 0, TRAPS = 0, PRIV = 0;
     localparam IRQ_WORD = 255;  // a store to this data word sets the interrupt line to its bit 0
+    // PRIV: the lines are external, timer and software (bits 0 to 2 of the stored word), and a
+    // nonzero byte stored to TIMER_WORD raises the timer line that many clock edges later.
+    localparam TIMER_WORD = 254, IRQ_W = PRIV != 0 ? 3 : 1;
     localparam N = 16384, IMEM = 16384, DMEM = 256;  // run.py keeps programs within these sizes
-    reg clk = 0, rst_n = 0, dmem_ready = 1, irq = 0;
+    reg clk = 0, rst_n = 0, dmem_ready = 1;
+    reg [IRQ_W-1:0] irq = 0;
+    reg [7:0] timer = 0;
     wire [31:0] imem_addr, dmem_addr, dmem_wdata, ret_pc, ret_insn, ret_wdata, ret_mem_addr, ret_mem_data;
     wire dmem_valid, dmem_we, ret_valid, halted;
     wire [4:0] ret_rd;
@@ -19,7 +24,7 @@ module core_tb;
     integer mem_rows = 0;
     wire [31:0] imem_data = imem[imem_addr[15:2]];
     wire [31:0] dmem_rdata = dmem_ready ? dmem[dmem_addr[9:2]] : 32'hdeadbeef;
-    rv32i_core #(.MUTATION(MUTATION), .PREDICT(PREDICT), .TRAPS(TRAPS)) dut(.*);
+    rv32i_core #(.MUTATION(MUTATION), .PREDICT(PREDICT), .TRAPS(TRAPS), .PRIV(PRIV)) dut(.*);
     always #5 clk = ~clk;
     integer fd, n, i, rows = 0, expected = 0, retired = 0, loads = 0, stores = 0, cycles = 0, limit = 0;
     integer accesses = 0, waits = 0, waiting = 0, perf_rows = 0, lanes;
@@ -27,6 +32,7 @@ module core_tb;
     reg [31:0] exp_ctrl = 0, exp_flush = 0, check_flush = 0;
     reg [31:0] v[0:10];
     reg [31:0] e_pc[0:N-1], e_insn[0:N-1], e_wdata[0:N-1], e_addr[0:N-1], e_data[0:N-1], e_tags[0:N-1];
+    reg [23:0] e_more[0:N-1];  // coverage tags of the privilege example, from bits 31:8 of column 9
     reg [4:0] e_rd[0:N-1];
     reg [1:0] e_kind[0:N-1];
     reg [5:0] e_op[0:N-1];
@@ -51,6 +57,23 @@ module core_tb;
             24: tag_name = "trap/interrupt";       25: tag_name = "trap/enabled-by-csr";
             26: tag_name = "trap/mret";
             default: tag_name = "csr/use-at-once";
+        endcase
+    endfunction
+    function string more_name(input integer k);  // same order as PRIV_TAGS in iss.py
+        case (k)
+            0: more_name = "priv/ecall-user";        1: more_name = "priv/mret-to-user";
+            2: more_name = "priv/user-csr-illegal";  3: more_name = "priv/user-mret-illegal";
+            4: more_name = "priv/mprv-fault";        5: more_name = "priv/mprv-cleared";
+            6: more_name = "pmp/fetch-fault";        7: more_name = "pmp/load-fault";
+            8: more_name = "pmp/store-fault";        9: more_name = "pmp/machine-locked-fault";
+            10: more_name = "pmp/outside-fault";     11: more_name = "pmp/locked-write-ignored";
+            12: more_name = "irq/timer";             13: more_name = "irq/software";
+            14: more_name = "irq/priority";          15: more_name = "irq/vectored";
+            16: more_name = "irq/nested";            17: more_name = "irq/user-ignores-mie";
+            18: more_name = "wfi/wake";              19: more_name = "wfi/user-tw-illegal";
+            20: more_name = "pmp/config-readback";   21: more_name = "priv/mpp-warl";
+            22: more_name = "priv/mprv-allowed";
+            default: more_name = "irq/after-wfi";
         endcase
     endfunction
     task fail(input string label);
@@ -79,7 +102,7 @@ module core_tb;
                 3: begin
                     e_pc[expected] = v[1]; e_insn[expected] = v[2]; e_rd[expected] = v[3]; e_wdata[expected] = v[4];
                     e_kind[expected] = v[5]; e_addr[expected] = v[6]; e_data[expected] = v[7];
-                    e_tags[expected] = v[8]; e_op[expected] = v[9];
+                    e_tags[expected] = v[8]; e_op[expected] = v[9][5:0]; e_more[expected] = v[9][31:8];
                     if (v[5] == 1 || v[5] == 2) begin wait_of[accesses] = v[10]; accesses = accesses + 1; end
                     expected = expected + 1;
                 end
@@ -117,8 +140,13 @@ module core_tb;
     always @(posedge clk) if (running && dmem_valid === 1'b1 && dmem_ready) begin
         if (dmem_we) for (lanes = 0; lanes < 4; lanes = lanes + 1)
             if (dmem_be[lanes]) dmem[dmem_addr[9:2]][8 * lanes +: 8] <= dmem_wdata[8 * lanes +: 8];
-        if (dmem_we && dmem_addr[9:2] == IRQ_WORD && dmem_be[0]) irq <= dmem_wdata[0];
+        if (dmem_we && dmem_addr[9:2] == IRQ_WORD && dmem_be[0]) irq <= dmem_wdata[IRQ_W-1:0];
+        if (PRIV != 0 && dmem_we && dmem_addr[9:2] == TIMER_WORD && dmem_be[0] && dmem_wdata[7:0] != 0) timer <= dmem_wdata[7:0];
         waiting = 0; accesses = accesses + 1;
+    end
+    always @(posedge clk) if (running && timer != 0) begin
+        timer <= timer - 8'd1;
+        if (timer == 8'd1) irq <= irq | IRQ_W'(2);
     end
     // Retirement: compare in order, then credit the tags of the matched record.
     always @(negedge clk) if (running) begin
@@ -131,6 +159,7 @@ module core_tb;
                 (e_kind[retired] != 0 && (ret_mem_addr !== e_addr[retired] || ret_mem_data !== e_data[retired])))
                 fail("ISS_DATA");
             for (i = 0; i < 28; i = i + 1) if (e_tags[retired][i]) $display("COVER %s", tag_name(i));
+            for (i = 0; i < 24; i = i + 1) if (e_more[retired][i]) $display("COVER %s", more_name(i));
             ops[e_op[retired]] = 1;
             if (required != 0 && (ops & required) == required) $display("COVER isa/every-instruction");
             loads = loads + (ret_mem == 1); stores = stores + (ret_mem == 2);

@@ -93,6 +93,9 @@ jobs:
       - name: Build pinned ngspice shared library
         if: steps.selection.outputs.jobs != '0' && steps.ngspice.outputs.cache-hit != 'true'
         run: python tools/setup_ngspice.py --jobs 2 --out artifacts/ci-ngspice
+      - name: Fetch the pinned RISC-V tests
+        if: steps.selection.outputs.jobs != '0'
+        run: python examples/local-riscv-official-tests/setup_riscv_tests.py --out artifacts/toolchains/riscv-tests
       - name: Prepare and diagnose full environment
         if: steps.selection.outputs.jobs != '0'
         run: python tools/setup_environment.py --profile full --tool-bin "$PWD/artifacts/ci-native/install/bin" --oss-home "$PWD/artifacts/ci-oss/oss-cad-suite" --ngspice-home "$PWD/artifacts/ci-ngspice/install" --out artifacts/ci-env

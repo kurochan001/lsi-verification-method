@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AT-RESERVE",
+      "summary": "LR returns the word and reserves it; an SC with a valid reservation for its address writes and returns zero.",
+      "goals": ["lr/reserved", "sc/success", "reason/own-store", "reason/own-amo", "reason/new-lr"]
+    },
+    {
+      "id": "AT-SC-FAIL",
+      "summary": "An SC returns a nonzero value and writes nothing without a reservation, after a second SC, at another address, after a reset, and after a store, a successful SC or an AMO of the other hart into the reservation set.",
+      "goals": ["sc/failure", "reason/no-reservation", "reason/second-sc", "reason/other-address", "reason/after-reset",
+                "reason/other-store", "reason/other-sc", "reason/other-amo", "reason/neighbour-store"]
+    },
+    {
+      "id": "AT-AMO",
+      "summary": "Each AMO returns the old word and writes the result of its function; nothing is taken between its read and its write.",
+      "goals": ["amo/swap", "amo/add", "amo/xor", "amo/and", "amo/or", "amo/min", "amo/max", "amo/minu", "amo/maxu",
+                "amo/signed-compare", "amo/blocks-requests"]
+    },
+    {
+      "id": "AT-PORT",
+      "summary": "A response waits until its hart takes it, and that hart is not served meanwhile; reset drops reservations, responses and an AMO in progress.",
+      "goals": ["response/hold", "response/both-waiting", "response/blocks-own-hart", "reset/applied"]
+    },
+    {
+      "id": "AT-LITMUS",
+      "summary": "The outcomes of the two-hart programs are those of the abstract model: no lost increment with the LR/SC lock, the LR/SC loop or AMOADD; a lost increment without them.",
+      "goals": ["litmus/spinlock-2-00", "litmus/spinlock-2-01", "litmus/spinlock-2-10",
+                "litmus/lrsc-2-00", "litmus/lrsc-2-01", "litmus/lrsc-2-10", "litmus/amoadd-2-00",
+                "litmus/plain-1-00", "litmus/plain-2-00", "litmus/taslock-1-00", "litmus/taslock-2-00"]
+    }
+  ]
+}

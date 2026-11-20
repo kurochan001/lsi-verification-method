@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "RF-RESULT", "summary": "Every retiring instruction names the right destination register and writes the value the instruction word and the latest register values give.",
+     "goals": ["none-result-link", "none-result-add", "none-result-logic", "none-result-shift", "none-result-compare", "none-waits-result-add",
+               "nightly:static-result-add", "nightly:dynamic-result-add"]},
+    {"id": "RF-MEMORY", "summary": "A load or store makes exactly one bus transfer, with the address, lanes and data of the instruction; no other instruction makes one.",
+     "goals": ["none-memory-access", "nightly:static-memory-access", "nightly:dynamic-memory-access"]},
+    {"id": "RF-REGISTER", "summary": "A register read returns the value of the latest retired write to that register, and x0 reads as zero.",
+     "goals": ["none-register-consistency", "static-register-consistency", "dynamic-register-consistency"]},
+    {"id": "RF-PC", "summary": "The first retirement is at pc 0, each retirement is at the pc its predecessor leads to, and nothing retires after EBREAK.",
+     "goals": ["none-pc-chain", "static-pc-chain", "dynamic-pc-chain", "none-waits-pc-chain"]},
+    {"id": "RF-REACH", "summary": "Every instruction group and the pipeline situations of the checks are reachable; a core held in reset reaches none.",
+     "goals": ["none-scenario-cover", "none-overconstrained"]},
+    {"id": "RF-MUTANTS", "summary": "Each functional mutant of the core gives a counterexample at the planned assertion; the two performance-only mutants pass.",
+     "goals": ["none-detect-mutation1", "none-detect-mutation2", "none-detect-mutation3", "none-detect-mutation4",
+               "static-detect-mutation5", "static-invisible-mutation6", "static-invisible-mutation7", "static-detect-mutation8",
+               "none-detect-mutation9", "none-detect-mutation10", "none-detect-mutation11", "none-detect-mutation12"]}
+  ]
+}

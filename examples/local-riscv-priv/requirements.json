@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PRIV-MODE",
+      "summary": "Environment calls from user mode, MRET to the privilege in MPP, and machine-only instructions refused in user mode.",
+      "goals": [
+        "priv/ecall-user",
+        "priv/mret-to-user",
+        "priv/user-csr-illegal",
+        "priv/user-mret-illegal",
+        "priv/mpp-warl"
+      ]
+    },
+    {
+      "id": "PRIV-MPRV",
+      "summary": "With MPRV set, loads and stores use the privilege in MPP; MRET to user mode clears MPRV.",
+      "goals": [
+        "priv/mprv-allowed",
+        "priv/mprv-fault",
+        "priv/mprv-cleared"
+      ]
+    },
+    {
+      "id": "PRIV-PMP",
+      "summary": "Fetches, loads and stores that PMP denies are access faults; the PMP CSRs read back, take effect at the next instruction and keep locked entries.",
+      "goals": [
+        "pmp/fetch-fault",
+        "pmp/load-fault",
+        "pmp/store-fault",
+        "pmp/machine-locked-fault",
+        "pmp/outside-fault",
+        "pmp/locked-write-ignored",
+        "pmp/config-readback"
+      ]
+    },
+    {
+      "id": "PRIV-INTERRUPT",
+      "summary": "Timer and software interrupts beside the external one, their priority, user mode ignoring MIE, nesting and vectored entry.",
+      "goals": [
+        "irq/timer",
+        "irq/software",
+        "irq/priority",
+        "irq/vectored",
+        "irq/nested",
+        "irq/user-ignores-mie"
+      ]
+    },
+    {
+      "id": "PRIV-WFI",
+      "summary": "WFI waits for an enabled pending interrupt, retires before it is taken, and is illegal in user mode under TW.",
+      "goals": [
+        "wfi/wake",
+        "irq/after-wfi",
+        "wfi/user-tw-illegal"
+      ]
+    },
+    {
+      "id": "PRIV-RUN",
+      "summary": "The program runs to EBREAK.",
+      "goals": [
+        "halt/ebreak"
+      ]
+    }
+  ]
+}

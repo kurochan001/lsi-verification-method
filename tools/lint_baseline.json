@@ -958,23 +958,23 @@
     },
     "local-jtag-tap/jtag_tap/default": {
       "target_sha256": "eee5379f8aa419da87c20fee9ec966f9804c36a3de5037359ca0501eb6bd562a",
-      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "417e9a684984c9a14af328b551231afd6f081ad9e8a5725eb7fdbf1ce96c590b"},
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908"},
       "diagnostics": [
-        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 10, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-jtag-tap/jtag_tap/IDCODE=305419897": {
       "target_sha256": "2e09f4a8860bfdcf49a05da2d59fdbfe9b47219aba38c5f047dc70d4b54dae54",
-      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "417e9a684984c9a14af328b551231afd6f081ad9e8a5725eb7fdbf1ce96c590b"},
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908"},
       "diagnostics": [
-        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 10, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-jtag-tap/jtag_tap/IDCODE=3735928559": {
       "target_sha256": "1339ffde0d2a2c2a553d5d9aba58fbb7fd38a516ba00971a9b9c6a161d339647",
-      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "417e9a684984c9a14af328b551231afd6f081ad9e8a5725eb7fdbf1ce96c590b"},
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908"},
       "diagnostics": [
-        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 10, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-lockstep-monitor/lockstep_monitor/default": {
@@ -1318,19 +1318,19 @@
     },
     "local-riscv-pmp/pmp/default": {
       "target_sha256": "982e6967b22818c83a34858faf9b722146cb373a50733348e4cbe46ef258b952",
-      "source_sha256": {"examples/local-riscv-pmp/rtl/pmp.sv": "552b2e57fa93ed01682913d9717990c3abdc0726fde32c7d609741a979d0c9ba"},
+      "source_sha256": {"examples/local-riscv-pmp/rtl/pmp.sv": "4096d6eac415ebfed42d3acfbb366f437d97d720f67ac43235a41be855195848"},
       "diagnostics": [
       ]
     },
     "local-riscv-pmp/pmp/AW=16": {
       "target_sha256": "af6b1d4a077ca0a442565e3744dcff15e42136046a5909c133656bdcc6ea8abe",
-      "source_sha256": {"examples/local-riscv-pmp/rtl/pmp.sv": "552b2e57fa93ed01682913d9717990c3abdc0726fde32c7d609741a979d0c9ba"},
+      "source_sha256": {"examples/local-riscv-pmp/rtl/pmp.sv": "4096d6eac415ebfed42d3acfbb366f437d97d720f67ac43235a41be855195848"},
       "diagnostics": [
       ]
     },
     "local-riscv-pmp/pmp/AW=18": {
       "target_sha256": "21fc7604aaea85006838aa3544a6d91479da44e48a367f873eba00f4660a784e",
-      "source_sha256": {"examples/local-riscv-pmp/rtl/pmp.sv": "552b2e57fa93ed01682913d9717990c3abdc0726fde32c7d609741a979d0c9ba"},
+      "source_sha256": {"examples/local-riscv-pmp/rtl/pmp.sv": "4096d6eac415ebfed42d3acfbb366f437d97d720f67ac43235a41be855195848"},
       "diagnostics": [
       ]
     },
@@ -1575,37 +1575,37 @@
     },
     "local-riscv-iss/rv32i_core/default": {
       "target_sha256": "e19b9d14af103a5b0c6b1f241cf7b6b86ba6c8d8dadc674a66bb759db2ba3463",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7"},
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
       ]
     },
     "local-riscv-iss/rv32i_core/PREDICT=0": {
       "target_sha256": "f11302caf6d60d3afb412401127cbb53663c719dbf85dda22411628c231028f1",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7"},
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
       ]
     },
     "local-riscv-iss/rv32i_core/PREDICT=0/TRAPS=1": {
       "target_sha256": "01b3b7346d6709098f33e46e3cfc233c59434d014f008a70f1d7b4fcea79352f",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7"},
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
       ]
     },
     "local-riscv-iss/rv32i_core/PREDICT=1": {
       "target_sha256": "19e99dafb403312f8ae1e1d8efe844ccfa2bef54677e87c98f7b1923fd99b42e",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7"},
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
       ]
     },
     "local-riscv-iss/rv32i_core/PREDICT=2": {
       "target_sha256": "12a35fa82c036b68cfcb269853383e19da596b5486bb9609e2332f4411939c2c",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7"},
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
       ]
     },
     "local-riscv-iss/rv32i_core/PREDICT=2/TRAPS=1": {
       "target_sha256": "56bb21e5c42589bbc9828da31cdbec596539a1b633b30cfcefcba6d5c2246534",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7"},
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
       ]
     },
@@ -2044,9 +2044,21 @@
       "diagnostics": [
       ]
     },
-    "local-auto-mutation/irq_regs/default": {"target_sha256": "8cceb0f37bb3967827d8fb52e395c6386c7be62b68959e70b87de8497a5f6aad", "source_sha256": {"examples/local-auto-mutation/rtl/irq_regs.sv": "48bc554b0f3594edbbdba09f0990b611c5aaffafb5813b6c58ed20a1a7cac3c7"}, "diagnostics": []},
-    "local-liveness/fair_arbiter/default": {"target_sha256": "638002b59e51e928dcabd52253d912a83cf52363ffe09fa0c58093fc76bbdbfe", "source_sha256": {"examples/local-liveness/rtl/fair_arbiter.sv": "4272fb2f58ffd612654c937021c5d90d301949464785c68795ab748ac3a72059"}, "diagnostics": []},
-    "local-uvm-outstanding/tagged_reorder/default": {"target_sha256": "5466d63a6edde334a8d7ea09e2364afbf7ad464d5d00f0dfeea8a1d8644c87f5", "source_sha256": {"examples/local-uvm-outstanding/rtl/tagged_reorder.sv": "7fe927ce826dc66246079f659686d948ee5e726e76ba7757bba38e44390d10e5"}, "diagnostics": []},
+    "local-auto-mutation/irq_regs/default": {
+      "target_sha256": "8cceb0f37bb3967827d8fb52e395c6386c7be62b68959e70b87de8497a5f6aad",
+      "source_sha256": {"examples/local-auto-mutation/rtl/irq_regs.sv": "48bc554b0f3594edbbdba09f0990b611c5aaffafb5813b6c58ed20a1a7cac3c7"},
+      "diagnostics": []
+    },
+    "local-liveness/fair_arbiter/default": {
+      "target_sha256": "638002b59e51e928dcabd52253d912a83cf52363ffe09fa0c58093fc76bbdbfe",
+      "source_sha256": {"examples/local-liveness/rtl/fair_arbiter.sv": "4272fb2f58ffd612654c937021c5d90d301949464785c68795ab748ac3a72059"},
+      "diagnostics": []
+    },
+    "local-uvm-outstanding/tagged_reorder/default": {
+      "target_sha256": "5466d63a6edde334a8d7ea09e2364afbf7ad464d5d00f0dfeea8a1d8644c87f5",
+      "source_sha256": {"examples/local-uvm-outstanding/rtl/tagged_reorder.sv": "7fe927ce826dc66246079f659686d948ee5e726e76ba7757bba38e44390d10e5"},
+      "diagnostics": []
+    },
     "local-image-sobel/sobel_stream/default": {
       "target_sha256": "bf3c0f6c7ad4109c77cbf0334d6c314f1479ad650fee108f351bac6cebd2feb3",
       "source_sha256": {"examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c"},
@@ -2119,175 +2131,664 @@
     },
     "local-image-soc/image_soc/default": {
       "target_sha256": "f9845acc6b0eeb9b69a51a93f71752b870119efa6d19175dcefa7b5075225e91",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7", "examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c", "examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_dma.sv": "321298acabcd4de4dc56a684088b4ebfc193397eb2ee58ab2ab662aff127d957", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-image-soc/rtl/image_soc.sv": "b42c7cb9d1486dbc95e51fce83612375f01a1eaaf87c46c605c3f1a268d34697"},
+      "source_sha256": {"examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c", "examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_dma.sv": "321298acabcd4de4dc56a684088b4ebfc193397eb2ee58ab2ab662aff127d957", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-image-soc/rtl/image_soc.sv": "b42c7cb9d1486dbc95e51fce83612375f01a1eaaf87c46c605c3f1a268d34697", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": []
     },
     "local-image-soc/image_soc/H=5/W=5/WAIT_CYCLES=0": {
       "target_sha256": "976d5a0c3d4b3c53b068c5b0cf0bc447dbc89ca3b137631a52f546eb8f790870",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7", "examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c", "examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_dma.sv": "321298acabcd4de4dc56a684088b4ebfc193397eb2ee58ab2ab662aff127d957", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-image-soc/rtl/image_soc.sv": "b42c7cb9d1486dbc95e51fce83612375f01a1eaaf87c46c605c3f1a268d34697"},
+      "source_sha256": {"examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c", "examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_dma.sv": "321298acabcd4de4dc56a684088b4ebfc193397eb2ee58ab2ab662aff127d957", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-image-soc/rtl/image_soc.sv": "b42c7cb9d1486dbc95e51fce83612375f01a1eaaf87c46c605c3f1a268d34697", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": []
     },
     "local-image-soc/image_soc/H=5/W=7/WAIT_CYCLES=2": {
       "target_sha256": "1ab37abcc85f999eab25d026c4bd20885c90e8ef11093d473bd40c705abb44fa",
-      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7", "examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c", "examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_dma.sv": "321298acabcd4de4dc56a684088b4ebfc193397eb2ee58ab2ab662aff127d957", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-image-soc/rtl/image_soc.sv": "b42c7cb9d1486dbc95e51fce83612375f01a1eaaf87c46c605c3f1a268d34697"},
+      "source_sha256": {"examples/local-conv-window/rtl/conv_window.sv": "28bfbaa515c5ec15967f5b9a5c975d95d72066a9b5c39804a6e14b291e300014", "examples/local-image-sobel/rtl/sobel_stream.sv": "56c018acf2bd2626a074466c4669b753b47f11dc70d6e5524e858c2fc895da4c", "examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_dma.sv": "321298acabcd4de4dc56a684088b4ebfc193397eb2ee58ab2ab662aff127d957", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-image-soc/rtl/image_soc.sv": "b42c7cb9d1486dbc95e51fce83612375f01a1eaaf87c46c605c3f1a268d34697", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": []
     },
-    "local-network-echo/rx_frame_queue/default": {"target_sha256":"1eb5f674fa80af0e4c6908bb7ab878f38cf5fab6c0fb77e2884fc8ed51d02598","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},"diagnostics":[]},
-    "local-network-echo/rx_frame_queue/MAX_FRAME=96": {"target_sha256":"975e0ffa9d2f32a93eddc156d64ebecdb659de910885c8fa601fd594671613cd","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},"diagnostics":[]},
-    "local-network-echo/rx_frame_queue/MAX_FRAME=128": {"target_sha256":"f430ad8c026d427c045e89fbfc70f00e42335a134c59d88ba6f38ae9fffac81c","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},"diagnostics":[]},
-    "local-network-echo/packet_codec/default": {"target_sha256":"7d375977da6eea632da0b20099f2e7cc66325cb060424edff11eb91abf52387d","source_sha256":{"examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3"},"diagnostics":[]},
-    "local-network-echo/packet_codec/MAX_FRAME=96": {"target_sha256":"300d50c14b497dd381408a02855dbdf3bd2db70eeb7c9e2d058f134cfe72511c","source_sha256":{"examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3"},"diagnostics":[]},
-    "local-network-echo/packet_codec/MAX_FRAME=128": {"target_sha256":"10df6e645ac10ad398db745813b4fa27482ea98c489346bd0fc0a8772b5b5446","source_sha256":{"examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3"},"diagnostics":[]},
-    "local-network-echo/network_echo/default": {"target_sha256":"fe39ed747ba2c36de4892d8f0a3bfdf68f2bedf1d06eeabfc90f9e9835974b04","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-echo/rtl/network_echo.sv":"9f5cd491fee8d3584f6aac62e41343c66483e8f9ae209894312a7258af75f239"},"diagnostics":[]},
-    "local-network-echo/network_echo/MAX_FRAME=96": {"target_sha256":"f1e97be25d87b9d766a447ddb31434d4289185c6fba52f34e5e7db2734cc2ace","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-echo/rtl/network_echo.sv":"9f5cd491fee8d3584f6aac62e41343c66483e8f9ae209894312a7258af75f239"},"diagnostics":[]},
-    "local-network-echo/network_echo/MAX_FRAME=128": {"target_sha256":"1e805b03eed0cd65dba0509e522d9263f0ac1ed730ec364ceaae3efd80096d70","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-echo/rtl/network_echo.sv":"9f5cd491fee8d3584f6aac62e41343c66483e8f9ae209894312a7258af75f239"},"diagnostics":[]},
-    "local-network-soc/network_nic/default": {"target_sha256":"992ee1ec7504b5f371afcdac412b1c395ff60459e650ebeb219f153e2c5d9a06","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-soc/rtl/network_nic.sv":"3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1"},"diagnostics":[]},
-    "local-network-soc/network_nic/MAX_FRAME=96/WAIT_CYCLES=1": {"target_sha256":"bd5417311f0f082146e556ee17c97808c6e820b684730cbbb1e3e83881533385","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-soc/rtl/network_nic.sv":"3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1"},"diagnostics":[]},
-    "local-network-soc/network_nic/MAX_FRAME=128/WAIT_CYCLES=3": {"target_sha256":"a8139a83176f0daa99cb13e622a99a4aa665b1ec6f2ccc5003b1b9f2c5ba4986","source_sha256":{"examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-soc/rtl/network_nic.sv":"3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1"},"diagnostics":[]},
-    "local-network-soc/network_soc/default": {"target_sha256":"4f95326bda1beb5bfd5f5229466f3790bfa54788fcbda1a07567572805ad64a8","source_sha256":{"examples/local-riscv-decoder/rtl/rv32i_decoder.sv":"df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f","examples/local-riscv-iss/rtl/rv32i_core.sv":"a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7","examples/local-image-soc/rtl/cpu_ahb.sv":"3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a","examples/local-image-soc/rtl/image_fabric.sv":"04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca","examples/local-image-soc/rtl/image_memory.sv":"a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d","examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-soc/rtl/network_nic.sv":"3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1","examples/local-network-soc/rtl/network_soc.sv":"5720c346dc58b41cda7a3a7934b69c199598773718c884e4be8a0c4010e30a24"},"diagnostics":[]},
-    "local-network-soc/network_soc/MAX_FRAME=96/WAIT_CYCLES=0": {"target_sha256":"23215fecc81f008e7d56174f259900694b69418db457bd35080c368a6e45813c","source_sha256":{"examples/local-riscv-decoder/rtl/rv32i_decoder.sv":"df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f","examples/local-riscv-iss/rtl/rv32i_core.sv":"a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7","examples/local-image-soc/rtl/cpu_ahb.sv":"3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a","examples/local-image-soc/rtl/image_fabric.sv":"04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca","examples/local-image-soc/rtl/image_memory.sv":"a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d","examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-soc/rtl/network_nic.sv":"3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1","examples/local-network-soc/rtl/network_soc.sv":"5720c346dc58b41cda7a3a7934b69c199598773718c884e4be8a0c4010e30a24"},"diagnostics":[]},
-    "local-network-soc/network_soc/MAX_FRAME=128/WAIT_CYCLES=2": {"target_sha256":"3d023ad40a5da7e44d02a62b645f1c5998e637531cd7961dced8c2bebef29cbf","source_sha256":{"examples/local-riscv-decoder/rtl/rv32i_decoder.sv":"df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f","examples/local-riscv-iss/rtl/rv32i_core.sv":"a01c5b4e8d5b5462e252940d5a60397b1bf9f2b42ad4f7775f958ff4d0f040c7","examples/local-image-soc/rtl/cpu_ahb.sv":"3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a","examples/local-image-soc/rtl/image_fabric.sv":"04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca","examples/local-image-soc/rtl/image_memory.sv":"a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d","examples/local-network-echo/rtl/rx_frame_queue.sv":"f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55","examples/local-network-echo/rtl/packet_codec.sv":"68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3","examples/local-network-soc/rtl/network_nic.sv":"3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1","examples/local-network-soc/rtl/network_soc.sv":"5720c346dc58b41cda7a3a7934b69c199598773718c884e4be8a0c4010e30a24"},"diagnostics":[]},
-    "local-tmr/tmr_register/default": {"target_sha256":"e6b19f38987f12e79c903bac35afdcbf6181ef6784b4256b9a7d5bbf1f0fc063","source_sha256":{"examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},"diagnostics":[]},
-    "local-tmr/tmr_register/WIDTH=8": {"target_sha256":"f7c74c23beb8ddb763d9d8d42278ab47ea8a752046f37d0128e2cff2a9421633","source_sha256":{"examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},"diagnostics":[]},
-    "local-tmr/tmr_register/WIDTH=16": {"target_sha256":"1953df8dceeaab8bb41c5dfe8772d787602133c667489ba4c1bffdb92765bce5","source_sha256":{"examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},"diagnostics":[]},
-    "local-fdir/protected_store/default": {"target_sha256":"88e1b833089411c830909f612e685a3f3695cfd8fbcf7f3616a97d80a932d5e2","source_sha256":{"examples/local-ecc/rtl/secded.sv":"43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b","examples/local-fdir/rtl/protected_store.sv":"1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e"},"diagnostics":[]},
-    "local-fdir/protected_store/DEPTH=4": {"target_sha256":"e17117af928ed4753bad3a7f75f7d92b95f15d1ddee0340692a58270e0b769cc","source_sha256":{"examples/local-ecc/rtl/secded.sv":"43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b","examples/local-fdir/rtl/protected_store.sv":"1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e"},"diagnostics":[]},
-    "local-fdir/protected_store/DEPTH=8": {"target_sha256":"4f0490788b420969593aba567521d9678fc32b23d871974c21bd8655ea44128d","source_sha256":{"examples/local-ecc/rtl/secded.sv":"43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b","examples/local-fdir/rtl/protected_store.sv":"1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e"},"diagnostics":[]},
-    "local-fdir/fdir_node/default": {"target_sha256":"cd554a138f4b2dbea3d561deac6281c4ae2eb9d4f8957f3e53bebf4d660490f2","source_sha256":{"examples/local-ecc/rtl/secded.sv":"43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b","examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4","examples/local-timer-watchdog/rtl/timer_watchdog.sv":"5167d756880d1c28199607c38b22246612e7e1262921534a6ea680f56039ea3d","examples/local-fdir/rtl/protected_store.sv":"1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e","examples/local-fdir/rtl/fdir_node.sv":"67b5c0c8d94cfbbc153028a85af26d1c0cba846eb7d9f38170a0b62b76cd6651"},"diagnostics":[]},
-    "local-fdir/fdir_node/DEPTH=4/TRIP=3/WD_LIMIT=5": {"target_sha256":"9eb0dedf93fb0e78d11fafb55ccb2d3d2d95e5b04e24d721bc18cf5a6ff88d1d","source_sha256":{"examples/local-ecc/rtl/secded.sv":"43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b","examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4","examples/local-timer-watchdog/rtl/timer_watchdog.sv":"5167d756880d1c28199607c38b22246612e7e1262921534a6ea680f56039ea3d","examples/local-fdir/rtl/protected_store.sv":"1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e","examples/local-fdir/rtl/fdir_node.sv":"67b5c0c8d94cfbbc153028a85af26d1c0cba846eb7d9f38170a0b62b76cd6651"},"diagnostics":[]},
-    "local-fdir/fdir_node/DEPTH=8/TRIP=2/WD_LIMIT=9": {"target_sha256":"661504a6a91a811238177f951072cece497de0851533c585a8d19ece8ce60ea8","source_sha256":{"examples/local-ecc/rtl/secded.sv":"43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b","examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4","examples/local-timer-watchdog/rtl/timer_watchdog.sv":"5167d756880d1c28199607c38b22246612e7e1262921534a6ea680f56039ea3d","examples/local-fdir/rtl/protected_store.sv":"1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e","examples/local-fdir/rtl/fdir_node.sv":"67b5c0c8d94cfbbc153028a85af26d1c0cba846eb7d9f38170a0b62b76cd6651"},"diagnostics":[]},
-    "local-motion-io/safe_pwm/default": {"target_sha256":"65fa1c23c475b4ce9391dbf64a460b196412ef34c5471904d2bee4204a0c2002","source_sha256":{"examples/local-motion-io/rtl/safe_pwm.sv":"a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},"diagnostics":[]},
-    "local-motion-io/safe_pwm/DEAD=2/PERIOD=16": {"target_sha256":"e83eff6adc37de1d165a6f0780baf165969290a102405a4aa4307e6e94c44dc4","source_sha256":{"examples/local-motion-io/rtl/safe_pwm.sv":"a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},"diagnostics":[]},
-    "local-motion-io/safe_pwm/DEAD=3/PERIOD=24": {"target_sha256":"e5b23f8b466d2cefd9eb8af00d19d675c451797ac588162a40085aa223c5faaa","source_sha256":{"examples/local-motion-io/rtl/safe_pwm.sv":"a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},"diagnostics":[]},
-    "local-motion-io/quadrature_decoder/default": {"target_sha256":"256a1d165c4e606b875cbc7964e58722f0373e4bba1d121e4c5fe5213b57272d","source_sha256":{"examples/local-motion-io/rtl/quadrature_decoder.sv":"d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08"},"diagnostics":[]},
-    "local-motion-io/quadrature_decoder/FILTER=2": {"target_sha256":"a5fad8225b771c1a58aaa48bd24242de461491d6853316d3ee2a34b747082f49","source_sha256":{"examples/local-motion-io/rtl/quadrature_decoder.sv":"d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08"},"diagnostics":[]},
-    "local-motion-io/quadrature_decoder/FILTER=3": {"target_sha256":"175c6cf99f941c10038d01ef7f95af2723e66b09b27271abcf2d79183ad75a0e","source_sha256":{"examples/local-motion-io/rtl/quadrature_decoder.sv":"d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08"},"diagnostics":[]},
-    "local-motion-control/fixed_pi/default": {"target_sha256":"adf26f7540e0901919671ee854bc8d9e0f5f600fd4e017ad75ba88d33baee316","source_sha256":{"examples/local-motion-control/rtl/fixed_pi.sv":"994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b"},"diagnostics":[]},
-    "local-motion-control/fixed_pi/LATENCY=3/LIMIT=8": {"target_sha256":"54c41c8e43de17c27d4f2e8b955a3d1a7097cc21dad2d75fbe84405e1cb51ab6","source_sha256":{"examples/local-motion-control/rtl/fixed_pi.sv":"994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b"},"diagnostics":[]},
-    "local-motion-control/fixed_pi/LATENCY=5/LIMIT=12": {"target_sha256":"90517b38ae9b781a444e4cc27abaff1a9d74e0c3280cfe9499e9816cf961862b","source_sha256":{"examples/local-motion-control/rtl/fixed_pi.sv":"994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b"},"diagnostics":[]},
-    "local-motion-control/motion_axis/default": {"target_sha256":"9db73f6b6be1c79bb8286dac74b3f25e73330e908e3f806d6bf036602678930a","source_sha256":{"examples/local-motion-io/rtl/safe_pwm.sv":"a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a","examples/local-motion-io/rtl/quadrature_decoder.sv":"d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08","examples/local-motion-control/rtl/fixed_pi.sv":"994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b","examples/local-motion-control/rtl/motion_axis.sv":"9041c4ed699ab9361b6399f670f56f2ca5bab0a07ec904c11de83e23f2044e2b"},"diagnostics":[]},
-    "local-motion-control/motion_axis/DEAD=2/FILTER=2/LATENCY=3/PERIOD=16/SAMPLE=64/SPEED_LIMIT=6": {"target_sha256":"74d2be640df2ad55dadc5fe26f751f841d79dace7abb2d62e0d8d2a952bda770","source_sha256":{"examples/local-motion-io/rtl/safe_pwm.sv":"a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a","examples/local-motion-io/rtl/quadrature_decoder.sv":"d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08","examples/local-motion-control/rtl/fixed_pi.sv":"994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b","examples/local-motion-control/rtl/motion_axis.sv":"9041c4ed699ab9361b6399f670f56f2ca5bab0a07ec904c11de83e23f2044e2b"},"diagnostics":[]},
-    "local-motion-control/motion_axis/DEAD=3/FILTER=3/LATENCY=5/PERIOD=24/SAMPLE=96/SPEED_LIMIT=8": {"target_sha256":"10d6397b4b8b720ac308eba18aba0c36b5b2e9ede26e9983e2caf245bb50dcd2","source_sha256":{"examples/local-motion-io/rtl/safe_pwm.sv":"a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a","examples/local-motion-io/rtl/quadrature_decoder.sv":"d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08","examples/local-motion-control/rtl/fixed_pi.sv":"994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b","examples/local-motion-control/rtl/motion_axis.sv":"9041c4ed699ab9361b6399f670f56f2ca5bab0a07ec904c11de83e23f2044e2b"},"diagnostics":[]},
-    "local-cpp-reference/saturating_fir/default": {"target_sha256":"b1d3b3636e773e460bc5c91c1218dbc401405f40f1fd02513dfdfbc6e4febc3f","source_sha256":{"examples/local-cpp-reference/rtl/saturating_fir.sv":"82b624f7d38ad5345cd269cc0a1d5ee26e9b18e809b69573015f9622ae6b3fc5"},"diagnostics":[]},
-    "local-cpp-reference/saturating_fir/LATENCY=3/WIDTH=12": {"target_sha256":"80351a6dcab516f23bc5504445a0e7015c2c0fb2f39924b066789b4489db05c4","source_sha256":{"examples/local-cpp-reference/rtl/saturating_fir.sv":"82b624f7d38ad5345cd269cc0a1d5ee26e9b18e809b69573015f9622ae6b3fc5"},"diagnostics":[]},
-    "local-spice-cosim/rc_hysteresis/default": {"target_sha256":"2b54a558383f6a35b6b9cbab6fa0ed9d22d41a0a64f1069f49be33743d9910c8","source_sha256":{"examples/local-spice-cosim/rtl/rc_hysteresis.sv":"4477a0a81ef3a3c8ea49c23ea145261fc62af8af389f28bbcecbe7e2b7320ebf"},"diagnostics":[]},
-    "local-spice-cosim/rc_hysteresis/ADC_BITS=10": {"target_sha256":"99a5d2e8cfdec3a8691609f8614d5547b06004c9e42137db49d1fb6839b410b7","source_sha256":{"examples/local-spice-cosim/rtl/rc_hysteresis.sv":"4477a0a81ef3a3c8ea49c23ea145261fc62af8af389f28bbcecbe7e2b7320ebf"},"diagnostics":[]},
-    "local-e2e-guard/e2e_guard/default": {"target_sha256": "4e6ffe4b1a834ebf5057c0d708620d9edf6a26db9639f2cebe2db873068e9a8c", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"}, "diagnostics": []},
-    "local-e2e-guard/e2e_guard/DATA_ID=13769": {"target_sha256": "e3f9cf986fe35bdfbe4cdff6bed3d4868326f916c7e4aeb156bd9bd4d7106155", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"}, "diagnostics": []},
-    "local-automotive-ecu/automotive_ecu/default": {"target_sha256": "eb78c9e97a4fd5781e8f7fa1f1fb3a781fad09b5be06c41b27b951aacab22ab5", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770", "examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a"}, "diagnostics": []},
-    "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5": {"target_sha256": "8e0f9461e686a24c5523b55dd643d5566ff45d2807cc50a12f69f676e18207d3", "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770", "examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a"}, "diagnostics": []},
+    "local-network-echo/rx_frame_queue/default": {
+      "target_sha256": "1eb5f674fa80af0e4c6908bb7ab878f38cf5fab6c0fb77e2884fc8ed51d02598",
+      "source_sha256": {"examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},
+      "diagnostics": []
+    },
+    "local-network-echo/rx_frame_queue/MAX_FRAME=96": {
+      "target_sha256": "975e0ffa9d2f32a93eddc156d64ebecdb659de910885c8fa601fd594671613cd",
+      "source_sha256": {"examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},
+      "diagnostics": []
+    },
+    "local-network-echo/rx_frame_queue/MAX_FRAME=128": {
+      "target_sha256": "f430ad8c026d427c045e89fbfc70f00e42335a134c59d88ba6f38ae9fffac81c",
+      "source_sha256": {"examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},
+      "diagnostics": []
+    },
+    "local-network-echo/packet_codec/default": {
+      "target_sha256": "7d375977da6eea632da0b20099f2e7cc66325cb060424edff11eb91abf52387d",
+      "source_sha256": {"examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3"},
+      "diagnostics": []
+    },
+    "local-network-echo/packet_codec/MAX_FRAME=96": {
+      "target_sha256": "300d50c14b497dd381408a02855dbdf3bd2db70eeb7c9e2d058f134cfe72511c",
+      "source_sha256": {"examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3"},
+      "diagnostics": []
+    },
+    "local-network-echo/packet_codec/MAX_FRAME=128": {
+      "target_sha256": "10df6e645ac10ad398db745813b4fa27482ea98c489346bd0fc0a8772b5b5446",
+      "source_sha256": {"examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3"},
+      "diagnostics": []
+    },
+    "local-network-echo/network_echo/default": {
+      "target_sha256": "fe39ed747ba2c36de4892d8f0a3bfdf68f2bedf1d06eeabfc90f9e9835974b04",
+      "source_sha256": {"examples/local-network-echo/rtl/network_echo.sv": "9f5cd491fee8d3584f6aac62e41343c66483e8f9ae209894312a7258af75f239", "examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},
+      "diagnostics": []
+    },
+    "local-network-echo/network_echo/MAX_FRAME=96": {
+      "target_sha256": "f1e97be25d87b9d766a447ddb31434d4289185c6fba52f34e5e7db2734cc2ace",
+      "source_sha256": {"examples/local-network-echo/rtl/network_echo.sv": "9f5cd491fee8d3584f6aac62e41343c66483e8f9ae209894312a7258af75f239", "examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},
+      "diagnostics": []
+    },
+    "local-network-echo/network_echo/MAX_FRAME=128": {
+      "target_sha256": "1e805b03eed0cd65dba0509e522d9263f0ac1ed730ec364ceaae3efd80096d70",
+      "source_sha256": {"examples/local-network-echo/rtl/network_echo.sv": "9f5cd491fee8d3584f6aac62e41343c66483e8f9ae209894312a7258af75f239", "examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55"},
+      "diagnostics": []
+    },
+    "local-network-soc/network_nic/default": {
+      "target_sha256": "992ee1ec7504b5f371afcdac412b1c395ff60459e650ebeb219f153e2c5d9a06",
+      "source_sha256": {"examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55", "examples/local-network-soc/rtl/network_nic.sv": "3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1"},
+      "diagnostics": []
+    },
+    "local-network-soc/network_nic/MAX_FRAME=96/WAIT_CYCLES=1": {
+      "target_sha256": "bd5417311f0f082146e556ee17c97808c6e820b684730cbbb1e3e83881533385",
+      "source_sha256": {"examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55", "examples/local-network-soc/rtl/network_nic.sv": "3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1"},
+      "diagnostics": []
+    },
+    "local-network-soc/network_nic/MAX_FRAME=128/WAIT_CYCLES=3": {
+      "target_sha256": "a8139a83176f0daa99cb13e622a99a4aa665b1ec6f2ccc5003b1b9f2c5ba4986",
+      "source_sha256": {"examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55", "examples/local-network-soc/rtl/network_nic.sv": "3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1"},
+      "diagnostics": []
+    },
+    "local-network-soc/network_soc/default": {
+      "target_sha256": "4f95326bda1beb5bfd5f5229466f3790bfa54788fcbda1a07567572805ad64a8",
+      "source_sha256": {"examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55", "examples/local-network-soc/rtl/network_nic.sv": "3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1", "examples/local-network-soc/rtl/network_soc.sv": "5720c346dc58b41cda7a3a7934b69c199598773718c884e4be8a0c4010e30a24", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-network-soc/network_soc/MAX_FRAME=96/WAIT_CYCLES=0": {
+      "target_sha256": "23215fecc81f008e7d56174f259900694b69418db457bd35080c368a6e45813c",
+      "source_sha256": {"examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55", "examples/local-network-soc/rtl/network_nic.sv": "3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1", "examples/local-network-soc/rtl/network_soc.sv": "5720c346dc58b41cda7a3a7934b69c199598773718c884e4be8a0c4010e30a24", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-network-soc/network_soc/MAX_FRAME=128/WAIT_CYCLES=2": {
+      "target_sha256": "3d023ad40a5da7e44d02a62b645f1c5998e637531cd7961dced8c2bebef29cbf",
+      "source_sha256": {"examples/local-image-soc/rtl/cpu_ahb.sv": "3b23cc7f0fbeafbfe19579fd126c4e90fff645fdf0d1303ba1765f4bc99e3a4a", "examples/local-image-soc/rtl/image_fabric.sv": "04e688356f5b73dd01805f7f295f162471ce35cadd743b0bebde043b4719d8ca", "examples/local-image-soc/rtl/image_memory.sv": "a252e8b6606ac37b638d1bb010e0af6e9fa9b2413def7959aa28de04d865670d", "examples/local-network-echo/rtl/packet_codec.sv": "68b6cffdb2f076d7c260e6e8675944c9928160d0448dc41d265c692f44d2d0a3", "examples/local-network-echo/rtl/rx_frame_queue.sv": "f13a816d597f4cbfff9e6f428e1d2ce038a87ea4154607b95320b6072fb09d55", "examples/local-network-soc/rtl/network_nic.sv": "3c6025145c4bb9181efbb3b51d26b8170c5244c0c9185c7bc353f29ad47243f1", "examples/local-network-soc/rtl/network_soc.sv": "5720c346dc58b41cda7a3a7934b69c199598773718c884e4be8a0c4010e30a24", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-tmr/tmr_register/default": {
+      "target_sha256": "e6b19f38987f12e79c903bac35afdcbf6181ef6784b4256b9a7d5bbf1f0fc063",
+      "source_sha256": {"examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-tmr/tmr_register/WIDTH=8": {
+      "target_sha256": "f7c74c23beb8ddb763d9d8d42278ab47ea8a752046f37d0128e2cff2a9421633",
+      "source_sha256": {"examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-tmr/tmr_register/WIDTH=16": {
+      "target_sha256": "1953df8dceeaab8bb41c5dfe8772d787602133c667489ba4c1bffdb92765bce5",
+      "source_sha256": {"examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-fdir/protected_store/default": {
+      "target_sha256": "88e1b833089411c830909f612e685a3f3695cfd8fbcf7f3616a97d80a932d5e2",
+      "source_sha256": {"examples/local-ecc/rtl/secded.sv": "43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b", "examples/local-fdir/rtl/protected_store.sv": "1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e"},
+      "diagnostics": []
+    },
+    "local-fdir/protected_store/DEPTH=4": {
+      "target_sha256": "e17117af928ed4753bad3a7f75f7d92b95f15d1ddee0340692a58270e0b769cc",
+      "source_sha256": {"examples/local-ecc/rtl/secded.sv": "43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b", "examples/local-fdir/rtl/protected_store.sv": "1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e"},
+      "diagnostics": []
+    },
+    "local-fdir/protected_store/DEPTH=8": {
+      "target_sha256": "4f0490788b420969593aba567521d9678fc32b23d871974c21bd8655ea44128d",
+      "source_sha256": {"examples/local-ecc/rtl/secded.sv": "43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b", "examples/local-fdir/rtl/protected_store.sv": "1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e"},
+      "diagnostics": []
+    },
+    "local-fdir/fdir_node/default": {
+      "target_sha256": "cd554a138f4b2dbea3d561deac6281c4ae2eb9d4f8957f3e53bebf4d660490f2",
+      "source_sha256": {"examples/local-ecc/rtl/secded.sv": "43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b", "examples/local-fdir/rtl/fdir_node.sv": "67b5c0c8d94cfbbc153028a85af26d1c0cba846eb7d9f38170a0b62b76cd6651", "examples/local-fdir/rtl/protected_store.sv": "1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e", "examples/local-timer-watchdog/rtl/timer_watchdog.sv": "5167d756880d1c28199607c38b22246612e7e1262921534a6ea680f56039ea3d", "examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-fdir/fdir_node/DEPTH=4/TRIP=3/WD_LIMIT=5": {
+      "target_sha256": "9eb0dedf93fb0e78d11fafb55ccb2d3d2d95e5b04e24d721bc18cf5a6ff88d1d",
+      "source_sha256": {"examples/local-ecc/rtl/secded.sv": "43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b", "examples/local-fdir/rtl/fdir_node.sv": "67b5c0c8d94cfbbc153028a85af26d1c0cba846eb7d9f38170a0b62b76cd6651", "examples/local-fdir/rtl/protected_store.sv": "1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e", "examples/local-timer-watchdog/rtl/timer_watchdog.sv": "5167d756880d1c28199607c38b22246612e7e1262921534a6ea680f56039ea3d", "examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-fdir/fdir_node/DEPTH=8/TRIP=2/WD_LIMIT=9": {
+      "target_sha256": "661504a6a91a811238177f951072cece497de0851533c585a8d19ece8ce60ea8",
+      "source_sha256": {"examples/local-ecc/rtl/secded.sv": "43519d825bd9f633390d42e6e239b19214af77e17321da6fb5d224e9cb64ca8b", "examples/local-fdir/rtl/fdir_node.sv": "67b5c0c8d94cfbbc153028a85af26d1c0cba846eb7d9f38170a0b62b76cd6651", "examples/local-fdir/rtl/protected_store.sv": "1587ae5119f4910145b2976f30435028d230ba60ee8a85deb91b08bcde47a73e", "examples/local-timer-watchdog/rtl/timer_watchdog.sv": "5167d756880d1c28199607c38b22246612e7e1262921534a6ea680f56039ea3d", "examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-motion-io/safe_pwm/default": {
+      "target_sha256": "65fa1c23c475b4ce9391dbf64a460b196412ef34c5471904d2bee4204a0c2002",
+      "source_sha256": {"examples/local-motion-io/rtl/safe_pwm.sv": "a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},
+      "diagnostics": []
+    },
+    "local-motion-io/safe_pwm/DEAD=2/PERIOD=16": {
+      "target_sha256": "e83eff6adc37de1d165a6f0780baf165969290a102405a4aa4307e6e94c44dc4",
+      "source_sha256": {"examples/local-motion-io/rtl/safe_pwm.sv": "a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},
+      "diagnostics": []
+    },
+    "local-motion-io/safe_pwm/DEAD=3/PERIOD=24": {
+      "target_sha256": "e5b23f8b466d2cefd9eb8af00d19d675c451797ac588162a40085aa223c5faaa",
+      "source_sha256": {"examples/local-motion-io/rtl/safe_pwm.sv": "a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},
+      "diagnostics": []
+    },
+    "local-motion-io/quadrature_decoder/default": {
+      "target_sha256": "256a1d165c4e606b875cbc7964e58722f0373e4bba1d121e4c5fe5213b57272d",
+      "source_sha256": {"examples/local-motion-io/rtl/quadrature_decoder.sv": "d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08"},
+      "diagnostics": []
+    },
+    "local-motion-io/quadrature_decoder/FILTER=2": {
+      "target_sha256": "a5fad8225b771c1a58aaa48bd24242de461491d6853316d3ee2a34b747082f49",
+      "source_sha256": {"examples/local-motion-io/rtl/quadrature_decoder.sv": "d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08"},
+      "diagnostics": []
+    },
+    "local-motion-io/quadrature_decoder/FILTER=3": {
+      "target_sha256": "175c6cf99f941c10038d01ef7f95af2723e66b09b27271abcf2d79183ad75a0e",
+      "source_sha256": {"examples/local-motion-io/rtl/quadrature_decoder.sv": "d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08"},
+      "diagnostics": []
+    },
+    "local-motion-control/fixed_pi/default": {
+      "target_sha256": "adf26f7540e0901919671ee854bc8d9e0f5f600fd4e017ad75ba88d33baee316",
+      "source_sha256": {"examples/local-motion-control/rtl/fixed_pi.sv": "994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b"},
+      "diagnostics": []
+    },
+    "local-motion-control/fixed_pi/LATENCY=3/LIMIT=8": {
+      "target_sha256": "54c41c8e43de17c27d4f2e8b955a3d1a7097cc21dad2d75fbe84405e1cb51ab6",
+      "source_sha256": {"examples/local-motion-control/rtl/fixed_pi.sv": "994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b"},
+      "diagnostics": []
+    },
+    "local-motion-control/fixed_pi/LATENCY=5/LIMIT=12": {
+      "target_sha256": "90517b38ae9b781a444e4cc27abaff1a9d74e0c3280cfe9499e9816cf961862b",
+      "source_sha256": {"examples/local-motion-control/rtl/fixed_pi.sv": "994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b"},
+      "diagnostics": []
+    },
+    "local-motion-control/motion_axis/default": {
+      "target_sha256": "9db73f6b6be1c79bb8286dac74b3f25e73330e908e3f806d6bf036602678930a",
+      "source_sha256": {"examples/local-motion-control/rtl/fixed_pi.sv": "994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b", "examples/local-motion-control/rtl/motion_axis.sv": "9041c4ed699ab9361b6399f670f56f2ca5bab0a07ec904c11de83e23f2044e2b", "examples/local-motion-io/rtl/quadrature_decoder.sv": "d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08", "examples/local-motion-io/rtl/safe_pwm.sv": "a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},
+      "diagnostics": []
+    },
+    "local-motion-control/motion_axis/DEAD=2/FILTER=2/LATENCY=3/PERIOD=16/SAMPLE=64/SPEED_LIMIT=6": {
+      "target_sha256": "74d2be640df2ad55dadc5fe26f751f841d79dace7abb2d62e0d8d2a952bda770",
+      "source_sha256": {"examples/local-motion-control/rtl/fixed_pi.sv": "994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b", "examples/local-motion-control/rtl/motion_axis.sv": "9041c4ed699ab9361b6399f670f56f2ca5bab0a07ec904c11de83e23f2044e2b", "examples/local-motion-io/rtl/quadrature_decoder.sv": "d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08", "examples/local-motion-io/rtl/safe_pwm.sv": "a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},
+      "diagnostics": []
+    },
+    "local-motion-control/motion_axis/DEAD=3/FILTER=3/LATENCY=5/PERIOD=24/SAMPLE=96/SPEED_LIMIT=8": {
+      "target_sha256": "10d6397b4b8b720ac308eba18aba0c36b5b2e9ede26e9983e2caf245bb50dcd2",
+      "source_sha256": {"examples/local-motion-control/rtl/fixed_pi.sv": "994764cb15ba39373364b4ba31a146c2579c5973f11748e2cac371686036c61b", "examples/local-motion-control/rtl/motion_axis.sv": "9041c4ed699ab9361b6399f670f56f2ca5bab0a07ec904c11de83e23f2044e2b", "examples/local-motion-io/rtl/quadrature_decoder.sv": "d6320d81ac3c4071cf9de7bed5b215b8c1b58116a82b1a326dd2e0c540a96e08", "examples/local-motion-io/rtl/safe_pwm.sv": "a76c427ad468ac4a700ff9b94f9259543a2e7f862872560d4235df46a334591a"},
+      "diagnostics": []
+    },
+    "local-cpp-reference/saturating_fir/default": {
+      "target_sha256": "b1d3b3636e773e460bc5c91c1218dbc401405f40f1fd02513dfdfbc6e4febc3f",
+      "source_sha256": {"examples/local-cpp-reference/rtl/saturating_fir.sv": "82b624f7d38ad5345cd269cc0a1d5ee26e9b18e809b69573015f9622ae6b3fc5"},
+      "diagnostics": []
+    },
+    "local-cpp-reference/saturating_fir/LATENCY=3/WIDTH=12": {
+      "target_sha256": "80351a6dcab516f23bc5504445a0e7015c2c0fb2f39924b066789b4489db05c4",
+      "source_sha256": {"examples/local-cpp-reference/rtl/saturating_fir.sv": "82b624f7d38ad5345cd269cc0a1d5ee26e9b18e809b69573015f9622ae6b3fc5"},
+      "diagnostics": []
+    },
+    "local-spice-cosim/rc_hysteresis/default": {
+      "target_sha256": "2b54a558383f6a35b6b9cbab6fa0ed9d22d41a0a64f1069f49be33743d9910c8",
+      "source_sha256": {"examples/local-spice-cosim/rtl/rc_hysteresis.sv": "4477a0a81ef3a3c8ea49c23ea145261fc62af8af389f28bbcecbe7e2b7320ebf"},
+      "diagnostics": []
+    },
+    "local-spice-cosim/rc_hysteresis/ADC_BITS=10": {
+      "target_sha256": "99a5d2e8cfdec3a8691609f8614d5547b06004c9e42137db49d1fb6839b410b7",
+      "source_sha256": {"examples/local-spice-cosim/rtl/rc_hysteresis.sv": "4477a0a81ef3a3c8ea49c23ea145261fc62af8af389f28bbcecbe7e2b7320ebf"},
+      "diagnostics": []
+    },
+    "local-e2e-guard/e2e_guard/default": {
+      "target_sha256": "4e6ffe4b1a834ebf5057c0d708620d9edf6a26db9639f2cebe2db873068e9a8c",
+      "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"},
+      "diagnostics": []
+    },
+    "local-e2e-guard/e2e_guard/DATA_ID=13769": {
+      "target_sha256": "e3f9cf986fe35bdfbe4cdff6bed3d4868326f916c7e4aeb156bd9bd4d7106155",
+      "source_sha256": {"examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"},
+      "diagnostics": []
+    },
+    "local-automotive-ecu/automotive_ecu/default": {
+      "target_sha256": "eb78c9e97a4fd5781e8f7fa1f1fb3a781fad09b5be06c41b27b951aacab22ab5",
+      "source_sha256": {"examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a", "examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"},
+      "diagnostics": []
+    },
+    "local-automotive-ecu/automotive_ecu/DATA_ID=13769/FRESH_MAX=19/WINDOW_MAX=13/WINDOW_MIN=5": {
+      "target_sha256": "8e0f9461e686a24c5523b55dd643d5566ff45d2807cc50a12f69f676e18207d3",
+      "source_sha256": {"examples/local-automotive-ecu/rtl/automotive_ecu.sv": "23fa2061de17b5c93ac63a11c9c9e5cc54cc45b214fb99aade4cf9db1cdd255a", "examples/local-e2e-guard/rtl/e2e_guard.sv": "7c050344db44fb086e928044d3f8c6e5e549d7c2fe17cd8ba7af03897ed0c770"},
+      "diagnostics": []
+    },
     "local-lbist/lbist/default": {
       "target_sha256": "12cf3214775c92358eba5146f4a22cd3995e6b684682fcf78175a76a81faf8d2",
-      "source_sha256": {
-        "examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345",
-        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
-      },
+      "source_sha256": {"examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345", "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"},
       "diagnostics": []
     },
     "local-lbist/lbist/PATTERNS=16": {
       "target_sha256": "91581d13c91a5f71f43a008777ccad3687bfffe0bbfd6c44a35d02b4db622a70",
-      "source_sha256": {
-        "examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345",
-        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
-      },
+      "source_sha256": {"examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345", "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"},
       "diagnostics": []
     },
     "local-lbist/lbist/PATTERNS=32": {
       "target_sha256": "b34ce5901feeeed1524a33771ea1bdb4c3c6ee8f98e7650bb49e86f2309816f3",
-      "source_sha256": {
-        "examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345",
-        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
-      },
+      "source_sha256": {"examples/local-lbist/rtl/lbist.sv": "6a57014e03a1abc919688f24be05248463f44e2086c0a587edda0411156eb345", "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"},
       "diagnostics": []
     },
     "local-lbist/lbist_logic/default": {
       "target_sha256": "98de0304bec2f81448d63c071515eb6483bed1b9359eb83790dbf0f7c7a56c84",
-      "source_sha256": {
-        "examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"
-      },
+      "source_sha256": {"examples/local-lbist/rtl/lbist_logic.sv": "29b5ddcc5c2d6a7ffe04597f772b31d5d7b2cb4e46fb8b547191f5cdf5884001"},
       "diagnostics": []
     },
-    "local-tmr/plain_register/default": {"target_sha256":"0b6295fe9e94da3fea1a1d541a6ea596a746b9bea1cdec171d460879231ee831","source_sha256":{"examples/local-tmr/rtl/plain_register.sv":"ce62a4b2cde422f607bf7557c7b46114d9b82c47bf3d393d73897ebf40a7aadc"},"diagnostics":[]},
-    "local-tmr/plain_register/WIDTH=1": {"target_sha256":"1f4ac659a3907b5c9e7c748034d15d2d5d9f54819f2fe85c9ee5ab7219ce2992","source_sha256":{"examples/local-tmr/rtl/plain_register.sv":"ce62a4b2cde422f607bf7557c7b46114d9b82c47bf3d393d73897ebf40a7aadc"},"diagnostics":[]},
-    "local-tmr/plain_register/WIDTH=8": {"target_sha256":"f406b5ea33926778957c05b78010c7eaeedec102467d958b265938cb775bfdb4","source_sha256":{"examples/local-tmr/rtl/plain_register.sv":"ce62a4b2cde422f607bf7557c7b46114d9b82c47bf3d393d73897ebf40a7aadc"},"diagnostics":[]},
-    "local-tmr/tmr_register/WIDTH=1": {"target_sha256":"d109f28fcf2f650571e634180ddb06da08bc2c78649fe541006ebd6bf6a71b3f","source_sha256":{"examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},"diagnostics":[]},
-    "local-tmr/tmr_register/WIDTH=32": {"target_sha256":"e30b0f729ff3fb96b69a1b15d0c523fa306d680afd6d1f04d00965a6d588160f","source_sha256":{"examples/local-tmr/rtl/tmr_register.sv":"0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},"diagnostics":[]},
-    "local-video-async/video_reset_sync/default": {"target_sha256":"7677c6654b984008739fac32201eba08b7b83b39859ed60197a7c0366524267d","source_sha256":{"examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/default": {"target_sha256":"d9fb9448ba81d34a9a6278a5894645c1d0ebb2087d7de8b7139cbafde4e64f87","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_key/default": {"target_sha256":"94f3fd7883a97692090dd256232bf79d39c17403ef7720e2f68494cf4a3569da","source_sha256":{"examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687"},"diagnostics":[]},
-    "local-video-async/video_csc/default": {"target_sha256":"9a9883f27b31c8886f2df489758cf53ee1afe1b1a002844955709263ff090b89","source_sha256":{"examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df"},"diagnostics":[]},
-    "local-video-async/video_blend/default": {"target_sha256":"a7935adaeae87ccbef90992f18284f01246009ddd40335f0296bc77d88b7a60b","source_sha256":{"examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6"},"diagnostics":[]},
-    "local-video-async/video_display/default": {"target_sha256":"9e5002be66d6c8bbc672ed25a05d39f148275e16fc8943bd263afbf34651bf6b","source_sha256":{"examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a"},"diagnostics":[]},
-    "local-video-async/video_async_pipeline/default": {"target_sha256":"0b2bff9b939980b499fc67673ad8cfdf193e4ce4da5a751781ad9d0fe164ac9e","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435","examples/local-video-async/rtl/video_async_pipeline.sv":"87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781","examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6","examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df","examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a","examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687","examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=32/DEPTH=4": {"target_sha256":"b8ae2f4151161a12d2235ef3c42fdcbf6b0ceace9b27df6cfdd622ccf28d9b00","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=32/DEPTH=8": {"target_sha256":"7a36c013a017cee17d1f35b22ae887198b7c4b42264de970d3dabf02333b941f","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=58/DEPTH=4": {"target_sha256":"d7f7d7f6978c9c45bdfc58622e592283760c9e8817ca95ee8fd03c167e396933","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=58/DEPTH=8": {"target_sha256":"726c2d9e7eae9c33bfb16e961fcee7e7ec62257698ceee179067ff7a5340ec1e","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=128": {"target_sha256":"82b142fa413ef531834f63be23ee3c470ec6ede7f3f8513d0986e3216ad62bff","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=4": {"target_sha256":"1ddb5166bb1fdb3ed7242611d410a6436016c4b3885a940254baded374faf8fe","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=8": {"target_sha256":"56efec469dc8baf50e9915bfa08ec640876752c2d97e4ae3dad701eafd88c69e","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=16": {"target_sha256":"8aa4bd1c5e4674a61710b8d527034d8f70ffbc26fb640869cf750d1bd879f575","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},"diagnostics":[]},
-    "local-video-async/video_display/W=2/H=2/DEPTH=4": {"target_sha256":"927ad26fa103dcf9c7b07c641b484ba9b6762337e469fbf015ae40e29add46bb","source_sha256":{"examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a"},"diagnostics":[]},
-    "local-video-async/video_async_pipeline/DISPLAY=0": {"target_sha256":"3e34f07a9e5cd563282af9eb0d732d02de3926b646e67ab4504f59aa274e92e9","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435","examples/local-video-async/rtl/video_async_pipeline.sv":"87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781","examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6","examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df","examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a","examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687","examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-video-async/video_async_pipeline/W=13/H=5/D0=4/D1=4/D2=8/DISPLAY=0": {"target_sha256":"f16a4b94d854572cd2cb9b81dcdba7c729828fc5225da1bdd5f73cf68c725bdd","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435","examples/local-video-async/rtl/video_async_pipeline.sv":"87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781","examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6","examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df","examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a","examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687","examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=0": {"target_sha256":"e5901ebeb0a4b52e69e0e35728c2d315d58f280a3fc738b0da9fcba95aae163c","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435","examples/local-video-async/rtl/video_async_pipeline.sv":"87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781","examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6","examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df","examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a","examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687","examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=1": {"target_sha256":"b174336604bede89088855fdb2dd9776aafdd2c1af1e43524fef1417efb531f6","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435","examples/local-video-async/rtl/video_async_pipeline.sv":"87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781","examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6","examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df","examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a","examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687","examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-video-async/video_async_pipeline/W=2/H=2/D0=4/D1=4/D2=4/DISPLAY=1": {"target_sha256":"6da3d74527ca61410c2b9992cd8f0d185435e4635001a314de34d494903779ad","source_sha256":{"examples/local-video-async/rtl/video_async_fifo.sv":"39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435","examples/local-video-async/rtl/video_async_pipeline.sv":"87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781","examples/local-video-async/rtl/video_blend.sv":"c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6","examples/local-video-async/rtl/video_csc.sv":"e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df","examples/local-video-async/rtl/video_display.sv":"5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a","examples/local-video-async/rtl/video_key.sv":"1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687","examples/local-video-async/rtl/video_reset_sync.sv":"121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},"diagnostics":[]},
-    "local-ram-ports/ram_address_adapter/default": {"target_sha256":"d8051e7a007c8a81570f5cd37331de206328e1133783343fec84b7afb75fbbd3","source_sha256":{"examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},"diagnostics":[]},
-    "local-ram-ports/ram_sp/default": {"target_sha256":"1e8316406cf169046614f91b9aa1fa916c95d61383fbdf865e1b38552aa402c8","source_sha256":{"examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d"},"diagnostics":[]},
-    "local-ram-ports/ram_1r1w/default": {"target_sha256":"6f5edae769811d5c91e9399c7c750781d1ea7168137e23aeda4bcb2d40b51045","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},"diagnostics":[]},
-    "local-ram-ports/ram_tdp/default": {"target_sha256":"18efeaacabe4c08fedcb02404d1e95d8ea190b2e65a46b3ec6148ae5670d93e3","source_sha256":{"examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/default": {"target_sha256":"c5c122d70b6cd5b094be9ab71b2d9300dc7781bb1046d3f4d2710b6e9e9f9a73","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_address_adapter/DATA_W=64/DEPTH=8": {"target_sha256":"3214303429194a743ce63bd3e88f3572d2cd973a1f0e706728d97021c2a380b2","source_sha256":{"examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},"diagnostics":[]},
-    "local-ram-ports/ram_address_adapter/DEPTH=13": {"target_sha256":"07d1e4f153538adfd24eb925c16459bf2c201ab51de7ba59fb3efbdece282ffc","source_sha256":{"examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},"diagnostics":[]},
-    "local-ram-ports/ram_sp/DATA_W=64/DEPTH=8": {"target_sha256":"f6265c347419f447a051022746e32978ed44e81d0ed918ce7a8441600a4f17cb","source_sha256":{"examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d"},"diagnostics":[]},
-    "local-ram-ports/ram_1r1w/RDW_MODE=1": {"target_sha256":"7eb473901b58c102a5b6f22cce93e0cb11d1850f2e82cad8c8e92d5495523fb4","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},"diagnostics":[]},
-    "local-ram-ports/ram_1r1w/RDW_MODE=2": {"target_sha256":"2da7727309d775326ce396ad9189312deaf0909bef0489a8601f30fe628d89fc","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},"diagnostics":[]},
-    "local-ram-ports/ram_1r1w/DATA_W=64/DEPTH=8/RDW_MODE=1": {"target_sha256":"02f62bd37f38943755dd2459e2cf578edf931f3d6c95f916aac4dc7c8eecc55c","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},"diagnostics":[]},
-    "local-ram-ports/ram_tdp/RDW_MODE=1": {"target_sha256":"2372dbe4531f7e3e105b4ba2fd0c338f4ed0b70fef2a9ab08ccfb8e71f9edcc1","source_sha256":{"examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_tdp/RDW_MODE=2": {"target_sha256":"35d2bd72cff934f0afd02d089f92da0e18163b26ca654ca58dcfd5164ffcd91b","source_sha256":{"examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_tdp/DATA_W=64/DEPTH=8/RDW_MODE=1": {"target_sha256":"ff48e294d5cf27e77339cfa9661c3ffb6e013bfd64e3ee843757ba4b02a3985f","source_sha256":{"examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_tdp/DEPTH=13/RDW_MODE=1": {"target_sha256":"a5fa0d55b291c001ff5072e69559cc3644d28a7acc5ed7cbba0808a4c22c9ed4","source_sha256":{"examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/KIND=0": {"target_sha256":"039e94779bb8b0b31dcb380866d3fc3b208571b75dec1ac76aae69cad8e0f598","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=0": {"target_sha256":"3681d62900353e0d282c87f7c98e98bce791e09089274ac39b234c06b5e3455f","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=1": {"target_sha256":"c4ff00ad10323d1f64231e55657a34b7e1f746d4a627c0854b09842df8af6115","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=2": {"target_sha256":"8cad8d0ebaa2dfbb944888eb03c8e84972938925c9efdd9e14eff37ccdca6485","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/RDW_MODE=1": {"target_sha256":"69a0f1aa38e3f169a30307144da21a5dc10f705d586b1924bcd85a65561eac38","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/RDW_MODE=2": {"target_sha256":"cf6f16dc77aad9057483e00e5f3b37553591985995413036ca9da92a0f89a540","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=0": {"target_sha256":"609d0725e3204b06814de5fa7406f81c9bf5280825a46827405b9ee2d919e7ca","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=1/RDW_MODE=1": {"target_sha256":"a2949365ff31b157f528bcd099e996889f5117120cbedd5560d81fa4f36c519d","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/RDW_MODE=1": {"target_sha256":"9af98a533d90a719756da22d93f9a8048fba70ed92762d13f315a9eca768e747","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/DEPTH=13/RDW_MODE=1": {"target_sha256":"e959343068dd133b77a7e9a6b6a1bad090d1ed11e7d6b661eca2f12941f46584","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ram-ports/ram_address_adapter/BASE_ADDR=264": {"target_sha256":"a7d6edfe72265f88ed310b93e3a2fbe69468d3a086c4458a0b9c716186313d75","source_sha256":{"examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},"diagnostics":[]},
-    "local-ram-ports/ram_ports_top/BASE_ADDR=264/RDW_MODE=1": {"target_sha256":"e30455d7e00963465a9b867ce3660492105e2c84e5b670b18ce447ca0d85e851","source_sha256":{"examples/local-ram-ports/rtl/ram_1r1w.sv":"2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7","examples/local-ram-ports/rtl/ram_address_adapter.sv":"25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4","examples/local-ram-ports/rtl/ram_ports_top.sv":"60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36","examples/local-ram-ports/rtl/ram_sp.sv":"cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d","examples/local-ram-ports/rtl/ram_tdp.sv":"76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},"diagnostics":[]},
-    "local-ecc-rmw/ecc_rmw_ram/default": {"target_sha256":"e757c23ede82cd4e413c59276eb9f9cff4c1debc9ba2e933b3f3234588eece47","source_sha256":{"examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv":"1088110808fb8644a5c079be1c0e0f0d6de91caff05df0aed6c5903fdb7ac033"},"diagnostics":[]},
-    "local-ecc-rmw/ecc_rmw_ram/DATA_W=64": {"target_sha256":"8bc7a196d5c0a2d746d98f58820c67b18feb3897045d43e2e4b6a8fc055d273b","source_sha256":{"examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv":"1088110808fb8644a5c079be1c0e0f0d6de91caff05df0aed6c5903fdb7ac033"},"diagnostics":[]},
-    "local-unaligned-memory/byte_word_ram/default": {"target_sha256":"dcec952f5fbc32ef1de80225e31de3a9271a50418ae78551ccaadac91f53a373","source_sha256":{"examples/local-unaligned-memory/rtl/byte_word_ram.sv":"2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed"},"diagnostics":[]},
-    "local-unaligned-memory/byte_word_ram/DATA_W=64": {"target_sha256":"49ca35d3c19cc8cfaddee632fb5bd3e71fa2d8cdf63343e38c0f50357c2bbdc8","source_sha256":{"examples/local-unaligned-memory/rtl/byte_word_ram.sv":"2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed"},"diagnostics":[]},
-    "local-unaligned-memory/unaligned_memory/default": {"target_sha256":"f62d4c59c9aef914ae3d6593c5d432cea8a737fa92c96b7565ccbdfd5b1bdca1","source_sha256":{"examples/local-unaligned-memory/rtl/byte_word_ram.sv":"2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed","examples/local-unaligned-memory/rtl/unaligned_memory.sv":"dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},"diagnostics":[]},
-    "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1": {"target_sha256":"c8a72e1fda110403fa16fba05531fd55ad3a0e8f18c0e1c80a79621cf943fe76","source_sha256":{"examples/local-unaligned-memory/rtl/byte_word_ram.sv":"2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed","examples/local-unaligned-memory/rtl/unaligned_memory.sv":"dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},"diagnostics":[]},
-    "local-unaligned-memory/unaligned_memory/DATA_W=64": {"target_sha256":"9e8b692e3ad58774e23ad992e6e38f0b01801d2f1fc4021c3ab0112e1e9c314b","source_sha256":{"examples/local-unaligned-memory/rtl/byte_word_ram.sv":"2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed","examples/local-unaligned-memory/rtl/unaligned_memory.sv":"dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},"diagnostics":[]},
-    "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1/DATA_W=64": {"target_sha256":"8d59aef972b601ad3108bfdcbe9d827a663c0b2d2e6862cb932e8b505c128c33","source_sha256":{"examples/local-unaligned-memory/rtl/byte_word_ram.sv":"2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed","examples/local-unaligned-memory/rtl/unaligned_memory.sv":"dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},"diagnostics":[]},
-    "local-sync-ram-fifo/memory_reset_sync/default": {"target_sha256":"c08578a25cd0abbbf439ed11efe6964aa286642209106770525b1b6089c7b80e","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_dual_clock_ram/default": {"target_sha256":"decd132571e544143f767b16d082d7ba6643b6315bbd2fdb1ad00f75e74071d0","source_sha256":{"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4": {"target_sha256":"5f053ac898b2b4b489d56a4edadaece04a961e6d2d8c83fda9316c3e30da98e3","source_sha256":{"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_dual_clock_ram/READ_LATENCY=2": {"target_sha256":"b1f4ba8ca05b9930fee82aee9969e80b0458d7b19552dc44e039fe8182c30642","source_sha256":{"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/READ_LATENCY=2/WIDTH=8": {"target_sha256":"6fe0453fc674b95777bce0c809d389272fec0ef2cad4ffc9be91ebc4f05f1092","source_sha256":{"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/WIDTH=1": {"target_sha256":"ba0acb6cd9b46abc128009c15027199249aee2a1f48439bca384096f6a087a2c","source_sha256":{"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_ram_async_fifo/default": {"target_sha256":"44cd5d5942b7b67d2fe1cc5bbb7cc2da236de2b017165483a29b27e10f559fab","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254","examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv":"0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4": {"target_sha256":"6d89312888ab142803b45bddbcfdca58707f9bb5ad71e59503dd483508d57cc1","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254","examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv":"0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_ram_async_fifo/READ_LATENCY=2": {"target_sha256":"d1f1c3c738224290089e8f6db29d570772f1e3c1871c7c0aa92a3f31a9eb5d8e","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254","examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv":"0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/READ_LATENCY=2/WIDTH=8": {"target_sha256":"c50122bb611ff0e67e2769bf47a16178f8cf50ea8a810e0143e4dbff1faaec66","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254","examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv":"0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},"diagnostics":[]},
-    "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/WIDTH=1": {"target_sha256":"850bb74a78ec27c21e86ab8b55446eb2df975ee7e419f4bbf78632fb5d33c799","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv":"c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254","examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv":"0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},"diagnostics":[]},
-    "local-video-double-buffer/video_double_buffer/default": {"target_sha256":"ed6d705a9efa5ea72836de12f5789c03aa66d7a15f3bd8fd10da25a0164a5ede","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-video-double-buffer/rtl/video_double_buffer.sv":"4eab88d4d120ef1ce50b956535ed8396e584150706635d72bf21e1975343d1d1"},"diagnostics":[]},
-    "local-video-double-buffer/video_double_buffer/HEIGHT=3/WIDTH=7": {"target_sha256":"3eec508b2f59c524af610eb2546e71474c738538a4a0f684bc799a368ee39d61","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-video-double-buffer/rtl/video_double_buffer.sv":"4eab88d4d120ef1ce50b956535ed8396e584150706635d72bf21e1975343d1d1"},"diagnostics":[]},
-    "local-video-double-buffer/video_double_buffer/HEIGHT=1/WIDTH=1": {"target_sha256":"cb3733e1f06e41a660b3879596226a73407ae0473e067061c4f462beb11fd2c5","source_sha256":{"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv":"1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29","examples/local-video-double-buffer/rtl/video_double_buffer.sv":"4eab88d4d120ef1ce50b956535ed8396e584150706635d72bf21e1975343d1d1"},"diagnostics":[]},
-    "local-adc-conversion/adc_capture/default": {"target_sha256":"b270b1824f87597520ce8d012670bc1a14b19780c16a71d4c8a67d16e7b477ec","source_sha256":{"examples/local-adc-conversion/rtl/adc_capture.sv":"924ecc2af4f899a4bc7eda64cd41f4d3e12a3c1014c0f0b69e9b9060c6eafefb"},"diagnostics":[]},
-    "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750": {"target_sha256":"9373cf759dab7b51f4b763c89123b227c642f02c9e337ddfb3bea64a90ba8477","source_sha256":{"examples/local-adc-conversion/rtl/adc_capture.sv":"924ecc2af4f899a4bc7eda64cd41f4d3e12a3c1014c0f0b69e9b9060c6eafefb"},"diagnostics":[]},
-    "local-pll-recovery/pll_guard/default": {"target_sha256":"8ea73c15010cb277ec091cef8b1db9c2b472b77599e7df8f92df7dd97dbfd588","source_sha256":{"examples/local-pll-recovery/rtl/pll_guard.sv":"967e0b29f750583895c9369ea6da095095a6a9266ee1aa191de70da55d7e6702"},"diagnostics":[]},
-    "local-pll-recovery/pll_guard/LOCK_CYCLES=7/TIMEOUT=16": {"target_sha256":"cb65242f950da3a1016f04b4fccdaa129b87aeb3f1e8d303893bc6c1d5a5be20","source_sha256":{"examples/local-pll-recovery/rtl/pll_guard.sv":"967e0b29f750583895c9369ea6da095095a6a9266ee1aa191de70da55d7e6702"},"diagnostics":[]},
-    "local-pwm-adc/pwm_adc_trigger/default": {"target_sha256":"46c78915ccbe27f2a5099dd5e577bbf4d740ba947f8ebf4facc601ce3216ada1","source_sha256":{"examples/local-pwm-adc/rtl/pwm_adc_trigger.sv":"fe9065e749eba243f605dd349804b3ed87a5761568170344624687e72d1428ce"},"diagnostics":[]},
-    "local-pwm-adc/pwm_adc_trigger/HALF_PERIOD=5": {"target_sha256":"781d2c425fe1809ea0e90ff5ae8c0fc5fbe787dfb9ef519281e7f8129846300d","source_sha256":{"examples/local-pwm-adc/rtl/pwm_adc_trigger.sv":"fe9065e749eba243f605dd349804b3ed87a5761568170344624687e72d1428ce"},"diagnostics":[]},
+    "local-tmr/plain_register/default": {
+      "target_sha256": "0b6295fe9e94da3fea1a1d541a6ea596a746b9bea1cdec171d460879231ee831",
+      "source_sha256": {"examples/local-tmr/rtl/plain_register.sv": "ce62a4b2cde422f607bf7557c7b46114d9b82c47bf3d393d73897ebf40a7aadc"},
+      "diagnostics": []
+    },
+    "local-tmr/plain_register/WIDTH=1": {
+      "target_sha256": "1f4ac659a3907b5c9e7c748034d15d2d5d9f54819f2fe85c9ee5ab7219ce2992",
+      "source_sha256": {"examples/local-tmr/rtl/plain_register.sv": "ce62a4b2cde422f607bf7557c7b46114d9b82c47bf3d393d73897ebf40a7aadc"},
+      "diagnostics": []
+    },
+    "local-tmr/plain_register/WIDTH=8": {
+      "target_sha256": "f406b5ea33926778957c05b78010c7eaeedec102467d958b265938cb775bfdb4",
+      "source_sha256": {"examples/local-tmr/rtl/plain_register.sv": "ce62a4b2cde422f607bf7557c7b46114d9b82c47bf3d393d73897ebf40a7aadc"},
+      "diagnostics": []
+    },
+    "local-tmr/tmr_register/WIDTH=1": {
+      "target_sha256": "d109f28fcf2f650571e634180ddb06da08bc2c78649fe541006ebd6bf6a71b3f",
+      "source_sha256": {"examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-tmr/tmr_register/WIDTH=32": {
+      "target_sha256": "e30b0f729ff3fb96b69a1b15d0c523fa306d680afd6d1f04d00965a6d588160f",
+      "source_sha256": {"examples/local-tmr/rtl/tmr_register.sv": "0089900eee55cc184be62e059aff7ce0bce04252f6b77d25a870221caf981ca4"},
+      "diagnostics": []
+    },
+    "local-video-async/video_reset_sync/default": {
+      "target_sha256": "7677c6654b984008739fac32201eba08b7b83b39859ed60197a7c0366524267d",
+      "source_sha256": {"examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/default": {
+      "target_sha256": "d9fb9448ba81d34a9a6278a5894645c1d0ebb2087d7de8b7139cbafde4e64f87",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_key/default": {
+      "target_sha256": "94f3fd7883a97692090dd256232bf79d39c17403ef7720e2f68494cf4a3569da",
+      "source_sha256": {"examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687"},
+      "diagnostics": []
+    },
+    "local-video-async/video_csc/default": {
+      "target_sha256": "9a9883f27b31c8886f2df489758cf53ee1afe1b1a002844955709263ff090b89",
+      "source_sha256": {"examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df"},
+      "diagnostics": []
+    },
+    "local-video-async/video_blend/default": {
+      "target_sha256": "a7935adaeae87ccbef90992f18284f01246009ddd40335f0296bc77d88b7a60b",
+      "source_sha256": {"examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6"},
+      "diagnostics": []
+    },
+    "local-video-async/video_display/default": {
+      "target_sha256": "9e5002be66d6c8bbc672ed25a05d39f148275e16fc8943bd263afbf34651bf6b",
+      "source_sha256": {"examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_pipeline/default": {
+      "target_sha256": "0b2bff9b939980b499fc67673ad8cfdf193e4ce4da5a751781ad9d0fe164ac9e",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435", "examples/local-video-async/rtl/video_async_pipeline.sv": "87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781", "examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6", "examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df", "examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a", "examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687", "examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=32/DEPTH=4": {
+      "target_sha256": "b8ae2f4151161a12d2235ef3c42fdcbf6b0ceace9b27df6cfdd622ccf28d9b00",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=32/DEPTH=8": {
+      "target_sha256": "7a36c013a017cee17d1f35b22ae887198b7c4b42264de970d3dabf02333b941f",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=58/DEPTH=4": {
+      "target_sha256": "d7f7d7f6978c9c45bdfc58622e592283760c9e8817ca95ee8fd03c167e396933",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=58/DEPTH=8": {
+      "target_sha256": "726c2d9e7eae9c33bfb16e961fcee7e7ec62257698ceee179067ff7a5340ec1e",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=128": {
+      "target_sha256": "82b142fa413ef531834f63be23ee3c470ec6ede7f3f8513d0986e3216ad62bff",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=4": {
+      "target_sha256": "1ddb5166bb1fdb3ed7242611d410a6436016c4b3885a940254baded374faf8fe",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=8": {
+      "target_sha256": "56efec469dc8baf50e9915bfa08ec640876752c2d97e4ae3dad701eafd88c69e",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_fifo/DATA_W=26/DEPTH=16": {
+      "target_sha256": "8aa4bd1c5e4674a61710b8d527034d8f70ffbc26fb640869cf750d1bd879f575",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435"},
+      "diagnostics": []
+    },
+    "local-video-async/video_display/W=2/H=2/DEPTH=4": {
+      "target_sha256": "927ad26fa103dcf9c7b07c641b484ba9b6762337e469fbf015ae40e29add46bb",
+      "source_sha256": {"examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_pipeline/DISPLAY=0": {
+      "target_sha256": "3e34f07a9e5cd563282af9eb0d732d02de3926b646e67ab4504f59aa274e92e9",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435", "examples/local-video-async/rtl/video_async_pipeline.sv": "87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781", "examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6", "examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df", "examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a", "examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687", "examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_pipeline/W=13/H=5/D0=4/D1=4/D2=8/DISPLAY=0": {
+      "target_sha256": "f16a4b94d854572cd2cb9b81dcdba7c729828fc5225da1bdd5f73cf68c725bdd",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435", "examples/local-video-async/rtl/video_async_pipeline.sv": "87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781", "examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6", "examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df", "examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a", "examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687", "examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=0": {
+      "target_sha256": "e5901ebeb0a4b52e69e0e35728c2d315d58f280a3fc738b0da9fcba95aae163c",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435", "examples/local-video-async/rtl/video_async_pipeline.sv": "87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781", "examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6", "examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df", "examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a", "examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687", "examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_pipeline/W=17/H=9/D0=4/D1=8/D2=16/DISPLAY=1": {
+      "target_sha256": "b174336604bede89088855fdb2dd9776aafdd2c1af1e43524fef1417efb531f6",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435", "examples/local-video-async/rtl/video_async_pipeline.sv": "87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781", "examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6", "examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df", "examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a", "examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687", "examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-video-async/video_async_pipeline/W=2/H=2/D0=4/D1=4/D2=4/DISPLAY=1": {
+      "target_sha256": "6da3d74527ca61410c2b9992cd8f0d185435e4635001a314de34d494903779ad",
+      "source_sha256": {"examples/local-video-async/rtl/video_async_fifo.sv": "39991ad3f07f561bb23063ad2f451671334c9ab689d87698b4ad76c2cbc52435", "examples/local-video-async/rtl/video_async_pipeline.sv": "87f6966c8db0b0a3e554d2f4197a16cc286ac35536c9227dab4b08e544697781", "examples/local-video-async/rtl/video_blend.sv": "c7b44b3a783f4273c032be769f6ff690529ab57b4ef61ea8b56f4e3dc88daba6", "examples/local-video-async/rtl/video_csc.sv": "e40b6007d6e60bbe06a278c875c22db502e3a495baf6f9bcdb585da3ed7272df", "examples/local-video-async/rtl/video_display.sv": "5f7bd03db4cb4e3d627317b54aa03689d7b84c12c45130cea2e4ea7f984a793a", "examples/local-video-async/rtl/video_key.sv": "1406ee1c8760ad863f614e0216afdbfb587171664a3cca4826fca7623385c687", "examples/local-video-async/rtl/video_reset_sync.sv": "121c4609258676eb63b73fda6e14dbfc17634095c8cc18432e138aa0625dd8fe"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_address_adapter/default": {
+      "target_sha256": "d8051e7a007c8a81570f5cd37331de206328e1133783343fec84b7afb75fbbd3",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_sp/default": {
+      "target_sha256": "1e8316406cf169046614f91b9aa1fa916c95d61383fbdf865e1b38552aa402c8",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_1r1w/default": {
+      "target_sha256": "6f5edae769811d5c91e9399c7c750781d1ea7168137e23aeda4bcb2d40b51045",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_tdp/default": {
+      "target_sha256": "18efeaacabe4c08fedcb02404d1e95d8ea190b2e65a46b3ec6148ae5670d93e3",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/default": {
+      "target_sha256": "c5c122d70b6cd5b094be9ab71b2d9300dc7781bb1046d3f4d2710b6e9e9f9a73",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_address_adapter/DATA_W=64/DEPTH=8": {
+      "target_sha256": "3214303429194a743ce63bd3e88f3572d2cd973a1f0e706728d97021c2a380b2",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_address_adapter/DEPTH=13": {
+      "target_sha256": "07d1e4f153538adfd24eb925c16459bf2c201ab51de7ba59fb3efbdece282ffc",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_sp/DATA_W=64/DEPTH=8": {
+      "target_sha256": "f6265c347419f447a051022746e32978ed44e81d0ed918ce7a8441600a4f17cb",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_1r1w/RDW_MODE=1": {
+      "target_sha256": "7eb473901b58c102a5b6f22cce93e0cb11d1850f2e82cad8c8e92d5495523fb4",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_1r1w/RDW_MODE=2": {
+      "target_sha256": "2da7727309d775326ce396ad9189312deaf0909bef0489a8601f30fe628d89fc",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_1r1w/DATA_W=64/DEPTH=8/RDW_MODE=1": {
+      "target_sha256": "02f62bd37f38943755dd2459e2cf578edf931f3d6c95f916aac4dc7c8eecc55c",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_tdp/RDW_MODE=1": {
+      "target_sha256": "2372dbe4531f7e3e105b4ba2fd0c338f4ed0b70fef2a9ab08ccfb8e71f9edcc1",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_tdp/RDW_MODE=2": {
+      "target_sha256": "35d2bd72cff934f0afd02d089f92da0e18163b26ca654ca58dcfd5164ffcd91b",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_tdp/DATA_W=64/DEPTH=8/RDW_MODE=1": {
+      "target_sha256": "ff48e294d5cf27e77339cfa9661c3ffb6e013bfd64e3ee843757ba4b02a3985f",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_tdp/DEPTH=13/RDW_MODE=1": {
+      "target_sha256": "a5fa0d55b291c001ff5072e69559cc3644d28a7acc5ed7cbba0808a4c22c9ed4",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/KIND=0": {
+      "target_sha256": "039e94779bb8b0b31dcb380866d3fc3b208571b75dec1ac76aae69cad8e0f598",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=0": {
+      "target_sha256": "3681d62900353e0d282c87f7c98e98bce791e09089274ac39b234c06b5e3455f",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=1": {
+      "target_sha256": "c4ff00ad10323d1f64231e55657a34b7e1f746d4a627c0854b09842df8af6115",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/KIND=1/RDW_MODE=2": {
+      "target_sha256": "8cad8d0ebaa2dfbb944888eb03c8e84972938925c9efdd9e14eff37ccdca6485",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/RDW_MODE=1": {
+      "target_sha256": "69a0f1aa38e3f169a30307144da21a5dc10f705d586b1924bcd85a65561eac38",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/RDW_MODE=2": {
+      "target_sha256": "cf6f16dc77aad9057483e00e5f3b37553591985995413036ca9da92a0f89a540",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=0": {
+      "target_sha256": "609d0725e3204b06814de5fa7406f81c9bf5280825a46827405b9ee2d919e7ca",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/KIND=1/RDW_MODE=1": {
+      "target_sha256": "a2949365ff31b157f528bcd099e996889f5117120cbedd5560d81fa4f36c519d",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/DATA_W=64/DEPTH=8/RDW_MODE=1": {
+      "target_sha256": "9af98a533d90a719756da22d93f9a8048fba70ed92762d13f315a9eca768e747",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/DEPTH=13/RDW_MODE=1": {
+      "target_sha256": "e959343068dd133b77a7e9a6b6a1bad090d1ed11e7d6b661eca2f12941f46584",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_address_adapter/BASE_ADDR=264": {
+      "target_sha256": "a7d6edfe72265f88ed310b93e3a2fbe69468d3a086c4458a0b9c716186313d75",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4"},
+      "diagnostics": []
+    },
+    "local-ram-ports/ram_ports_top/BASE_ADDR=264/RDW_MODE=1": {
+      "target_sha256": "e30455d7e00963465a9b867ce3660492105e2c84e5b670b18ce447ca0d85e851",
+      "source_sha256": {"examples/local-ram-ports/rtl/ram_1r1w.sv": "2070c3ed0a1451a7b820e6cfb702d3703380e05fdd0f34ba9457e50f67ed34c7", "examples/local-ram-ports/rtl/ram_address_adapter.sv": "25454bc6cb84bfc089df4818276e7d77a401c7b09a5614c0d4f970f1ed62efa4", "examples/local-ram-ports/rtl/ram_ports_top.sv": "60e52ceb47fcc0988f2fcd3505a09afe790a977cdbe4d5d7ce3d187274be4f36", "examples/local-ram-ports/rtl/ram_sp.sv": "cb053d42345e77d3bff7fbc072061ab2ca8eabf344a9a2b1e0b492070a81854d", "examples/local-ram-ports/rtl/ram_tdp.sv": "76c0f3734625c837b89ac485c03275fb1d78151a0f765230a803117086c0a5c1"},
+      "diagnostics": []
+    },
+    "local-ecc-rmw/ecc_rmw_ram/default": {
+      "target_sha256": "e757c23ede82cd4e413c59276eb9f9cff4c1debc9ba2e933b3f3234588eece47",
+      "source_sha256": {"examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv": "1088110808fb8644a5c079be1c0e0f0d6de91caff05df0aed6c5903fdb7ac033"},
+      "diagnostics": []
+    },
+    "local-ecc-rmw/ecc_rmw_ram/DATA_W=64": {
+      "target_sha256": "8bc7a196d5c0a2d746d98f58820c67b18feb3897045d43e2e4b6a8fc055d273b",
+      "source_sha256": {"examples/local-ecc-rmw/rtl/ecc_rmw_ram.sv": "1088110808fb8644a5c079be1c0e0f0d6de91caff05df0aed6c5903fdb7ac033"},
+      "diagnostics": []
+    },
+    "local-unaligned-memory/byte_word_ram/default": {
+      "target_sha256": "dcec952f5fbc32ef1de80225e31de3a9271a50418ae78551ccaadac91f53a373",
+      "source_sha256": {"examples/local-unaligned-memory/rtl/byte_word_ram.sv": "2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed"},
+      "diagnostics": []
+    },
+    "local-unaligned-memory/byte_word_ram/DATA_W=64": {
+      "target_sha256": "49ca35d3c19cc8cfaddee632fb5bd3e71fa2d8cdf63343e38c0f50357c2bbdc8",
+      "source_sha256": {"examples/local-unaligned-memory/rtl/byte_word_ram.sv": "2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed"},
+      "diagnostics": []
+    },
+    "local-unaligned-memory/unaligned_memory/default": {
+      "target_sha256": "f62d4c59c9aef914ae3d6593c5d432cea8a737fa92c96b7565ccbdfd5b1bdca1",
+      "source_sha256": {"examples/local-unaligned-memory/rtl/byte_word_ram.sv": "2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed", "examples/local-unaligned-memory/rtl/unaligned_memory.sv": "dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},
+      "diagnostics": []
+    },
+    "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1": {
+      "target_sha256": "c8a72e1fda110403fa16fba05531fd55ad3a0e8f18c0e1c80a79621cf943fe76",
+      "source_sha256": {"examples/local-unaligned-memory/rtl/byte_word_ram.sv": "2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed", "examples/local-unaligned-memory/rtl/unaligned_memory.sv": "dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},
+      "diagnostics": []
+    },
+    "local-unaligned-memory/unaligned_memory/DATA_W=64": {
+      "target_sha256": "9e8b692e3ad58774e23ad992e6e38f0b01801d2f1fc4021c3ab0112e1e9c314b",
+      "source_sha256": {"examples/local-unaligned-memory/rtl/byte_word_ram.sv": "2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed", "examples/local-unaligned-memory/rtl/unaligned_memory.sv": "dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},
+      "diagnostics": []
+    },
+    "local-unaligned-memory/unaligned_memory/BIG_ENDIAN=1/DATA_W=64": {
+      "target_sha256": "8d59aef972b601ad3108bfdcbe9d827a663c0b2d2e6862cb932e8b505c128c33",
+      "source_sha256": {"examples/local-unaligned-memory/rtl/byte_word_ram.sv": "2da4310d42e2198b9829f2b6df4861e883975f276d8aa0ca5681a3282ad461ed", "examples/local-unaligned-memory/rtl/unaligned_memory.sv": "dda362b7ed870b1b2ccf9dda59535327605182e1482a267bfd02745d20e4ee14"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/memory_reset_sync/default": {
+      "target_sha256": "c08578a25cd0abbbf439ed11efe6964aa286642209106770525b1b6089c7b80e",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_dual_clock_ram/default": {
+      "target_sha256": "decd132571e544143f767b16d082d7ba6643b6315bbd2fdb1ad00f75e74071d0",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4": {
+      "target_sha256": "5f053ac898b2b4b489d56a4edadaece04a961e6d2d8c83fda9316c3e30da98e3",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_dual_clock_ram/READ_LATENCY=2": {
+      "target_sha256": "b1f4ba8ca05b9930fee82aee9969e80b0458d7b19552dc44e039fe8182c30642",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/READ_LATENCY=2/WIDTH=8": {
+      "target_sha256": "6fe0453fc674b95777bce0c809d389272fec0ef2cad4ffc9be91ebc4f05f1092",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_dual_clock_ram/DEPTH=4/WIDTH=1": {
+      "target_sha256": "ba0acb6cd9b46abc128009c15027199249aee2a1f48439bca384096f6a087a2c",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_ram_async_fifo/default": {
+      "target_sha256": "44cd5d5942b7b67d2fe1cc5bbb7cc2da236de2b017165483a29b27e10f559fab",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254", "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv": "0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4": {
+      "target_sha256": "6d89312888ab142803b45bddbcfdca58707f9bb5ad71e59503dd483508d57cc1",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254", "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv": "0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_ram_async_fifo/READ_LATENCY=2": {
+      "target_sha256": "d1f1c3c738224290089e8f6db29d570772f1e3c1871c7c0aa92a3f31a9eb5d8e",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254", "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv": "0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/READ_LATENCY=2/WIDTH=8": {
+      "target_sha256": "c50122bb611ff0e67e2769bf47a16178f8cf50ea8a810e0143e4dbff1faaec66",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254", "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv": "0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},
+      "diagnostics": []
+    },
+    "local-sync-ram-fifo/sync_ram_async_fifo/DEPTH=4/WIDTH=1": {
+      "target_sha256": "850bb74a78ec27c21e86ab8b55446eb2df975ee7e419f4bbf78632fb5d33c799",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv": "c4d5dce620ce7fdc18965bce179b393370ef11e265866e03a1ac25a514397254", "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv": "0dbfc42202b579051c4d04492b099a9c1e1b2f86fb4936677f3f71f254fafe7b"},
+      "diagnostics": []
+    },
+    "local-video-double-buffer/video_double_buffer/default": {
+      "target_sha256": "ed6d705a9efa5ea72836de12f5789c03aa66d7a15f3bd8fd10da25a0164a5ede",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-video-double-buffer/rtl/video_double_buffer.sv": "4eab88d4d120ef1ce50b956535ed8396e584150706635d72bf21e1975343d1d1"},
+      "diagnostics": []
+    },
+    "local-video-double-buffer/video_double_buffer/HEIGHT=3/WIDTH=7": {
+      "target_sha256": "3eec508b2f59c524af610eb2546e71474c738538a4a0f684bc799a368ee39d61",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-video-double-buffer/rtl/video_double_buffer.sv": "4eab88d4d120ef1ce50b956535ed8396e584150706635d72bf21e1975343d1d1"},
+      "diagnostics": []
+    },
+    "local-video-double-buffer/video_double_buffer/HEIGHT=1/WIDTH=1": {
+      "target_sha256": "cb3733e1f06e41a660b3879596226a73407ae0473e067061c4f462beb11fd2c5",
+      "source_sha256": {"examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv": "1d8679a4af4fe7ae412aa94571fbcc94690d7dc4923671700a5e514afb545a29", "examples/local-video-double-buffer/rtl/video_double_buffer.sv": "4eab88d4d120ef1ce50b956535ed8396e584150706635d72bf21e1975343d1d1"},
+      "diagnostics": []
+    },
+    "local-adc-conversion/adc_capture/default": {
+      "target_sha256": "b270b1824f87597520ce8d012670bc1a14b19780c16a71d4c8a67d16e7b477ec",
+      "source_sha256": {"examples/local-adc-conversion/rtl/adc_capture.sv": "924ecc2af4f899a4bc7eda64cd41f4d3e12a3c1014c0f0b69e9b9060c6eafefb"},
+      "diagnostics": []
+    },
+    "local-adc-conversion/adc_capture/ACQUIRE=1/CONVERT=1/LSB_UV=750": {
+      "target_sha256": "9373cf759dab7b51f4b763c89123b227c642f02c9e337ddfb3bea64a90ba8477",
+      "source_sha256": {"examples/local-adc-conversion/rtl/adc_capture.sv": "924ecc2af4f899a4bc7eda64cd41f4d3e12a3c1014c0f0b69e9b9060c6eafefb"},
+      "diagnostics": []
+    },
+    "local-pll-recovery/pll_guard/default": {
+      "target_sha256": "8ea73c15010cb277ec091cef8b1db9c2b472b77599e7df8f92df7dd97dbfd588",
+      "source_sha256": {"examples/local-pll-recovery/rtl/pll_guard.sv": "967e0b29f750583895c9369ea6da095095a6a9266ee1aa191de70da55d7e6702"},
+      "diagnostics": []
+    },
+    "local-pll-recovery/pll_guard/LOCK_CYCLES=7/TIMEOUT=16": {
+      "target_sha256": "cb65242f950da3a1016f04b4fccdaa129b87aeb3f1e8d303893bc6c1d5a5be20",
+      "source_sha256": {"examples/local-pll-recovery/rtl/pll_guard.sv": "967e0b29f750583895c9369ea6da095095a6a9266ee1aa191de70da55d7e6702"},
+      "diagnostics": []
+    },
+    "local-pwm-adc/pwm_adc_trigger/default": {
+      "target_sha256": "46c78915ccbe27f2a5099dd5e577bbf4d740ba947f8ebf4facc601ce3216ada1",
+      "source_sha256": {"examples/local-pwm-adc/rtl/pwm_adc_trigger.sv": "fe9065e749eba243f605dd349804b3ed87a5761568170344624687e72d1428ce"},
+      "diagnostics": []
+    },
+    "local-pwm-adc/pwm_adc_trigger/HALF_PERIOD=5": {
+      "target_sha256": "781d2c425fe1809ea0e90ff5ae8c0fc5fbe787dfb9ef519281e7f8129846300d",
+      "source_sha256": {"examples/local-pwm-adc/rtl/pwm_adc_trigger.sv": "fe9065e749eba243f605dd349804b3ed87a5761568170344624687e72d1428ce"},
+      "diagnostics": []
+    },
     "local-cdc-structural/cdc_comb_before_sync/default": {
       "target_sha256": "ec84564b610fa4f13ba360d0a19497ccb259b0e1c81078c8b71b2256dac76fa7",
       "source_sha256": {"examples/local-cdc-structural/rtl/cdc_comb_before_sync.sv": "c6a4cb656fe8c5766eda8a1592e2ea63e86853bdd69a88125f5065e0661b2c18"},
@@ -2426,6 +2927,114 @@
     "local-transition-fault/tf_core/default": {
       "target_sha256": "d208021ec319f544683761dc514463e9171fed8d139cc4e6b8401558747417d6",
       "source_sha256": {"examples/local-transition-fault/rtl/TFSITE.sv": "3dedd1dd80c75eb487006c11d03e7ffdc762f2902a351c9355575179c25c4d8f", "examples/local-transition-fault/rtl/tf_core.sv": "5dfe47702dfda15cb2abd2dcc113fd32a399d541507ea4b2c9e2fcbff90794c1"},
+      "diagnostics": []
+    },
+    "local-riscv-iss/rv32i_core/PREDICT=0/PRIV=1/TRAPS=1": {
+      "target_sha256": "05bdc82ecefdd58aa5b2537da7d1b5b6ff39085aa0686cf19dc68be35d7959ee",
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996", "examples/local-riscv-pmp/rtl/pmp.sv": "4096d6eac415ebfed42d3acfbb366f437d97d720f67ac43235a41be855195848"},
+      "diagnostics": []
+    },
+    "local-riscv-iss/rv32i_core/PREDICT=2/PRIV=1/TRAPS=1": {
+      "target_sha256": "88b0edbb1078ca73fd4af5146b062d621fa411ab4b1fb5328cbc9b659274d5f5",
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996", "examples/local-riscv-pmp/rtl/pmp.sv": "4096d6eac415ebfed42d3acfbb366f437d97d720f67ac43235a41be855195848"},
+      "diagnostics": []
+    },
+    "local-riscv-iss/rv32i_core/DEBUG=1/TRAPS=1": {
+      "target_sha256": "7a94ebf0faac8766c8f92b54386d9d7b8295148359c6950768d733f1c0839d76",
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-riscv-iss/rv32i_core/DEBUG=1/PREDICT=2/TRAPS=1": {
+      "target_sha256": "21d4de6089f64a0dcfc3e3543b4113a13573fee21a57b4a735266bb158683c2f",
+      "source_sha256": {"examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-jtag-tap/jtag_tap/EXT=1": {
+      "target_sha256": "3b4e411065c330ede64d71d281a7092f31ca24196e450d939682d0659865d5c6",
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908"},
+      "diagnostics": [
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+      ]
+    },
+    "local-riscv-debug/debug_system/default": {
+      "target_sha256": "aeafaa787381bd883b9a23d783d0fac4647939f19b261a0ccc48eafa49af5dc3",
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace", "examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab", "examples/local-riscv-debug/rtl/debug_system.sv": "fc08486027f23a3a35b1d2eebf5581394e76286dcd6ad67f9ba1ecc0690eb76f", "examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": [
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+      ]
+    },
+    "local-riscv-debug/debug_system/PREDICT=2": {
+      "target_sha256": "15b57ff91f0b94f279a6bda73683f6b49af869f77ca34a3ca379c0c72fba7842",
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace", "examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab", "examples/local-riscv-debug/rtl/debug_system.sv": "fc08486027f23a3a35b1d2eebf5581394e76286dcd6ad67f9ba1ecc0690eb76f", "examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": [
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+      ]
+    },
+    "local-riscv-debug/debug_module/default": {
+      "target_sha256": "412452baea8fe6c90c3f97a35e754ce546ee5aa9e435bb37832006b7083cf11e",
+      "source_sha256": {"examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab"},
+      "diagnostics": []
+    },
+    "local-riscv-debug/debug_module/CMD_CYCLES=8": {
+      "target_sha256": "49f689c7f09a720cd0e50629faff31270f93662ebd1f7357b170c96911cf6618",
+      "source_sha256": {"examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab"},
+      "diagnostics": []
+    },
+    "local-riscv-debug/debug_dtm/default": {
+      "target_sha256": "89eafc17d39609876b847e4ad21dbd08a0687768c4bb3558ed5cededdcc71f08",
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace"},
+      "diagnostics": [
+        {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
+      ]
+    },
+    "local-riscv-debug/rv32i_debug_core/default": {
+      "target_sha256": "2c6f9162f454b36160c0413ea28b21d8cea7cf11f4b2d5ed5cfca7478b5e1598",
+      "source_sha256": {"examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-riscv-debug/rv32i_debug_core/PREDICT=2": {
+      "target_sha256": "38d7c869ea1592b0b0606374204edb9694a30592363d90f18fd3e138f6cd33ac",
+      "source_sha256": {"examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "diagnostics": []
+    },
+    "local-riscv-atomic/atomic_mem/default": {
+      "target_sha256": "95d89655bbaf00a0785fc1d4f053c2ae2e8d33c5b90244a0f295ebd1b763455b",
+      "source_sha256": {"examples/local-riscv-atomic/rtl/atomic_mem.sv": "f6f61d04d183ba54646212a9bde58e1b93fc3c45d75297f3a62921bda5e2abd6"},
+      "diagnostics": []
+    },
+    "local-riscv-atomic/atomic_mem/GRAIN=1": {
+      "target_sha256": "8673bb576a74b551da8d3a3c8ebd7cda6945c5d157d6d737568761e88701cda3",
+      "source_sha256": {"examples/local-riscv-atomic/rtl/atomic_mem.sv": "f6f61d04d183ba54646212a9bde58e1b93fc3c45d75297f3a62921bda5e2abd6"},
+      "diagnostics": []
+    },
+    "local-rename-rob/rename_rob/default": {
+      "target_sha256": "510e274e304088b730e981bb64c0c42fc30333cfc1a779424b5ae1204e5b92c4",
+      "source_sha256": {"examples/local-rename-rob/rtl/rename_rob.sv": "6233d4f72d265c06fa68c71eb2f1cac4ad3c5b8424e3164715d6767b48d21194"},
+      "diagnostics": []
+    },
+    "local-rename-rob/rename_rob/PREGS=10": {
+      "target_sha256": "e777b73870e439bc14ed4eb3878560470d90718535ba62461784c980db16595c",
+      "source_sha256": {"examples/local-rename-rob/rtl/rename_rob.sv": "6233d4f72d265c06fa68c71eb2f1cac4ad3c5b8424e3164715d6767b48d21194"},
+      "diagnostics": []
+    },
+    "local-rename-rob/rename_rob/PREGS=7/ROB=8": {
+      "target_sha256": "d625ac813fcb69e4b325e4dda767f9e0bf1667d96fa09402cc84d09560c726ed",
+      "source_sha256": {"examples/local-rename-rob/rtl/rename_rob.sv": "6233d4f72d265c06fa68c71eb2f1cac4ad3c5b8424e3164715d6767b48d21194"},
+      "diagnostics": []
+    },
+    "local-fp-adder/fp_adder/default": {
+      "target_sha256": "e6c5ea057647f355029c9d9b5a12620cc6a07f7d07889c79066076a8924c82bc",
+      "source_sha256": {"examples/local-fp-adder/rtl/fp_adder.sv": "b96509be9c547523c8adfd1bfecb5283071488c677d6a12d5a280851243c27ed"},
+      "diagnostics": []
+    },
+    "local-fp-adder/fp_adder/EXP=4/FRAC=3": {
+      "target_sha256": "2e02c056e7089ac36762b046ebd403c082d9f581e730b64481d952a4416c7f12",
+      "source_sha256": {"examples/local-fp-adder/rtl/fp_adder.sv": "b96509be9c547523c8adfd1bfecb5283071488c677d6a12d5a280851243c27ed"},
+      "diagnostics": []
+    },
+    "local-fp-adder/fp_adder/EXP=5/FRAC=4": {
+      "target_sha256": "e47a65e9c58a42f8249cf403856f0e34149badbe6f18f284f440b9e9d4478104",
+      "source_sha256": {"examples/local-fp-adder/rtl/fp_adder.sv": "b96509be9c547523c8adfd1bfecb5283071488c677d6a12d5a280851243c27ed"},
       "diagnostics": []
     }
   }

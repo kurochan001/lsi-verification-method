@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-`timescale 1ns/1ps
 module pmp #(
     parameter integer AW=16, MUTATION=0
 ) (

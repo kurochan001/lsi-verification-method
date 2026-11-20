@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "sources": {
+    "riscv-tests": {
+      "repository": "https://github.com/riscv-software-src/riscv-tests",
+      "commit": "3df703cd52d5f0d8224e3c50bf03c6cb70efff98",
+      "url": "https://github.com/riscv-software-src/riscv-tests/archive/3df703cd52d5f0d8224e3c50bf03c6cb70efff98.tar.gz",
+      "sha256": "26f60be0c065cae656e1bd6c23677693461d8c78380ae654ec2dceb770282981",
+      "license": "BSD-3-Clause form, The Regents of the University of California (file LICENSE)",
+      "directory": "riscv-tests"
+    },
+    "riscv-test-env": {
+      "repository": "https://github.com/riscv/riscv-test-env",
+      "commit": "6de71edb142be36319e380ce782c3d1830c65d68",
+      "url": "https://github.com/riscv/riscv-test-env/archive/6de71edb142be36319e380ce782c3d1830c65d68.tar.gz",
+      "sha256": "c261a872c3d118e07d8a5d6a09ceff7f666dec29030e150089f6fde5eec66edf",
+      "license": "BSD-3-Clause form, The Regents of the University of California (file LICENSE)",
+      "directory": "riscv-tests/env"
+    }
+  },
+  "suite": "isa/rv32ui",
+  "tests": [
+    "add",
+    "addi",
+    "and",
+    "andi",
+    "auipc",
+    "beq",
+    "bge",
+    "bgeu",
+    "blt",
+    "bltu",
+    "bne",
+    "jal",
+    "jalr",
+    "lb",
+    "lbu",
+    "ld_st",
+    "lh",
+    "lhu",
+    "lui",
+    "lw",
+    "or",
+    "ori",
+    "sb",
+    "sh",
+    "simple",
+    "sll",
+    "slli",
+    "slt",
+    "slti",
+    "sltiu",
+    "sltu",
+    "sra",
+    "srai",
+    "srl",
+    "srli",
+    "st_ld",
+    "sub",
+    "sw",
+    "xor",
+    "xori"
+  ],
+  "excluded": {
+    "fence_i": "Self-modifying code: it stores instructions and executes them after FENCE.I. FENCE.I is the Zifencei extension, which this RV32I core does not implement.",
+    "ma_data": "It expects misaligned loads and stores to read and write the correct value. This core traps them as misaligned-address exceptions, which the specification also allows."
+  },
+  "used_files_sha256": "7c75325c3b878757622dc7e6bf473cea39a054d3083282227f4c3ec43413f1bd",
+  "mutations": {
+    "1": {
+      "class": "self-check",
+      "noticed": [
+        "add",
+        "addi",
+        "and",
+        "andi",
+        "auipc",
+        "beq",
+        "bge",
+        "bgeu",
+        "blt",
+        "bltu",
+        "bne",
+        "jal",
+        "jalr",
+        "lb",
+        "lbu",
+        "ld_st",
+        "lh",
+        "lhu",
+        "lui",
+        "lw",
+        "or",
+        "ori",
+        "sb",
+        "sh",
+        "simple",
+        "sll",
+        "slli",
+        "slt",
+        "slti",
+        "sltiu",
+        "sltu",
+        "sra",
+        "srai",
+        "srl",
+        "srli",
+        "st_ld",
+        "sub",
+        "sw",
+        "xor",
+        "xori"
+      ]
+    },
+    "2": {
+      "class": "self-check",
+      "noticed": [
+        "lb",
+        "lbu",
+        "ld_st",
+        "lh",
+        "lhu",
+        "lw"
+      ]
+    },
+    "3": {
+      "class": "self-check",
+      "noticed": [
+        "jalr"
+      ]
+    },
+    "4": {
+      "class": "self-check",
+      "noticed": [
+        "ld_st",
+        "sb",
+        "sh",
+        "st_ld",
+        "sw"
+      ]
+    },
+    "5": {
+      "class": "self-check",
+      "noticed": [
+        "add",
+        "addi",
+        "and",
+        "andi",
+        "beq",
+        "bge",
+        "bgeu",
+        "blt",
+        "bltu",
+        "bne",
+        "jalr",
+        "lb",
+        "lbu",
+        "lh",
+        "lhu",
+        "lw",
+        "or",
+        "ori",
+        "sb",
+        "sh",
+        "sll",
+        "slli",
+        "slt",
+        "slti",
+        "sltiu",
+        "sltu",
+        "sra",
+        "srai",
+        "srl",
+        "srli",
+        "sub",
+        "sw",
+        "xor",
+        "xori"
+      ]
+    },
+    "6": {
+      "class": "invisible",
+      "noticed": []
+    },
+    "7": {
+      "class": "invisible",
+      "noticed": []
+    },
+    "8": {
+      "class": "self-check",
+      "noticed": [
+        "beq",
+        "bge",
+        "bgeu",
+        "blt",
+        "bltu",
+        "bne"
+      ]
+    },
+    "9": {
+      "class": "self-check",
+      "noticed": [
+        "lb",
+        "ld_st",
+        "lh",
+        "sb",
+        "sh",
+        "st_ld"
+      ]
+    },
+    "10": {
+      "class": "self-check",
+      "noticed": [
+        "ld_st",
+        "sb",
+        "sh",
+        "st_ld"
+      ]
+    },
+    "11": {
+      "class": "self-check",
+      "noticed": [
+        "lb",
+        "lbu",
+        "ld_st",
+        "sb",
+        "st_ld"
+      ]
+    },
+    "12": {
+      "class": "self-check",
+      "noticed": [
+        "lb",
+        "lbu",
+        "ld_st",
+        "lh",
+        "lhu",
+        "sb",
+        "sh",
+        "st_ld"
+      ]
+    },
+    "13": {
+      "class": "invisible",
+      "noticed": []
+    },
+    "14": {
+      "class": "invisible",
+      "noticed": []
+    },
+    "15": {
+      "class": "invisible",
+      "noticed": []
+    },
+    "16": {
+      "class": "invisible",
+      "noticed": []
+    },
+    "17": {
+      "class": "invisible",
+      "noticed": []
+    }
+  }
+}

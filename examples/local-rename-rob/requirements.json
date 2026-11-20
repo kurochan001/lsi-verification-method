@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "RR-ALLOC",
+      "summary": "An instruction gets a place and a free physical register; it is refused when the buffer is full or no register is free.",
+      "goals": ["alloc/accepted", "stall/refused", "reuse/after-flush"]
+    },
+    {
+      "id": "RR-COMPLETE",
+      "summary": "A completion is taken once, for an instruction in the buffer; any other completion changes nothing.",
+      "goals": ["done/normal", "done/exception", "done/ignored"]
+    },
+    {
+      "id": "RR-FLUSH",
+      "summary": "A flush cancels every younger instruction and restores the mapping, also when two instructions write the same logical register.",
+      "goals": ["flush/cancel", "flush/nothing-younger", "flush/same-dst"]
+    },
+    {
+      "id": "RR-COMMIT",
+      "summary": "The completed head retires in order with its value; an allocation in the same cycle sees the room before the retirement.",
+      "goals": ["commit/retire", "commit/not-done", "commit/with-alloc", "commit/with-refused-alloc"]
+    },
+    {
+      "id": "RR-TRAP",
+      "summary": "An instruction with an exception is not retired: it and every younger instruction are cancelled and the committed state stays.",
+      "goals": ["commit/trap", "trap/with-younger"]
+    },
+    {
+      "id": "RR-STATE",
+      "summary": "The committed value of every logical register is the one of sequential execution, also after a reset with instructions in flight.",
+      "goals": ["state/read", "reset/in-flight"]
+    }
+  ]
+}

@@ -81,6 +81,14 @@
 | SCOPE-CODE-COVERAGE | [未達カバレッジの到達不能証明](../../examples/local-coverage-unreachable/README.md) | 到達例と帰納法の証明による分類、除外の台帳の監査。式とtoggleの未達は分類しない |
 | SCOPE-PHYSICAL（DFT・STA） | [遷移故障](../../examples/local-transition-fault/README.md)、[メモリの修復](../../examples/local-memory-repair/README.md)、[モード・コーナー別のSTA](../../examples/local-sta-modes/README.md) | launch-on-captureと実速度の捕捉、予備の行・列への割当とヒューズ、機能／スキャン×slow／fastの解析。実際のATPG・実マクロ・実PDKは対象外 |
 
+2026-11-21には、プロセッサの検証を補う次の例を追加しました。位置付けは[プロセッサの検証手順](processor-verification.md)にあります。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-SYSTEM-SW | [退出のフォーマル検査](../../examples/local-riscv-formal/README.md)、[公開の試験プログラム](../../examples/local-riscv-official-tests/README.md) | RVFI相当の信号での有界検査、riscv-testsのrv32ui 40本。帰納法の証明、arch-test、外部ISSとの比較は対象外 |
+| SCOPE-SECURITY / SYSTEM-SW | [特権モードとPMPの統合](../../examples/local-riscv-priv/README.md)、[デバッグ](../../examples/local-riscv-debug/README.md) | M／Uモード、アクセスフォルト、割り込みの拡張、停止・再開・1命令実行。Sモード、ページングの統合、デバッグ仕様への準拠は対象外 |
+| SCOPE-PROTOCOL-DATA | [LR／SCとAMO](../../examples/local-riscv-atomic/README.md)、[リネーム・ROB](../../examples/local-rename-rob/README.md)、[浮動小数点の加算器](../../examples/local-fp-adder/README.md) | 予約とリトマス試験、物理レジスタの保存則、丸めと例外フラグ。コアへの統合、前進性、乗除算は対象外 |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

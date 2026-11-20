@@ -26,14 +26,27 @@ OPS = {  # name: (format, opcode, funct3, funct7)
     # machine-mode traps and CSRs (Zicsr), used when traps are enabled
     'ecall': ('E', 0x73, 0, 0), 'mret': ('E', 0x73, 0, 0x18),
     'csrrw': ('C', 0x73, 1, 0), 'csrrs': ('C', 0x73, 2, 0), 'csrrc': ('C', 0x73, 3, 0),
-    'csrrwi': ('C', 0x73, 5, 0), 'csrrsi': ('C', 0x73, 6, 0), 'csrrci': ('C', 0x73, 7, 0)}
+    'csrrwi': ('C', 0x73, 5, 0), 'csrrsi': ('C', 0x73, 6, 0), 'csrrci': ('C', 0x73, 7, 0),
+    # privileged architecture beyond machine-mode traps, used when priv is enabled
+    'wfi': ('E', 0x73, 0, 0x08)}
 NAMES = list(OPS)
 WORD_ONLY = NAMES[:32]  # the instructions of the ISS example, which uses word accesses only
 LOAD_STORE = NAMES[:38]  # adds the byte and halfword accesses
-ECALL, MRET = 0x00000073, 0x30200073
+ECALL, MRET, WFI = 0x00000073, 0x30200073, 0x10500073
 IRQ_WORD = DATA_WORDS - 1  # with traps, bit 0 of this data word drives the external interrupt line
 CSRS = {'mstatus': 0x300, 'mie': 0x304, 'mtvec': 0x305, 'mscratch': 0x340, 'mepc': 0x341, 'mcause': 0x342,
         'mtval': 0x343, 'mip': 0x344}
+# With priv: one configuration register and four address registers of physical memory protection.
+PMP_CSRS = {'pmpcfg0': 0x3a0, 'pmpaddr0': 0x3b0, 'pmpaddr1': 0x3b1, 'pmpaddr2': 0x3b2, 'pmpaddr3': 0x3b3}
+TIMER_WORD = DATA_WORDS - 2  # with priv, a nonzero byte stored here raises the timer line some cycles later
+PHYSICAL_BITS = 16           # with priv, addresses of 64 KiB and beyond are access faults
+M, U = 3, 0
+# Coverage of the privilege example, set by the ISS itself; same order as more_name in the bench.
+PRIV_TAGS = ['priv/ecall-user', 'priv/mret-to-user', 'priv/user-csr-illegal', 'priv/user-mret-illegal',
+             'priv/mprv-fault', 'priv/mprv-cleared', 'pmp/fetch-fault', 'pmp/load-fault', 'pmp/store-fault',
+             'pmp/machine-locked-fault', 'pmp/outside-fault', 'pmp/locked-write-ignored', 'irq/timer', 'irq/software',
+             'irq/priority', 'irq/vectored', 'irq/nested', 'irq/user-ignores-mie', 'wfi/wake', 'wfi/user-tw-illegal',
+             'pmp/config-readback', 'priv/mpp-warl', 'priv/mprv-allowed', 'irq/after-wfi']
 # Coverage tags carried to the bench with each retired instruction.
 TAGS = ['raw/distance-1', 'raw/distance-2', 'raw/distance-3', 'load/use', 'load/store-data', 'jalr/forwarded-base',
         'branch/taken', 'branch/not-taken', 'branch/forwarded-operand', 'branch/backward', 'x0/write-then-read',
@@ -42,7 +55,7 @@ TAGS = ['raw/distance-1', 'raw/distance-2', 'raw/distance-3', 'load/use', 'load/
 
 def name_of(insn):
     """Mnemonic of an encoded instruction, for the every-instruction goal; None if unknown."""
-    special = {EBREAK: 'ebreak', ECALL: 'ecall', MRET: 'mret'}
+    special = {EBREAK: 'ebreak', ECALL: 'ecall', MRET: 'mret', WFI: 'wfi'}
     if insn in special:
         return special[insn]
     op, f3, f7 = insn & 0x7f, insn >> 12 & 7, insn >> 25
@@ -66,8 +79,8 @@ def encode(item, pc, labels):
     name, *args = item
     if name == 'word':  # any instruction word, such as an illegal one
         return args[0] & MASK
-    if name in ('ecall', 'mret'):
-        return ECALL if name == 'ecall' else MRET
+    if name in ('ecall', 'mret', 'wfi'):
+        return {'ecall': ECALL, 'mret': MRET, 'wfi': WFI}[name]
     fmt, opcode, f3, f7 = OPS[name]
 
     def value(x):  # an immediate, a label, ('off', target, base) or ('abs', target) for JALR
@@ -79,11 +92,15 @@ def encode(item, pc, labels):
         return f7 << 25 | rs2 << 20 | rs1 << 15 | f3 << 12 | rd << 7 | opcode
     if fmt == 'I':
         rd, rs1, imm = (args[0], args[2], value(args[1])) if opcode in (0x03, 0x67) else (args[0], args[1], args[2])
+        if isinstance(imm, tuple):  # ('abs', label) or ('off', label, base label) as the immediate of ADDI and the like
+            imm = value(imm)
         if name in ('slli', 'srli', 'srai'):
             imm = f7 << 5 | imm
         return (imm & 0xfff) << 20 | rs1 << 15 | f3 << 12 | rd << 7 | opcode
     if fmt == 'S':
         rs2, imm, rs1 = args
+        if isinstance(imm, tuple):
+            imm = value(imm)
         return (imm >> 5 & 0x7f) << 25 | rs2 << 20 | rs1 << 15 | f3 << 12 | (imm & 0x1f) << 7 | opcode
     if fmt == 'B':
         rs1, rs2, target = args
@@ -95,7 +112,7 @@ def encode(item, pc, labels):
         return (imm & 0xfffff) << 12 | rd << 7 | opcode
     if fmt == 'C':  # (rd, CSR name, rs1 or 5-bit immediate)
         rd, csr, source = args
-        return CSRS[csr] << 20 | source << 15 | f3 << 12 | rd << 7 | opcode
+        return (CSRS[csr] if csr in CSRS else PMP_CSRS[csr]) << 20 | source << 15 | f3 << 12 | rd << 7 | opcode
     if fmt == 'J':
         rd, target = args
         off = value(target)
@@ -135,6 +152,7 @@ class Retired:
     result: int = 0  # value computed even when rd is x0
     taken: bool = False  # a branch whose condition held
     tags: int = 0
+    more: int = 0    # coverage of the privilege example (PRIV_TAGS)
 
 
 def alu(f3, alt, a, b):
@@ -192,11 +210,78 @@ class Machine:
         return self.tvec
 
 
-def execute(words, data, limit=100000, traps=False, memory=None):
+class Protection:
+    """Physical memory protection, four entries, written from the rules of the privileged
+    specification (Machine-Level ISA, section "Physical Memory Protection"). An address register
+    holds bits 15:2 of an address; a configuration byte holds L (bit 7), A (bits 4:3), X, W, R."""
+
+    def __init__(self):
+        self.cfg, self.addr = [0] * 4, [0] * 4
+
+    def region(self, i):
+        """First byte and the byte after the last of entry i, or None when the entry is off."""
+        mode, value = self.cfg[i] >> 3 & 3, self.addr[i]
+        if mode == 1:  # top of range: from the previous address register (0 for entry 0)
+            return (self.addr[i - 1] << 2 if i else 0), value << 2
+        if mode == 2:  # naturally aligned four bytes
+            return value << 2, (value << 2) + 4
+        if mode == 3:  # naturally aligned power of two: each trailing one doubles eight bytes
+            ones = 0
+            while ones < PHYSICAL_BITS - 2 and value >> ones & 1:
+                ones += 1
+            base = (value >> ones << ones) << 2
+            return base, base + (8 << ones)
+        return None
+
+    def allows(self, address, size, kind, privilege):
+        """kind: 0 read, 1 write, 2 execute. The lowest-numbered entry that covers any byte of the
+        access decides: it must cover all of them and grant the permission. Machine mode is bound
+        only by locked entries and passes when no entry matches; user mode then fails."""
+        for i in range(4):
+            bounds = self.region(i)
+            if bounds and bounds[1] > bounds[0] and address < bounds[1] and address + size > bounds[0]:
+                if not (bounds[0] <= address and address + size <= bounds[1]):
+                    return False
+                return bool(self.cfg[i] >> kind & 1) or (privilege == M and not self.cfg[i] >> 7)
+        return privilege == M
+
+    def read_cfg(self):
+        return sum(c << 8 * i for i, c in enumerate(self.cfg))
+
+    def write_cfg(self, value):
+        """A locked byte keeps its value. Bits 6:5 are zero, and the reserved combination of W
+        without R is stored as neither. Returns whether a locked byte ignored a different value."""
+        ignored = False
+        for i in range(4):
+            byte = value >> 8 * i & 0xff
+            legal = byte & 0x9d | (byte & 2 if byte & 1 else 0)
+            if self.cfg[i] >> 7:
+                ignored |= legal != self.cfg[i]
+            else:
+                self.cfg[i] = legal
+        return ignored
+
+    def write_addr(self, i, value):
+        """Ignored when the entry is locked, or when the next entry is locked and uses this
+        register as the bottom of its range. Returns whether a different value was ignored."""
+        value &= (1 << PHYSICAL_BITS - 2) - 1
+        if self.cfg[i] >> 7 or (i < 3 and self.cfg[i + 1] >> 7 and self.cfg[i + 1] >> 3 & 3 == 1):
+            return value != self.addr[i]
+        self.addr[i] = value
+        return False
+
+
+def execute(words, data, limit=100000, traps=False, memory=None, priv=False, debug=None):
     """Run from address 0 to EBREAK. With traps, illegal instructions, ECALL and misaligned
     accesses trap to mtvec, CSR instructions and MRET work, and an interrupt pending on the line
     with mstatus.MIE and mie.MEIE set is taken before the next instruction. A list passed as
-    memory receives the data memory as the program left it."""
+    memory receives the data memory as the program left it. With priv (and traps), user mode,
+    memory protection, timer and software interrupts, vectored mtvec and WFI are added; see
+    execute_privileged. A debugger (local-riscv-debug) is asked before every instruction:
+    debug.boundary(pc, regs, words, trace) returns the pc to go on with, after any stop in debug
+    mode there, and no interrupt is taken while debug.masks_interrupts() (a single step)."""
+    if priv:
+        return execute_privileged(words, data, limit, memory)
     regs, pc, mem, trace = [0] * 32, 0, list(data), []
     m = Machine()
 
@@ -205,8 +290,10 @@ def execute(words, data, limit=100000, traps=False, memory=None):
         trace.append(record)
         return m.enter(record.pc, cause, tval)
     for _ in range(limit):
+        if debug is not None:
+            pc = debug.boundary(pc, regs, words, trace)
         insn = words[pc >> 2]
-        if traps and mem[IRQ_WORD] & 1 and m.mie and m.meie:
+        if traps and mem[IRQ_WORD] & 1 and m.mie and m.meie and not (debug is not None and debug.masks_interrupts()):
             pc = trap(Retired(pc, insn, 0, 0, 0), 0x80000000 | 11, 0)
             continue
         op, rd, f3, rs1, rs2, f7 = insn & 0x7f, insn >> 7 & 31, insn >> 12 & 7, insn >> 15 & 31, insn >> 20 & 31, insn >> 25
@@ -462,3 +549,226 @@ def random_program(rng, count, loops=False, subword=False):
 
 def random_data(rng):
     return [rng.getrandbits(32) for _ in range(DATA_WORDS)]
+
+
+def execute_privileged(words, data, limit=100000, memory=None):
+    """Machine and user mode as the RISC-V privileged specification defines them, for the fields
+    the core implements. Each step is one instruction boundary, in the order of the
+    specification: a pending and enabled interrupt first, then the fetch (access fault), the
+    decode (illegal instruction, environment call), the address (misaligned, then access fault).
+
+    Choices the specification leaves to the implementation, shared with the core:
+    - mstatus holds MIE, MPIE, MPP, MPRV and TW; MPP holds M or U, anything else reads back as U.
+    - mtvec holds a base and mode bit 0 (direct or vectored); mode bit 1 reads as zero.
+    - mie and mip hold the machine external (11), timer (7) and software (3) bits; mip is read-only.
+    - CSRs other than those listed in CSRS and PMP_CSRS do not exist: using one is an illegal instruction.
+    - mtval is the address for access faults and misaligned accesses (the pc for a fetch), the
+      instruction word for an illegal instruction, and zero otherwise.
+    - A misaligned load or store address traps as misaligned, before any access fault.
+    - Physical memory is 64 KiB: any access beyond it is an access fault in every mode.
+    - WFI waits for an interrupt that is pending and enabled in mie; it then retires, and the
+      interrupt, if mstatus allows it, is taken before the next instruction.
+    - EBREAK ends the program in either mode (the convention of the bench, not a breakpoint trap).
+
+    The interrupt lines are bits 0 (external), 1 (timer) and 2 (software) of the last value
+    stored to IRQ_WORD. A nonzero byte stored to TIMER_WORD arms the timer line: it rises while
+    the WFI that must follow is waiting. The data memory holds DATA_WORDS words; instruction
+    memory beyond the program reads as NOP."""
+    regs, pc, mem, trace = [0] * 32, 0, list(data), []
+    m, pmp = Machine(), Protection()
+    mode, mpp, mprv, tw, msie, mtie, vectored = M, M, 0, 0, 0, 0, 0
+    fired = armed = False   # the timer line raised by the timer, and a timer waiting for its WFI
+    depth = 0               # traps taken and not yet returned from
+    bit = {name: 1 << i for i, name in enumerate(PRIV_TAGS)}
+
+    def lines():
+        return mem[IRQ_WORD] & 7 | (2 if fired else 0)
+
+    def pending():  # (cause, line bit) of the enabled pending interrupts, highest priority first
+        level = lines()
+        return [c for c, mask, enable in ((11, 1, m.meie), (3, 4, msie), (7, 2, mtie)) if level & mask and enable]
+
+    def status():
+        return tw << 21 | mprv << 17 | mpp << 11 | m.mpie << 7 | m.mie << 3
+
+    def enter(record, cause, tval, interrupt=False):
+        nonlocal mode, mpp, depth
+        record.kind, record.addr, record.data = 3, cause | (0x80000000 if interrupt else 0), tval
+        trace.append(record)
+        mpp, mode, depth = mode, M, depth + 1
+        m.epc, m.cause, m.tval, m.mpie, m.mie = record.pc, record.addr, tval, m.mie, 0
+        return (m.tvec + 4 * cause) & MASK if interrupt and vectored else m.tvec
+
+    for _ in range(limit):
+        fetch_fault = pc >> PHYSICAL_BITS or not pmp.allows(pc, 4, 2, mode)
+        insn = 0 if fetch_fault else words[pc >> 2] if pc >> 2 < len(words) else 0x00000013
+        record = Retired(pc, insn, 0, 0, 0)
+        waiting = pending()
+        if armed and (insn != WFI or fetch_fault or waiting):
+            raise ValueError(f'an armed timer must be followed by WFI with nothing pending, at {pc:#x}')
+        if waiting and (m.mie or mode == U):
+            record.more |= bit['irq/timer'] * (waiting[0] == 7) | bit['irq/software'] * (waiting[0] == 3)
+            record.more |= bit['irq/priority'] * (len(waiting) > 1) | bit['irq/vectored'] * vectored
+            record.more |= bit['irq/nested'] * (depth > 0) | bit['irq/user-ignores-mie'] * (mode == U and not m.mie)
+            if trace and trace[-1].insn == WFI and trace[-1].kind == 0:
+                record.more |= bit['irq/after-wfi']
+            pc = enter(record, waiting[0], 0, interrupt=True)
+            continue
+        if fetch_fault:
+            record.more |= bit['pmp/fetch-fault'] | bit['pmp/outside-fault'] * bool(pc >> PHYSICAL_BITS)
+            record.more |= bit['pmp/machine-locked-fault'] * (mode == M and not pc >> PHYSICAL_BITS)
+            pc = enter(record, 1, pc)
+            continue
+        op, rd, f3, rs1, rs2, f7 = insn & 0x7f, insn >> 7 & 31, insn >> 12 & 7, insn >> 15 & 31, insn >> 20 & 31, insn >> 25
+        a, b = regs[rs1], regs[rs2]
+        nxt = (pc + 4) & MASK
+        if insn == EBREAK:
+            trace.append(record)
+            if memory is not None:
+                memory[:] = mem
+            return trace
+        address = insn >> 20
+        csr = op == 0x73 and f3 & 3 and (address in CSRS.values() or address in PMP_CSRS.values())
+        if insn == MRET or csr:
+            if mode != M:  # every implemented CSR and MRET need machine privilege
+                record.more |= bit['priv/user-mret-illegal' if insn == MRET else 'priv/user-csr-illegal']
+                pc = enter(record, 2, insn)
+                continue
+        elif insn == WFI:
+            if mode != M and tw:
+                record.more |= bit['wfi/user-tw-illegal']
+                pc = enter(record, 2, insn)
+                continue
+        elif not legal_rv32i(insn):
+            pc = enter(record, 2, insn)
+            continue
+        if insn == ECALL:
+            record.more |= bit['priv/ecall-user'] * (mode == U)
+            pc = enter(record, 8 if mode == U else 11, 0)
+            continue
+        if insn == MRET:
+            mode, mpp, depth = mpp, U, max(depth - 1, 0)
+            m.mie, m.mpie = m.mpie, 1
+            if mode != M:
+                record.more |= bit['priv/mret-to-user'] | bit['priv/mprv-cleared'] * mprv
+                mprv = 0
+            trace.append(record)
+            pc = m.epc
+            continue
+        if insn == WFI:
+            if armed:
+                fired, armed = True, False
+                record.more |= bit['wfi/wake']
+            if not pending():
+                raise ValueError(f'WFI at {pc:#x} would never wake')
+            trace.append(record)
+            pc = nxt
+            continue
+        if csr:
+            source = rs1 if f3 >= 5 else a
+            if address == 0x300:
+                old = status()
+            elif address == 0x304:
+                old = m.meie << 11 | mtie << 7 | msie << 3
+            elif address == 0x305:
+                old = m.tvec | vectored
+            elif address == 0x344:
+                level = lines()
+                old = (level & 1) << 11 | (level >> 1 & 1) << 7 | (level >> 2 & 1) << 3
+            elif address == 0x3a0:
+                old = pmp.read_cfg()
+            elif address in PMP_CSRS.values():
+                old = pmp.addr[address & 3]
+            else:
+                old = m.read(address, 0)
+            if f3 & 3 == 1 or rs1:
+                new = [None, source, old | source, old & ~source & MASK][f3 & 3]
+                if address == 0x300:
+                    m.mie, m.mpie, mprv, tw = new >> 3 & 1, new >> 7 & 1, new >> 17 & 1, new >> 21 & 1
+                    field = new >> 11 & 3
+                    mpp = M if field == M else U
+                    record.more |= bit['priv/mpp-warl'] * (field in (1, 2))
+                elif address == 0x304:
+                    m.meie, mtie, msie = new >> 11 & 1, new >> 7 & 1, new >> 3 & 1
+                elif address == 0x305:
+                    m.tvec, vectored = new & ~3 & MASK, new & 1
+                elif address == 0x3a0:
+                    record.more |= bit['pmp/locked-write-ignored'] * pmp.write_cfg(new)
+                elif address in PMP_CSRS.values():
+                    record.more |= bit['pmp/locked-write-ignored'] * pmp.write_addr(address & 3, new)
+                else:
+                    m.write(address, new)
+            elif address in PMP_CSRS.values() and old:
+                record.more |= bit['pmp/config-readback']
+            if rd:
+                regs[rd], record.rd, record.wdata = old, rd, old
+            record.result = old
+            trace.append(record)
+            pc = nxt
+            continue
+        imm_i = sext(insn >> 20, 12)
+        imm_s = sext(f7 << 5 | rd, 12)
+        imm_b = sext((insn >> 31) << 12 | (insn >> 7 & 1) << 11 | (insn >> 25 & 0x3f) << 5 | (insn >> 8 & 0xf) << 1, 13)
+        imm_j = sext((insn >> 31) << 20 | (insn >> 12 & 0xff) << 12 | (insn >> 20 & 1) << 11 | (insn >> 21 & 0x3ff) << 1, 21)
+        value = None
+        if op in (0x03, 0x23):
+            target = (a + (imm_i if op == 0x03 else imm_s)) & MASK
+            size = 1 << (f3 & 3)
+            if target % size:
+                pc = enter(record, 4 if op == 0x03 else 6, target)
+                continue
+            effective = mpp if mprv else mode
+            outside = bool(target >> PHYSICAL_BITS)
+            if outside or not pmp.allows(target, size, int(op == 0x23), effective):
+                record.more |= bit['pmp/load-fault' if op == 0x03 else 'pmp/store-fault'] | bit['pmp/outside-fault'] * outside
+                record.more |= bit['priv/mprv-fault'] * (mode == M and effective == U and not outside)
+                record.more |= bit['pmp/machine-locked-fault'] * (effective == M and not outside)
+                pc = enter(record, 5 if op == 0x03 else 7, target)
+                continue
+            record.more |= bit['priv/mprv-allowed'] * (mode == M and effective == U)
+        if op == 0x37:
+            value = insn & 0xfffff000
+        elif op == 0x17:
+            value = (pc + (insn & 0xfffff000)) & MASK
+        elif op == 0x6f:
+            value, nxt = nxt, (pc + imm_j) & MASK
+        elif op == 0x67:
+            value, nxt = nxt, (a + imm_i) & MASK & ~1
+        elif op == 0x63:
+            record.taken = bool([a == b, a != b, None, None, signed(a) < signed(b), signed(a) >= signed(b), a < b, a >= b][f3])
+            if record.taken:
+                nxt = (pc + imm_b) & MASK
+        elif op == 0x03:
+            record.addr = target
+            size, shift = 1 << (f3 & 3), 8 * (target & 3)
+            value = mem[check(target, size)] >> shift & (1 << 8 * size) - 1
+            if f3 < 4 and size < 4:
+                value = sext(value, 8 * size) & MASK
+            record.kind, record.data = 1, value
+        elif op == 0x23:
+            record.addr = target
+            size, shift = 1 << f3, 8 * (target & 3)
+            field = (1 << 8 * size) - 1
+            index = check(target, size)
+            mem[index] = mem[index] & ~(field << shift) & MASK | (b & field) << shift
+            record.kind, record.data = 2, b & field
+            if shift == 0 and index == IRQ_WORD:
+                fired = False  # the bench drives all three lines from the stored value
+            if shift == 0 and index == TIMER_WORD and b & 0xff:
+                if fired or armed:
+                    raise ValueError(f'timer armed again at {pc:#x} before its line was cleared')
+                armed = True
+        elif op == 0x13:
+            value = alu(f3, f3 == 5 and f7 == 0x20, a, imm_i & MASK)
+        elif op == 0x33:
+            value = alu(f3, f7 == 0x20, a, b)
+        else:
+            raise ValueError(f'unsupported instruction {insn:08x} at {pc:#x}')
+        if value is not None:
+            record.result = value
+            if rd:
+                regs[rd], record.rd, record.wdata = value, rd, value
+        trace.append(record)
+        pc = nxt
+    raise ValueError('program did not reach EBREAK')
+

@@ -337,6 +337,14 @@
     "examples/local-formal-replay/replay_tb.sv",
     "examples/local-formal-replay/run.py",
     "examples/local-formal-replay/tests/test_witness.py",
+    "examples/local-fp-adder/formal.py",
+    "examples/local-fp-adder/fp_adder_formal.sv",
+    "examples/local-fp-adder/model.py",
+    "examples/local-fp-adder/requirements.json",
+    "examples/local-fp-adder/rtl/fp_adder.sv",
+    "examples/local-fp-adder/run.py",
+    "examples/local-fp-adder/tb/fp_adder_tb.sv",
+    "examples/local-fp-adder/tests/test_example.py",
     "examples/local-functional-coverage/run.py",
     "examples/local-functional-coverage/sim_main.cpp",
     "examples/local-functional-coverage/tb/dram.sv",
@@ -644,6 +652,13 @@
     "examples/local-register-spec/tests/test_spec.py",
     "examples/local-register-spec/tools-requirements.txt",
     "examples/local-regression-report/run.py",
+    "examples/local-rename-rob/formal.py",
+    "examples/local-rename-rob/model.py",
+    "examples/local-rename-rob/requirements.json",
+    "examples/local-rename-rob/rtl/rename_rob.sv",
+    "examples/local-rename-rob/run.py",
+    "examples/local-rename-rob/tb/rename_rob_tb.sv",
+    "examples/local-rename-rob/tests/test_example.py",
     "examples/local-requantize/requirements.json",
     "examples/local-requantize/rtl/requantize.sv",
     "examples/local-requantize/run.py",
@@ -656,6 +671,21 @@
     "examples/local-retry-link/run.py",
     "examples/local-retry-link/tb/retry_tb.sv",
     "examples/local-retry-link/tests/test_example.py",
+    "examples/local-riscv-atomic/litmus.py",
+    "examples/local-riscv-atomic/requirements.json",
+    "examples/local-riscv-atomic/rtl/atomic_mem.sv",
+    "examples/local-riscv-atomic/run.py",
+    "examples/local-riscv-atomic/tb/atomic_tb.sv",
+    "examples/local-riscv-atomic/tests/test_example.py",
+    "examples/local-riscv-debug/model.py",
+    "examples/local-riscv-debug/requirements.json",
+    "examples/local-riscv-debug/rtl/debug_dtm.sv",
+    "examples/local-riscv-debug/rtl/debug_module.sv",
+    "examples/local-riscv-debug/rtl/debug_system.sv",
+    "examples/local-riscv-debug/rtl/rv32i_debug_core.sv",
+    "examples/local-riscv-debug/run.py",
+    "examples/local-riscv-debug/tb/debug_tb.sv",
+    "examples/local-riscv-debug/tests/test_example.py",
     "examples/local-riscv-decoder/decoder_formal.sv",
     "examples/local-riscv-decoder/generate.py",
     "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
@@ -667,17 +697,32 @@
     "examples/local-riscv-decoder/upstream/LICENSE",
     "examples/local-riscv-decoder/upstream/rv32_i",
     "examples/local-riscv-decoder/upstream/rv_i",
+    "examples/local-riscv-formal/requirements.json",
+    "examples/local-riscv-formal/run.py",
+    "examples/local-riscv-formal/rvfi_formal.sv",
+    "examples/local-riscv-formal/tests/test_riscv_formal.py",
     "examples/local-riscv-iss/iss.py",
     "examples/local-riscv-iss/requirements.json",
     "examples/local-riscv-iss/rtl/rv32i_core.sv",
     "examples/local-riscv-iss/run.py",
     "examples/local-riscv-iss/tb/core_tb.sv",
     "examples/local-riscv-iss/tests/test_example.py",
+    "examples/local-riscv-official-tests/env/riscv_test.h",
+    "examples/local-riscv-official-tests/link.py",
+    "examples/local-riscv-official-tests/requirements.json",
+    "examples/local-riscv-official-tests/riscv_tests.json",
+    "examples/local-riscv-official-tests/run.py",
+    "examples/local-riscv-official-tests/setup_riscv_tests.py",
+    "examples/local-riscv-official-tests/tb/official_tb.sv",
+    "examples/local-riscv-official-tests/tests/test_example.py",
     "examples/local-riscv-pmp/requirements.json",
     "examples/local-riscv-pmp/rtl/pmp.sv",
     "examples/local-riscv-pmp/run.py",
     "examples/local-riscv-pmp/tb/pmp_tb.sv",
     "examples/local-riscv-pmp/tests/test_example.py",
+    "examples/local-riscv-priv/requirements.json",
+    "examples/local-riscv-priv/run.py",
+    "examples/local-riscv-priv/tests/test_example.py",
     "examples/local-riscv-traps/requirements.json",
     "examples/local-riscv-traps/run.py",
     "examples/local-riscv-traps/tests/test_example.py",
@@ -985,6 +1030,7 @@
       "local-equivalence",
       "local-fdir",
       "local-fifo",
+      "local-fp-adder",
       "local-gate-sim",
       "local-gate-timing",
       "local-i2c",
@@ -1016,8 +1062,11 @@
       "local-ram-ports",
       "local-recovery",
       "local-reduction",
+      "local-rename-rob",
       "local-requantize",
       "local-retry-link",
+      "local-riscv-atomic",
+      "local-riscv-debug",
       "local-riscv-decoder",
       "local-riscv-iss",
       "local-riscv-pmp",
@@ -1331,6 +1380,10 @@
       "local-exploration-common",
       "local-formal-common"
     ],
+    "local-fp-adder": [
+      "local-common",
+      "local-formal-common"
+    ],
     "local-functional-coverage": [
       "local-dram",
       "local-exploration-common",
@@ -1379,7 +1432,8 @@
     ],
     "local-irq-cdc": [],
     "local-jtag-tap": [
-      "local-common"
+      "local-common",
+      "local-riscv-debug"
     ],
     "local-lbist": [
       "local-common"
@@ -1572,6 +1626,10 @@
       "local-exploration-common",
       "local-fifo"
     ],
+    "local-rename-rob": [
+      "local-common",
+      "local-formal-common"
+    ],
     "local-requantize": [
       "local-common"
     ],
@@ -1579,15 +1637,45 @@
       "local-common",
       "local-packet-crc"
     ],
+    "local-riscv-atomic": [
+      "local-common"
+    ],
+    "local-riscv-debug": [
+      "local-common",
+      "local-jtag-tap",
+      "local-riscv-decoder",
+      "local-riscv-iss"
+    ],
     "local-riscv-decoder": [
       "local-formal-common"
     ],
+    "local-riscv-formal": [
+      "local-exploration-common",
+      "local-formal-common",
+      "local-riscv-decoder",
+      "local-riscv-iss",
+      "local-riscv-pmp"
+    ],
     "local-riscv-iss": [
       "local-common",
-      "local-riscv-decoder"
+      "local-riscv-debug",
+      "local-riscv-decoder",
+      "local-riscv-pmp"
+    ],
+    "local-riscv-official-tests": [
+      "local-exploration-common",
+      "local-riscv-decoder",
+      "local-riscv-iss",
+      "local-riscv-pmp"
     ],
     "local-riscv-pmp": [
       "local-common"
+    ],
+    "local-riscv-priv": [
+      "local-common",
+      "local-riscv-decoder",
+      "local-riscv-iss",
+      "local-riscv-pmp"
     ],
     "local-riscv-traps": [
       "local-common",

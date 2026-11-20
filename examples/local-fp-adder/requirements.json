@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "FA-OPERAND",
+      "summary": "Zeros, subnormal numbers, infinities, quiet and signaling NaNs are accepted as operands.",
+      "goals": [
+        "operand/zero",
+        "operand/subnormal",
+        "operand/infinity",
+        "operand/quiet-nan",
+        "operand/signaling-nan"
+      ]
+    },
+    {
+      "id": "FA-RESULT",
+      "summary": "Exact zeros take the sign the rounding mode asks for, sums in the subnormal range keep exponent field zero, an overflow gives infinity or the largest finite number by mode and sign, and infinity minus infinity is invalid.",
+      "goals": [
+        "result/positive-zero",
+        "result/negative-zero",
+        "result/subnormal",
+        "result/overflow-infinity",
+        "result/overflow-largest-finite",
+        "result/invalid-infinities"
+      ]
+    },
+    {
+      "id": "FA-ROUND",
+      "summary": "A sum that is not representable is rounded to one of its two neighbours by the mode; ties and a carry out of the significand are handled.",
+      "goals": [
+        "round/exact",
+        "round/tie",
+        "round/away",
+        "round/toward",
+        "round/carry-into-exponent"
+      ]
+    },
+    {
+      "id": "FA-ALIGN",
+      "summary": "Operands far apart in exponent and nearly cancelling operands give the correctly rounded sum.",
+      "goals": [
+        "align/cancellation",
+        "align/far"
+      ]
+    },
+    {
+      "id": "FA-OPERATION",
+      "summary": "Both a + b and a - b are computed.",
+      "goals": [
+        "operation/add",
+        "operation/subtract"
+      ]
+    },
+    {
+      "id": "FA-MODE",
+      "summary": "All five rounding modes are implemented.",
+      "goals": [
+        "mode/rne",
+        "mode/rtz",
+        "mode/rdn",
+        "mode/rup",
+        "mode/rmm"
+      ]
+    }
+  ]
+}
