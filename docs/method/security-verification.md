@@ -42,7 +42,7 @@ flowchart TD
 | 対象 | 主な確認事項 | このリポジトリの入口 |
 | --- | --- | --- |
 | バスのアクセス制御 | 特権・セキュア属性による許可と拒否、設定のロック | [APBのアクセス保護](../../examples/local-access-control/README.md) |
-| メモリの保護 | 領域・優先順位・ロック、アクセス全体の包含 | [PMP判定](../../examples/local-riscv-pmp/README.md) |
+| メモリの保護 | 領域・優先順位・ロック、アクセス全体の包含 | [PMP判定](../../examples/local-riscv-pmp/README.md)、[特権モードとPMPの統合](../../examples/local-riscv-priv/README.md) |
 | ライフサイクルとデバッグの許可 | 状態の遷移、認証、試行の制限、タンパー時の消去 | [セキュリティ・ライフサイクル](../../examples/local-secure-lifecycle/README.md) |
 | 処理時間 | 秘密の値によってサイクル数や公開の信号が変わらない | [定時間比較](../../examples/local-constant-time/README.md) |
 | 暗号の演算 | 公開ベクトルとの一致、パディング、ブロックの連鎖 | [SHA-256](../../examples/local-sha256/README.md) |
@@ -116,7 +116,7 @@ flowchart TD
 | ライフサイクル・デバッグ認証・鍵の消去 | [セキュリティ・ライフサイクル](../../examples/local-secure-lifecycle/README.md) | 権限の判定と状態遷移。鍵は確認用に読出しを許している |
 | 定時間 | [定時間比較](../../examples/local-constant-time/README.md) | 公開ポートの値とサイクル数。比較結果の公開は許す |
 | ハッシュ演算 | [SHA-256](../../examples/local-sha256/README.md) | 最大2ブロック。`hashlib`との照合。サイドチャネルは対象外 |
-| メモリの保護 | [PMP判定](../../examples/local-riscv-pmp/README.md) | 4エントリーの判定回路の単体 |
+| メモリの保護 | [PMP判定](../../examples/local-riscv-pmp/README.md)、[特権モードとPMPの統合](../../examples/local-riscv-priv/README.md) | 4エントリーの判定回路の単体と、コアへ統合したときのM／Uモードとアクセスフォルト |
 | 仮想記憶の権限 | [Sv32ウォーク](../../examples/local-sv32/README.md)、[TLB](../../examples/local-tlb/README.md) | U／S・SUM・MXR・A／D |
 | アドレスの別名 | [アドレスマップ](../../examples/local-address-map/README.md)、[接続性の証明](../../examples/local-connectivity/README.md) | デコードと配線。保護の回避の観点では未整理 |
 | 2系統の比較 | [ロックステップ監視](../../examples/local-lockstep-monitor/README.md)、[TMR](../../examples/local-tmr/README.md) | 偶発的な故障のモデル |

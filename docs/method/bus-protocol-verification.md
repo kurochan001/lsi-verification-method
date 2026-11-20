@@ -118,6 +118,7 @@ flowchart TD
 | AXI4（結合） | [インターコネクト](../../examples/local-interconnect/README.md)、[DMA](../../examples/local-dma/README.md) | デコード、所有者の管理、仲裁 |
 | AXI4-Stream | [AXI4-Stream](../../examples/local-axis/README.md)、[CRC](../../examples/local-packet-crc/README.md)、[Stream DMA](../../examples/local-stream-dma/README.md) | TVALID・TREADY、TDATA、TKEEP、TLAST、パケットの境界 |
 | ready/valid（一般） | [ready/valid](../../examples/local-stream/README.md)、[クレジット通信](../../examples/local-credit-link/README.md) | 逆圧、クレジットによる流量制御 |
+| 簡易バス | [アドレスマップ](../../examples/local-address-map/README.md) | デコード、未割当、別名、バイトストローブ、エラー時に副作用が残らないこと |
 | VCI | [VCI・SoCLib](../../examples/local-vci-soclib/README.md) | コマンドと応答のパケット、待ち中の保持。SystemCのサイクル精度のモデル |
 | ブリッジ | [AHB／AXI-Lite→APB](../../examples/local-bus-bridge/README.md)、[非同期APBブリッジ](../../examples/local-cdc-bridge/README.md)、[幅変換](../../examples/local-width-converter/README.md) | 変換、待ちとエラーの伝達、クロックの乗換え、64ビットから32ビット |
 | フォーマル | [AHB／AXIのフォーマル](../../examples/local-bus-formal/README.md)、[AXI4のフォーマル](../../examples/local-axi4-formal/README.md) | 制御の性質の証明、データの有界検査、到達 |

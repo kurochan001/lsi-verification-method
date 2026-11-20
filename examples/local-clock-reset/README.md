@@ -47,4 +47,4 @@ python3 -m unittest discover -s examples/local-clock-reset/tests -v
 
 [共通手順](../local-common/README.md)を使います。smokeは24回、nightlyは160回×3 seedの演算・停止・再開を固定シナリオへ追加します。2構成合計JUnitは14／18件です。VCDには常時動作側とワーク側の両クロックを保存します。
 
-デジタル動作モデルです。実際のICGセル、グリッチ、メタスタビリティ、recovery/removal、クロックスキュー、STA、静的CDC/RDC、UPFの確認は別途必要です。この例の合格を、それらの物理的な保証へ置き換えません。
+デジタル動作モデルです。実際のICGセル、グリッチ、メタスタビリティ、recovery/removal、クロックスキュー、STA、静的CDC/RDC、UPFの確認は別途必要です。クロックゲートの回路は[クロックゲーティングの例](../local-clock-gating/README.md)、構造的なCDC／RDC解析の手順は[CDC／RDCの構造解析の例](../local-cdc-structural/README.md)で扱います。この例の合格を、それらの物理的な保証へ置き換えません。

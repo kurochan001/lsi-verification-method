@@ -62,4 +62,4 @@ python3 -m unittest discover -s examples/local-store-buffer/tests -v
 
 ## 確認範囲
 
-ストア→ロードの順序緩和を示す、単一クロックの教材です。ロードの投機・取消し、複数の未完了応答、AMO／LR-SC、I/O・混在サイズ・依存関係、キャッシュ階層、RVWMO／RVTSO全体の準拠性や公理モデルとの照合は含みません。FENCEの完了にはバッファの排出が必要であり、排出が永久に止まる環境での進行は保証しません。アドレス変換を無効化する[SFENCE.VMA](../local-tlb/README.md)とは別の操作です。
+ストア→ロードの順序緩和を示す、単一クロックの教材です。ロードの投機・取消し、複数の未完了応答、AMO／LR-SC、I/O・混在サイズ・依存関係、キャッシュ階層、RVWMO／RVTSO全体の準拠性や公理モデルとの照合は含みません。AMO／LR-SCは[LR／SCとAMOの例](../local-riscv-atomic/README.md)で扱います。FENCEの完了にはバッファの排出が必要であり、排出が永久に止まる環境での進行は保証しません。アドレス変換を無効化する[SFENCE.VMA](../local-tlb/README.md)とは別の操作です。

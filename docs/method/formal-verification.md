@@ -230,7 +230,7 @@ flowchart TD
 
 ### 動作確認の範囲
 
-2026-10-25に上記2個のコードブロックを一時ディレクトリへ保存し、YoWASP版Yosys 0.70（`28ba3cb92`、パッケージ`yowasp-yosys==0.70.0.0.post1259`）と同梱SBY・smtbmc、Z3 5.3.1で実行しました。SBYの版表示は`unknown SBY version`だったため、使用パッケージの版を記録しています。通常例では次を確認しました。
+2026-10-25に上記2個のコードブロックを一時ディレクトリへ保存し、YoWASP版Yosys 0.70（`28ba3cb92`、パッケージ`yowasp-yosys==0.70.0.0.post1259`）と同梱SBY・smtbmc、Z3 5.3.1で実行しました。このZ3は、その日の一時環境が取得した当時の新しい版です。検証例が固定している版（4.15.3）とは別です。SBYの版表示は`unknown SBY version`だったため、使用パッケージの版を記録しています。通常例では次を確認しました。
 
 - `bmc`：深さ8で反例なし。
 - `prove`：ベースケースと帰納段階が成立し、6個のassertを含むモデルの非有界の証明がPASS。
@@ -326,6 +326,8 @@ AHB 3構成・AXI 2構成で各9タスクです。フォーマルの到達目標
 [完了期限の実行例](../../examples/local-progress/README.md)では、受信側READYが一定回数以内に上がる条件を仮定し、要求の受付・完了期限を安全性として非有界に証明します。READYの期限条件を外した安全性証明と、READY停止時の期限違反も別タスクです。一般のLTL活性や、環境条件を置かない最終完了の証明として扱いません。
 
 [反例のシミュレーション再現例](../../examples/local-formal-replay/README.md)は、FIFOの4種類の変異×深さ2／4で新しく生成したYosys witnessを使います。初期リセット・クロック・入力幅を検査し、トップ入力だけを駆動して内部状態は強制しません。独立キューと参照RTLも照合し、変異ありで同じ違反、正常RTLで合格することを要求します。再現はシミュレーションとの対応確認であり、証明範囲を広げるものではありません。
+
+その後に加えたフォーマルの例には、[命令デコーダ](../../examples/local-riscv-decoder/README.md)、[除算器](../../examples/local-divider/README.md)、[Top-K選択](../../examples/local-topk/README.md)、[接続性](../../examples/local-connectivity/README.md)、[定時間比較](../../examples/local-constant-time/README.md)、[未達カバレッジの到達不能証明](../../examples/local-coverage-unreachable/README.md)、[RTLとネットリストの等価性](../../examples/local-lec-netlist/README.md)、[コアの退出のフォーマル検査](../../examples/local-riscv-formal/README.md)、[リネーム・フリーリスト・ROB](../../examples/local-rename-rob/README.md)、[浮動小数点の加算器](../../examples/local-fp-adder/README.md)があります。有界か非有界か、縮めた構成かどうかは例ごとに違うので、証明の範囲は各READMEで確かめます。
 
 ## 公平性を前提とする期限なしの進行を実行する
 

@@ -81,4 +81,4 @@ python3 -m unittest discover -s examples/local-load-store/tests -v
 
 2026-10-31に、Python 3.14.7、Icarus Verilog 14.0開発版で、smoke／nightly、11目標、4種類の変異、セルフテスト8件が成功しました。Verilator 5.052の`--lint-only -Wall`では、`PREDICT`0〜2と変異0〜12のどの組合せでも警告はありません。ロード・ストアを加えた後も、ISSとの比較の例と分岐予測器の例の回帰とセルフテストは成功しています。
 
-境界に合わないアクセス（例外として[例外・割り込みの例](../local-riscv-traps/README.md)で扱います）、アトミック命令、キャッシュ、メモリの順序付け（FENCE）は扱いません。
+境界に合わないアクセス（例外として[例外・割り込みの例](../local-riscv-traps/README.md)で扱います）、アトミック命令、キャッシュ、メモリの順序付け（FENCE）は扱いません。アトミック命令は[LR／SCとAMOの例](../local-riscv-atomic/README.md)、FENCEは[ストアバッファの例](../local-store-buffer/README.md)が、このコアとは別の回路で扱います。

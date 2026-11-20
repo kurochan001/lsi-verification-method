@@ -73,7 +73,7 @@ python3 -m unittest discover -s examples/local-axi4/tests -v
 
 構成名は`two-outstanding`の1構成です。smokeは48ベクトル×1 seed、nightlyは500×3 seedで、1ベクトルが2書込み＋2読出しです。固定14ベクトルと冒頭の試験はiterationsとは別です。JUnitは7／9件（固定1＋ランダム1／3＋変異4＋合否判定1）です。2026-10-27にPython 3.14.7、Icarus Verilog 14.0開発版でsmoke／nightly、全26目標、4種類の変異とセルフテスト6件が成功しました。
 
-これはシミュレーション例です。[既存のフォーマル例](../local-bus-formal/README.md)の証明対象はAHB-LiteとAXI4-Liteで、本AXI4回路を証明した結果ではありません。バス全体のVIP、合成・タイミング・CDCの検査、無限時間の活性証明も含めません。
+これはシミュレーション例です。[既存のフォーマル例](../local-bus-formal/README.md)の証明対象はAHB-LiteとAXI4-Liteで、本AXI4回路を証明した結果ではありません（本回路の証明は[下の節](#制御証明データbmcを追加で実行する)）。バス全体のVIP、合成・タイミング・CDCの検査、無限時間の活性証明も含めません。
 
 2026-11-03の[kirimasimでの互換性確認](../../docs/case-study-kirimasim/README.md)では、ファイル名を保持するpacked配列から`string`型への暗黙変換が拒否されました。ファイル名の宣言を`string`へ変更し、kirimasim・Icarusの両方でsmoke／nightly、全26目標、4種類の変異を再確認しました。回路と比較内容は変更していません。
 

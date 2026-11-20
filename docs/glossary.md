@@ -50,6 +50,7 @@ flowchart TD
 - [C++参照モデル・SPICE協調](#20-c参照モデルspice協調)
 - [オートモーティブ](#21-オートモーティブ)
 - [外部のDV環境](#22-外部のdv環境)
+- [プロセッサ](#23-プロセッサ)
 - [表記の参考資料](#表記の参考資料)
 
 ## 1. 基本用語
@@ -276,7 +277,7 @@ flowchart TD
 | 依存環境の診断 | 必要な実行ファイル・版・Pythonパッケージの読み込み・コンパイル機能等の事前確認。回路の要求・検出力・必須カバレッジの合格とは分ける。[環境の手順](../tools/ENVIRONMENT.md)を参照 |
 | 文書の自動検査 | 内部リンク・見出し・表・図の構文等を機械的に確認すること。説明の正しさ・日本語・描画の見やすさのレビューは別に行う。[検査手順](../tools/QUALITY.md)を参照 |
 | CI/CD／pipeline／job／Runner | 継続的インテグレーション・デリバリー等の自動化／処理全体／個別の処理単位／ジョブを実行する基盤 |
-| MR（Merge Request）／PR（Pull Request） | 変更のレビュー・統合を依頼する単位。GitLabではMR、GitHubではPRと呼ぶ。パイプラインの結果表示と、マージを許可するプロジェクトの設定を対応付ける |
+| MR（Merge Request）／PR（Pull Request） | 変更のレビュー・統合を依頼する単位。サービスによって呼び方が違い、GitHubではPRと呼ぶ。パイプラインの結果表示と、マージを許可するプロジェクトの設定を対応付ける |
 | manifest（実行計画・入力記録） | 予定ケース、構成、seed、入力の版などを固定する記録。実行結果と照合し、未実行・欠落を検出する |
 | JUnit XML／artifact | CIへケース別結果を伝える形式／保存するログ・波形・DB等の成果物。JUnitの表示とジョブの終了コードは別に確認する |
 | retry／flaky | 再実行／同条件のつもりでも結果が揺れる試験。最初の失敗を残し、再試行で成功した事実だけで置き換えない |
@@ -286,7 +287,7 @@ flowchart TD
 | `complete`／`success` | 記録・予定処理の完了／その処理の合否を表す結果フィールド。履歴レポートの`complete`は全ジョブの最後の試行に結果記録がある意味で、全件合格とは異なる。具体的な定義は各ランナーで確認する |
 | 古い証跡（stale evidence） | 現在の対象版・構成・計画に対応しない実行結果。ハッシュを書き換えて現在の証跡にせず、影響を確認して必要な再実行を行う |
 
-参照：[継続的リグレッション](method/continuous-regression.md)、[全例の統合実行](../tools/REGRESSION.md)、[履歴レポート](../tools/REPORTING.md)。CIでのJUnitとジョブ状態の関係は、例えばGitLabの[公式資料](https://docs.gitlab.com/ci/testing/unit_test_reports/)に説明があります。
+参照：[継続的リグレッション](method/continuous-regression.md)、[全例の統合実行](../tools/REGRESSION.md)、[履歴レポート](../tools/REPORTING.md)。このリポジトリでのJUnitとジョブの状態の関係は、[CIの説明](../tools/CI.md)にあります。
 
 ## 11. 実装・製造に関わる検証
 
@@ -318,12 +319,6 @@ flowchart TD
 | モードとコーナー（STA） | 動作モード（機能、スキャンなど）と、遅延の条件（slow、fastなど）の組。セットアップはslow、ホールドはfastで厳しくなり、モードを混ぜると偽の違反や経路の消失が起きる。[実行例](../examples/local-sta-modes/README.md) |
 | 到達不能の除外（カバレッジ） | 到達できないと証明した未達項目を分母から外すこと。有界検査で届かなかっただけの項目や、強すぎる仮定の下の証明は除外の根拠にしない。[実行例](../examples/local-coverage-unreachable/README.md) |
 | 活動率（電力見積り） | 信号が変化する頻度。シミュレーションの波形から取り込み、セルのエネルギーと合わせて平均電力を見積もる。[実行例](../examples/local-power-estimate/README.md)の数値は架空のライブラリのもの |
-| 公開の試験プログラム（riscv-tests） | 命令ごとの動作を自己判定するアセンブリの試験。自作のISSとコアが同じ誤解を共有していないかを、外部の基準で確かめる。[実行例](../examples/local-riscv-official-tests/README.md)は固定版を取得し、転載しない |
-| 特権モード／PMP | 命令が実行される権限の段階（機械モード、ユーザーモードなど）／物理メモリの保護。モードの遷移、アクセスフォルト、MPRVの実効特権を確認する。[コアへ統合した実行例](../examples/local-riscv-priv/README.md) |
-| デバッグモード／dcsr・dpc | 外部のデバッガーがコアを止めて状態を読み書きする動作状態／その原因・設定と、再開する番地を持つレジスタ。停止と例外・割り込みの重なりを確認する。[実行例](../examples/local-riscv-debug/README.md)は教材用の部分実装 |
-| LR／SC・AMO | 予約つきロードと条件つきストア（Load-Reserved／Store-Conditional）、読みと書きを不可分に行うメモリ操作（Atomic Memory Operation）。予約が無効になる条件と、SCが誤って成功しないことを確認する。[実行例](../examples/local-riscv-atomic/README.md) |
-| リネーム／フリーリスト／ROB | 論理レジスタを物理レジスタへ対応付ける表／空いている物理レジスタの一覧／命令を退出の順に保持するリオーダーバッファ（Reorder Buffer）。各物理レジスタがちょうど1か所に属するという保存則を確認する。[実行例](../examples/local-rename-rob/README.md) |
-| 丸めモード／例外フラグ（浮動小数点） | 正確な結果を表現できる値へ丸める向き／不正な演算・オーバーフロー・アンダーフロー・不正確を示すフラグ。丸めの中間点、subnormal、NaN、ゼロの符号で誤りが出やすい。[実行例](../examples/local-fp-adder/README.md) |
 | DRC／LVS | 物理レイアウトの設計ルール検査（Design Rule Check）／レイアウトと回路の接続対応の検査（Layout Versus Schematic）。論理の機能合格とは別の確認 |
 | ECO（Engineering Change Order） | 設計変更。振る舞いを維持する範囲と仕様を変える範囲を分け、リグレッション・等価性・物理などの影響を確認する |
 
@@ -512,6 +507,21 @@ flowchart TD
 | PCPI（Pico Co-Processor Interface） | PicoRV32のコプロセッサー接続。選択構成、要求・待機・結果・完了等を確認する。ネイティブメモリーだけの試験からPCPIの合格を推定しない |
 
 参照：[公開CPU・IP・VIPの読み方](method/open-source-dv-environments.md)、[RVFIの仕様](https://yosyshq.readthedocs.io/projects/riscv-formal/en/latest/rvfi.html)。固定版の実コードから、構成による比較の有効化・TLM接続・依存する参照モデルまで追います。
+
+## 23. プロセッサ
+
+コアの特権・デバッグ・メモリの順序・演算に関わる用語です。ISS・RVFI・タンデム検証など、比較の方式に関わる用語は[22節](#22-外部のdv環境)にあります。
+
+| 用語 | 意味・検証で確認すること |
+| --- | --- |
+| 公開の試験プログラム（riscv-tests） | 命令ごとの動作を自己判定するアセンブリの試験。自作のISSとコアが同じ誤解を共有していないかを、外部の基準で確かめる。[実行例](../examples/local-riscv-official-tests/README.md)は固定版を取得し、転載しない |
+| 特権モード／PMP | 命令が実行される権限の段階（機械モード、ユーザーモードなど）／物理メモリの保護。モードの遷移、アクセスフォルト、MPRVの実効特権を確認する。[コアへ統合した実行例](../examples/local-riscv-priv/README.md) |
+| デバッグモード／dcsr・dpc | 外部のデバッガーがコアを止めて状態を読み書きする動作状態／その原因・設定と、再開する番地を持つレジスタ。停止と例外・割り込みの重なりを確認する。[実行例](../examples/local-riscv-debug/README.md)は教材用の部分実装 |
+| LR／SC・AMO | 予約つきロードと条件つきストア（Load-Reserved／Store-Conditional）、読みと書きを不可分に行うメモリ操作（Atomic Memory Operation）。予約が無効になる条件と、SCが誤って成功しないことを確認する。[実行例](../examples/local-riscv-atomic/README.md) |
+| リネーム／フリーリスト／ROB | 論理レジスタを物理レジスタへ対応付ける表／空いている物理レジスタの一覧／命令を退出の順に保持するリオーダーバッファ（Reorder Buffer）。各物理レジスタがちょうど1か所に属するという保存則を確認する。[実行例](../examples/local-rename-rob/README.md) |
+| 丸めモード／例外フラグ（浮動小数点） | 正確な結果を表現できる値へ丸める向き／不正な演算・オーバーフロー・アンダーフロー・不正確を示すフラグ。丸めの中間点、subnormal、NaN、ゼロの符号で誤りが出やすい。[実行例](../examples/local-fp-adder/README.md) |
+
+参照：[プロセッサの検証手順](method/processor-verification.md)、[演算回路の検証手順](method/arithmetic-datapath-verification.md)。
 
 ## 表記の参考資料
 

@@ -135,6 +135,8 @@ reset中のマスク、解除後のready条件、req/ack・FIFOの初期値、�
 | [CDCハンドシェイク](../../examples/local-cdc-handshake/README.md) | 複数ビットの4相req/ack、パルス同期、リセットの同期解除 | 網羅的なRDC解析、実装上のデータ保持・到着制約 |
 | [非同期APBブリッジ](../../examples/local-cdc-bridge/README.md) | 要求／応答FIFO、APB接続、片側リセット時の全体破棄 | 任意のFIFOでの独立リセット対応、製品バス全体のサインオフ |
 | [クロック停止・リセット](../../examples/local-clock-reset/README.md) | 排出・停止・再開、停止中リセット、同期解除 | 実クロックセルのグリッチ・パルス幅、実装タイミング |
+| [クロックゲーティング](../../examples/local-clock-gating/README.md) | ラッチ型のゲート、イネーブルの変化とパルスの形、停止中の保持 | 実際のICGセル、STAのクロックゲーティング検査 |
+| [複数電源領域](../../examples/local-power-domains/README.md) | 電源意図の表から作るX注入、隔離と保持、停止と復帰の順序 | UPFを読む電源認識シミュレーション、レベルシフター |
 | [複数クロックUVM](../../examples/local-uvm-multiclock/README.md) | リセット世代、取消、古い応答の拒否、解除順序、メールボックスの証明 | 物理CDC/RDCと同期器の信頼性評価 |
 
 Icarusで動かす4例の入口は次のとおりです。出力先は毎回新しくします。これは上表の限定した論理検証を動かす手順で、静的CDC/RDCツールの実行ではありません。
