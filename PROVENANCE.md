@@ -2380,3 +2380,20 @@ macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-41
 | kirimasim向けの計画 | `run_kirimasim_examples.py`に`--list`を追加しました。選択する例と構成数を表示するだけで、何も実行しません。現在の計画は91例・118構成で、README、[CIの説明](tools/CI.md)、[kirimasimの事例](docs/case-study-kirimasim/README.md)の「81例・108構成」を直しました。[公開DV環境の案内](docs/method/open-source-dv-environments.md)の「131登録項目・109ルートジョブ」も現在の143・121に直しました |
 
 `tools/tests`は218件から224件になりました。文書検査、`check_tb_races.py`（131テストベンチ・競合の候補0件）、ツールのセルフテスト224件が合格しました。
+
+### バッチA：分野別の手順書（文書のみ）
+
+実行例は複数あるのに、分野としての手順書がなかった8領域について、[`docs/method/`](docs/method/)に手順書を追加しました。どれも文書だけの追加で、新しく実行した検証はありません。形式は航空宇宙・車載などの既存の手順書に合わせ、対象境界、要求への分解、重点クロス、独立した期待値、検出力、既存の実行例との対応表、まだ例がない項目、製品で追加する確認、参考にした一次資料を書きました。
+
+| 手順書 | 対応付けた既存例 | 特に明記したこと |
+| --- | --- | --- |
+| [プロセッサ](docs/method/processor-verification.md) | プロセッサ11例と参照4例（Ibex、CVA6、CORE-V-VERIF、PicoRV32） | 自作ISSとコアが同じ誤解を共有する危険。外部の基準との照合は未実施 |
+| [低電力設計](docs/method/low-power-verification.md) | 低電力制御、クロック停止とリセット、PLLの復帰 | UPFを実行できない範囲。RTLの動作モデルの合格をパワーアウェアな検証の結果と読み替えない |
+| [セキュリティ](docs/method/security-verification.md) | アクセス保護、ライフサイクル、定時間、SHA-256、PMP | 拒否の応答だけでなく副作用のなさを見ること。物理的なサイドチャネルと故障注入は対象外 |
+| [ゲートレベルとタイミング](docs/method/gate-level-and-timing-verification.md) | gate-sim、gate-timing、sta、equivalence | 各手法が見つけるものと見つけられないもの。Xの楽観と悲観 |
+| [ハードウェアとソフトウェアの結合](docs/method/hw-sw-integration-verification.md) | SystemRDL、Cドライバ、cocotb、SoCの2例、DMA | 実行しているのはホスト上のCとRTLシミュレーションまで |
+| [メモリ](docs/method/memory-verification.md) | RAM、ECC、MBIST、キャッシュ、DRAM、FIFO | 機能検証と製造故障の検査を別の分母で扱うこと |
+| [バスプロトコル](docs/method/bus-protocol-verification.md) | APB・AHB・AXI・AXI4-Stream・VCIの各例 | プロトコルごとの対応表と、扱っていない機能の表（WRAP、狭い転送、排他アクセスなど） |
+| [演算データパス](docs/method/arithmetic-datapath-verification.md) | FIR、除算器、活性化、再量子化、MXFP4、SHA-256、CRC | ビット一致・許容誤差・統計の使い分け。統計的な判定の例はまだない |
+
+[README](README.md#目的から資料を選ぶ)の目的別の表に8行、分野別の表に8行を加え、[検証例一覧](examples/README.md)の該当する7節と、[検証計画の抜けの点検](docs/method/verification-gap-review.md#1-適用する検証領域を先に決める)の領域表からリンクしました。引用した外部URL 32件は、2026-11-20に応答を確かめました（ArmのAMBA仕様の4件は、自動取得を拒否する403でした）。規格の本文は写していません。文書検査は486項目で合格しました。

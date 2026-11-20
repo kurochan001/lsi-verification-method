@@ -30,6 +30,8 @@
 
 ## バス・レジスタ・アドレス
 
+プロトコルによらない観点と、各例が扱う機能・扱っていない機能は、[バスプロトコルの検証手順](../docs/method/bus-protocol-verification.md)にまとめています。
+
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [APBレジスタ](local-apb/README.md) | 読出し・書込み、待ち状態、エラー、W1Cとイベントの競合 | Icarus |
@@ -71,6 +73,8 @@
 
 ## DMA・メモリ・順序制御
 
+RAM・ECC・MBIST・キャッシュ・DRAM・FIFOの観点は、[メモリの検証手順](../docs/method/memory-verification.md)で、機能検証と製造故障の検査を分けて整理しています。
+
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [Single port・1R1W・True dual port RAM](local-ram-ports/README.md) | 32／64ビット、Word／Byteアドレス、Byte enable、範囲・整列、同期読み出し、読書き衝突の3モード、二重書き込み拒否、12変異の検出 | Icarus |
@@ -90,6 +94,8 @@
 
 ## CDC・クロック・リセット・低電力
 
+電源領域・隔離・保持・クロックゲーティングの観点と、UPFを実行できない範囲は、[低電力設計の検証手順](../docs/method/low-power-verification.md)にあります。
+
 分野全体の検証項目は、[非同期検証の手順](../docs/method/asynchronous-verification.md)から確認できます。[リコンバージェンス](../docs/method/asynchronous-verification.md#reconvergence)、[非同期FIFO](../docs/method/asynchronous-verification.md#async-fifo)、複数ビット・パルス転送、RDC、静的解析・遅延注入・物理評価を区別し、以下の実行例で確認できる範囲へ対応付けています。
 
 | 検証例 | 主な検証内容 | 主なツール |
@@ -106,6 +112,8 @@
 | [複数クロックと個別リセットの上位UVM](local-uvm-multiclock/README.md) | 片側リセット、解除順序、時刻順の観測、取消・古い応答・復帰、3種類のクロック条件 | UVM |
 
 ## 演算・故障注入・保護・性能・DFT
+
+演算回路の判定の方法と入力の選び方は[演算データパスの検証手順](../docs/method/arithmetic-datapath-verification.md)、保護とライフサイクルは[セキュリティの検証手順](../docs/method/security-verification.md)にあります。
 
 DFTの題材は、[スキャン・ATPG・MBIST・LBIST・JTAGの検証手順](../docs/method/dft-verification.md)で、故障モデル・テストモード・観測・復帰と製品への追加項目を比較できます。
 
@@ -222,6 +230,8 @@ python3 tools/run_regression.py --example local-pll-recovery --example local-adc
 
 ## プロセッサ
 
+退出の単位での比較、ハザードの網羅、例外の精密さ、まだ例がない項目は、[プロセッサの検証手順](../docs/method/processor-verification.md)にまとめています。
+
 RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフトウェアから動かすSoCの11例です。
 
 | 検証例 | 主な検証内容 | 主なツール |
@@ -239,6 +249,8 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [多サイクル除算器](local-divider/README.md) | 0除算・オーバーフロー・剰余の符号・短い経路の境目・取消しの優先順位、32ビットのシミュレーションと4・8ビットの全入力の証明、補助不変条件と帰納法の深さ | Icarus＋フォーマル |
 
 ## 静的タイミング解析
+
+lint・等価性検証・ゲートレベルシミュレーション・STAの分担は、[ゲートレベルとタイミングの検証手順](../docs/method/gate-level-and-timing-verification.md)にあります。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
@@ -260,6 +272,8 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 | [仮定・保証と分割証明](local-compositional-formal/README.md) | 送信側・受信側・配線の契約、結合実装の検算、証明依存・欠落・版・循環の照合 | フォーマル |
 
 ## SVA・UVM・仕様生成・ソフトウェア連携・検証効率
+
+レジスタの仕様からドライバー・SoCまでのつなぎ方は、[ハードウェアとソフトウェアの結合の検証手順](../docs/method/hw-sw-integration-verification.md)にあります。
 
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |

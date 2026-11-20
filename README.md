@@ -57,6 +57,14 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 航空宇宙・高信頼の故障反応を学ぶ | [検証手順](docs/method/aerospace-verification.md)／[TMRレジスタ](examples/local-tmr/README.md)／[FDIRサブシステム](examples/local-fdir/README.md) |
 | ロボティクスの計測・制御・駆動を学ぶ | [検証手順](docs/method/robotics-verification.md)／[PWM・エンコーダ](examples/local-motion-io/README.md)／[1軸の閉ループ](examples/local-motion-control/README.md) |
 | オートモーティブの通信保護・故障反応を学ぶ | [検証手順](docs/method/automotive-verification.md)／[E2Eガード](examples/local-e2e-guard/README.md)／[小規模ECU](examples/local-automotive-ecu/README.md) |
+| プロセッサを検証する | [検証手順](docs/method/processor-verification.md)／[コアとISSの比較](examples/local-riscv-iss/README.md)／[例外・割り込み](examples/local-riscv-traps/README.md) |
+| 低電力設計を検証する | [検証手順とUPFを実行できない範囲](docs/method/low-power-verification.md)／[排出・隔離・保持・復帰](examples/local-power/README.md)／[クロック停止とリセット](examples/local-clock-reset/README.md) |
+| セキュリティを検証する | [資産と脅威のモデルからの展開](docs/method/security-verification.md)／[アクセス保護](examples/local-access-control/README.md)／[ライフサイクル](examples/local-secure-lifecycle/README.md)／[定時間の証明](examples/local-constant-time/README.md) |
+| 合成後の回路とタイミングを確かめる | [lint・等価性・ゲートレベル・STAの分担](docs/method/gate-level-and-timing-verification.md)／[合成後ネットリスト](examples/local-gate-sim/README.md)／[SDFの遅延つき](examples/local-gate-timing/README.md)／[OpenSTA](examples/local-sta/README.md) |
+| ハードウェアとソフトウェアを結合して検証する | [レジスタ仕様からドライバー・SoCまで](docs/method/hw-sw-integration-verification.md)／[SystemRDLからの生成](examples/local-register-spec/README.md)／[Cドライバ](examples/local-c-driver/README.md) |
+| メモリとその周辺を検証する | [機能検証と製造故障の検査の分け方](docs/method/memory-verification.md)／[ECCメモリ](examples/local-ecc-memory/README.md)／[MBIST](examples/local-mbist/README.md) |
+| バスプロトコルを検証する | [共通の観点とプロトコルごとの対応表](docs/method/bus-protocol-verification.md)／[未対応の機能の一覧](docs/method/bus-protocol-verification.md#実行例が扱っていない機能) |
+| 演算回路を検証する | [ビット一致・許容誤差・統計の使い分け](docs/method/arithmetic-datapath-verification.md)／[固定小数点FIR](examples/local-dsp/README.md)／[除算器](examples/local-divider/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
 | 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[SVG図の一覧](docs/figures/README.md)／[変更時・毎晩のCI](tools/CI.md) |
 | 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
@@ -246,13 +254,18 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | 分野 | 主な題材 |
 | --- | --- |
 | <a id="バスレジスタアドレス"></a>[バス・レジスタ・アドレス](examples/README.md#バスレジスタアドレス) | APB・AHB・AXI・VCI、幅変換、アドレスマップ、SoCLibモデル |
+| [バスプロトコル](docs/method/bus-protocol-verification.md) | 受理と完了、待ち中の保持、未完了・ID・順序、バースト、エラー応答、プロトコルごとの対応と未対応 |
 | <a id="fifo通信仲裁"></a>[FIFO・通信・仲裁](examples/README.md#fifo通信仲裁) | FIFO、ready/valid、UART・SPI・I²C、再送・パケットスイッチ |
 | <a id="割り込みタイマー周辺機能の結合"></a>[割り込み・タイマー・周辺機能の結合](examples/README.md#割り込みタイマー周辺機能の結合) | 割り込み、タイマー、ウォッチドッグ、周辺回路の接続 |
 | <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序 |
+| [メモリ](docs/method/memory-verification.md) | RAMのポートと衝突、Byte enable、ECCとスクラブ、MBIST、キャッシュ、DRAM、FIFO。機能検証と製造故障の検査の区別 |
 | [非同期検証（CDC/RDC）](docs/method/asynchronous-verification.md) | 同期構造、リコンバージェンス、複数ビット・パルス転送、非同期FIFO、リセット交差、遅延注入と物理制約 |
 | [DFT・製造テスト](docs/method/dft-verification.md) | 内部スキャン・ATPG、MBIST、LBISTのPRPG・MISRとエイリアシング、JTAG、テストモードと復帰 |
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
+| [低電力設計](docs/method/low-power-verification.md) | 電源状態表、隔離・保持・レベルシフター、起動と停止の順序、クロックゲーティング、wake-up、UPFを実行できない範囲 |
+| [セキュリティ](docs/method/security-verification.md) | 資産と脅威のモデル、アクセス制御、ライフサイクル、定時間、情報の流れ、故障攻撃への対策、鍵の消去 |
 | <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
+| [演算データパス](docs/method/arithmetic-datapath-verification.md) | ビット一致・許容誤差・統計的な判定、固定小数点の丸めと飽和、全数・境界・ランダム・フォーマル、整数・有理数のモデル |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
 | <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
 | <a id="航空宇宙高信頼システム"></a>[航空宇宙・高信頼システム](examples/README.md#航空宇宙高信頼システム) | TMR、ECC・スクラブ、故障注入、FDIR、期限監視、保守と復帰 |
@@ -261,9 +274,12 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="アナログデジタル協調"></a>[アナログ・デジタル協調](examples/README.md#アナログデジタル協調) | ngspiceで解く線形RC回路、理想ADC／DAC、RTL電圧制御、時刻同期、解析解との比較 |
 | <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
+| [プロセッサの検証手順](docs/method/processor-verification.md) | 退出の単位での比較、命令列とハザード、例外・割り込みの精密さ、特権と保護、メモリ順序、デバッグ、性能カウンター |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
+| [ゲートレベルとタイミング](docs/method/gate-level-and-timing-verification.md) | lint・合成・等価性・ゲートレベルシミュレーション・STA・制約の検証の分担、Xの楽観と悲観、初期値 |
 | <a id="フォーマル検証等価性反例再現"></a>[フォーマル検証・等価性・反例再現](examples/README.md#フォーマル検証等価性反例再現) | 証明、到達性、等価性、反例再現、接続性 |
 | <a id="svauvm仕様生成ソフトウェア連携検証効率"></a>[SVA・UVM・仕様生成・ソフトウェア連携・検証効率](examples/README.md#svauvm仕様生成ソフトウェア連携検証効率) | アサーション、機能／コードカバレッジ、UVM・RAL、生成、C・cocotb、探索・削減 |
+| [ハードウェアとソフトウェアの結合](docs/method/hw-sw-integration-verification.md) | レジスタ仕様からヘッダー・RAL・ドライバーへ、cocotb、ROM起動のSoC、割り込みハンドラー、DMA、実行環境の段階 |
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
 

@@ -25,6 +25,17 @@
 | SCOPE-SYSTEM-SW | システム・ソフトウェア統合 | 接続・アドレス・割り込み、DMA・ドライバー・実ワークロード |
 | SCOPE-PHYSICAL | タイミング・物理・製造・実測 | STA、DFT/ATPG、DRC/LVS、電源・信頼性、AMS、シリコン評価 |
 
+領域ごとの手順は、次の分野別の手順書に展開しています。
+
+| 領域ID | 分野別の手順書 |
+| --- | --- |
+| SCOPE-CDC-RDC | [非同期検証](asynchronous-verification.md) |
+| SCOPE-PROTOCOL-DATA | [バスプロトコル](bus-protocol-verification.md)、[メモリ](memory-verification.md)、[演算データパス](arithmetic-datapath-verification.md) |
+| SCOPE-POWER | [低電力設計](low-power-verification.md) |
+| SCOPE-SECURITY | [セキュリティ](security-verification.md) |
+| SCOPE-EQUIVALENCE / PHYSICAL | [ゲートレベルとタイミング](gate-level-and-timing-verification.md)、[DFT・製造テスト](dft-verification.md) |
+| SCOPE-SYSTEM-SW | [ハードウェアとソフトウェアの結合](hw-sw-integration-verification.md)、[プロセッサ](processor-verification.md) |
+
 この一覧自体が仕様の完全な分類とは限りません。ブロック図、外部端子、クロック・リセット・電源、レジスタとメモリ、エラー経路、運用・製造モードを別々の入口として照合し、どの行にも対応しない機能・接続・要求を探します。
 
 2026-10-28に追加したローカル例は、次の領域をデジタル動作の範囲で補います。製品のサインオフや物理特性の保証ではありません。
