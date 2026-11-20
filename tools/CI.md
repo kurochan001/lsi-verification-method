@@ -7,7 +7,7 @@ GitHub Actionsに、変更時の[Quality](../.github/workflows/quality.yml)と�
 | Quality | push、pull request、手動 | 全文書・Mermaid、toolsのセルフテスト、FIFO・APB・stream・ネイティブSVAのsmoke構成行列 |
 | Affected verification | push、pull request、手動 | [差分選択](AFFECTED.md#ciの比較基準)した例のsmokeと履歴監査。pushは同じブランチで最後に成功した実行からの差分を見る。不明な依存・共通入力変更は全例へ戻す。文書のみは回路0件と記録 |
 | Nightly verification | 毎日UTC 18:23（日本時間翌03:23）、手動 | 全文書、skipなしの全セルフテスト、全例のnightly、全フォーマル・STA・lint、保存結果の履歴照合 |
-| Kirimasim latest | 毎日UTC 19:07（日本時間翌04:07）、mainへのpush（例と実行ツールの変更）、手動 | [kirimasim](https://github.com/kurochan001/kirimasim)の`main`の最新コミットで、[Icarus向け81例・108構成](../docs/case-study-kirimasim/README.md)のsmokeを実行 |
+| Kirimasim latest | 毎日UTC 19:07（日本時間翌04:07）、mainへのpush（例と実行ツールの変更）、手動 | [kirimasim](https://github.com/kurochan001/kirimasim)の`main`の最新コミットで、[Icarus向け91例・118構成](../docs/case-study-kirimasim/README.md)のsmokeを実行 |
 
 スケジュールはmainのワークフローを使います。GitHub側の混雑等で開始が遅れる場合があり、時刻どおりの開始を保証する仕組みではありません。2026-11-01から11-06までのNightlyは、予定の約3時間50分から6時間40分後に作成されました。`--profile nightly`というランナー引数自体には、定期起動の機能はありません。
 

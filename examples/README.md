@@ -23,6 +23,7 @@
 - [静的タイミング解析](#静的タイミング解析)
 - [フォーマル検証・等価性・反例再現](#フォーマル検証等価性反例再現)
 - [SVA・UVM・仕様生成・ソフトウェア連携・検証効率](#svauvm仕様生成ソフトウェア連携検証効率)
+- [共通処理・集約ランナー](#共通処理集約ランナー)
 - [外部のオープンソースDV環境（参照例）](#外部のオープンソースdv環境参照例)
 
 「主なツール」はPythonに加えて必要な環境です。IcarusはIcarus Verilog、フォーマルはYosys・SymbiYosys（SBY）・Z3、UVMはVerilator・C++20環境・外部のAccellera UVMを指します。Verilatorでビルド・実行する例にはC++コンパイラとmakeも必要です。lintだけの例では不要です。詳細な版・追加パッケージ・セットアップは各手順を参照してください。
@@ -296,6 +297,26 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 
 変更箇所から影響する例を選ぶ場合は[選択の手順](../tools/AFFECTED.md)を使えます。不明な入力や依存変更は全例へ戻します。毎晩の全例実行も維持します。
 
+## 共通処理・集約ランナー
+
+個別の検証例が取り込む共通処理と、関連する例をまとめて起動する集約ランナーです。回路そのものの例ではないので、上の分野別の表には載せていません。集約ランナーの判定と子の個別結果は、件数を二重に数えないようにします。
+
+| ディレクトリ | 種別 | 内容 |
+| --- | --- | --- |
+| [local-common](local-common/README.md) | 共通処理 | Icarusの共通シミュレーションランナー。構成別の合否判定、変異の検出、必須目標、証跡 |
+| [local-native-common](local-native-common/README.md) | 共通処理 | C++参照モデルとSPICE協調の例の実行処理。コンパイルコマンド・波形・数値誤差の記録 |
+| [local-formal-common](local-formal-common/README.md) | 共通処理 | Yosys・SBY・Z3の固定版環境と、フォーマル例のランナー |
+| [local-host-common](local-host-common/README.md) | 共通処理 | Cドライバ・cocotb・シミュレータ差分の結果の判定 |
+| [local-exploration-common](local-exploration-common/README.md) | 共通処理 | 探索・縮小・UVMの固定計画と実行記録 |
+| [local-memory-common](local-memory-common/README.md) | 共通処理・集約 | RAMを使う発展4例の共通処理と、まとめて回帰する入口 |
+| [local-system-regression](local-system-regression/README.md) | 集約 | DMA、複数マスター、非同期APB、復旧、低電力、AXI4フォーマル、FIFO等価性の7例 |
+| [local-advanced-regression](local-advanced-regression/README.md) | 集約 | AXI4-Stream、Cドライバ、メモリ競合、DSP、cocotb、差分検証、完了期限の7例 |
+| [local-workflow-regression](local-workflow-regression/README.md) | 集約 | 幅変換、アクセス保護、ECCメモリ、クロック・リセット、操作列縮小、刺激調整、UVMの7例 |
+| [local-soc-regression](local-soc-regression/README.md) | 集約 | UVMランダム、SystemRDL、反例再現、優先度付き割り込み、リング式DMA、クレジット通信、キャッシュの7例 |
+| [local-extension-regression](local-extension-regression/README.md) | 集約 | 生成RAL、AXI応答順序、DMA所有権、Stream DMA、CRC、カウンター、MBISTの7例 |
+| [local-gap-regression](local-gap-regression/README.md) | 集約 | セキュリティ、性能モニター、CDCハンドシェイク、JTAG、アドレスマップ、ロックステップの6例 |
+| [local-ai-regression](local-ai-regression/README.md) | 集約 | シストリックアレイ、再量子化、活性化関数、ラインバッファ、Top-K、FP16／MXFP8／MXFP4の6例 |
+
 ## 外部のオープンソースDV環境（参照例）
 
 小規模な実行例から、実プロジェクトのCPU・演算IP・メモリー・バス・NIC・セキュリティIPのDV環境へ進むための参照例13件です。[読み方・依存・版の比較](../docs/method/open-source-dv-environments.md)では、公開された検証ソースと、実行に必要なツールを分けて説明します。
@@ -326,7 +347,36 @@ RISC-Vの命令・保護機構、プロセッサを構成する回路、ソフ�
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-現在の統合計画は、143登録項目・121ルートジョブです。nightly対応の個別例に加え、集約7本、全12フォーマル例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて13行、`aggregate`は共通lintの2行を含めて9行です。証明専用例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。画像処理の3例は独立したランナーで、単体IPのJUnitは18／22件、SoCは44／48件、非同期FIFO付きパイプラインは20／22件です。ネットワークの新2例も独立したランナーで、単体IPは30／34件、SoCは54／58件です。RAMのポート比較は38／62件です。RAMの発展4例は、ECC付き部分書込み10／14件、非整列アクセス14／22件、同期RAM型非同期FIFO18／30件、画像ダブルバッファ12／18件です。[4例をまとめて回帰する入口](local-memory-common/README.md)も用意しています。TMRとFDIRも独立したランナーで、JUnitはそれぞれ17／27件、56／60件です。モーションI/Oは28／32件、閉ループ制御は48／52件です。VCI・SoCLibは23／27件、C++参照モデルは22／26件、SPICE協調は25／29件、PWM・RCとADCの取り込み時刻は15／19件です。E2E通信保護は24／28件、小規模ECUは30／34件です。PLL・ADC・PWMの3例は共通ランナーで、合計44／56件です。PLL出力の測定実習も共通ランナーを使い、16／20件です。いずれもsmoke／nightlyの順です。
+現在の統合計画は、143登録項目・121ルートジョブです。nightly対応の個別例に加え、集約7本、全12フォーマル例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて13行、`aggregate`は共通lintの2行を含めて9行です。証明専用例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
+
+共通シミュレーションランナーとは別に数える例と、共通ランナーの件数のうち最近加えた例の内訳を下表に示します。JUnit件数は各例が出力する件数です。
+
+| 検証例 | smokeのJUnit件数 | nightlyのJUnit件数 | ランナー |
+| --- | --- | --- | --- |
+| [Sobelフィルター](local-image-sobel/README.md)（画像の単体IP） | 18 | 22 | 独自 |
+| [画像処理SoC](local-image-soc/README.md) | 44 | 48 | 独自 |
+| [非同期FIFO付き画像パイプライン](local-video-async/README.md) | 20 | 22 | 独自（証跡は[探索用の共通処理](local-exploration-common/README.md)） |
+| [Ethernet・ARP・UDPエコーIP](local-network-echo/README.md)（ネットワークの単体IP） | 30 | 34 | 独自 |
+| [NIC SoC](local-network-soc/README.md) | 54 | 58 | 独自 |
+| [RAMのポート比較](local-ram-ports/README.md) | 38 | 62 | 独自（証跡は探索用の共通処理） |
+| [ECC付き部分書込み](local-ecc-rmw/README.md) | 10 | 14 | [RAM教材の共通処理](local-memory-common/README.md) |
+| [非整列アクセス](local-unaligned-memory/README.md) | 14 | 22 | RAM教材の共通処理 |
+| [同期RAM型非同期FIFO](local-sync-ram-fifo/README.md) | 18 | 30 | RAM教材の共通処理 |
+| [画像ダブルバッファ](local-video-double-buffer/README.md) | 12 | 18 | RAM教材の共通処理 |
+| [TMR](local-tmr/README.md) | 17 | 27 | 独自 |
+| [FDIR](local-fdir/README.md) | 56 | 60 | 独自 |
+| [モーションI/O](local-motion-io/README.md) | 28 | 32 | 独自 |
+| [閉ループ制御](local-motion-control/README.md) | 48 | 52 | 独自 |
+| [VCI・SoCLib](local-vci-soclib/README.md) | 23 | 27 | 独自（証跡は探索用の共通処理） |
+| [C++参照モデル](local-cpp-reference/README.md) | 22 | 26 | [C++・SPICEの共通処理](local-native-common/README.md) |
+| [SPICE協調](local-spice-cosim/README.md) | 25 | 29 | C++・SPICEの共通処理 |
+| [PWM・RCとADCの取り込み時刻](local-pwm-spice/README.md) | 15 | 19 | 独自（実行処理はRAM教材の共通処理の`sim.py`を再利用） |
+| [E2E通信保護](local-e2e-guard/README.md) | 24 | 28 | 独自 |
+| [小規模ECU](local-automotive-ecu/README.md) | 30 | 34 | 独自 |
+| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の969／1243件の内数） |
+| [PLL出力の測定実習](local-pll-clock-quality/README.md) | 16 | 20 | 共通シミュレーションランナー（同上） |
+
+RAMを使う発展4例には、[まとめて回帰する入口](local-memory-common/README.md)も用意しています。
 
 共通lintの対象は150 RTLファイル・151モジュール・408構成です。RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
 

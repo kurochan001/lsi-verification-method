@@ -11,7 +11,7 @@
 | [`verification_plan.py`](verification_plan.py) | [検証項目表と実行証跡の照合](../docs/method/verification-plan-automation.md)。出典・要求・項目・構成・実績・版を確認する。 |
 | [`check_tb_races.py`](check_tb_races.py) | テストベンチの実行順の競合を探す。クロック同期ブロックがブロッキング代入した信号を、同じエッジで別の場所が読む形をテキスト検索で見つける。全数は保証しない。`tools/tests`の中で毎回実行する。 |
 | [`run_regression.py`](run_regression.py) | [全検証例の統合実行](REGRESSION.md)。構成行列、依存確認、並列数、時間上限、JUnitとソースの照合を管理する。 |
-| [`run_kirimasim_examples.py`](run_kirimasim_examples.py) | [kirimasimでの実行と実測記録](../docs/case-study-kirimasim/README.md)。Icarus向けの既存計画・判定を使い、80例を選択して実行する。実コマンド・版・ハッシュ・異常終了を記録する。 |
+| [`run_kirimasim_examples.py`](run_kirimasim_examples.py) | [kirimasimでの実行と実測記録](../docs/case-study-kirimasim/README.md)。Icarus向けの既存計画・判定を使い、Icarusだけで動く例を選択して実行する。`--list`は、選択する例と構成数を表示するだけで、何も実行しない。実コマンド・版・ハッシュ・異常終了を記録する。 |
 | [`kirimasim_results.py`](kirimasim_results.py) | [kirimasimの実行結果](../docs/case-study-kirimasim/results.md)の表を作る。完了して全構成が合格した実行だけをPASSと表示する。 |
 | [`kirimasim_uvm_check.py`](kirimasim_uvm_check.py) | [kirimasimがUVMを処理できるか](../docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を確かめて報告する。CIの合否には使わない。 |
 | [`regression_report.py`](regression_report.py) | [履歴と採用結果の照合](REPORTING.md)。初回失敗を保持し、現在の計画に対する最後の試行を判定する。 |

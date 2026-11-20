@@ -209,6 +209,14 @@ def write_shim(path, mode, python=sys.executable):
     Path(path).chmod(0o755)
 
 
+def selection_plan(registry, names=None):
+    """Selected examples and the number of jobs their configuration matrices expand to."""
+    selected = selected_entries(registry, names)
+    entries = {e["id"]: e for e in registry["examples"]}
+    jobs = sum(math.prod(len(values) for values in (entries[name].get("matrix") or {}).values()) for name in selected)
+    return dict(examples=selected, selected_examples=len(selected), planned=jobs)
+
+
 def run(a):
     registry = json.loads((ROOT / "tools/regressions.json").read_text())
     selected = selected_entries(registry, a.example)
@@ -282,8 +290,9 @@ def main():
         if len(sys.argv) > 1 and sys.argv[1] in ("--adapter-compile", "--adapter-run"):
             return adapter(sys.argv[1].removeprefix("--adapter-"), sys.argv[2:])
         p = argparse.ArgumentParser(description=__doc__)
-        p.add_argument("--kirimasim", type=Path, required=True)
-        p.add_argument("--out", type=Path, required=True)
+        p.add_argument("--list", action="store_true", help="print the selected examples and the number of jobs, run nothing")
+        p.add_argument("--kirimasim", type=Path)
+        p.add_argument("--out", type=Path)
         p.add_argument("--example", action="append")
         p.add_argument("--profile", choices=("smoke", "nightly"), default="smoke")
         p.add_argument("--seed", type=int, default=17)
@@ -291,6 +300,12 @@ def main():
         p.add_argument("--command-timeout", type=float, default=60)
         p.add_argument("--job-timeout", type=float, default=900)
         a = p.parse_args()
+        if a.list:
+            registry = json.loads((ROOT / "tools/regressions.json").read_text())
+            print(json.dumps(selection_plan(registry, a.example), indent=2))
+            return 0
+        if a.kirimasim is None or a.out is None:
+            p.error("--kirimasim and --out are required unless --list is given")
         a.out = a.out.resolve()
         a.kirimasim = a.kirimasim.resolve()
         if a.out.exists() or not a.kirimasim.is_file() or not 1 <= a.jobs <= 16 or not 0 <= a.seed <= 2**31 - 4 or any(

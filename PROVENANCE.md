@@ -2362,3 +2362,21 @@ macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-41
 macOS arm64・Python 3.14.7・Icarus Verilog／vvp 14.0開発版（`s20260301-411-gca6b8d376`）で、20ns／34nsの2構成についてsmoke 16件とnightly 20件が成功しました。両構成で各7目標に到達し、短いHigh、短いLow、周期超過、蓄積する位相ずれ、隣接周期差の超過をそれぞれ検出しました。公称周期20nsの位相ずれケースでは、周期20.25ns・前周期との差0psのままTIEが1250psに達し、1000psの上限を超えました。そのときもロック・動作許可・リセット解除はHighでした。
 
 証跡は `artifacts/pll-quality-final-smoke/` と `artifacts/pll-quality-final-nightly/` に保存しました。nightlyではPLL復帰・PWMとRCの実習も同じ回帰で実行しました。VCDと実エッジのCSVを保存し、固定試験のHigh幅、Low幅、周期差、TIE、隣接周期差の境界値をCSVから再計算して照合しました。直接の負例実行も終了コード1と `PLL_TIE` を確認しています。登録表は143項目・121ルートジョブです。実PLLのジッター分布・位相ノイズ・電気特性の測定は未実施です。
+
+<a id="review-additions-20261120"></a>
+
+## レビューに基づく不整合の修正・分野別の手順書・検証例の追加（2026-11-20）
+
+2026-11-20のレビュー（対象コミット`00fb0b1`）で挙がった項目を、バッチに分けて進めた記録です。手元の環境はmacOS arm64、Python 3.14、Icarus Verilog 14.0開発版（`ca6b8d3`）、Verilator 5.052、YoWASP版Yosys 0.70、OpenSTA 3.1.0、ngspice 47です。Linux、kirimasim、全例のsmoke／nightlyは、手元では実行していません。
+
+### バッチ0：小さな不整合の修正
+
+| 項目 | 直したこと |
+| --- | --- |
+| RTLのファイル数 | [README](README.md#注意)の「109ファイル中27」を「150ファイル中27」に直しました。分母は共通lintの台帳と同じ範囲（`examples/**/rtl/**`の`.sv`・`.v`。取り込んだMXFP4の上流RTL 17ファイルを含む）で、`` `timescale``を書いているのは27ファイルです |
+| 件数のずれの検出 | [`test_document_counts.py`](tools/tests/test_document_counts.py)を追加しました。RTLのファイル数と`` `timescale``の数、kirimasim向けの自動選択計画、登録項目数とルートジョブ数、共通lintの対象数を数え直し、文書の記載と照合します（6件）。修正前の文書では3件が失敗することを確かめました |
+| リンクのないディレクトリ | [検証例一覧](examples/README.md#共通処理集約ランナー)に「共通処理・集約ランナー」の節を作り、リンクのなかった11ディレクトリを含む13ディレクトリを載せました。ルートのREADMEからは、`local-native-common`と、この節へリンクしました |
+| 集計の段落 | 検証例一覧の「集計と実行記録」で、1つの段落に並んでいたJUnit件数を、例・smoke・nightly・ランナーの表に直しました。数値は変えていません |
+| kirimasim向けの計画 | `run_kirimasim_examples.py`に`--list`を追加しました。選択する例と構成数を表示するだけで、何も実行しません。現在の計画は91例・118構成で、README、[CIの説明](tools/CI.md)、[kirimasimの事例](docs/case-study-kirimasim/README.md)の「81例・108構成」を直しました。[公開DV環境の案内](docs/method/open-source-dv-environments.md)の「131登録項目・109ルートジョブ」も現在の143・121に直しました |
+
+`tools/tests`は218件から224件になりました。文書検査、`check_tb_races.py`（131テストベンチ・競合の候補0件）、ツールのセルフテスト224件が合格しました。
