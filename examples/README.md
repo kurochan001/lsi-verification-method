@@ -364,7 +364,7 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 
 ## 集計と実行記録
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は64例・137構成、各検証例が出力するJUnit件数の合計はsmoke 969件／nightly 1243件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は68例・145構成、各検証例が出力するJUnit件数の合計はsmoke 1038件／nightly 1328件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
@@ -396,8 +396,14 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [PWM・RCとADCの取り込み時刻](local-pwm-spice/README.md) | 15 | 19 | 独自（実行処理はRAM教材の共通処理の`sim.py`を再利用） |
 | [E2E通信保護](local-e2e-guard/README.md) | 24 | 28 | 独自 |
 | [小規模ECU](local-automotive-ecu/README.md) | 30 | 34 | 独自 |
-| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の969／1243件の内数） |
+| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の1038／1328件の内数） |
 | [PLL出力の測定実習](local-pll-clock-quality/README.md) | 16 | 20 | 共通シミュレーションランナー（同上） |
+| [複数電源領域](local-power-domains/README.md)・[クロックゲーティング](local-clock-gating/README.md)・[メモリの修復](local-memory-repair/README.md)・[遷移故障](local-transition-fault/README.md)の4例の合計 | 69 | 85 | 共通シミュレーションランナー（同上）。内訳は順に20／24、16／20、18／22、15／19 |
+| [CDC／RDCの構造解析](local-cdc-structural/README.md) | 29 | 31 | 独自（証跡は探索用の共通処理） |
+| [未達カバレッジの到達不能証明](local-coverage-unreachable/README.md) | 42 | 52 | 独自（証跡は探索用の共通処理） |
+| [RTLとネットリストの等価性](local-lec-netlist/README.md) | 16 | 16 | 独自（証跡は探索用の共通処理）。smokeとnightlyの区別なし |
+| [モード・コーナー別のSTA](local-sta-modes/README.md) | 31 | 31 | 独自。smokeとnightlyの区別なし |
+| [活動率からの電力見積り](local-power-estimate/README.md) | 23 | 23 | 独自。smokeとnightlyの区別なし |
 
 RAMを使う発展4例には、[まとめて回帰する入口](local-memory-common/README.md)も用意しています。
 

@@ -27,10 +27,11 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | RAMのポート構成とアドレス単位を検証する | [Single port・1R1W・True dual portの実行例](examples/local-ram-ports/README.md)／[Word・Byteアドレスの不具合検出](examples/local-ram-ports/README.md#word-byte) |
 | RAMを使う発展例を動かす | [4教材の入口・まとめて回帰](examples/local-memory-common/README.md)／[ECC付き部分書込み](examples/local-ecc-rmw/README.md)／[画像ダブルバッファ](examples/local-video-double-buffer/README.md)／[同期RAM型非同期FIFO](examples/local-sync-ram-fifo/README.md)／[非整列・エンディアン](examples/local-unaligned-memory/README.md) |
 | 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
-| 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
+| 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[ネットリストからの構造解析](examples/local-cdc-structural/README.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
 | PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[PLL出力の周期・パルス幅・ジッター](examples/local-pll-clock-quality/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
 | 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
-| DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md) |
+| DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md)／[遷移故障と実速度の捕捉](examples/local-transition-fault/README.md) |
+| コードカバレッジの未達を除外してよいか判断する | [到達例と到達不能の証明による分類](examples/local-coverage-unreachable/README.md)／[コードカバレッジの手順](docs/method/code-coverage.md) |
 | 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
@@ -58,11 +59,11 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | ロボティクスの計測・制御・駆動を学ぶ | [検証手順](docs/method/robotics-verification.md)／[PWM・エンコーダ](examples/local-motion-io/README.md)／[1軸の閉ループ](examples/local-motion-control/README.md) |
 | オートモーティブの通信保護・故障反応を学ぶ | [検証手順](docs/method/automotive-verification.md)／[E2Eガード](examples/local-e2e-guard/README.md)／[小規模ECU](examples/local-automotive-ecu/README.md) |
 | プロセッサを検証する | [検証手順](docs/method/processor-verification.md)／[コアとISSの比較](examples/local-riscv-iss/README.md)／[例外・割り込み](examples/local-riscv-traps/README.md) |
-| 低電力設計を検証する | [検証手順とUPFを実行できない範囲](docs/method/low-power-verification.md)／[排出・隔離・保持・復帰](examples/local-power/README.md)／[クロック停止とリセット](examples/local-clock-reset/README.md) |
+| 低電力設計を検証する | [検証手順とUPFを実行できない範囲](docs/method/low-power-verification.md)／[排出・隔離・保持・復帰](examples/local-power/README.md)／[複数の電源領域とX注入](examples/local-power-domains/README.md)／[クロックゲート・切替・奇数分周](examples/local-clock-gating/README.md)／[活動率からの電力見積り](examples/local-power-estimate/README.md) |
 | セキュリティを検証する | [資産と脅威のモデルからの展開](docs/method/security-verification.md)／[アクセス保護](examples/local-access-control/README.md)／[ライフサイクル](examples/local-secure-lifecycle/README.md)／[定時間の証明](examples/local-constant-time/README.md) |
-| 合成後の回路とタイミングを確かめる | [lint・等価性・ゲートレベル・STAの分担](docs/method/gate-level-and-timing-verification.md)／[合成後ネットリスト](examples/local-gate-sim/README.md)／[SDFの遅延つき](examples/local-gate-timing/README.md)／[OpenSTA](examples/local-sta/README.md) |
+| 合成後の回路とタイミングを確かめる | [lint・等価性・ゲートレベル・STAの分担](docs/method/gate-level-and-timing-verification.md)／[合成後ネットリスト](examples/local-gate-sim/README.md)／[SDFの遅延つき](examples/local-gate-timing/README.md)／[OpenSTA](examples/local-sta/README.md)／[RTLとネットリストの等価性](examples/local-lec-netlist/README.md)／[モード・コーナー別のSTA](examples/local-sta-modes/README.md) |
 | ハードウェアとソフトウェアを結合して検証する | [レジスタ仕様からドライバー・SoCまで](docs/method/hw-sw-integration-verification.md)／[SystemRDLからの生成](examples/local-register-spec/README.md)／[Cドライバ](examples/local-c-driver/README.md) |
-| メモリとその周辺を検証する | [機能検証と製造故障の検査の分け方](docs/method/memory-verification.md)／[ECCメモリ](examples/local-ecc-memory/README.md)／[MBIST](examples/local-mbist/README.md) |
+| メモリとその周辺を検証する | [機能検証と製造故障の検査の分け方](docs/method/memory-verification.md)／[ECCメモリ](examples/local-ecc-memory/README.md)／[MBIST](examples/local-mbist/README.md)／[予備の行・列による修復](examples/local-memory-repair/README.md) |
 | バスプロトコルを検証する | [共通の観点とプロトコルごとの対応表](docs/method/bus-protocol-verification.md)／[未対応の機能の一覧](docs/method/bus-protocol-verification.md#実行例が扱っていない機能) |
 | 演算回路を検証する | [ビット一致・許容誤差・統計の使い分け](docs/method/arithmetic-datapath-verification.md)／[固定小数点FIR](examples/local-dsp/README.md)／[除算器](examples/local-divider/README.md) |
 | 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
@@ -262,7 +263,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | [非同期検証（CDC/RDC）](docs/method/asynchronous-verification.md) | 同期構造、リコンバージェンス、複数ビット・パルス転送、非同期FIFO、リセット交差、遅延注入と物理制約 |
 | [DFT・製造テスト](docs/method/dft-verification.md) | 内部スキャン・ATPG、MBIST、LBISTのPRPG・MISRとエイリアシング、JTAG、テストモードと復帰 |
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
-| [低電力設計](docs/method/low-power-verification.md) | 電源状態表、隔離・保持・レベルシフター、起動と停止の順序、クロックゲーティング、wake-up、UPFを実行できない範囲 |
+| [低電力設計](docs/method/low-power-verification.md) | 電源状態表、隔離・保持・レベルシフター、起動と停止の順序、クロックゲーティング、wake-up、活動率からの電力見積り、UPFを実行できない範囲 |
 | [セキュリティ](docs/method/security-verification.md) | 資産と脅威のモデル、アクセス制御、ライフサイクル、定時間、情報の流れ、故障攻撃への対策、鍵の消去 |
 | <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
 | [演算データパス](docs/method/arithmetic-datapath-verification.md) | ビット一致・許容誤差・統計的な判定、固定小数点の丸めと飽和、全数・境界・ランダム・フォーマル、整数・有理数のモデル |
@@ -276,7 +277,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、デコーダ、PMP・Sv32・TLB、除算器 |
 | [プロセッサの検証手順](docs/method/processor-verification.md) | 退出の単位での比較、命令列とハザード、例外・割り込みの精密さ、特権と保護、メモリ順序、デバッグ、性能カウンター |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
-| [ゲートレベルとタイミング](docs/method/gate-level-and-timing-verification.md) | lint・合成・等価性・ゲートレベルシミュレーション・STA・制約の検証の分担、Xの楽観と悲観、初期値 |
+| [ゲートレベルとタイミング](docs/method/gate-level-and-timing-verification.md) | lint・合成・等価性・ゲートレベルシミュレーション・STA・制約の検証の分担、Xの楽観と悲観、初期値、スキャン挿入後の等価性、モード・コーナー別のSTA |
 | <a id="フォーマル検証等価性反例再現"></a>[フォーマル検証・等価性・反例再現](examples/README.md#フォーマル検証等価性反例再現) | 証明、到達性、等価性、反例再現、接続性 |
 | <a id="svauvm仕様生成ソフトウェア連携検証効率"></a>[SVA・UVM・仕様生成・ソフトウェア連携・検証効率](examples/README.md#svauvm仕様生成ソフトウェア連携検証効率) | アサーション、機能／コードカバレッジ、UVM・RAL、生成、C・cocotb、探索・削減 |
 | [ハードウェアとソフトウェアの結合](docs/method/hw-sw-integration-verification.md) | レジスタ仕様からヘッダー・RAL・ドライバーへ、cocotb、ROM起動のSoC、割り込みハンドラー、DMA、実行環境の段階 |

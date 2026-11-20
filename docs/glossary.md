@@ -309,6 +309,15 @@ flowchart TD
 | MISR（Multiple-Input Signature Register） | 複数の応答ビットを線形な更新で署名へ圧縮する回路。初期値・入力位置・更新回数と、最後の応答を含む比較時点を確認する |
 | エイリアシング（署名圧縮） | 異なる応答列が同じ署名になること。署名一致だけで全故障なしとは判断せず、対象故障の検出結果や圧縮前の観測と区別する |
 | ATPG／MBIST／ATE | テストパターンの自動生成（Automatic Test Pattern Generation）／メモリの組込み自己テスト（Memory Built-In Self-Test）／自動試験装置（Automatic Test Equipment）。故障モデル・試験条件に基づく網羅を、要求カバレッジと分ける |
+| 構造的なCDC解析 | ネットリストから、フリップフロップごとのクロックと非同期リセットを求め、領域をまたぐ経路を列挙・分類する静的な検査。同期器の欠落、同期前の論理、再収束などを見つける。機能が正しいかは別に確かめる。[教材用の実行例](../examples/local-cdc-structural/README.md) |
+| LEC（Logic Equivalence Checking） | 論理等価性検証。RTLとネットリスト、変更前後のネットリストが同じ論理かを、対応する比較点ごとに証明する。スキャン挿入後は機能モードの仮定を置き、その仮定を外すと反例が出ることも確かめる。[実行例](../examples/local-lec-netlist/README.md) |
+| 電源領域／隔離／保持 | 電源を個別に切れる回路の範囲／切った領域の出力を決めた値に固定すること／切る前のレジスタの値を残すこと。領域・隔離値・保持の対象を表にして検査する。[実行例](../examples/local-power-domains/README.md)はRTLの動作モデルで、UPFは実行しない |
+| クロックゲート（ICG） | クロックを止めて動的な電力を減らす回路。クロックがLowの間だけイネーブルを通すラッチと論理積で作り、短いパルスを出さない。[実行例](../examples/local-clock-gating/README.md) |
+| 遷移故障／launch-on-capture | 信号の立上りや立下りが遅れる故障モデル／スキャンでロードした後、機能クロック2発（launchとcapture）で遷移を起こして取り込む試験。captureを実速度で出さないと検出できない。[実行例](../examples/local-transition-fault/README.md) |
+| メモリの修復（BIRA／予備の行・列） | 故障したセルを予備の行や列へ振り替えること。割当の解析（Built-In Redundancy Analysis）、修復不能の判定、ヒューズへの記録、修復後の再試験を確認する。[実行例](../examples/local-memory-repair/README.md) |
+| モードとコーナー（STA） | 動作モード（機能、スキャンなど）と、遅延の条件（slow、fastなど）の組。セットアップはslow、ホールドはfastで厳しくなり、モードを混ぜると偽の違反や経路の消失が起きる。[実行例](../examples/local-sta-modes/README.md) |
+| 到達不能の除外（カバレッジ） | 到達できないと証明した未達項目を分母から外すこと。有界検査で届かなかっただけの項目や、強すぎる仮定の下の証明は除外の根拠にしない。[実行例](../examples/local-coverage-unreachable/README.md) |
+| 活動率（電力見積り） | 信号が変化する頻度。シミュレーションの波形から取り込み、セルのエネルギーと合わせて平均電力を見積もる。[実行例](../examples/local-power-estimate/README.md)の数値は架空のライブラリのもの |
 | DRC／LVS | 物理レイアウトの設計ルール検査（Design Rule Check）／レイアウトと回路の接続対応の検査（Layout Versus Schematic）。論理の機能合格とは別の確認 |
 | ECO（Engineering Change Order） | 設計変更。振る舞いを維持する範囲と仕様を変える範囲を分け、リグレッション・等価性・物理などの影響を確認する |
 

@@ -71,6 +71,16 @@
 | SCOPE-PROTOCOL-DATA / SYSTEM-SW | [ストアバッファとFENCE](../../examples/local-store-buffer/README.md) | 自分への転送と他hartへの可視性、有限リトマスの結果集合。RVWMO全体の準拠性は対象外 |
 | SCOPE-FAULT-RECOVERY / PROTOCOL-DATA | [CRC・ACK・再送リンク](../../examples/local-retry-link/README.md) | 消失・破損・重複排除・上限到達、配送済みか確定できない失敗。PHY・任意に古いパケットの再出現は対象外 |
 
+2026-11-20には、この資料や各例のREADMEが「別途必要」としていた項目について、次の例を追加しました。どれも教材用の小さな回路と架空のライブラリによるもので、商用ツールやサインオフの代わりではありません。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-CDC-RDC | [CDC／RDCの構造解析](../../examples/local-cdc-structural/README.md) | ネットリストから交差を列挙・分類し、期待する台帳と除外を照合。直結した2段以上のフリップフロップだけを同期器と認める。商用の静的CDC／RDCツールの代わりではない |
+| SCOPE-EQUIVALENCE | [RTLとネットリストの等価性](../../examples/local-lec-netlist/README.md) | 合成・スキャン挿入・ECO後の比較と、機能モードの仮定。対応付けは名前だけで、リタイミングや再符号化は対象外 |
+| SCOPE-POWER | [複数の電源領域](../../examples/local-power-domains/README.md)、[クロックゲーティング](../../examples/local-clock-gating/README.md)、[活動率からの電力見積り](../../examples/local-power-estimate/README.md) | 電源意図の表からのX注入と隔離の検査、ゲートと切替の短いパルス、架空のライブラリでのゲーティングの効果。UPF・実セル・実際の電力は対象外 |
+| SCOPE-CODE-COVERAGE | [未達カバレッジの到達不能証明](../../examples/local-coverage-unreachable/README.md) | 到達例と帰納法の証明による分類、除外の台帳の監査。式とtoggleの未達は分類しない |
+| SCOPE-PHYSICAL（DFT・STA） | [遷移故障](../../examples/local-transition-fault/README.md)、[メモリの修復](../../examples/local-memory-repair/README.md)、[モード・コーナー別のSTA](../../examples/local-sta-modes/README.md) | launch-on-captureと実速度の捕捉、予備の行・列への割当とヒューズ、機能／スキャン×slow／fastの解析。実際のATPG・実マクロ・実PDKは対象外 |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |
