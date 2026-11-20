@@ -210,7 +210,7 @@ python3 tools/run_kirimasim_examples.py \
   --kirimasim /path/to/kirimasim --example local-fifo \
   --out artifacts/kirimasim-fifo
 
-# 対象80例・107構成を、既存smoke計画で実行する
+# 条件に合う全登録例を、既存smoke計画で実行する（2026-11-03の実測では80例・107構成）
 python3 tools/run_kirimasim_examples.py \
   --kirimasim /path/to/kirimasim --profile smoke --seed 17 --jobs 2 \
   --command-timeout 60 --job-timeout 900 \
@@ -238,7 +238,7 @@ python3 tools/run_regression.py \
 
 ### GitHub Actionsで最新版を実行する
 
-[Kirimasim latest](../../.github/workflows/kirimasim.yml)は、kirimasimの`main`の最新コミットをビルドし、同じ80例・107構成のsmokeを毎日実行します。[起動条件と失敗の切り分け](../../tools/CI.md#kirimasimの最新版)はCIの説明にあります。この節の上にある記録は`d73d8922dfa2`の実測のままで、Actionsの結果では更新しません。各実行の結果はSummaryの表と14日間保存される証跡で確認します。記録した結果は[実行結果の一覧](results.md)にあります。
+[Kirimasim latest](../../.github/workflows/kirimasim.yml)は、kirimasimの`main`の最新コミットをビルドし、その時点の登録表から同じ条件で選んだ全例（冒頭の計画）のsmokeを毎日実行します。[起動条件と失敗の切り分け](../../tools/CI.md#kirimasimの最新版)はCIの説明にあります。この節の上にある記録は`d73d8922dfa2`の実測のままで、Actionsの結果では更新しません。各実行の結果はSummaryの表と14日間保存される証跡で確認します。記録した結果は[実行結果の一覧](results.md)にあります。
 
 ## 6. 確認範囲の外側
 
@@ -283,7 +283,7 @@ Linuxのビルドは、最初は`uvm_apb_pkg.sv:69`で止まりました。こ�
 
 今の停止箇所は、UVMの`local uvm_object m_extensions[uvm_object_wrapper];`です。kirimasimは連想配列をまだ実装しておらず、[対応状況の文書](https://github.com/kurochan001/kirimasim/blob/97d5b0001e7ca759ae8f928c6217690a119d1700/docs/P1_SUPPORT.ja.md)にも未対応と書かれているので、バグではありません。UVMのほかのファイルでも連想配列を使っています。エラーは最初の1件だけ報告されるので、連想配列の先に別の問題があるかは分かりません。次の順に進めます。
 
-1. **開始の判断：** Linuxのビルドで、上のUVMの確認コマンドが終了コード0になることを確かめます。[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)の各実行のSummaryの先頭に、UVMライブラリの解析と`local-uvm`のloweringの結果が出ます。107構成の合否には影響しません。macOSで試すには、#110の解決も必要です。
+1. **開始の判断：** Linuxのビルドで、上のUVMの確認コマンドが終了コード0になることを確かめます。[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)の各実行のSummaryの先頭に、UVMライブラリの解析と`local-uvm`のloweringの結果が出ます。選択した構成の合否には影響しません。macOSで試すには、#110の解決も必要です。
 2. **実行の準備：** UVMの例はVerilator向けの実行手順なので、[アダプター](../../tools/run_kirimasim_examples.py)を拡張します。
 3. **最初の例：** 同時アサーション、`covergroup`、DPIを使っていない`local-uvm`から始めます。
 4. **対象の拡大：** 下の表で、必要な機能がそろった例から増やします。同時アサーションには[#111](https://github.com/kurochan001/kirimasim/issues/111)も必要です。

@@ -74,7 +74,8 @@ class DocumentCountTests(unittest.TestCase):
 
     def test_registry_size_and_root_jobs_are_current_wherever_they_are_quoted(self):
         current = (len(REGISTRY['examples']), root_jobs(REGISTRY))
-        for name in ('examples/README.md', 'docs/method/open-source-dv-environments.md'):
+        for name in ('examples/README.md', 'docs/method/open-source-dv-environments.md',
+                     'examples/reference-opentitan-dv/README.md', 'examples/reference-picorv32/README.md'):
             found = quoted((ROOT / name).read_text(), r'(\d+)登録項目・(\d+)ルートジョブ')
             self.assertTrue(found, name)
             self.assertEqual(set(found), {current}, name)

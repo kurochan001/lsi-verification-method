@@ -49,4 +49,4 @@ python3 -m unittest discover -s examples/local-riscv-pmp/tests -v
 
 ## 確認範囲
 
-独立したPMP判定回路のシミュレーションです。プロセッサのCSR命令、例外発生、MPRVの実効特権計算、PMA、ページング、PMPキャッシュ、Smepmpは含みません。`machine`には実効特権モードを与えます。コアへの組込みやフォーマル証明は、この例では実施していません。
+独立したPMP判定回路のシミュレーションです。プロセッサのCSR命令、例外発生、MPRVの実効特権計算、PMA、ページング、PMPキャッシュ、Smepmpは含みません。`machine`には実効特権モードを与えます。コアへの組込みやフォーマル証明は、この例では実施していません。コアへの組込みは、[特権モードとPMPの統合の例](../local-riscv-priv/README.md)で扱います。

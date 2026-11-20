@@ -7,10 +7,12 @@
 | [`check_docs.py`](check_docs.py) | [文書・図・用語集・FAQの検査](QUALITY.md)。内部リンクと見出し、表、フェンス、実際のMermaid構文を判定する。 |
 | [`setup_environment.py`](setup_environment.py)／[`check_environment.py`](check_environment.py) | [環境の一括準備と診断](ENVIRONMENT.md)。docs・smoke・fullを選び、版・import・コンパイル・UVMを確認する。 |
 | [`build_native.py`](build_native.py) | [固定コミットからのネイティブツール構築](ENVIRONMENT.md#2-os側の依存を用意する)。CIでも同じソース版を使う。 |
+| [`setup_oss_cad.py`](setup_oss_cad.py)／[`setup_ngspice.py`](setup_ngspice.py) | [OSS CAD Suiteの固定版](ENVIRONMENT.md#oss-cad-suiteの固定版)の取得と照合、[ngspice共有ライブラリー](ENVIRONMENT.md#ngspiceとspice協調例)の構築と照合。どちらも`--check`で既存の導入先だけを確かめられる。 |
 | [`run_selftests.py`](run_selftests.py) | [グループ別セルフテスト](QUALITY.md#セルフテスト)。未実行・空・skip・失敗を拒否し、JSON・JUnitを保存する。 |
 | [`verification_plan.py`](verification_plan.py) | [検証項目表と実行証跡の照合](../docs/method/verification-plan-automation.md)。出典・要求・項目・構成・実績・版を確認する。 |
 | [`check_tb_races.py`](check_tb_races.py) | テストベンチの実行順の競合を探す。クロック同期ブロックがブロッキング代入した信号を、同じエッジで別の場所が読む形をテキスト検索で見つける。全数は保証しない。`tools/tests`の中で毎回実行する。 |
 | [`run_regression.py`](run_regression.py) | [全検証例の統合実行](REGRESSION.md)。構成行列、依存確認、並列数、時間上限、JUnitとソースの照合を管理する。 |
+| [`select_regression.py`](select_regression.py) | [変更箇所からの検証例の選択](AFFECTED.md)。Gitの差分と[`regression_dependencies.json`](regression_dependencies.json)から、実行する例を保守的に選ぶ。台帳にない入力があれば全例へ広げる。 |
 | [`run_kirimasim_examples.py`](run_kirimasim_examples.py) | [kirimasimでの実行と実測記録](../docs/case-study-kirimasim/README.md)。Icarus向けの既存計画・判定を使い、Icarusだけで動く例を選択して実行する。`--list`は、選択する例と構成数を表示するだけで、何も実行しない。実コマンド・版・ハッシュ・異常終了を記録する。 |
 | [`kirimasim_results.py`](kirimasim_results.py) | [kirimasimの実行結果](../docs/case-study-kirimasim/results.md)の表を作る。完了して全構成が合格した実行だけをPASSと表示する。 |
 | [`kirimasim_uvm_check.py`](kirimasim_uvm_check.py) | [kirimasimがUVMを処理できるか](../docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)を確かめて報告する。CIの合否には使わない。 |

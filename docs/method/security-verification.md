@@ -120,7 +120,7 @@ flowchart TD
 | 仮想記憶の権限 | [Sv32ウォーク](../../examples/local-sv32/README.md)、[TLB](../../examples/local-tlb/README.md) | U／S・SUM・MXR・A／D |
 | アドレスの別名 | [アドレスマップ](../../examples/local-address-map/README.md)、[接続性の証明](../../examples/local-connectivity/README.md) | デコードと配線。保護の回避の観点では未整理 |
 | 2系統の比較 | [ロックステップ監視](../../examples/local-lockstep-monitor/README.md)、[TMR](../../examples/local-tmr/README.md) | 偶発的な故障のモデル |
-| デバッグの入口 | [JTAG TAP](../../examples/local-jtag-tap/README.md) | TAPの動作だけ。認証との結合はない |
+| デバッグの入口 | [JTAG TAP](../../examples/local-jtag-tap/README.md)、[デバッグモジュール](../../examples/local-riscv-debug/README.md) | TAPの動作と、JTAG経由の停止・再開・レジスタアクセス。認証は実装しておらず、ライフサイクルとの結合はない |
 
 公開プロジェクトでは、[OpenTitanの参照例](../../examples/reference-opentitan-dv/README.md)と[Caliptraの参照例](../../examples/reference-caliptra/README.md)が、セキュリティIPの検証環境の入口です。
 

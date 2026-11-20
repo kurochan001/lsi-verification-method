@@ -127,7 +127,7 @@ flowchart TD
 
 | プロトコル | 扱っていない機能 | 状態 |
 | --- | --- | --- |
-| APB | PSTRB（部分書込み）、複数スレーブの選択とデコードの結合、PPROTとPSLVERRの全組合せ | PSTRBは未着手 |
+| APB | PSTRB（部分書込み）、複数スレーブの選択とデコードの結合、PPROTとPSLVERRの全組合せ | PSTRBは未着手。バイトストローブそのものは、APBの2相を持たない簡易バスの[アドレスマップ](../../examples/local-address-map/README.md)が扱う |
 | AHB | WRAPのバースト、INCR4以外の長さ、HPROT、ロック（HMASTLOCK）、複数マスター、フルAHBの仲裁 | 未着手 |
 | AXI4 | WRAPとFIXEDのバースト、狭い転送（データ幅より小さいAxSIZE）、整列していない開始アドレス、5ビート以上（最大256ビート）、排他アクセス（AxLOCK） | 未着手。まとめて1つの例にする計画 |
 | AXI4 | AxCACHE・AxPROT・AxQOS・AxREGION・USER、読出しのデータのインターリーブ | ポートを省略。未着手 |

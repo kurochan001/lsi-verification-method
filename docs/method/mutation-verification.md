@@ -125,7 +125,7 @@ flowchart TD
 
 これらは製品DUTの評価でも、自動生成した大量の変異を使うキャンペーンでもありません。本資料の追加で再実行したものではなく、既存の説明用コードの確認結果への参照です。
 
-[ローカルECC例](../../examples/local-ecc/README.md)では、入力符号語へのビット誤り注入と、訂正回路そのものの変異を区別して実行します。正常回路への1／2ビット誤りは仕様上の訂正・検出を確認する刺激で、回路のミューテーションではありません。3／4ビット誤りによる誤訂正・見逃しは、保証範囲外の診断として別に記録します。[SPI例](../../examples/local-spi/README.md)と[タイマー・ウォッチドッグ例](../../examples/local-timer-watchdog/README.md)も、それぞれ4種類の誤実装を予定したチェッカーで検出します。[非同期FIFO](../../examples/local-async-fifo/README.md)、[I²C](../../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../../examples/local-apb-timer/README.md)にも、それぞれ4種類の変異検出を用意しています。[AHB-Lite](../../examples/local-ahb/README.md)はアドレス／データの誤対応や1サイクルERROR、[AXI4-Lite](../../examples/local-axi/README.md)は受理後のバス値への依存や応答保持の違反も検出します。これらはローカルで動作する教材です。
+[ローカルECC例](../../examples/local-ecc/README.md)では、入力符号語へのビット誤り注入と、訂正回路そのものの変異を区別して実行します。正常回路への1／2ビット誤りは仕様上の訂正・検出を確認する刺激で、回路のミューテーションではありません。3／4ビット誤りによる誤訂正・見逃しは、保証範囲外の診断として別に記録します。[SPI例](../../examples/local-spi/README.md)と[タイマー・ウォッチドッグ例](../../examples/local-timer-watchdog/README.md)も、それぞれ5種類・4種類の誤実装を予定したチェッカーで検出します。[非同期FIFO](../../examples/local-async-fifo/README.md)、[I²C](../../examples/local-i2c/README.md)、[APB＋タイマー＋ウォッチドッグ](../../examples/local-apb-timer/README.md)にも、それぞれ4種類の変異検出を用意しています。[AHB-Lite](../../examples/local-ahb/README.md)はアドレス／データの誤対応や1サイクルERROR、[AXI4-Lite](../../examples/local-axi/README.md)は受理後のバス値への依存や応答保持の違反も検出します。これらはローカルで動作する教材です。
 
 ## 7. 証跡と完了判定
 

@@ -37,9 +37,9 @@ flowchart LR
 
 | 対象 | 主な確認事項 | このリポジトリの入口 |
 | --- | --- | --- |
-| 合成前後の論理 | 全入力での一致、対応付け、除外 | [FIFOの等価性](../../examples/local-equivalence/README.md)（RTLどうしの比較） |
+| 合成前後の論理 | 全入力での一致、対応付け、除外 | [RTLとネットリストの等価性](../../examples/local-lec-netlist/README.md)、[FIFOの等価性](../../examples/local-equivalence/README.md)（RTLどうしの比較） |
 | ネットリストでだけ起きる食い違い | 合成の指示、シミュレーター専用のコード、初期値、実行順への依存 | [合成後ネットリストのシミュレーション](../../examples/local-gate-sim/README.md) |
-| タイミング | セットアップ・ホールド、制約の漏れ、消えた経路 | [OpenSTAの実行例](../../examples/local-sta/README.md) |
+| タイミング | セットアップ・ホールド、制約の漏れ、消えた経路 | [OpenSTAの実行例](../../examples/local-sta/README.md)、[モード・コーナー別のSTA](../../examples/local-sta-modes/README.md) |
 | 制約の前提 | マルチサイクルパス、フォルスパス、クロックの遅延 | [遅延つきのゲートレベルシミュレーション](../../examples/local-gate-timing/README.md) |
 | 静的検査 | 警告の分類と除外の台帳 | [共通lint](../../examples/local-lint/README.md)、[lintと警告管理](lint-and-waivers.md) |
 | 試験回路 | スキャンのシフトとキャプチャ、署名 | [内部スキャンとATPG](../../examples/local-scan-atpg/README.md)、[LBIST](../../examples/local-lbist/README.md) |

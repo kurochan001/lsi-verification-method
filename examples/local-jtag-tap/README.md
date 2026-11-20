@@ -39,6 +39,7 @@ flowchart LR
 - SAMPLE/PRELOADとEXTESTのUpdate-DR立下りで、シフト値を別の出力保持段へ反映します。EXTEST以外では`pin_in`を通常機能のピン値としてそのまま出力します。
 - `trst_n`は非同期リセットです。TDOはシフト状態以外の立下りで0にします。
 - TDOはTCKの立下りで更新し、テストベンチは立上り前の値を比較します。
+- パラメーター`EXT`（既定0）を1にすると、`pin_in`と`pin_out`の上位に、外部のデータレジスタ用の信号を載せます。[デバッグの例](../local-riscv-debug/README.md)が使います。この例の2構成は既定の0で、上の動作とポートの幅は変わりません。
 
 ## PRELOADした値をEXTESTで出す
 

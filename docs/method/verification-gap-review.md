@@ -109,7 +109,6 @@
 | SCOPE-FAULT-RECOVERY / SYSTEM-SW | [FDIRサブシステム](../../examples/local-fdir/README.md) | ECC・進捗監視、異常とcommitの競合、取消、原因保持、検査付き復帰。実機認証は対象外 |
 | SCOPE-PROTOCOL-DATA / PERFORMANCE | [PWM・直交エンコーダ](../../examples/local-motion-io/README.md) | 相補出力、デッドタイム、設定反映、ノイズ・不正遷移・位置折返し |
 | SCOPE-PERFORMANCE / FAULT-RECOVERY | [1軸の閉ループ制御](../../examples/local-motion-control/README.md) | PI・実PWMで動くプラント、追従窓、負荷、演算期限、停止・再開。正規化モデルであり、実機の制動評価は対象外 |
-
 | SCOPE-PROTOCOL-DATA / FAULT-RECOVERY | [E2E通信保護](../../examples/local-e2e-guard/README.md) | CRC・Data ID・順序・待ち・初期化。CANコントローラーやAUTOSARプロファイルへの適合は対象外 |
 | SCOPE-FAULT-RECOVERY / PERFORMANCE | [小規模ECU](../../examples/local-automotive-ecu/README.md) | 窓付きウォッチドッグ、指令の更新期限、不正フレームによる延長の禁止、取消・出力抑止、許可付き復帰 |
 

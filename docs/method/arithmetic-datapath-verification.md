@@ -151,6 +151,7 @@ RTLと同じ式を同じ順序で書いたモデルは、同じ誤りを持ち�
 | 近似の関数 | [活性化関数](../../examples/local-activation/README.md) | 許容誤差。上限つき |
 | 2段階の丸め | [再量子化](../../examples/local-requantize/README.md) | ビット一致。中間の値 |
 | 小さい浮動小数点の形式 | [FP16／MXFP8／MXFP4](../../examples/local-mxfp4/README.md) | ビット一致。有理数のモデル。nightlyで全65,536通りの要素の組 |
+| IEEE 754の加算器 | [浮動小数点の加算器](../../examples/local-fp-adder/README.md) | ビット一致。8ビットの形式は全数、8・10ビットの形式は全入力のフォーマル証明、binary32は有理数のモデルで境界値とランダム |
 | 積和の時間合わせ | [シストリックアレイ](../../examples/local-systolic-array/README.md) | ビット一致。サイクル単位 |
 | 選択 | [Top-K](../../examples/local-topk/README.md) | 全入力のフォーマル証明 |
 | ハッシュ | [SHA-256](../../examples/local-sha256/README.md) | ビット一致。`hashlib`と公開ベクトル |
@@ -166,7 +167,7 @@ RTLと同じ式を同じ順序で書いたモデルは、同じ誤りを持ち�
 
 | 項目 | 判定 | 状態 |
 | --- | --- | --- |
-| IEEE 754の加算器 | ビット一致。小さい形式の全数とフォーマル、binary32は有理数のモデル | [実行例あり](../../examples/local-fp-adder/README.md)。乗算は未着手 |
+| IEEE 754の乗算 | ビット一致。小さい形式の全数とフォーマル、binary32は有理数のモデル | 未着手。加算器には[実行例](../../examples/local-fp-adder/README.md)がある |
 | CORDIC | 許容誤差。反復ごとの誤差の上限、16ビットの角度の全数 | 未着手 |
 | CICデシメーター | ビット一致。ビット成長、途中の段の折返し | 未着手 |
 | IIR（バイクアッド） | ビット一致と、周波数特性の許容誤差の2段 | 未着手 |

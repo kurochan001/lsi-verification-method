@@ -21,7 +21,7 @@ flowchart LR
 
 ## 対象のコア
 
-[`rv32i_core.sv`](rtl/rv32i_core.sv)は、IF・ID・EX・MEM・WBの5段のパイプラインです。この例の命令列は、RV32Iの整数命令のうち、ワード単位のロード・ストア、分岐、ジャンプ、演算の32命令を使います。EBREAKで停止します。命令メモリ（16384語）とデータメモリ（256語）は分かれていて、データメモリは応答を待たせることがあります。このコアには、[分岐予測器の例](../local-branch-predictor/README.md)が使う`PREDICT`パラメーターと性能カウンター、[ロード・ストアの例](../local-load-store/README.md)が使うバイト・ハーフワードのアクセス、[例外・割り込みの例](../local-riscv-traps/README.md)が使う`TRAPS`パラメーター（機械モードのCSR、例外、外部割り込み、MRET）もあります。`TRAPS=1`のときの不正な命令の判定には、[命令デコーダの例](../local-riscv-decoder/README.md)で証明したデコーダを使うので、そのRTLもコンパイルします。この例は既定の`PREDICT=0`・`TRAPS=0`で実行し、カウンターは照合しません。コアの変異5〜16は、それらの例の誤実装です。
+[`rv32i_core.sv`](rtl/rv32i_core.sv)は、IF・ID・EX・MEM・WBの5段のパイプラインです。この例の命令列は、RV32Iの整数命令のうち、ワード単位のロード・ストア、分岐、ジャンプ、演算の32命令を使います。EBREAKで停止します。命令メモリ（16384語）とデータメモリ（256語）は分かれていて、データメモリは応答を待たせることがあります。このコアには、[分岐予測器の例](../local-branch-predictor/README.md)が使う`PREDICT`パラメーターと性能カウンター、[ロード・ストアの例](../local-load-store/README.md)が使うバイト・ハーフワードのアクセス、[例外・割り込みの例](../local-riscv-traps/README.md)が使う`TRAPS`パラメーター（機械モードのCSR、例外、外部割り込み、MRET）、[特権モードとPMPの統合の例](../local-riscv-priv/README.md)が使う`PRIV`パラメーター（M／Uモード、PMP、割り込みの拡張）、[デバッグの例](../local-riscv-debug/README.md)が使う`DEBUG`パラメーター（デバッグモード、1命令実行）もあります。`TRAPS=1`のときの不正な命令の判定には、[命令デコーダの例](../local-riscv-decoder/README.md)で証明したデコーダを使うので、そのRTLもコンパイルします。この例は既定の`PREDICT=0`・`TRAPS=0`・`PRIV=0`・`DEBUG=0`で実行し、カウンターは照合しません。コアの変異5〜27は、それらの例と、コアを組み込んだSoCの例（変異17）の誤実装です。
 
 | 状況 | 対処 |
 | --- | --- |
@@ -101,4 +101,4 @@ python3 -m unittest discover -s examples/local-riscv-iss/tests -v
 
 2026-11-07に、Python 3.14.7、Icarus Verilog 14.0開発版で、smoke／nightly、16目標、4種類の変異、セルフテスト10件が成功しました。アセンブラの照合にはLLVM 23.1.4の`llvm-mc`を使いました。Verilator 5.052の`--lint-only -Wall`では、変異0〜4のどれでも警告はありません。
 
-この例の対象は、RV32Iのうちワード単位のロード・ストアと演算・分岐・ジャンプです。バイト・ハーフワードのアクセス、分岐予測、例外と割り込み（境界に合わない番地、ECALL・CSRを含む）は、それぞれ別の例で扱います。FENCE、機械モード以外の特権モード、圧縮命令、M拡張、キャッシュは扱いません。比較は与えた命令列の範囲で行うもので、すべての命令列について正しさを示すものではありません。形式的に示す方法には、退出のポートを使う[riscv-formal](https://github.com/YosysHQ/riscv-formal)があります。
+この例の対象は、RV32Iのうちワード単位のロード・ストアと演算・分岐・ジャンプです。バイト・ハーフワードのアクセス、分岐予測、例外と割り込み（境界に合わない番地、ECALL・CSRを含む）、ユーザーモードとPMP、デバッグモードは、それぞれ別の例で扱います。FENCE、スーパーバイザーモード、圧縮命令、M拡張、キャッシュは扱いません。比較は与えた命令列の範囲で行うもので、すべての命令列について正しさを示すものではありません。形式的に示す方法には、退出のポートを使う[riscv-formal](https://github.com/YosysHQ/riscv-formal)があります。その方式を小さく写した有界の検査は[退出のフォーマル検査の例](../local-riscv-formal/README.md)に、第三者が書いた試験プログラムとの照合は[公開の試験プログラムの例](../local-riscv-official-tests/README.md)にあります。

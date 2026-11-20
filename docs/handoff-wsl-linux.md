@@ -10,7 +10,7 @@
 | --- | --- |
 | 手順書どおりに、空の環境から全ツールを構築できる | CIは構築結果をキャッシュから戻すことが多い |
 | 文書検査、全セルフテスト、全例のsmoke・nightlyがmacOSと同じ結果になる | CIと別のLinux環境でも同じになるかを見る |
-| kirimasimで80例・107構成のsmokeが合格する | CIは最新版を実行する。ここではmacOSの記録と同じ版で、OSの違いだけを比べる |
+| kirimasimで、Icarus向けに自動選択した例（2026-11-07時点は80例・107構成）のsmokeが合格する | CIは最新版を実行する。ここではmacOSの記録と同じ版で、OSの違いだけを比べる |
 
 [CIの状態](#ciの状態)は別に確認します。
 
@@ -96,6 +96,7 @@ J=2     # 初回はCIと同じ2並列にする
 "$PY" tools/build_native.py --profile full --jobs "$J" --out artifacts/toolchains/native
 "$PY" tools/setup_oss_cad.py --out artifacts/toolchains/oss
 "$PY" tools/setup_ngspice.py --jobs "$J" --out artifacts/toolchains/ngspice
+"$PY" examples/local-riscv-official-tests/setup_riscv_tests.py --out artifacts/toolchains/riscv-tests
 "$PY" tools/setup_environment.py --profile full \
   --tool-bin "$PWD/artifacts/toolchains/native/install/bin" \
   --oss-home "$PWD/artifacts/toolchains/oss/oss-cad-suite" \
@@ -181,7 +182,7 @@ print('kirimasim success', k['success'], k['passed'], '/', k['planned'], k['nati
 PY
 ```
 
-macOSの結果は次のとおりです。件数はOSに依存しないはずなので、違っていたら原因を調べます。
+macOSの結果は次のとおりです。件数はOSに依存しないはずなので、違っていたら原因を調べます。表は2026-11-07の`05e957f`での値です。その後に例を加えたので、今のmainでは件数が増えます。2026-11-21時点の計画は、文書検査518判定、セルフテスト156グループ・1,602件、全例139ジョブ、kirimasim 126構成です。比べるときは、同じコミットの[由来](../PROVENANCE.md)の記録を使います。
 
 | 検査 | macOSの結果 |
 | --- | --- |

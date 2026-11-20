@@ -134,7 +134,7 @@ ISSとの比較で見つからない変異もあります。結果を変えな�
 | 幅のあるメモリアクセス | [ロード・ストア](../../examples/local-load-store/README.md) | バイト・ハーフワード、符号拡張、バイト有効 |
 | 分岐予測 | [分岐予測器](../../examples/local-branch-predictor/README.md) | 方向の予測。飛び先の予測は対象外 |
 | 例外と割り込み | [例外・割り込み](../../examples/local-riscv-traps/README.md) | 機械モードの同期例外4種類と外部割り込み1本 |
-| PMP | [PMP判定](../../examples/local-riscv-pmp/README.md) | 4エントリーの判定回路の単体。コアへは未統合 |
+| PMP | [PMP判定](../../examples/local-riscv-pmp/README.md) | 4エントリーの判定回路の単体。コアへの統合は[下の表](#2026-11-21に加えた例とまだ例がない項目)の特権モードの例 |
 | ページング | [Sv32ウォーク](../../examples/local-sv32/README.md)、[TLB](../../examples/local-tlb/README.md) | ウォーカーとTLBの単体・結合。コアへは未統合 |
 | メモリの順序 | [ストアバッファ](../../examples/local-store-buffer/README.md) | 2 hartのリトマス試験。命令は実行しない |
 | キャッシュ | [キャッシュコヒーレンシ](../../examples/local-cache-coherence/README.md)、[キャッシュとDMA](../../examples/local-cache-dma/README.md) | 2クライアントの一貫性、DMAとの見え方 |
