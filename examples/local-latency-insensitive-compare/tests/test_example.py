@@ -25,13 +25,45 @@ class ModelAndCompareTests(unittest.TestCase):
 #include <sstream>
 #include <string>
 #include <vector>
-int main(){std::string line;DotModel m;while(std::getline(std::cin,line)){std::istringstream w(line);std::string k;w>>k;
- if(k=="M"){DotTxn t;for(auto& v:t.a)w>>v;for(auto& v:t.b)w>>v;try{std::cout<<m.accept(t)<<"\\n";}catch(const std::exception&){std::cout<<"REJECT\\n";}}
- else if(k=="C"){int p;w>>p;std::vector<std::int64_t> e,a;std::string s;w>>s;std::istringstream es(s==","?"":s);std::string x;
-  while(std::getline(es,x,','))if(!x.empty())e.push_back(std::stoll(x));w>>s;std::istringstream as(s==","?"":s);while(std::getline(as,x,','))if(!x.empty())a.push_back(std::stoll(x));
-  auto r=classify_stream(e,a,p==1);std::cout<<(r.empty()?"OK":r)<<"\\n";}}return 0;}
+static std::vector<std::int64_t> parse_list(const std::string& s) {
+    std::vector<std::int64_t> out;
+    std::istringstream in(s == "," ? "" : s);
+    std::string x;
+    while (std::getline(in, x, ',')) {
+        if (!x.empty()) out.push_back(std::stoll(x));
+    }
+    return out;
+}
+int main() {
+    std::string line;
+    DotModel m;
+    while (std::getline(std::cin, line)) {
+        std::istringstream w(line);
+        std::string k;
+        w >> k;
+        if (k == "M") {
+            DotTxn t;
+            for (auto& v : t.a) w >> v;
+            for (auto& v : t.b) w >> v;
+            try {
+                std::cout << m.accept(t) << "\\n";
+            } catch (const std::exception&) {
+                std::cout << "REJECT\\n";
+            }
+        } else if (k == "C") {
+            int p;
+            std::string expected, actual;
+            w >> p >> expected >> actual;
+            auto r = classify_stream(parse_list(expected), parse_list(actual), p == 1);
+            std::cout << (r.empty() ? "OK" : r) << "\\n";
+        }
+    }
+    return 0;
+}
 ''')
-        subprocess.run(['c++','-std=c++17','-Wall','-Wextra','-Werror','-I'+str(HERE/'model'),str(source),str(HERE/'model/dot_model.cpp'),'-o',str(cls.binary)],check=True,capture_output=True)
+        # GCC and clang warn about different things; show the compiler's message when -Werror stops the build.
+        built=subprocess.run(['c++','-std=c++17','-Wall','-Wextra','-Werror','-I'+str(HERE/'model'),str(source),str(HERE/'model/dot_model.cpp'),'-o',str(cls.binary)],capture_output=True,text=True)
+        if built.returncode:raise AssertionError('the test driver does not compile:\n'+built.stderr)
 
     def ask(self,lines):
         r=subprocess.run([str(self.binary)],input='\n'.join(lines)+'\n',text=True,capture_output=True)
