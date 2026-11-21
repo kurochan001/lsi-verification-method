@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "FC-INVENTORY",
+      "text": "故障リストは、回路から抽出したフリップフロップの全ビットから作る。組合せの変数は含めず、仕様から書いたモデルの状態と一致する。",
+      "goals": ["inventory/circuit", "inventory/no-combinational"]
+    },
+    {
+      "id": "FC-EXCLUDE",
+      "text": "事前に除外する故障は、観測する出力へ構造的に届かないことを接続解析で示して台帳に残し、シミュレーションでも影響なしを確かめる。",
+      "goals": ["exclusion/structural", "exclusion/ledger", "exclusion/confirmed"]
+    },
+    {
+      "id": "FC-INJECT",
+      "text": "注入はRTLを変えずに行い、注入した値を読み返して確かめる。RTLの実行の列は、独立したモデルの列と毎サイクル一致する。",
+      "goals": ["inject/readback", "inject/model-match"]
+    },
+    {
+      "id": "FC-CLASS",
+      "text": "各故障を、影響なし・安全機構が検出・検出されず出力が相違・時間切れの4つに分類する。4分類と代表の場面が、固定の故障に現れる。",
+      "goals": ["class/no-effect", "class/detected", "class/undetected", "class/timeout",
+                "scenario/masked-overwrite", "scenario/detected-recovered", "scenario/undetected-handshake",
+                "scenario/undetected-resync", "scenario/timeout-stall", "scenario/timeout-livelock",
+                "scenario/stuck-abandon", "scenario/false-alarm", "scenario/detected-wrong-after-recovery"]
+    },
+    {
+      "id": "FC-RATE",
+      "text": "検出率は対象集合と分母を明示して求める。抽出した故障からの推定には厳密な区間を付け、区間が母集団の値を含む。区間の方法が決めた確率でしか外れないことを、多数のseedで確かめる。",
+      "goals": ["rate/denominator", "rate/interval", "rate/calibration"]
+    },
+    {
+      "id": "FC-CHECKER",
+      "text": "分類器と集計の誤りを、手で決めた答えの表で見つける。",
+      "goals": ["classifier/known-answers", "accounting/known-answers"]
+    }
+  ]
+}

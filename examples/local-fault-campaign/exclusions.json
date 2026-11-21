@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "rtl": "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
+  "rtl_sha256": "04cd038d517e4a33ac478561a150c7ac6caf3535035bac479be44c7a0c35a40f",
+  "observed_outputs": ["result", "done", "error"],
+  "method": "Forward cone of each flip-flop bit in the Yosys netlist after proc and opt_clean; every cell input is taken to reach every cell output, so the cone over-approximates.",
+  "excluded": [
+    {"register": "error_code", "bit": 0, "reaches": ["error_code"],
+     "reason": "The diagnostic code register drives only its own output. No functional output and not the alarm depend on it, so no fault in it can change the classification."},
+    {"register": "error_code", "bit": 1, "reaches": ["error_code"],
+     "reason": "The diagnostic code register drives only its own output. No functional output and not the alarm depend on it, so no fault in it can change the classification."}
+  ],
+  "review": "Recomputed by run.py on every run. A change of the RTL hash or of the computed cones fails the run until this ledger is reviewed again."
+}

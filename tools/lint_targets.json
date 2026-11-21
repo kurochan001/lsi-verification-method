@@ -7,6 +7,7 @@
     "examples/local-activation/rtl/pwl_activation.sv",
     "examples/local-adc-conversion/rtl/adc_capture.sv",
     "examples/local-address-map/rtl/address_map.sv",
+    "examples/local-aes/rtl/aes128_core.sv",
     "examples/local-ahb/rtl/ahb_regs.sv",
     "examples/local-apb-irq/rtl/apb_irq.sv",
     "examples/local-apb-timer/rtl/apb_timer.sv",
@@ -70,6 +71,7 @@
     "examples/local-fifo/rtl/sync_fifo.sv",
     "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
     "examples/local-fp-adder/rtl/fp_adder.sv",
+    "examples/local-fsm-hardening/rtl/hardened_lock.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
@@ -174,6 +176,9 @@
     "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
     "examples/local-scrambler-prbs/rtl/ss_descrambler.sv",
     "examples/local-scrambler-prbs/rtl/ss_scrambler.sv",
+    "examples/local-secret-flow/rtl/secret_block.sv",
+    "examples/local-secure-boot/rtl/boot_ctrl.sv",
+    "examples/local-secure-boot/rtl/secure_boot_soc.sv",
     "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
     "examples/local-sensor-packet/rtl/sensor_packet_rx.sv",
     "examples/local-sha256/rtl/sha256_engine.sv",
@@ -196,6 +201,7 @@
     "examples/local-topk/rtl/topk_select.sv",
     "examples/local-transition-fault/rtl/TFSITE.sv",
     "examples/local-transition-fault/rtl/tf_core.sv",
+    "examples/local-trng-health/rtl/trng_health.sv",
     "examples/local-uart/rtl/uart.sv",
     "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
     "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
@@ -6147,6 +6153,130 @@
         "STAGES": 3,
         "WAIT": 2
       }
+    },
+    {
+      "id": "local-fsm-hardening/hardened_lock/default",
+      "file": "examples/local-fsm-hardening/rtl/hardened_lock.sv",
+      "top": "hardened_lock",
+      "sources": [
+        "examples/local-fsm-hardening/rtl/hardened_lock.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fsm-hardening/hardened_lock/MAX_TRIES=2",
+      "file": "examples/local-fsm-hardening/rtl/hardened_lock.sv",
+      "top": "hardened_lock",
+      "sources": [
+        "examples/local-fsm-hardening/rtl/hardened_lock.sv"
+      ],
+      "parameters": {
+        "MAX_TRIES": 2
+      }
+    },
+    {
+      "id": "local-fsm-hardening/hardened_lock/HARDENED=0",
+      "file": "examples/local-fsm-hardening/rtl/hardened_lock.sv",
+      "top": "hardened_lock",
+      "sources": [
+        "examples/local-fsm-hardening/rtl/hardened_lock.sv"
+      ],
+      "parameters": {
+        "HARDENED": 0
+      }
+    },
+    {
+      "id": "local-secret-flow/secret_block/default",
+      "file": "examples/local-secret-flow/rtl/secret_block.sv",
+      "top": "secret_block",
+      "sources": [
+        "examples/local-secret-flow/rtl/secret_block.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-secret-flow/secret_block/KW=16",
+      "file": "examples/local-secret-flow/rtl/secret_block.sv",
+      "top": "secret_block",
+      "sources": [
+        "examples/local-secret-flow/rtl/secret_block.sv"
+      ],
+      "parameters": {
+        "KW": 16
+      }
+    },
+    {
+      "id": "local-trng-health/trng_health/default",
+      "file": "examples/local-trng-health/rtl/trng_health.sv",
+      "top": "trng_health",
+      "sources": [
+        "examples/local-trng-health/rtl/trng_health.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-trng-health/trng_health/APT_CUTOFF=590/RCT_CUTOFF=21/STARTUP=1024/W=1024",
+      "file": "examples/local-trng-health/rtl/trng_health.sv",
+      "top": "trng_health",
+      "sources": [
+        "examples/local-trng-health/rtl/trng_health.sv"
+      ],
+      "parameters": {
+        "APT_CUTOFF": 590,
+        "RCT_CUTOFF": 21,
+        "STARTUP": 1024,
+        "W": 1024
+      }
+    },
+    {
+      "id": "local-aes/aes128_core/default",
+      "file": "examples/local-aes/rtl/aes128_core.sv",
+      "top": "aes128_core",
+      "sources": [
+        "examples/local-aes/rtl/aes128_core.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-secure-boot/boot_ctrl/default",
+      "file": "examples/local-secure-boot/rtl/boot_ctrl.sv",
+      "top": "boot_ctrl",
+      "sources": [
+        "examples/local-secure-boot/rtl/boot_ctrl.sv",
+        "examples/local-sha256/rtl/sha256_engine.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-secure-boot/secure_boot_soc/default",
+      "file": "examples/local-secure-boot/rtl/secure_boot_soc.sv",
+      "top": "secure_boot_soc",
+      "sources": [
+        "examples/local-secure-boot/rtl/secure_boot_soc.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-sha256/rtl/sha256_engine.sv",
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+        "examples/local-secure-boot/rtl/boot_ctrl.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-secure-boot/secure_boot_soc/IMG_MAX=80/WAIT=2",
+      "file": "examples/local-secure-boot/rtl/secure_boot_soc.sv",
+      "top": "secure_boot_soc",
+      "sources": [
+        "examples/local-secure-boot/rtl/secure_boot_soc.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-sha256/rtl/sha256_engine.sv",
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+        "examples/local-secure-boot/rtl/boot_ctrl.sv"
+      ],
+      "parameters": {
+        "IMG_MAX": 80,
+        "WAIT": 2
+      }
     }
   ],
   "examples": {
@@ -8347,6 +8477,54 @@
       "scope": "workflow",
       "targets": [],
       "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-fsm-hardening": {
+      "scope": "dut",
+      "targets": [
+        "local-fsm-hardening/hardened_lock/default",
+        "local-fsm-hardening/hardened_lock/MAX_TRIES=2",
+        "local-fsm-hardening/hardened_lock/HARDENED=0"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-secret-flow": {
+      "scope": "dut",
+      "targets": [
+        "local-secret-flow/secret_block/default",
+        "local-secret-flow/secret_block/KW=16"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-trng-health": {
+      "scope": "dut",
+      "targets": [
+        "local-trng-health/trng_health/default",
+        "local-trng-health/trng_health/APT_CUTOFF=590/RCT_CUTOFF=21/STARTUP=1024/W=1024"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-aes": {
+      "scope": "dut",
+      "targets": [
+        "local-aes/aes128_core/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-secure-boot": {
+      "scope": "dut",
+      "targets": [
+        "local-secure-boot/boot_ctrl/default",
+        "local-secure-boot/secure_boot_soc/default",
+        "local-secure-boot/secure_boot_soc/IMG_MAX=80/WAIT=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-fault-campaign": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-lockstep-monitor/lockstep_monitor/default"
+      ],
+      "reason": "題材のロックステップ監視のRTLを参照し、その既存の構成で静的検査"
     }
   },
   "blackbox_sources": {

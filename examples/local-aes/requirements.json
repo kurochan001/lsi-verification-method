@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AES-VECTORS",
+      "text": "FIPS 197の付録の例（付録Bと付録C.1）の暗号文を出す。",
+      "goals": [
+        "vector/fips-b",
+        "vector/fips-c1"
+      ]
+    },
+    {
+      "id": "AES-DATA",
+      "text": "どの鍵とブロックでも、独立に書いたモデルと同じ暗号文を出す。全0・全1の鍵とブロックを含む。",
+      "goals": [
+        "data/zero-block",
+        "data/zero-key",
+        "data/ones-block",
+        "data/ones-key"
+      ]
+    },
+    {
+      "id": "AES-TIME",
+      "text": "受け付けてから結果までのクロック数と、ready・busy・out_valid・progressの列は、鍵とデータに依らない。処理中に入力が変わっても、受け付けた値で計算する。",
+      "goals": [
+        "timing/fixed-latency",
+        "flow/inputs-change-busy"
+      ]
+    },
+    {
+      "id": "AES-FLOW",
+      "text": "readyのときだけ受け付け、処理中と結果の保持中のstartは無視する。結果はout_readyまで保持し、受け取った次のクロックから受け付ける。",
+      "goals": [
+        "flow/idle-gap",
+        "flow/start-while-busy",
+        "flow/start-while-holding",
+        "flow/hold",
+        "flow/back-to-back"
+      ]
+    },
+    {
+      "id": "AES-CANCEL",
+      "text": "cancelとリセットは、処理中・結果の保持中・待機中のどこでも処理を取り消す。cancelとstartが同じクロックならcancelを優先する。",
+      "goals": [
+        "cancel/busy",
+        "cancel/holding",
+        "cancel/idle",
+        "cancel/with-start",
+        "reset/busy",
+        "reset/holding"
+      ]
+    },
+    {
+      "id": "AES-ZERO",
+      "text": "待機中は状態・ラウンド鍵・ラウンド定数がすべて0で、結果の保持中もラウンド鍵とラウンド定数は0。out_validが0の間、out_blockは0。",
+      "goals": [
+        "clear/after-cancel",
+        "clear/after-reset",
+        "clear/after-result"
+      ]
+    }
+  ]
+}

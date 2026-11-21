@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "SB-VERIFY", "text": "STARTで、ヘッダーと本体のSHA-256がOTPの値と一致したときだけPASSになり、1バイトでも違えばFAIL（digest）になる。ヘッダーの版や長さも照合の対象に含まれる。", "goals": ["verdict/pass", "verdict/fail-digest"]},
+    {"id": "SB-HEADER", "text": "マジックが違う、長さが0・語の倍数でない・上限を超えるイメージは、ハッシュの前に理由つきで拒否する。上限ちょうどは受理する。", "goals": ["verdict/fail-magic", "verdict/fail-length", "boundary/length-max", "boundary/length-zero", "boundary/length-unaligned", "boundary/length-over"]},
+    {"id": "SB-ROLLBACK", "text": "版がOTPの最小値より小さいイメージは拒否し、最小値と同じ版は受理する。", "goals": ["verdict/fail-rollback", "boundary/version-equal", "boundary/version-below"]},
+    {"id": "SB-FETCH", "text": "フラッシュからの命令の取込みは、PASSの後に、検証した本体の範囲の中でだけ許す。ヘッダーの語も命令としては取り込めない。それ以外はEBREAKになり、コアはそこで止まる。ROMが判定を無視しても、割り込みの処理が途中で飛んでも同じ。", "goals": ["gate/blocked-during-check", "gate/blocked-after-fail", "gate/blocked-past-payload", "gate/header-not-executable"]},
+    {"id": "SB-SECRET", "text": "鍵は、PASSの後にだけ読める（それ以前は0）。ライフサイクルの保護レジスタはPASSの後にだけセキュアとして読める。デバッグはPASSで、ライフサイクルがTESTかDEVのときだけ有効になる。", "goals": ["key/granted", "key/denied", "lifecycle/secure-read", "lifecycle/refused", "debug/enabled", "debug/held-by-lifecycle"]},
+    {"id": "SB-STICKY", "text": "判定はリセットまで変わらない。STATUSへの書込みはバスエラーで判定を変えず、判定後のSTARTは無視される。", "goals": ["verdict/forge-refused", "verdict/restart-ignored"]},
+    {"id": "SB-EVENTS", "text": "照合中の割り込みは処理されて照合は最後まで進む。照合中とイメージの実行中のリセットは、許可をすべて閉じ、起動をやり直させる。", "goals": ["irq/during-check", "reset/during-check", "reset/during-image"]}
+  ]
+}

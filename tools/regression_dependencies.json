@@ -24,6 +24,14 @@
     "examples/local-address-map/tests/test_example.py",
     "examples/local-advanced-regression/run.py",
     "examples/local-advanced-regression/tests/test_runner.py",
+    "examples/local-aes/aes_ct_formal.sv",
+    "examples/local-aes/formal.py",
+    "examples/local-aes/model.py",
+    "examples/local-aes/requirements.json",
+    "examples/local-aes/rtl/aes128_core.sv",
+    "examples/local-aes/run.py",
+    "examples/local-aes/tb/aes_tb.sv",
+    "examples/local-aes/tests/test_example.py",
     "examples/local-ahb/requirements.json",
     "examples/local-ahb/rtl/ahb_regs.sv",
     "examples/local-ahb/run.py",
@@ -351,6 +359,13 @@
     "examples/local-failure-triage/support.py",
     "examples/local-failure-triage/tb/top.sv",
     "examples/local-failure-triage/tests/test_oracle.py",
+    "examples/local-fault-campaign/campaign.py",
+    "examples/local-fault-campaign/exclusions.json",
+    "examples/local-fault-campaign/model.py",
+    "examples/local-fault-campaign/requirements.json",
+    "examples/local-fault-campaign/run.py",
+    "examples/local-fault-campaign/tb/fault_campaign_tb.sv",
+    "examples/local-fault-campaign/tests/test_campaign.py",
     "examples/local-fdir/cases.py",
     "examples/local-fdir/model.py",
     "examples/local-fdir/requirements.json",
@@ -402,6 +417,14 @@
     "examples/local-fp-adder/run.py",
     "examples/local-fp-adder/tb/fp_adder_tb.sv",
     "examples/local-fp-adder/tests/test_example.py",
+    "examples/local-fsm-hardening/formal.py",
+    "examples/local-fsm-hardening/fsm_hardening_formal.sv",
+    "examples/local-fsm-hardening/model.py",
+    "examples/local-fsm-hardening/requirements.json",
+    "examples/local-fsm-hardening/rtl/hardened_lock.sv",
+    "examples/local-fsm-hardening/run.py",
+    "examples/local-fsm-hardening/tb/fsm_hardening_tb.sv",
+    "examples/local-fsm-hardening/tests/test_example.py",
     "examples/local-functional-coverage/run.py",
     "examples/local-functional-coverage/sim_main.cpp",
     "examples/local-functional-coverage/tb/dram.sv",
@@ -878,6 +901,21 @@
     "examples/local-scrambler-prbs/scrambler_prbs_formal.sv",
     "examples/local-scrambler-prbs/tb/scrambler_prbs_tb.sv",
     "examples/local-scrambler-prbs/tests/test_example.py",
+    "examples/local-secret-flow/formal.py",
+    "examples/local-secret-flow/model.py",
+    "examples/local-secret-flow/requirements.json",
+    "examples/local-secret-flow/rtl/secret_block.sv",
+    "examples/local-secret-flow/run.py",
+    "examples/local-secret-flow/secret_flow_formal.sv",
+    "examples/local-secret-flow/tb/secret_flow_tb.sv",
+    "examples/local-secret-flow/tests/test_example.py",
+    "examples/local-secure-boot/model.py",
+    "examples/local-secure-boot/requirements.json",
+    "examples/local-secure-boot/rtl/boot_ctrl.sv",
+    "examples/local-secure-boot/rtl/secure_boot_soc.sv",
+    "examples/local-secure-boot/run.py",
+    "examples/local-secure-boot/tb/secure_boot_tb.sv",
+    "examples/local-secure-boot/tests/test_example.py",
     "examples/local-secure-lifecycle/requirements.json",
     "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
     "examples/local-secure-lifecycle/run.py",
@@ -1041,6 +1079,11 @@
     "examples/local-transition-fault/sta/check.tcl",
     "examples/local-transition-fault/tb/tf_tb.sv",
     "examples/local-transition-fault/tests/test_example.py",
+    "examples/local-trng-health/requirements.json",
+    "examples/local-trng-health/rtl/trng_health.sv",
+    "examples/local-trng-health/run.py",
+    "examples/local-trng-health/tb/trng_tb.sv",
+    "examples/local-trng-health/tests/test_example.py",
     "examples/local-uart/requirements.json",
     "examples/local-uart/rtl/uart.sv",
     "examples/local-uart/run.py",
@@ -1202,6 +1245,7 @@
       "local-activation",
       "local-adc-conversion",
       "local-address-map",
+      "local-aes",
       "local-ahb",
       "local-apb",
       "local-apb-irq",
@@ -1254,6 +1298,7 @@
       "local-fifo",
       "local-formal-data-integrity",
       "local-fp-adder",
+      "local-fsm-hardening",
       "local-gate-sim",
       "local-gate-timing",
       "local-i2c",
@@ -1303,6 +1348,8 @@
       "local-rnm-sar-adc",
       "local-scan-atpg",
       "local-scrambler-prbs",
+      "local-secret-flow",
+      "local-secure-boot",
       "local-secure-lifecycle",
       "local-sensor-packet",
       "local-sha256",
@@ -1320,6 +1367,7 @@
       "local-tmr",
       "local-topk",
       "local-transition-fault",
+      "local-trng-health",
       "local-uart",
       "local-unaligned-memory",
       "local-uvm-coordination",
@@ -1358,6 +1406,10 @@
       "local-irq-cdc",
       "local-memory-order",
       "local-progress"
+    ],
+    "local-aes": [
+      "local-common",
+      "local-formal-common"
     ],
     "local-ahb": [
       "local-common"
@@ -1612,6 +1664,10 @@
       "local-irq-cdc",
       "local-uvm-random"
     ],
+    "local-fault-campaign": [
+      "local-exploration-common",
+      "local-lockstep-monitor"
+    ],
     "local-fdir": [
       "local-ecc",
       "local-timer-watchdog",
@@ -1646,6 +1702,10 @@
       "local-formal-common"
     ],
     "local-fp-adder": [
+      "local-common",
+      "local-formal-common"
+    ],
+    "local-fsm-hardening": [
       "local-common",
       "local-formal-common"
     ],
@@ -1988,6 +2048,17 @@
       "local-common",
       "local-formal-common"
     ],
+    "local-secret-flow": [
+      "local-common",
+      "local-formal-common"
+    ],
+    "local-secure-boot": [
+      "local-common",
+      "local-riscv-decoder",
+      "local-riscv-iss",
+      "local-secure-lifecycle",
+      "local-sha256"
+    ],
     "local-secure-lifecycle": [
       "local-common"
     ],
@@ -2090,6 +2161,9 @@
     "local-transition-fault": [
       "local-common",
       "local-gate-timing"
+    ],
+    "local-trng-health": [
+      "local-common"
     ],
     "local-uart": [
       "local-irq-cdc"

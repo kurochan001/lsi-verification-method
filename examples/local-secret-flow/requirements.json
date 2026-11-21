@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SF-LIFECYCLE",
+      "summary": "The lifecycle is taken at reset: development and production are both run.",
+      "goals": ["lc/dev", "lc/prod"]
+    },
+    {
+      "id": "SF-STATUS",
+      "summary": "Status depends only on public inputs: a key write sets key loaded whatever its value, a write wins over a start on the same edge.",
+      "goals": ["key/load", "key/secrets-differ", "key/write-beats-start", "dbg/status"]
+    },
+    {
+      "id": "SF-SCAN",
+      "summary": "In production the scan output never depends on the key: entering scan erases the key, the second copy and the result first, and a read on that edge is dropped. In development the scan output may show the key.",
+      "goals": ["scan/prod-entry", "scan/prod-entry-read", "scan/prod-shift", "scan/through-chain", "scan/exit", "scan/ignored-ops", "scan/dev-differs"]
+    },
+    {
+      "id": "SF-DBG",
+      "summary": "A production debug read of the key returns zero and is recorded as refused. A development key read and a read of a valid result may depend on the key.",
+      "goals": ["dbg/key-dev", "dbg/key-denied", "dbg/result", "dbg/error"]
+    },
+    {
+      "id": "SF-ERR",
+      "summary": "The error record never depends on the key, in any lifecycle: a refused read records the address, a start without a key records no detail, an event on the same edge wins over a clear.",
+      "goals": ["op/no-key", "op/no-key-after-erase", "err/clear", "err/event-beats-clear"]
+    },
+    {
+      "id": "SF-CT",
+      "summary": "The result is din XOR key while it is valid and may depend on the key then; while it is not valid the output is zero.",
+      "goals": ["op/result", "flow/result-differs"]
+    },
+    {
+      "id": "SF-ERASE",
+      "summary": "After reset, erase or production scan entry nothing shows the old key until a new key is written, also where development would otherwise allow it.",
+      "goals": ["erase/zeroize", "erase/in-scan", "erase/dev-read", "erase/dev-scan", "reset/with-key"]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TRNG-RCT",
+      "text": "同じ値がカットオフの回数続いたサンプルで、連続同値の試験が失敗する。1回少ない連続では失敗しない。値の0と1、受け付けないサイクルを挟む連続を区別しない。",
+      "goals": ["rct/below-cutoff", "rct/at-cutoff", "rct/value0", "rct/value1", "rct/gap-in-run"]
+    },
+    {
+      "id": "TRNG-APT",
+      "text": "W個のサンプルの窓で、先頭のサンプルと同じ値の数がカットオフに達したサンプルで、適応比率の試験が失敗する。1つ少ない数では失敗せず、次の窓は新しい先頭のサンプルで数え直す。",
+      "goals": ["apt/below-cutoff", "apt/at-cutoff", "apt/ref0", "apt/ref1", "apt/last-in-window", "apt/window-restart"]
+    },
+    {
+      "id": "TRNG-STARTUP",
+      "text": "リセットと再起動の後、最初のSTARTUP個のサンプルを試験し、出力しない。その間にどちらかの試験が失敗すれば、readyは上がらない。",
+      "goals": ["startup/pass", "startup/fail-rct", "startup/fail-apt", "startup/fail-last-sample", "output/first-after-startup"]
+    },
+    {
+      "id": "TRNG-SUPPRESS",
+      "text": "試験を失敗させたサンプルとそれ以後のサンプルは出力しない。失敗の表示は、再起動かリセットまで保つ。",
+      "goals": ["output/suppressed", "alarm/sticky", "alarm/both"]
+    },
+    {
+      "id": "TRNG-RESTART",
+      "text": "再起動は、リセットと同じく両方の試験の状態と起動時の試験を初めからにする。",
+      "goals": ["reset/power-on", "reset/after-alarm", "reset/clears-rct", "reset/clears-apt"]
+    },
+    {
+      "id": "TRNG-SOURCE",
+      "text": "固着した雑音源と偏った雑音源を検出する。交互に変わる雑音源は、どちらの試験も検出しない（試験の限界として記録する）。",
+      "goals": ["source/stuck-detected", "source/biased-detected", "source/alternating-passes"]
+    },
+    {
+      "id": "TRNG-RATE",
+      "text": "理想の雑音源での警報の回数が、設計の誤警報の確率から求めた受容域に入る。",
+      "goals": ["rate/judged"]
+    }
+  ]
+}

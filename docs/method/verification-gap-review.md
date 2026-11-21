@@ -113,6 +113,13 @@
 | SCOPE-PHYSICAL（AMS） | [SAR型ADCの実数モデル](../../examples/local-rnm-sar-adc/README.md)、[SPICEの回帰の自動判定](../../examples/local-spice-regression/README.md)、[LibertyとSPICEの対応付け](../../examples/local-liberty-vs-spice/README.md) | 動作モデルの適用範囲、解析の自動判定とコーナー・モンテカルロ、Libertyの値の出所。実PDK、雑音・リーク、メタスタビリティ、チップごとのばらつきは対象外 |
 | SCOPE-POWER / RESET | [電源の立上りとパワーオンリセット](../../examples/local-por-sequence/README.md) | 電源のランプ・瞬時低下・再投入とリセットの同期解除。比較器の基準電圧の立上り、最小パルス幅とrecovery／removalは対象外 |
 
+セキュリティ・機能安全を補う次の例も追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-SECURITY | [故障に強い状態機械](../../examples/local-fsm-hardening/README.md)、[鍵の情報の流れ](../../examples/local-secret-flow/README.md)、[AES-128](../../examples/local-aes/README.md)、[セキュアブート](../../examples/local-secure-boot/README.md) | 1ビットの反転で権限を与えないことの証明、方針の表に沿った非干渉、時間と消去の証明、検証してから開くハードウェアの門。サイドチャネル、署名の検証、認証や適合の主張は対象外 |
+| SCOPE-SECURITY（安全機構） | [故障注入キャンペーン](../../examples/local-fault-campaign/README.md)、[乱数源の健全性試験](../../examples/local-trng-health/README.md) | 分母を明示した検出率と厳密な区間、構造的な除外の台帳、誤警報確率から求めた受容域。ISO 26262の指標、エントロピーの評価は対象外 |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "FSM-AUTH",
+      "description": "LOCKEDでstartを受けて鍵を確かめ、正しい鍵でだけOPENになる。startなしの鍵は無視し、OPENはrelockでLOCKEDへ戻る",
+      "goals": [
+        "fsm/check-from-locked",
+        "fsm/key-without-start",
+        "fsm/open-on-key",
+        "fsm/relock"
+      ]
+    },
+    {
+      "id": "FSM-LIMIT",
+      "description": "誤った鍵を数え、ちょうどMAX_TRIES回でLOCKOUTへ入る。1回手前ではLOCKEDへ戻り、成功は回数を0にする。LOCKOUTはどの要求でも抜けない",
+      "goals": [
+        "fsm/retry-after-fail",
+        "fsm/success-clears-fails",
+        "fsm/lockout-at-limit",
+        "fsm/lockout-holds"
+      ]
+    },
+    {
+      "id": "FSM-RESET",
+      "description": "リセットはOPENとLOCKOUTを含むどの状態からもLOCKEDと0回へ戻す",
+      "goals": [
+        "fsm/reset-from-open",
+        "fsm/reset-from-lockout"
+      ]
+    },
+    {
+      "id": "FLT-DETECT",
+      "description": "保持している10ビット（状態の符号6、失敗回数2、その補数の写し2）のどの1ビットが、どの働く状態で反転しても、次のエッジでERRORへ入る",
+      "goals": [
+        "fault/state-locked",
+        "fault/state-check",
+        "fault/state-open",
+        "fault/state-lockout",
+        "fault/counter-true",
+        "fault/counter-complement",
+        "fault/every-bit-every-state"
+      ]
+    },
+    {
+      "id": "FLT-TIME",
+      "description": "状態が変わるエッジ、失敗回数が変わるエッジで反転しても同じく検出する",
+      "goals": [
+        "fault/at-transition",
+        "fault/at-counter-update"
+      ]
+    },
+    {
+      "id": "FLT-SAFE",
+      "description": "反転は権限を与えない。OPENでの反転は権限を失わせ、ERRORはどの要求でも抜けず、ERRORでのもう1回の反転でもERRORのまま",
+      "goals": [
+        "fault/grant-removed",
+        "fault/error-holds-inputs",
+        "fault/state-error"
+      ]
+    },
+    {
+      "id": "FLT-RECOVER",
+      "description": "反転の後もリセットで正常に戻り、正しい鍵で再びOPENになる",
+      "goals": [
+        "fault/reset-recovers"
+      ]
+    }
+  ]
+}

@@ -87,7 +87,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md)／[遷移故障と実速度の捕捉](examples/local-transition-fault/README.md) |
 | 低電力設計を検証する | [検証手順とUPFを実行できない範囲](docs/method/low-power-verification.md)／[排出・隔離・保持・復帰](examples/local-power/README.md)／[複数の電源領域とX注入](examples/local-power-domains/README.md)／[クロックゲート・切替・奇数分周](examples/local-clock-gating/README.md)／[活動率からの電力見積り](examples/local-power-estimate/README.md) |
 | プロセッサを検証する | [検証手順](docs/method/processor-verification.md)／[コアとISSの比較](examples/local-riscv-iss/README.md)／[例外・割り込み](examples/local-riscv-traps/README.md)／[退出のフォーマル検査](examples/local-riscv-formal/README.md)／[公開の試験プログラムとの照合](examples/local-riscv-official-tests/README.md)／[特権モードとPMP](examples/local-riscv-priv/README.md)／[デバッグ](examples/local-riscv-debug/README.md) |
-| セキュリティを検証する | [資産と脅威のモデルからの展開](docs/method/security-verification.md)／[アクセス保護](examples/local-access-control/README.md)／[ライフサイクル](examples/local-secure-lifecycle/README.md)／[定時間の証明](examples/local-constant-time/README.md) |
+| セキュリティを検証する | [資産と脅威のモデルからの展開](docs/method/security-verification.md)／[アクセス保護](examples/local-access-control/README.md)／[ライフサイクル](examples/local-secure-lifecycle/README.md)／[定時間の証明](examples/local-constant-time/README.md)／[故障に強い状態機械](examples/local-fsm-hardening/README.md)／[鍵の情報の流れ](examples/local-secret-flow/README.md)／[故障注入キャンペーン](examples/local-fault-campaign/README.md)／[乱数源の健全性試験](examples/local-trng-health/README.md)／[AES-128](examples/local-aes/README.md)／[セキュアブート](examples/local-secure-boot/README.md) |
 | PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[PLL出力の周期・パルス幅・ジッター](examples/local-pll-clock-quality/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
 | SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md)／[PWM・RCとADCの取り込み時刻](examples/local-pwm-spice/README.md)／[SAR型ADCの実数モデル](examples/local-rnm-sar-adc/README.md)／[SPICEの回帰の自動判定](examples/local-spice-regression/README.md)／[LibertyとSPICE](examples/local-liberty-vs-spice/README.md)／[パワーオンリセット](examples/local-por-sequence/README.md) |
 
@@ -321,7 +321,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | [低電力設計](docs/method/low-power-verification.md) | 電源状態表、隔離・保持・レベルシフター、起動と停止の順序、クロックゲーティング、wake-up、活動率からの電力見積り、UPFを実行できない範囲 |
 | [セキュリティ](docs/method/security-verification.md) | 資産と脅威のモデル、アクセス制御、ライフサイクル、定時間、情報の流れ、故障攻撃への対策、鍵の消去 |
-| <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、CORDIC、CIC、IIR、誤り訂正と誤り率、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
+| <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、CORDIC、CIC、IIR、誤り訂正と誤り率、SHA-256、AES、ECC、アクセス保護、故障に強い状態機械、鍵の情報の流れ、乱数源の健全性試験、セキュアブート、故障注入キャンペーン、MBIST、JTAG・スキャン |
 | [演算データパス](docs/method/arithmetic-datapath-verification.md) | ビット一致・許容誤差・統計的な判定、固定小数点の丸めと飽和、全数・境界・ランダム・フォーマル、整数・有理数のモデル |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
 | <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
@@ -481,13 +481,13 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
 4. **テンプレートの実案件への適用**：検証領域の適用範囲、サインオフ、[不具合票](docs/templates/verification-issue.md)、[AIへの依頼・採否](docs/templates/ai-verification-request.md)の雛形を、実際の担当・構成・証跡へ対応付けて見直します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
-5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。現在の自動選択計画は113例・140構成です（`python3 tools/run_kirimasim_examples.py --list`で確認できます）。過去の記録は80例・107構成の実測で、その後に加えた例の結果は毎日の実行で確かめています。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
+5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。現在の自動選択計画は118例・145構成です（`python3 tools/run_kirimasim_examples.py --list`で確認できます）。過去の記録は80例・107構成の実測で、その後に加えた例の結果は毎日の実行で確かめています。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
 
 ### 注意
 
 各例は教材として対象を限定しています。例えば、AXIの例で規格全体への適合、論理CDCモデルで物理的なメタスタビリティ、架空LibertyのSTAで実チップのタイミングを確認したとは扱いません。製品へ適用する際は、仕様・構成と必要な解析・試験を追加して判断します。
 
-- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（212ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
+- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（218ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
 - 規格や仕様書の本文は、このリポジトリに入れません。要求は自分の言葉で整理し、出典の版・節・段落を明記します。
 - 機密の仕様書を扱う場合は、AIを使える環境と範囲を先に決めます。
 - AIによるレビューは、人の承認ではありません。台帳と報告に、担当者と方法を明記します。
