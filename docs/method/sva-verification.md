@@ -273,3 +273,5 @@ UVMとの接続は[UVM資料](uvm-verification.md)、刺激と時間関係は[�
 - [Verilatorの引数](https://verilator.org/guide/latest/exe_verilator.html)と[対応言語](https://verilator.org/guide/latest/languages.html)：assertion・カバレッジの有効化と対応範囲の確認先です。
 
 チェッカーと記録例は本リポジトリで作成したもので、規格のコード例を転載したものではありません。
+
+再利用できるプロパティを部品にして`bind`で取り付ける方法と、ツールごとの差の確かめ方は、[プロパティ集の例](../../examples/local-sva-patterns/README.md)にあります。固定版のYosysは並行アサーションと`bind`を読まず、固定版のVerilatorには、受理するのに正しく評価しない書き方があります。その例では、補助レジスタへ書き直した形と、3試験・ランダムなトレースで一致を確かめます。

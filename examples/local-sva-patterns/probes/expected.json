@@ -1,0 +1,24 @@
+{
+  "comment": "What the pinned tools accept, and what Verilator reports for each evaluation case. 'correct' is the result required by the property; 'recorded' is the differing result observed with Verilator 5.052.",
+  "acceptance": {
+    "concurrent":        {"verilator": true,  "yosys": false},
+    "immediate":         {"verilator": true,  "yosys": true},
+    "bind":              {"verilator": true,  "yosys": false},
+    "multiclock":        {"verilator": false, "yosys": false},
+    "localvar_fixed":    {"verilator": true,  "yosys": false},
+    "localvar_sequence": {"verilator": false, "yosys": false}
+  },
+  "evaluation": {
+    "RANGE_CONSEQUENT":     {"correct": [11], "used_by_library": true},
+    "LOCALVAR_FIXED":       {"correct": [8],  "used_by_library": true},
+    "GOTO_FIRST_CYCLE":     {"correct": [],   "recorded": [6]},
+    "RANGE_ANTECEDENT":     {"correct": [10], "recorded": []},
+    "UNBOUNDED_CONSEQUENT": {"correct": [10], "recorded": []},
+    "LOCALVAR_GOTO":        {"correct": [10], "recorded": [5, 10]}
+  },
+  "order_local_variable": {
+    "comment": "Failure ticks of pat_order_sva on the three fixed order traces.",
+    "correct":  {"pass": [], "violation": [5, 9], "vacuous": []},
+    "recorded": {"pass": [], "violation": [],     "vacuous": []}
+  }
+}

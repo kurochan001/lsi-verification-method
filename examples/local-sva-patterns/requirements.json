@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PAT-01",
+      "pattern": "hold",
+      "title": "待ち中の保持",
+      "text": "validがreadyを待つ間、validとペイロードを保つ",
+      "goals": [
+        "trace-hold-pass",
+        "trace-hold-violation",
+        "trace-hold-vacuous",
+        "sby-hold-pass",
+        "sby-hold-violation",
+        "sby-hold-vacuous",
+        "random-hold",
+        "formal-clean-hold",
+        "dut-mutant1",
+        "formal-mutant1"
+      ]
+    },
+    {
+      "id": "PAT-02",
+      "pattern": "onehot",
+      "title": "one-hot",
+      "text": "書込み位置の選択がいつも1ビットだけ立つ",
+      "goals": [
+        "trace-onehot-pass",
+        "trace-onehot-violation",
+        "trace-onehot-vacuous",
+        "sby-onehot-pass",
+        "sby-onehot-violation",
+        "sby-onehot-vacuous",
+        "random-onehot",
+        "formal-clean-onehot",
+        "dut-mutant2",
+        "formal-mutant2"
+      ]
+    },
+    {
+      "id": "PAT-03",
+      "pattern": "within",
+      "title": "Nサイクル以内の応答",
+      "text": "受け付けた要求に、LAT+1サイクル以内に出力のvalidで応える",
+      "goals": [
+        "trace-within-pass",
+        "trace-within-violation",
+        "trace-within-vacuous",
+        "sby-within-pass",
+        "sby-within-violation",
+        "sby-within-vacuous",
+        "random-within",
+        "formal-clean-within",
+        "dut-mutant3",
+        "formal-mutant3"
+      ]
+    },
+    {
+      "id": "PAT-04",
+      "pattern": "nodup",
+      "title": "重複なし",
+      "text": "出ていく前の識別子を、もう一度受け付けない",
+      "goals": [
+        "trace-nodup-pass",
+        "trace-nodup-violation",
+        "trace-nodup-vacuous",
+        "sby-nodup-pass",
+        "sby-nodup-violation",
+        "sby-nodup-vacuous",
+        "random-nodup",
+        "formal-clean-nodup",
+        "dut-mutant4",
+        "formal-mutant4"
+      ]
+    },
+    {
+      "id": "PAT-05",
+      "pattern": "pipe",
+      "title": "固定遅延のデータ対応",
+      "text": "空のキューへ入った項目が、LAT+1サイクル後に同じ内容で出力に現れる",
+      "goals": [
+        "trace-pipe-pass",
+        "trace-pipe-violation",
+        "trace-pipe-vacuous",
+        "sby-pipe-pass",
+        "sby-pipe-violation",
+        "sby-pipe-vacuous",
+        "random-pipe",
+        "formal-clean-pipe",
+        "dut-mutant7",
+        "formal-mutant7"
+      ]
+    },
+    {
+      "id": "PAT-06",
+      "pattern": "order",
+      "title": "タグ追跡によるデータ順序",
+      "text": "追跡した1項目が、前にいた項目の数だけ後に、同じ内容で出ていく",
+      "goals": [
+        "trace-order-pass",
+        "trace-order-violation",
+        "trace-order-vacuous",
+        "sby-order-pass",
+        "sby-order-violation",
+        "sby-order-vacuous",
+        "random-order",
+        "formal-clean-order",
+        "dut-mutant5",
+        "formal-mutant5"
+      ]
+    },
+    {
+      "id": "PAT-07",
+      "pattern": "cross",
+      "title": "複数クロック",
+      "text": "clkで受け付けたイベントに、clk_bの3エッジ以内に通知が出る",
+      "goals": [
+        "trace-cross-pass",
+        "trace-cross-violation",
+        "trace-cross-vacuous",
+        "sby-cross-pass",
+        "sby-cross-violation",
+        "sby-cross-vacuous",
+        "random-cross",
+        "formal-clean-cross",
+        "dut-mutant6",
+        "formal-mutant6"
+      ]
+    },
+    {
+      "id": "PAT-08",
+      "pattern": null,
+      "title": "bindによる適用",
+      "text": "対象のRTLを編集せずに、同じ束縛の一覧をシミュレーションとフォーマルの両方へ適用する",
+      "goals": [
+        "dut-clean-fixed",
+        "dut-clean",
+        "formal-bind-rewrite"
+      ]
+    },
+    {
+      "id": "PAT-09",
+      "pattern": null,
+      "title": "ツール差の記録",
+      "text": "固定版のツールが受理する書き方と、受理しても正しく評価しない書き方を、小さな試験で記録する",
+      "goals": [
+        "tool-versions",
+        "build",
+        "tool-acceptance",
+        "tool-evaluation",
+        "diagnose-order-local-variable"
+      ]
+    }
+  ]
+}

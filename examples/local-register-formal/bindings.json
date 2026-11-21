@@ -1,0 +1,6 @@
+{
+  "spec": {"source": "../local-register-spec/registers.rdl", "module": "rdl_regs", "storage": "{reg}",
+           "ro_write_error": true, "events": {"pending.value": [0, 3]}},
+  "wide": {"source": "registers.rdl", "module": "reg_block", "storage": "{reg}_{field}",
+           "ro_write_error": false, "events": {"status.done": [0, 0], "status.err": [1, 2]}}
+}

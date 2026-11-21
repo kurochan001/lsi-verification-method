@@ -50,6 +50,7 @@
     "examples/local-divider/rtl/divider.sv",
     "examples/local-dma-ownership/rtl/owned_ring.sv",
     "examples/local-dma/rtl/apb_dma.sv",
+    "examples/local-dpi-model/rtl/packet_sum.sv",
     "examples/local-dram/rtl/dram_controller.sv",
     "examples/local-dsp/rtl/fir2.sv",
     "examples/local-e2e-guard/rtl/e2e_guard.sv",
@@ -60,6 +61,7 @@
     "examples/local-fdir/rtl/fdir_node.sv",
     "examples/local-fdir/rtl/protected_store.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
+    "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
     "examples/local-fp-adder/rtl/fp_adder.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
@@ -79,6 +81,7 @@
     "examples/local-lec-netlist/rtl/event_meter.sv",
     "examples/local-liveness/rtl/fair_arbiter.sv",
     "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
+    "examples/local-long-counter/rtl/long_counter.sv",
     "examples/local-mbist/rtl/mbist.sv",
     "examples/local-memory-repair/rtl/fuse_bank.sv",
     "examples/local-memory-repair/rtl/mem_repair.sv",
@@ -132,8 +135,10 @@
     "examples/local-ram-ports/rtl/ram_tdp.sv",
     "examples/local-recovery/rtl/timeout_guard.sv",
     "examples/local-reduction/rtl/reduction_irq.sv",
+    "examples/local-register-formal/rtl/reg_block.sv",
     "examples/local-rename-rob/rtl/rename_rob.sv",
     "examples/local-requantize/rtl/requantize.sv",
+    "examples/local-reset-x-formal/rtl/reset_x_unit.sv",
     "examples/local-retry-link/rtl/crc9.sv",
     "examples/local-retry-link/rtl/retry_receiver.sv",
     "examples/local-retry-link/rtl/retry_sender.sv",
@@ -154,6 +159,8 @@
     "examples/local-stream-dma/rtl/stream_dma.sv",
     "examples/local-stream/rtl/stream_buffer.sv",
     "examples/local-sv32/rtl/sv32_walk.sv",
+    "examples/local-sva-patterns/rtl/event_cross.sv",
+    "examples/local-sva-patterns/rtl/tagged_queue.sv",
     "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
     "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
     "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
@@ -169,8 +176,11 @@
     "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
     "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
+    "examples/local-uvm-layering/rtl/frame_port.sv",
     "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
     "examples/local-uvm-outstanding/rtl/tagged_reorder.sv",
+    "examples/local-uvm-reactive/rtl/req_master.sv",
+    "examples/local-uvm-reg-sequences/rtl/reg_bank.sv",
     "examples/local-video-async/rtl/video_async_fifo.sv",
     "examples/local-video-async/rtl/video_async_pipeline.sv",
     "examples/local-video-async/rtl/video_blend.sv",
@@ -5431,6 +5441,176 @@
         "EXP": 5,
         "FRAC": 4
       }
+    },
+    {
+      "id": "local-dpi-model/packet_sum/default",
+      "file": "examples/local-dpi-model/rtl/packet_sum.sv",
+      "top": "packet_sum",
+      "sources": [
+        "examples/local-dpi-model/rtl/packet_sum.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-dpi-model/packet_sum/INIT=0",
+      "file": "examples/local-dpi-model/rtl/packet_sum.sv",
+      "top": "packet_sum",
+      "sources": [
+        "examples/local-dpi-model/rtl/packet_sum.sv"
+      ],
+      "parameters": {
+        "INIT": 0
+      }
+    },
+    {
+      "id": "local-formal-data-integrity/width_downsizer/default",
+      "file": "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
+      "top": "width_downsizer",
+      "sources": [
+        "examples/local-formal-data-integrity/rtl/width_downsizer.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-long-counter/long_counter/default",
+      "file": "examples/local-long-counter/rtl/long_counter.sv",
+      "top": "long_counter",
+      "sources": [
+        "examples/local-long-counter/rtl/long_counter.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-long-counter/long_counter/WIDTH=8",
+      "file": "examples/local-long-counter/rtl/long_counter.sv",
+      "top": "long_counter",
+      "sources": [
+        "examples/local-long-counter/rtl/long_counter.sv"
+      ],
+      "parameters": {
+        "WIDTH": 8
+      }
+    },
+    {
+      "id": "local-long-counter/long_counter/SPLIT=4/WIDTH=8",
+      "file": "examples/local-long-counter/rtl/long_counter.sv",
+      "top": "long_counter",
+      "sources": [
+        "examples/local-long-counter/rtl/long_counter.sv"
+      ],
+      "parameters": {
+        "SPLIT": 4,
+        "WIDTH": 8
+      }
+    },
+    {
+      "id": "local-long-counter/long_counter/WIDTH=64",
+      "file": "examples/local-long-counter/rtl/long_counter.sv",
+      "top": "long_counter",
+      "sources": [
+        "examples/local-long-counter/rtl/long_counter.sv"
+      ],
+      "parameters": {
+        "WIDTH": 64
+      }
+    },
+    {
+      "id": "local-register-formal/reg_block/default",
+      "file": "examples/local-register-formal/rtl/reg_block.sv",
+      "top": "reg_block",
+      "sources": [
+        "examples/local-register-formal/rtl/reg_block.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-reset-x-formal/reset_x_unit/default",
+      "file": "examples/local-reset-x-formal/rtl/reset_x_unit.sv",
+      "top": "reset_x_unit",
+      "sources": [
+        "examples/local-reset-x-formal/rtl/reset_x_unit.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-reset-x-formal/reset_x_unit/STAGES=2/WIDTH=4",
+      "file": "examples/local-reset-x-formal/rtl/reset_x_unit.sv",
+      "top": "reset_x_unit",
+      "sources": [
+        "examples/local-reset-x-formal/rtl/reset_x_unit.sv"
+      ],
+      "parameters": {
+        "STAGES": 2,
+        "WIDTH": 4
+      }
+    },
+    {
+      "id": "local-uvm-layering/frame_port/default",
+      "file": "examples/local-uvm-layering/rtl/frame_port.sv",
+      "top": "frame_port",
+      "sources": [
+        "examples/local-uvm-layering/rtl/frame_port.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-uvm-reactive/req_master/default",
+      "file": "examples/local-uvm-reactive/rtl/req_master.sv",
+      "top": "req_master",
+      "sources": [
+        "examples/local-uvm-reactive/rtl/req_master.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-uvm-reactive/req_master/RETRIES=1/TIMEOUT=4",
+      "file": "examples/local-uvm-reactive/rtl/req_master.sv",
+      "top": "req_master",
+      "sources": [
+        "examples/local-uvm-reactive/rtl/req_master.sv"
+      ],
+      "parameters": {
+        "RETRIES": 1,
+        "TIMEOUT": 4
+      }
+    },
+    {
+      "id": "local-uvm-reg-sequences/reg_bank/default",
+      "file": "examples/local-uvm-reg-sequences/rtl/reg_bank.sv",
+      "top": "reg_bank",
+      "sources": [
+        "examples/local-uvm-reg-sequences/rtl/reg_bank.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-sva-patterns/tagged_queue/default",
+      "file": "examples/local-sva-patterns/rtl/tagged_queue.sv",
+      "top": "tagged_queue",
+      "sources": [
+        "examples/local-sva-patterns/rtl/tagged_queue.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-sva-patterns/tagged_queue/LAT=2",
+      "file": "examples/local-sva-patterns/rtl/tagged_queue.sv",
+      "top": "tagged_queue",
+      "sources": [
+        "examples/local-sva-patterns/rtl/tagged_queue.sv"
+      ],
+      "parameters": {
+        "LAT": 2
+      }
+    },
+    {
+      "id": "local-sva-patterns/event_cross/default",
+      "file": "examples/local-sva-patterns/rtl/event_cross.sv",
+      "top": "event_cross",
+      "sources": [
+        "examples/local-sva-patterns/rtl/event_cross.sv"
+      ],
+      "parameters": {}
     }
   ],
   "examples": {
@@ -7417,6 +7597,77 @@
       "scope": "workflow",
       "targets": [],
       "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-dpi-model": {
+      "scope": "dut",
+      "targets": [
+        "local-dpi-model/packet_sum/default",
+        "local-dpi-model/packet_sum/INIT=0"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-formal-data-integrity": {
+      "scope": "dut",
+      "targets": [
+        "local-formal-data-integrity/width_downsizer/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-long-counter": {
+      "scope": "dut",
+      "targets": [
+        "local-long-counter/long_counter/default",
+        "local-long-counter/long_counter/WIDTH=8",
+        "local-long-counter/long_counter/SPLIT=4/WIDTH=8",
+        "local-long-counter/long_counter/WIDTH=64"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-register-formal": {
+      "scope": "dut",
+      "targets": [
+        "local-register-formal/reg_block/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-reset-x-formal": {
+      "scope": "dut",
+      "targets": [
+        "local-reset-x-formal/reset_x_unit/default",
+        "local-reset-x-formal/reset_x_unit/STAGES=2/WIDTH=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uvm-layering": {
+      "scope": "dut",
+      "targets": [
+        "local-uvm-layering/frame_port/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uvm-reactive": {
+      "scope": "dut",
+      "targets": [
+        "local-uvm-reactive/req_master/default",
+        "local-uvm-reactive/req_master/RETRIES=1/TIMEOUT=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-uvm-reg-sequences": {
+      "scope": "dut",
+      "targets": [
+        "local-uvm-reg-sequences/reg_bank/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sva-patterns": {
+      "scope": "dut",
+      "targets": [
+        "local-sva-patterns/tagged_queue/default",
+        "local-sva-patterns/tagged_queue/LAT=2",
+        "local-sva-patterns/event_cross/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
     }
   },
   "blackbox_sources": {

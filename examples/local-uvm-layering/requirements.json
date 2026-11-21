@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "LAYER-001", "text": "上位のパケットは、ポートごとの順序と内容を保って、下位のバス転送のフレームになる。フレームは途中でほかのフレームと混ざらない。", "goals": ["both_ports", "mixed_traffic"]},
+    {"id": "LAYER-002", "text": "両方のポートにパケットが待っているとき、優先度の高いポートのパケットを先に送る。", "goals": ["backlog_priority"]},
+    {"id": "LAYER-003", "text": "INDEXの書込みとVALUEの読出しの組は、間に待ちがあっても、ほかのシーケンスの転送で分けられない。", "goals": ["lock_delays_isr", "gap_protected"]},
+    {"id": "LAYER-004", "text": "割り込み処理は、既に待っているlockの要求より先に実行され、割り込みが出てから処理が始まるまでに挟まる転送は5回以下である。フレームの途中でも実行できる。", "goals": ["grab_overtakes_lock", "isr_inside_frame"]},
+    {"id": "LAYER-005", "text": "割り込みの要因は、処理の途中や、クリアと同じサイクルに届いても失われず、要因の数と処理の数が一致する。", "goals": ["alarm_serviced", "done_serviced", "w1c_late", "w1c_same"]},
+    {"id": "LAYER-006", "text": "DUTの全出力は、毎サイクル、独立したサイクルモデルと一致する。", "goals": ["cycle_model"]}
+  ]
+}

@@ -89,6 +89,15 @@
 | SCOPE-SECURITY / SYSTEM-SW | [特権モードとPMPの統合](../../examples/local-riscv-priv/README.md)、[デバッグ](../../examples/local-riscv-debug/README.md) | M／Uモード、アクセスフォルト、割り込みの拡張、停止・再開・1命令実行。Sモード、ページングの統合、デバッグ仕様への準拠は対象外 |
 | SCOPE-PROTOCOL-DATA | [LR／SCとAMO](../../examples/local-riscv-atomic/README.md)、[リネーム・ROB](../../examples/local-rename-rob/README.md)、[浮動小数点の加算器](../../examples/local-fp-adder/README.md) | 予約とリトマス試験、物理レジスタの保存則、丸めと例外フラグ。コアへの統合、前進性、乗除算は対象外 |
 
+同じ日に、テストベンチの技法を補う次の例も追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-SYSTEM-SW | [DPI-CによるCの参照モデルの接続](../../examples/local-dpi-model/README.md) | importとexport、型の対応、オープン配列、C側の状態。DPIの実行はVerilatorだけで、4値のシミュレーターでのXの受渡しは対象外 |
+| SCOPE-PROTOCOL-DATA | [UVMの応答側agent](../../examples/local-uvm-reactive/README.md)、[組込みレジスタシーケンス](../../examples/local-uvm-reg-sequences/README.md)、[sequenceの階層化](../../examples/local-uvm-layering/README.md) | 応答の注入とfactoryの差替え、除外指定と組込みで見つからない誤り、lock・grabと仲裁。HDLパスのバックドア、ほかのシミュレーターでの動作は対象外 |
+| SCOPE-PROTOCOL-DATA | [再利用できるプロパティ集](../../examples/local-sva-patterns/README.md)、[1データ追跡](../../examples/local-formal-data-integrity/README.md) | 3試験と2形式の一致、ツールの差、データの欠落・重複・順序の非有界の証明。活性と、プロパティ集の一部の非有界の証明は対象外 |
+| SCOPE-CONFIG-REG / RESET | [レジスタの性質の生成と証明](../../examples/local-register-formal/README.md)、[リセット後の値の確定](../../examples/local-reset-x-formal/README.md)、[長時間カウンターの時間短縮](../../examples/local-long-counter/README.md) | フィールド属性ごとの証明と生成器の検算、不定の初期値からの証明、時間短縮の3方法の検出力。非同期リセット、読出しの副作用を持つレジスタは対象外 |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

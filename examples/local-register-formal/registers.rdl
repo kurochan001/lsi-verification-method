@@ -1,0 +1,13 @@
+addrmap wide {
+ reg {
+  field {sw=rw;hw=r;reset=1'b0;} enable[0:0];
+  field {sw=rw;hw=r;reset=3'h5;} mode[6:4];
+  field {sw=r;hw=r;reset=4'h9;} rev[11:8];
+ } ctrl @ 0x0;
+ reg {
+  field {sw=rw;hw=w;onwrite=woclr;stickybit;precedence=hw;reset=1'b0;} done[0:0];
+  field {sw=rw;hw=w;onwrite=woclr;stickybit;precedence=hw;reset=2'h0;} err[5:4];
+ } status @ 0x4;
+ reg {field {sw=rw;hw=r;reset=32'h0;} value[31:0];} limit @ 0x8;
+ reg {field {sw=r;hw=r;reset=32'h57494445;} value[31:0];} id @ 0xc;
+};

@@ -108,7 +108,7 @@ def lowering_passed(report):
 def render(report):
     lines = ["## kirimasimのUVM対応の確認", "",
              f"{cell(report['version'])}で、固定版のUVM {report['uvm']}を処理できるかを確かめます。"
-             "下の107構成の合否には影響しません。", ""]
+             "下の表の構成の合否には影響しません。", ""]
     if report["reason"]:
         lines += [f"実行していません（{cell(report['reason'])}）。", ""]
     else:

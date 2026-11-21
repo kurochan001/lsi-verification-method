@@ -285,6 +285,9 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [定時間比較・情報の流れ](local-constant-time/README.md) | 独立した秘密値を持つ2実行の公開信号・タイミングの一致、固定レイテンシ、比較結果の明示的な公開 | フォーマル＋Icarus |
 | [SoCの接続性](local-connectivity/README.md) | 接続表から生成した検査回路で、ブロックをブラックボックスにした上位配線を証明、表の漏れ・幅の検査、割り込み番号・端子の切替え・デバッグ信号の遮断 | フォーマル |
 | [仮定・保証と分割証明](local-compositional-formal/README.md) | 送信側・受信側・配線の契約、結合実装の検算、証明依存・欠落・版・循環の照合 | フォーマル |
+| [1データ追跡によるデータの完全性](local-formal-data-integrity/README.md) | 任意に選んだ1データをタグと位置カウンターで追い、FIFO・AXI4-Stream・幅変換の欠落・重複・順序・内容を非有界に証明。有界検査との比較、追跡だけでは見つからない誤り | フォーマル |
+| [レジスタの性質の生成と証明](local-register-formal/README.md) | SystemRDLからフィールド属性（RO・RW・W1C・予約・リセット値・別名なし）ごとの性質を生成して証明。生成器の誤りを手書きの期待表で検出 | SystemRDL＋フォーマル |
+| [リセット後の値の確定](local-reset-x-formal/README.md) | 不定の初期値から始めた2つの複製の比較で、リセット後に出力とレジスタが決まることを証明。Xの楽観でシミュレーションが見逃す誤りとの対比 | Icarus＋フォーマル |
 
 ## SVA・UVM・仕様生成・ソフトウェア連携・検証効率
 
@@ -293,8 +296,12 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | 検証例 | 主な検証内容 | 主なツール |
 | --- | --- | --- |
 | [UVMの順不同応答](local-uvm-outstanding/README.md) | 4件同時未完了、ID・token、応答順の追越し、再利用、reset取消し、独立台帳 | UVM |
+| [UVMの応答側agent](local-uvm-reactive/README.md) | monitorが見た要求にsequenceがメモリモデルから応答。コールバックによる遅延・エラー・応答なし・違反の注入、factoryでのエラー版itemへの差替え | UVM |
+| [UVMの組込みレジスタシーケンス](local-uvm-reg-sequences/README.md) | リセット値・ビットバッシュ・アクセス・メモリのウォーク、除外指定とその根拠、RALのカバレッジ。組込みでは見つからない副作用・別名・W1Cの誤り | UVM |
+| [UVMのsequenceの階層化](local-uvm-layering/README.md) | パケットからバス転送への変換、割り込み処理のlock・grabと優先度、仲裁モード、virtual sequenceとの違い | UVM |
 | [MCYの自動ミューテーション](local-auto-mutation/README.md) | 自動生成した同じ候補を弱い／強いテストと非有界等価性で分類 | Icarus＋固定版OSS CAD Suite |
 | [SVAのアサーションとカバー](local-sva/README.md) | assert／cover、前件が成立しない場合の診断、違反注入、ネイティブcoverage.datとの照合 | Verilator |
+| [再利用できるプロパティ集](local-sva-patterns/README.md) | 保持・one-hot・期限つき応答・重複なし・データ順序・複数クロックを`bind`で適用。正例・違反・空虚な成立の3試験、アサーション形と補助レジスタ形の一致、VerilatorとSBYの差 | Verilator＋フォーマル |
 | [SystemVerilog UVM・RAL](local-uvm/README.md) | APB agent・monitor・独立したスコアボード、RALとレジスタ操作 | UVM |
 | [passive・active UVMへの移行](local-uvm-migration/README.md) | 設定・factory・SVA報告、sequence・driverでの同一入力再生、14項目・20／21目標の維持、追加RAL検査 | Icarus＋UVM |
 | [複数UVM agentの協調](local-uvm-coordination/README.md) | APB設定・GAIN・ready、観測の到着順、同時受理・保持・取消、23 binと4 SVA目標 | UVM |
@@ -310,6 +317,8 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [ネイティブ機能カバレッジ](local-functional-coverage/README.md) | DRAM・SHA-256・スイッチのcoverpoint／cross、DBのbin集合・ヒット数、計測不足の拒否 | Verilator |
 | [UVMの制約付きランダム検証](local-uvm-random/README.md) | rand・constraint・randomize、ネイティブcovergroup、seedの再現 | UVM＋Z3 |
 | [SystemRDLによる仕様生成](local-register-spec/README.md) | RTL・Cヘッダー・RALの生成、生成物の構造・属性・動作を、独立に定めた期待値と照合 | SystemRDL＋Icarus＋UVM＋C |
+| [DPI-CによるCの参照モデルの接続](local-dpi-model/README.md) | importとexport、2値・4値の型とXの扱い、オープン配列、C側の状態と複数インスタンス。DPIのないIcarusではファイル経由で同じ検査を行い、CモデルはPythonの別実装で確かめる | Verilator＋C＋Icarus |
+| [長時間カウンターの時間短縮](local-long-counter/README.md) | 幅を縮める・試験用のロード・forceの3方法の比較。幅を縮めると消える上位の桁上げの誤りを、実幅のロード試験と帰納法で検出 | Icarus＋フォーマル |
 | [生成RTL＋UVM RALの結合](local-generated-ral/README.md) | フロントドアアクセス、独立したスコアボード、ミラー比較 | SystemRDL＋UVM |
 | [Cドライバ＋DMA RTL](local-c-driver/README.md) | ホスト上のCからAPBで起動・監視し、実DMAのIRQ・エラー・復旧を確認 | Verilator＋C |
 | [cocotbによるAPB検証](local-cocotb/README.md) | Pythonコルーチンによる刺激・位相モニター・独立したレジスタモデル | Icarus＋cocotb |
@@ -367,17 +376,17 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`を読解し、I/O修正をC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | [Caliptra](reference-caliptra/README.md) | 暗号・鍵管理IP、SHA-512の期待ベクトル・予測器・比較器、zeroizeと機能カバレッジ | 固定ソース・接続・商用VIPを含む依存を確認。RTL・UVM・セキュリティ評価は未実施 |
 
-13件は上流を読む参照例で、下記の161登録項目・139ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
+13件は上流を読む参照例で、下記の172登録項目・150ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は73例・155構成、各検証例が出力するJUnit件数の合計はsmoke 1140件／nightly 1450件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は75例・161構成、各検証例が出力するJUnit件数の合計はsmoke 1209件／nightly 1531件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-現在の統合計画は、161登録項目・139ルートジョブです。nightly対応の個別例に加え、集約7本、フォーマル16例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて17行、`aggregate`は共通lintの2行を含めて9行です。従来のSBY証明例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
+現在の統合計画は、172登録項目・150ルートジョブです。nightly対応の個別例に加え、集約7本、フォーマル20例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて21行、`aggregate`は共通lintの2行を含めて9行です。従来のSBY証明例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
 
 共通シミュレーションランナーとは別に数える例と、共通ランナーの件数のうち最近加えた例の内訳を下表に示します。JUnit件数は各例が出力する件数です。
 
@@ -403,7 +412,7 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [PWM・RCとADCの取り込み時刻](local-pwm-spice/README.md) | 15 | 19 | 独自（実行処理はRAM教材の共通処理の`sim.py`を再利用） |
 | [E2E通信保護](local-e2e-guard/README.md) | 24 | 28 | 独自 |
 | [小規模ECU](local-automotive-ecu/README.md) | 30 | 34 | 独自 |
-| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の1140／1450件の内数） |
+| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の1209／1531件の内数） |
 | [PLL出力の測定実習](local-pll-clock-quality/README.md) | 16 | 20 | 共通シミュレーションランナー（同上） |
 | [複数電源領域](local-power-domains/README.md)・[クロックゲーティング](local-clock-gating/README.md)・[メモリの修復](local-memory-repair/README.md)・[遷移故障](local-transition-fault/README.md)の4例の合計 | 69 | 85 | 共通シミュレーションランナー（同上）。内訳は順に20／24、16／20、18／22、15／19 |
 | [CDC／RDCの構造解析](local-cdc-structural/README.md) | 29 | 31 | 独自（証跡は探索用の共通処理） |
@@ -416,10 +425,20 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [公開の試験プログラム](local-riscv-official-tests/README.md) | 214 | 225 | 独自（証跡は探索用の共通処理） |
 | リネーム・ROBのフォーマル（`formal.py`） | 16 | 16 | 共通フォーマルランナー。smokeとnightlyの区別なし |
 | 浮動小数点の加算器のフォーマル（`formal.py`） | 18 | 18 | 共通フォーマルランナー。smokeとnightlyの区別なし |
+| [リセット後の値の確定](local-reset-x-formal/README.md)・[長時間カウンター](local-long-counter/README.md)の2例の合計 | 69 | 81 | 共通シミュレーションランナー（上の内数）。内訳は順に32／36、37／45 |
+| リセット後の値の確定のフォーマル（`formal.py`） | 22 | 22 | 共通フォーマルランナー。smokeとnightlyの区別なし |
+| 長時間カウンターのフォーマル（`formal.py`） | 20 | 20 | 共通フォーマルランナー。smokeとnightlyの区別なし |
+| [1データ追跡によるデータの完全性](local-formal-data-integrity/README.md) | 26 | 26 | 共通フォーマルランナー。smokeとnightlyの区別なし |
+| [レジスタの性質の生成と証明](local-register-formal/README.md) | 48 | 53 | 独自（証跡は探索用の共通処理） |
+| [再利用できるプロパティ集](local-sva-patterns/README.md) | 79 | 95 | 独自（証跡は探索用の共通処理）。フォーマルのタスクを含む |
+| [DPI-CによるCの参照モデルの接続](local-dpi-model/README.md) | 58 | 74 | 独自（証跡は探索用の共通処理） |
+| [UVMの応答側agent](local-uvm-reactive/README.md) | 20 | 24 | 独自（UVM） |
+| [UVMの組込みレジスタシーケンス](local-uvm-reg-sequences/README.md) | 26 | 28 | 独自（UVM） |
+| [UVMのsequenceの階層化](local-uvm-layering/README.md) | 11 | 13 | 独自（UVM） |
 
 RAMを使う発展4例には、[まとめて回帰する入口](local-memory-common/README.md)も用意しています。
 
-共通lintの対象は177 RTLファイル・178モジュール・456構成です。2026-11-21に加えたプロセッサ関連の20構成は、JTAG TAPを含む4構成に既存の既知の警告が1件ずつ出るほかは警告0件です。2026-11-20の[レビューで追加した教材](../PROVENANCE.md#review-additions-20261120)のRTL 28構成、RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
+共通lintの対象は187 RTLファイル・188モジュール・473構成です。2026-11-21に加えたテストベンチの技法の9例の17構成は警告0件です。2026-11-21に加えたプロセッサ関連の20構成は、JTAG TAPを含む4構成に既存の既知の警告が1件ずつ出るほかは警告0件です。2026-11-20の[レビューで追加した教材](../PROVENANCE.md#review-additions-20261120)のRTL 28構成、RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
 
 各例の既定計画には正常動作・変異・診断があり、予定した反例や未到達の識別も成功と判定します。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果・親判定・lint・セルフテストを分けた実行数、設定、残る制限は[最新のレビューと確認記録](../PROVENANCE.md#verification-gaps-20261107)を参照してください。
 

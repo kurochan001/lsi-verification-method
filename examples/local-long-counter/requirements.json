@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CNT-COUNT",
+      "description": "1ずつの加算、停止中の保持、全ビットへの桁上げ、上限に一致しない一周",
+      "goals": [
+        "count/hold",
+        "count/rollover-without-tick",
+        "carry/half",
+        "carry/top",
+        "carry/every-bit"
+      ]
+    },
+    {
+      "id": "CNT-LIMIT",
+      "description": "上限との一致で0へ戻り、tickを1サイクル出す。最上位ビットだけが違う値では戻らない",
+      "goals": [
+        "count/wrap-at-limit",
+        "count/limit-zero",
+        "count/limit-max",
+        "match/top-bit-differs"
+      ]
+    },
+    {
+      "id": "CNT-PRIORITY",
+      "description": "リセット、クリア、カウントの優先順位",
+      "goals": [
+        "reset/active",
+        "count/clear-over-enable",
+        "count/clear-on-match"
+      ]
+    },
+    {
+      "id": "CNT-PAUSE",
+      "description": "桁上げの直前と、桁上げを待つ状態での停止と再開",
+      "goals": [
+        "pause/at-carry-minus-one",
+        "pause/at-carry"
+      ]
+    },
+    {
+      "id": "CNT-TEST",
+      "description": "試験用のロード経路。test_modeがなければ無視し、カウントより優先する",
+      "goals": [
+        "test/load",
+        "test/load-ignored",
+        "test/load-over-enable"
+      ]
+    }
+  ]
+}

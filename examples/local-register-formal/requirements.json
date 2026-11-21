@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "RG-RESET", "summary": "After a reset every field holds the reset value of its description.",
+     "goals": ["spec-prove", "wide-prove", "spec-detect-mutation1", "wide-detect-mutation1", "nightly:spec-wait2-prove", "nightly:spec-wait2-detect-mutation1"]},
+    {"id": "RG-RW", "summary": "A read-write field takes the written bits of an accepted write to its own register and keeps its value otherwise.",
+     "goals": ["spec-prove", "wide-prove", "spec-detect-mutation2", "wide-detect-mutation2", "nightly:spec-wait2-detect-mutation2"]},
+    {"id": "RG-RO", "summary": "A read-only field never changes; a write to a register of read-only fields is answered as the bus contract of the block says.",
+     "goals": ["spec-prove", "wide-prove", "wide-detect-mutation3"]},
+    {"id": "RG-W1C", "summary": "A sticky write-one-to-clear field sets every event bit, with the event winning over a clear in the same cycle, and clears only the bits written as one.",
+     "goals": ["spec-prove", "wide-prove", "spec-detect-mutation3", "wide-detect-mutation4", "wide-detect-mutation7", "nightly:spec-wait2-detect-mutation3"]},
+    {"id": "RG-READ", "summary": "A read returns every field at its own bit position and zero in the reserved bits.",
+     "goals": ["spec-prove", "wide-prove", "wide-detect-mutation5", "wide-detect-mutation8"]},
+    {"id": "RG-ALIAS", "summary": "An address outside the map answers with an error, reads as zero and changes no field.",
+     "goals": ["spec-prove", "wide-prove", "wide-detect-mutation6"]},
+    {"id": "RG-NONVACUOUS", "summary": "Every generated property can be exercised: the cover goals are reached, and an environment that never starts a transfer is noticed.",
+     "goals": ["spec-cover", "wide-cover", "cover-goals", "spec-overconstrained", "wide-overconstrained", "nightly:spec-wait2-cover"]},
+    {"id": "RG-GENERATOR", "summary": "The property generator is checked against tables written by hand: its correct output equals them, and each planted generator error is rejected, including those a proof alone cannot see.",
+     "goals": ["spec-contract", "spec-table", "wide-table",
+               "generator-bug1-table-rejects", "generator-bug2-table-rejects", "generator-bug3-table-rejects",
+               "generator-bug4-table-rejects", "generator-bug5-table-rejects", "generator-bug5-invisible-on-spec",
+               "generator-bug1-proof-still-passes", "generator-bug1-mutation5-escapes", "generator-bug2-proof-fails",
+               "generator-bug3-proof-fails", "generator-bug4-proof-still-passes", "generator-bug5-proof-still-passes",
+               "generator-bug5-mutation5-escapes"]}
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DI-INTEGRITY",
+      "summary": "Any one accepted item leaves unchanged, once, after exactly the items accepted before it, for every input sequence; held data is offered.",
+      "goals": [
+        "fifo3-integrity-proof",
+        "fifo12-integrity-proof",
+        "axis2-integrity-proof",
+        "axis4-integrity-proof",
+        "width-integrity-proof"
+      ]
+    },
+    {
+      "id": "DI-REACH",
+      "summary": "The situations the proof speaks about are reachable: an item is chosen, waits behind others, and leaves.",
+      "goals": [
+        "fifo3-tracking-cover",
+        "axis4-tracking-cover",
+        "width-tracking-cover"
+      ]
+    },
+    {
+      "id": "DI-DETECT",
+      "summary": "Each wrong design gives a counterexample that violates the stated check.",
+      "goals": [
+        "fifo3-detect-mutation1",
+        "fifo3-detect-mutation2",
+        "fifo3-detect-mutation3",
+        "axis4-detect-mutation1",
+        "axis4-detect-mutation2",
+        "axis4-detect-mutation3",
+        "axis4-detect-mutation4",
+        "width-detect-mutation1",
+        "width-detect-mutation2",
+        "width-detect-mutation3",
+        "width-detect-mutation4",
+        "width-detect-mutation5",
+        "width-detect-mutation6",
+        "fifo12-detect-mutation2"
+      ]
+    },
+    {
+      "id": "DI-LIMITS",
+      "summary": "What the method does not find is recorded as a passing run of a wrong design: a bound shorter than the fault, a field that is not followed, and data that is never offered.",
+      "goals": [
+        "fifo12-bound10-misses-mutation2",
+        "axis4-data-only-misses-mutation1",
+        "axis4-data-only-misses-mutation2",
+        "width-tracking-only-misses-mutation5"
+      ]
+    }
+  ]
+}

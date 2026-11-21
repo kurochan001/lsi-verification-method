@@ -1,0 +1,10 @@
+{
+  "comment": "Hand-derived results of the fixed traces: ticks at which the property fails, and how often its antecedent occurs.",
+  "hold":   {"pass": {"fails": [], "hits": 2}, "violation": {"fails": [3, 4], "hits": 2},  "vacuous": {"fails": [], "hits": 0}},
+  "onehot": {"pass": {"fails": [], "hits": 2}, "violation": {"fails": [3, 4], "hits": 3},  "vacuous": {"fails": [], "hits": 0}},
+  "within": {"pass": {"fails": [], "hits": 4}, "violation": {"fails": [5, 11], "hits": 2}, "vacuous": {"fails": [], "hits": 0}},
+  "nodup":  {"pass": {"fails": [], "hits": 3}, "violation": {"fails": [4, 6], "hits": 3},  "vacuous": {"fails": [], "hits": 0}},
+  "pipe":   {"pass": {"fails": [], "hits": 2}, "violation": {"fails": [4, 8], "hits": 2},  "vacuous": {"fails": [], "hits": 0}},
+  "order":  {"pass": {"fails": [], "hits": 2}, "violation": {"fails": [5, 9], "hits": 2},  "vacuous": {"fails": [], "hits": 0}},
+  "cross":  {"pass": {"fails": [], "hits": 2}, "violation": {"fails": [8, 16], "hits": 2}, "vacuous": {"fails": [], "hits": 0}}
+}

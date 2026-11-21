@@ -1,0 +1,25 @@
+{
+  "comment": "Written by hand from the register description in the README of local-register-spec, not from the generator.",
+  "asserts": {
+    "ap_cfg_value_reset":     ["reset",    0, 0,  8, "0x12"],
+    "ap_cfg_value_write":     ["write",    0, 0,  8, null],
+    "ap_cfg_value_hold":      ["hold",     0, 0,  8, null],
+    "ap_cfg_value_read":      ["read",     0, 0,  8, null],
+    "ap_cfg_reserved":        ["reserved", 0, null, null, "0xffffff00"],
+    "ap_idreg_value_reset":   ["reset",    4, 0, 32, "0x52444c31"],
+    "ap_idreg_value_const":   ["const",    4, 0, 32, "0x52444c31"],
+    "ap_idreg_value_read":    ["read",     4, 0, 32, null],
+    "ap_idreg_ro_write":      ["ro_write", 4, null, null, "error"],
+    "ap_pending_value_reset": ["reset",    8, 0,  4, "0x0"],
+    "ap_pending_value_event": ["event",    8, 0,  4, null],
+    "ap_pending_value_w1c":   ["w1c",      8, 0,  4, null],
+    "ap_pending_value_read":  ["read",     8, 0,  4, null],
+    "ap_pending_reserved":    ["reserved", 8, null, null, "0xfffffff0"],
+    "ap_unmapped_error":      ["unmapped_error", null, null, null, null],
+    "ap_unmapped_read":       ["unmapped_read",  null, null, null, null],
+    "ap_mapped_ok":           ["mapped_ok",      null, null, null, null]
+  },
+  "covers": ["cp_cfg_value_write", "cp_cfg_value_read", "cp_idreg_value_read", "cp_idreg_ro_write",
+             "cp_pending_value_event", "cp_pending_value_clear", "cp_pending_value_read", "cp_unmapped"],
+  "assumes": ["as_reset", "as_select", "as_phase", "as_stable"]
+}

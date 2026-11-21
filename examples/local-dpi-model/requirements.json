@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "DPI-STREAM",
+      "summary": "On every clock, done, crc and length of the design equal the C model called through DPI: single bytes, back-to-back packets, idle gaps inside a packet, a packet longer than the 8-bit count, and a reset inside or between packets.",
+      "goals": [
+        "stream/single-byte",
+        "stream/known-answer",
+        "stream/back-to-back",
+        "stream/idle-gap",
+        "stream/long-saturated",
+        "reset/mid-packet",
+        "reset/idle"
+      ]
+    },
+    {
+      "id": "DPI-INSTANCE",
+      "summary": "Each design instance has its own model state behind a handle. Packets of different length that overlap on the two channels do not disturb each other.",
+      "goals": [
+        "instances/one-active",
+        "instances/interleaved",
+        "dpi/handle-per-instance"
+      ]
+    },
+    {
+      "id": "DPI-BINDING",
+      "summary": "The binding uses a pure import, a context import that calls an exported function, an open array of two different sizes, and the type mapping checked by the probe testbench.",
+      "goals": [
+        "dpi/pure-import",
+        "dpi/context-import-and-export",
+        "dpi/open-array",
+        "types/two-state",
+        "types/four-state",
+        "types/string-and-handle",
+        "types/open-array-ranges",
+        "types/context-and-export"
+      ]
+    },
+    {
+      "id": "DPI-UNKNOWN",
+      "summary": "Unknown data bits while valid is low change nothing. Unknown data bits while valid is high are a testbench error: the 4-state file route reports it, and the run records that the 2-state DPI route cannot see it.",
+      "goals": [
+        "unknown/idle-data",
+        "unknown/valid-flagged-by-file-route",
+        "unknown/invisible-to-dpi-route"
+      ]
+    },
+    {
+      "id": "DPI-ROUTES",
+      "summary": "The DPI route and the file route apply the same stimulus, observe the same outputs on every clock and report every design mutation with the same label.",
+      "goals": [
+        "route/observed-identical",
+        "route/same-detections"
+      ]
+    },
+    {
+      "id": "DPI-MODEL",
+      "summary": "The C model is itself checked: against an independent Python model, against published check values, and with deliberate model faults. The run also shows what a simulation alone cannot tell: a wrong model looks like a wrong design, one instance hides shared state, and the same mistake on both sides passes.",
+      "goals": [
+        "model/independent-cross-check",
+        "model/known-answer",
+        "model/known-answer-in-simulation",
+        "model/faults-detected",
+        "model/wrong-model-looks-like-wrong-design",
+        "model/single-instance-miss",
+        "model/common-mode-miss"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "RX-POWER",
+      "summary": "The specified outputs do not depend on the register values at power-up: unknown, all zeros, all ones or mixed.",
+      "goals": ["power/x", "power/zeros", "power/ones", "power/mixed"]
+    },
+    {
+      "id": "RX-RESET",
+      "summary": "One clock edge with rst high gives ready, out_valid, odd, count and err their reset values, also with data in flight.",
+      "goals": ["reset/one-cycle", "reset/long", "reset/in-flight"]
+    },
+    {
+      "id": "RX-FLUSH",
+      "summary": "STAGES-1 edges after the reset every valid bit is known and ready rises; an input offered before is refused.",
+      "goals": ["flush/ready", "flush/stages-known", "flush/refused"]
+    },
+    {
+      "id": "RX-DATA",
+      "summary": "Data registers have no reset. Their unknown value is visible only on out_data while out_valid is low.",
+      "goals": ["data/unknown-hidden", "data/passed", "data/back-to-back", "data/odd", "data/even"]
+    },
+    {
+      "id": "RX-COUNT",
+      "summary": "The counter adds one or two for every output, as the step setting says, and wraps.",
+      "goals": ["count/step1", "count/step2", "count/wrap"]
+    },
+    {
+      "id": "RX-ERR",
+      "summary": "The error flag is set by a refused input, stays, and is cleared by a reset.",
+      "goals": ["err/set", "err/sticky", "err/cleared"]
+    }
+  ]
+}

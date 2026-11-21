@@ -2455,6 +2455,190 @@
         "yowasp-yosys-witness",
         "z3"
       ]
+    },
+    {
+      "id": "local-dpi-model",
+      "script": "examples/local-dpi-model/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "c++",
+        "cc",
+        "iverilog",
+        "make",
+        "verilator",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-uvm-reactive",
+      "script": "examples/local-uvm-reactive/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-uvm-reg-sequences",
+      "script": "examples/local-uvm-reg-sequences/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-uvm-layering",
+      "script": "examples/local-uvm-layering/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "uvm-home"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-formal-data-integrity",
+      "script": "examples/local-formal-data-integrity/run.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-register-formal",
+      "script": "examples/local-register-formal/run.py",
+      "kind": "formal",
+      "profile": true,
+      "options": [
+        "timeout",
+        "formal-timeout",
+        "rdl-python"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ],
+      "packages": {
+        "rdl-python": [
+          "systemrdl"
+        ]
+      }
+    },
+    {
+      "id": "local-reset-x-formal",
+      "script": "examples/local-reset-x-formal/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-reset-x-formal-proof",
+      "script": "examples/local-reset-x-formal/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-long-counter",
+      "script": "examples/local-long-counter/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-long-counter-formal",
+      "script": "examples/local-long-counter/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-sva-patterns",
+      "script": "examples/local-sva-patterns/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "build-timeout",
+        "timeout",
+        "formal-timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator",
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
     }
   ]
 }

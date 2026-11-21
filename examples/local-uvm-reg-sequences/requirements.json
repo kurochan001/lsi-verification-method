@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "REGSEQ-RESET", "goals": ["builtin/hw-reset"]},
+    {"id": "REGSEQ-BITS", "goals": ["builtin/bit-bash"]},
+    {"id": "REGSEQ-ACCESS", "goals": ["builtin/access"]},
+    {"id": "REGSEQ-MEMORY", "goals": ["builtin/mem-walk", "directed/mem-unique"]},
+    {"id": "REGSEQ-CROSS", "goals": ["directed/mirror", "directed/cross-register", "directed/unmapped"]},
+    {"id": "REGSEQ-W1C", "goals": ["directed/w1c-clear", "directed/w1c-event-wins"]},
+    {"id": "REGSEQ-COMMAND", "goals": ["directed/soft-reset"]},
+    {"id": "REGSEQ-COVERAGE", "goals": [
+      "ral/addr/ctrl/read", "ral/addr/ctrl/write", "ral/addr/id/read", "ral/addr/id/write",
+      "ral/addr/status/read", "ral/addr/status/write", "ral/addr/irq/read", "ral/addr/irq/write",
+      "ral/addr/scratch/read", "ral/addr/scratch/write", "ral/addr/cmd/read", "ral/addr/cmd/write",
+      "ral/addr/ram/read", "ral/addr/ram/write",
+      "ral/value/ctrl/zero", "ral/value/ctrl/ones", "ral/value/ctrl/other",
+      "ral/value/scratch/zero", "ral/value/scratch/ones", "ral/value/scratch/other",
+      "ral/value/irq/zero", "ral/value/irq/ones", "ral/value/irq/other"]}
+  ]
+}

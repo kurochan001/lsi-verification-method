@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "RX-RESPOND",
+      "goals": [
+        "respond/one-item-per-request",
+        "respond/read-default",
+        "respond/read-after-write"
+      ]
+    },
+    {
+      "id": "RX-CALLBACK",
+      "goals": [
+        "callback/stall",
+        "callback/delay-boundary",
+        "callback/error",
+        "callback/drop",
+        "callback/disable",
+        "callback/delete"
+      ]
+    },
+    {
+      "id": "RX-VIOLATION",
+      "goals": [
+        "violation/early",
+        "violation/duplicate"
+      ]
+    },
+    {
+      "id": "RX-RETRY",
+      "goals": [
+        "retry/once",
+        "retry/twice",
+        "retry/exhausted",
+        "retry/write-not-committed"
+      ]
+    },
+    {
+      "id": "RX-TIMEOUT",
+      "goals": [
+        "timeout/expired",
+        "timeout/recovery"
+      ]
+    },
+    {
+      "id": "RX-RESET",
+      "goals": [
+        "reset/cancel",
+        "reset/recovery"
+      ]
+    },
+    {
+      "id": "RX-FACTORY",
+      "goals": [
+        "factory/base-type",
+        "factory/error-type",
+        "factory/error-region"
+      ]
+    }
+  ]
+}

@@ -267,6 +267,19 @@
     "examples/local-dma/run.py",
     "examples/local-dma/tb/dma_tb.sv",
     "examples/local-dma/tests/test_system.py",
+    "examples/local-dpi-model/model.py",
+    "examples/local-dpi-model/model/packet_cli.c",
+    "examples/local-dpi-model/model/packet_dpi.c",
+    "examples/local-dpi-model/model/packet_model.c",
+    "examples/local-dpi-model/model/packet_model.h",
+    "examples/local-dpi-model/model/probe_dpi.c",
+    "examples/local-dpi-model/requirements.json",
+    "examples/local-dpi-model/rtl/packet_sum.sv",
+    "examples/local-dpi-model/run.py",
+    "examples/local-dpi-model/tb/dpi_probe_tb.sv",
+    "examples/local-dpi-model/tb/dpi_tb.sv",
+    "examples/local-dpi-model/tb/file_tb.sv",
+    "examples/local-dpi-model/tests/test_dpi_model.py",
     "examples/local-dram/requirements.json",
     "examples/local-dram/rtl/dram_controller.sv",
     "examples/local-dram/run.py",
@@ -334,6 +347,12 @@
     "examples/local-fifo/tests/test_runner.py",
     "examples/local-formal-common/runner.py",
     "examples/local-formal-common/tests/test_evidence.py",
+    "examples/local-formal-data-integrity/data_integrity_formal.sv",
+    "examples/local-formal-data-integrity/model.py",
+    "examples/local-formal-data-integrity/requirements.json",
+    "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
+    "examples/local-formal-data-integrity/run.py",
+    "examples/local-formal-data-integrity/tests/test_plan.py",
     "examples/local-formal-replay/replay_tb.sv",
     "examples/local-formal-replay/run.py",
     "examples/local-formal-replay/tests/test_witness.py",
@@ -448,6 +467,13 @@
     "examples/local-lockstep-monitor/run.py",
     "examples/local-lockstep-monitor/tb/lockstep_monitor_tb.sv",
     "examples/local-lockstep-monitor/tests/test_example.py",
+    "examples/local-long-counter/formal.py",
+    "examples/local-long-counter/long_counter_formal.sv",
+    "examples/local-long-counter/requirements.json",
+    "examples/local-long-counter/rtl/long_counter.sv",
+    "examples/local-long-counter/run.py",
+    "examples/local-long-counter/tb/long_counter_tb.sv",
+    "examples/local-long-counter/tests/test_example.py",
     "examples/local-mbist/requirements.json",
     "examples/local-mbist/rtl/mbist.sv",
     "examples/local-mbist/run.py",
@@ -642,6 +668,15 @@
     "examples/local-reduction/run.py",
     "examples/local-reduction/tb/reduction_tb.sv",
     "examples/local-reduction/tests/test_runner.py",
+    "examples/local-register-formal/bindings.json",
+    "examples/local-register-formal/expected/spec.json",
+    "examples/local-register-formal/expected/wide.json",
+    "examples/local-register-formal/generate_properties.py",
+    "examples/local-register-formal/registers.rdl",
+    "examples/local-register-formal/requirements.json",
+    "examples/local-register-formal/rtl/reg_block.sv",
+    "examples/local-register-formal/run.py",
+    "examples/local-register-formal/tests/test_register_formal.py",
     "examples/local-register-spec/check_header.c",
     "examples/local-register-spec/contract.json",
     "examples/local-register-spec/generate.py",
@@ -664,6 +699,14 @@
     "examples/local-requantize/run.py",
     "examples/local-requantize/tb/requantize_tb.sv",
     "examples/local-requantize/tests/test_example.py",
+    "examples/local-reset-x-formal/formal.py",
+    "examples/local-reset-x-formal/model.py",
+    "examples/local-reset-x-formal/requirements.json",
+    "examples/local-reset-x-formal/reset_x_formal.sv",
+    "examples/local-reset-x-formal/rtl/reset_x_unit.sv",
+    "examples/local-reset-x-formal/run.py",
+    "examples/local-reset-x-formal/tb/reset_x_tb.sv",
+    "examples/local-reset-x-formal/tests/test_example.py",
     "examples/local-retry-link/requirements.json",
     "examples/local-retry-link/rtl/crc9.sv",
     "examples/local-retry-link/rtl/retry_receiver.sv",
@@ -799,6 +842,36 @@
     "examples/local-sv32/run.py",
     "examples/local-sv32/tb/sv32_tb.sv",
     "examples/local-sv32/tests/test_example.py",
+    "examples/local-sva-patterns/expected.json",
+    "examples/local-sva-patterns/model.py",
+    "examples/local-sva-patterns/probes/accept_bind.sv",
+    "examples/local-sva-patterns/probes/accept_concurrent.sv",
+    "examples/local-sva-patterns/probes/accept_immediate.sv",
+    "examples/local-sva-patterns/probes/accept_localvar_fixed.sv",
+    "examples/local-sva-patterns/probes/accept_localvar_sequence.sv",
+    "examples/local-sva-patterns/probes/accept_multiclock.sv",
+    "examples/local-sva-patterns/probes/eval.sv",
+    "examples/local-sva-patterns/probes/expected.json",
+    "examples/local-sva-patterns/requirements.json",
+    "examples/local-sva-patterns/rtl/event_cross.sv",
+    "examples/local-sva-patterns/rtl/tagged_queue.sv",
+    "examples/local-sva-patterns/run.py",
+    "examples/local-sva-patterns/sva/bind_patterns.sv",
+    "examples/local-sva-patterns/sva/pat_cross.sv",
+    "examples/local-sva-patterns/sva/pat_hold.sv",
+    "examples/local-sva-patterns/sva/pat_nodup.sv",
+    "examples/local-sva-patterns/sva/pat_onehot.sv",
+    "examples/local-sva-patterns/sva/pat_order.sv",
+    "examples/local-sva-patterns/sva/pat_pipe.sv",
+    "examples/local-sva-patterns/sva/pat_report.svh",
+    "examples/local-sva-patterns/sva/pat_within.sv",
+    "examples/local-sva-patterns/tb/cross_formal.sv",
+    "examples/local-sva-patterns/tb/dut_tb.sv",
+    "examples/local-sva-patterns/tb/queue_formal.sv",
+    "examples/local-sva-patterns/tb/queue_invariants.svh",
+    "examples/local-sva-patterns/tb/trace_harness.sv",
+    "examples/local-sva-patterns/tb/trace_tb.sv",
+    "examples/local-sva-patterns/tests/test_runner.py",
     "examples/local-sva/irq_checker.sv",
     "examples/local-sva/requirements.json",
     "examples/local-sva/run.py",
@@ -875,6 +948,13 @@
     "examples/local-uvm-hierarchy/tb/hierarchy_pkg.sv",
     "examples/local-uvm-hierarchy/tb/top.sv",
     "examples/local-uvm-hierarchy/tests/test_runner.py",
+    "examples/local-uvm-layering/requirements.json",
+    "examples/local-uvm-layering/rtl/frame_port.sv",
+    "examples/local-uvm-layering/run.py",
+    "examples/local-uvm-layering/tb/layer_if.sv",
+    "examples/local-uvm-layering/tb/layer_pkg.sv",
+    "examples/local-uvm-layering/tb/top.sv",
+    "examples/local-uvm-layering/tests/test_runner.py",
     "examples/local-uvm-migration/coverage_probe.sv",
     "examples/local-uvm-migration/run.py",
     "examples/local-uvm-migration/tb/active_pkg.sv",
@@ -901,6 +981,21 @@
     "examples/local-uvm-random/tb/random_pkg.sv",
     "examples/local-uvm-random/tb/top.sv",
     "examples/local-uvm-random/tests/test_native.py",
+    "examples/local-uvm-reactive/requirements.json",
+    "examples/local-uvm-reactive/rtl/req_master.sv",
+    "examples/local-uvm-reactive/run.py",
+    "examples/local-uvm-reactive/tb/rx_if.sv",
+    "examples/local-uvm-reactive/tb/rx_pkg.sv",
+    "examples/local-uvm-reactive/tb/top.sv",
+    "examples/local-uvm-reactive/tests/test_runner.py",
+    "examples/local-uvm-reg-sequences/model.py",
+    "examples/local-uvm-reg-sequences/requirements.json",
+    "examples/local-uvm-reg-sequences/rtl/reg_bank.sv",
+    "examples/local-uvm-reg-sequences/run.py",
+    "examples/local-uvm-reg-sequences/tb/reg_seq_pkg.sv",
+    "examples/local-uvm-reg-sequences/tb/regbus_if.sv",
+    "examples/local-uvm-reg-sequences/tb/top.sv",
+    "examples/local-uvm-reg-sequences/tests/test_runner.py",
     "examples/local-uvm/requirements.json",
     "examples/local-uvm/run.py",
     "examples/local-uvm/setup_uvm.py",
@@ -1021,6 +1116,7 @@
       "local-divider",
       "local-dma",
       "local-dma-ownership",
+      "local-dpi-model",
       "local-dram",
       "local-dsp",
       "local-e2e-guard",
@@ -1030,6 +1126,7 @@
       "local-equivalence",
       "local-fdir",
       "local-fifo",
+      "local-formal-data-integrity",
       "local-fp-adder",
       "local-gate-sim",
       "local-gate-timing",
@@ -1043,6 +1140,7 @@
       "local-lec-netlist",
       "local-liveness",
       "local-lockstep-monitor",
+      "local-long-counter",
       "local-mbist",
       "local-memory-repair",
       "local-motion-control",
@@ -1062,8 +1160,10 @@
       "local-ram-ports",
       "local-recovery",
       "local-reduction",
+      "local-register-formal",
       "local-rename-rob",
       "local-requantize",
+      "local-reset-x-formal",
       "local-retry-link",
       "local-riscv-atomic",
       "local-riscv-debug",
@@ -1079,6 +1179,7 @@
       "local-stream",
       "local-stream-dma",
       "local-sv32",
+      "local-sva-patterns",
       "local-sync-ram-fifo",
       "local-systolic-array",
       "local-timer-watchdog",
@@ -1089,8 +1190,11 @@
       "local-uart",
       "local-unaligned-memory",
       "local-uvm-coordination",
+      "local-uvm-layering",
       "local-uvm-multiclock",
       "local-uvm-outstanding",
+      "local-uvm-reactive",
+      "local-uvm-reg-sequences",
       "local-video-async",
       "local-video-double-buffer",
       "local-width-converter"
@@ -1310,6 +1414,9 @@
       "local-descriptor-dma",
       "local-dma"
     ],
+    "local-dpi-model": [
+      "local-exploration-common"
+    ],
     "local-dram": [
       "local-common"
     ],
@@ -1374,6 +1481,11 @@
       "local-bus-formal",
       "local-fifo-formal",
       "local-irq-cdc"
+    ],
+    "local-formal-data-integrity": [
+      "local-axis",
+      "local-fifo",
+      "local-formal-common"
     ],
     "local-formal-replay": [
       "local-equivalence",
@@ -1531,6 +1643,10 @@
     "local-lockstep-monitor": [
       "local-common"
     ],
+    "local-long-counter": [
+      "local-common",
+      "local-formal-common"
+    ],
     "local-mbist": [
       "local-common"
     ],
@@ -1619,6 +1735,11 @@
     "local-reduction": [
       "local-irq-cdc"
     ],
+    "local-register-formal": [
+      "local-exploration-common",
+      "local-formal-common",
+      "local-register-spec"
+    ],
     "local-register-spec": [
       "local-exploration-common"
     ],
@@ -1632,6 +1753,10 @@
     ],
     "local-requantize": [
       "local-common"
+    ],
+    "local-reset-x-formal": [
+      "local-common",
+      "local-formal-common"
     ],
     "local-retry-link": [
       "local-common",
@@ -1742,6 +1867,9 @@
     "local-sva": [
       "local-irq-cdc"
     ],
+    "local-sva-patterns": [
+      "local-exploration-common"
+    ],
     "local-sync-ram-fifo": [
       "local-memory-common"
     ],
@@ -1799,6 +1927,10 @@
       "local-uvm",
       "local-uvm-random"
     ],
+    "local-uvm-layering": [
+      "local-exploration-common",
+      "local-uvm-random"
+    ],
     "local-uvm-migration": [
       "local-apb",
       "local-exploration-common",
@@ -1818,6 +1950,13 @@
       "local-apb",
       "local-exploration-common",
       "local-uvm"
+    ],
+    "local-uvm-reactive": [
+      "local-exploration-common",
+      "local-uvm-random"
+    ],
+    "local-uvm-reg-sequences": [
+      "local-exploration-common"
     ],
     "local-vci-soclib": [
       "local-exploration-common"
