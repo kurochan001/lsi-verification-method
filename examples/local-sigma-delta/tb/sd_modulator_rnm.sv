@@ -26,7 +26,10 @@ module sd_modulator_rnm #(parameter ORDER = 2, MUTATION = 0) (
 
     // A continuous assignment is evaluated at time 0, so the first decision is defined even
     // though the states keep their initial value. Mutation 2 decides -1 for a state of exactly 0.
-    wire real last = (ORDER == 1) ? s1 : s2;
+    // A real cannot be the data type of a net (IEEE 1800 6.7.1), so `last` is a variable driven by
+    // one continuous assignment. Icarus also accepts `wire real` as an extension; kirimasim does not.
+    real last;
+    assign last = (ORDER == 1) ? s1 : s2;
     assign y_bit = (MUTATION == 2) ? (last > 0.0) : (last >= 0.0);
 
     always @(posedge clk or negedge rst_n) begin
