@@ -2,6 +2,7 @@
   "url": "https://github.com/kurochan001/mxfp4",
   "commit": "347edbb8e45454e84945a13c1815e08937feff3f",
   "retrieved": "2026-10-30",
+  "license": "Apache-2.0 WITH LLVM-exception, the license of this repository. The source repository carries no license notice; its author is the owner of this repository and applies this license to the imported files.",
   "scope": "RTL and the plain SystemVerilog benches only; the source repository is not public. The 78 other files of the import (documents, figures, UVM environment, reproduction cases, Makefile) were removed on 2026-11-13.",
   "note": "files_sha256 is the hash of each file in the source commit. local_sha256 is the hash of the file tracked here. local_changes lists every file whose two hashes differ; basis says where the reason comes from (git: this repository history, record: README/PROVENANCE text written at import time, none: no record). The source repository is not public and the original files are not kept here, so a reason with basis record cannot be checked against a diff.",
   "files_sha256": {

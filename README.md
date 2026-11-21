@@ -492,7 +492,7 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 
 ## ライセンス
 
-本リポジトリで新規作成した資料・コード、およびkirimasim-testsから複製・改訂した資料・ツールには、Apache License 2.0 with LLVM Exceptions（`Apache-2.0 WITH LLVM-exception`）を適用します（[LICENSE](LICENSE)）。複製元と改訂の記録は[PROVENANCE.md](PROVENANCE.md)を参照してください。
+本リポジトリで新規作成した資料・コード、およびkirimasim-testsから複製・改訂した資料・ツールには、Apache License 2.0 with LLVM Exceptions（`Apache-2.0 WITH LLVM-exception`）を適用します（[LICENSE](LICENSE)）。複製元と改訂の記録は[PROVENANCE.md](PROVENANCE.md)を参照してください。[MXFP4の例の取り込みファイル](examples/local-mxfp4/upstream/)は、著作者が同じ非公開リポジトリから取り込んだもので、同じライセンスを適用します。
 
 [SoCLibの収録ソース](examples/local-vci-soclib/upstream/)にはLGPL-2.1-onlyを適用し、元の著作権表示とライセンス本文を保持しています。詳細は[取り込みの記録](PROVENANCE.md#vci-soclib-20261102)を参照してください。
 
