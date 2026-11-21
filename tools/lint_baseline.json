@@ -3581,6 +3581,31 @@
       "target_sha256": "9365950d57f64c15d4ffac1146acf7d8a819a82760a0c483ffcb574ee89c3044",
       "source_sha256": {"examples/local-image-scaler/rtl/image_scaler.sv": "623b5990ae60d2e10fe74acddece9c1789c73e2a695b45455c1558564db04555"},
       "diagnostics": []
+    },
+    "local-i2c-open-drain/i2c_rx_master/default": {
+      "target_sha256": "4ef28708a7ea5fe4414f5bdca6261986aa1900085a79e39c6ca5b05c9e8430b5",
+      "source_sha256": {"examples/local-i2c-open-drain/rtl/i2c_rx_master.sv": "473fa163dc433bfbbde414d7555f19ee303716ce42f8040dd7d52a84ff50a6f3"},
+      "diagnostics": []
+    },
+    "local-i2c-open-drain/i2c_rx_master/SAMPLE=112": {
+      "target_sha256": "83fdee15d73490f1012522a36b3bf61b1087207bdabe3e30effb14442bb3eefe",
+      "source_sha256": {"examples/local-i2c-open-drain/rtl/i2c_rx_master.sv": "473fa163dc433bfbbde414d7555f19ee303716ce42f8040dd7d52a84ff50a6f3"},
+      "diagnostics": []
+    },
+    "local-i2c-open-drain/i2c_rx_master/DIV=50/SAMPLE=25": {
+      "target_sha256": "594e9fe9763d486c8d118d36fada0ec46e76e0bd619b376626f2fa17fbe26bfc",
+      "source_sha256": {"examples/local-i2c-open-drain/rtl/i2c_rx_master.sv": "473fa163dc433bfbbde414d7555f19ee303716ce42f8040dd7d52a84ff50a6f3"},
+      "diagnostics": []
+    },
+    "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=2": {
+      "target_sha256": "4c002207260e164456f1cfa053199ee4a462b7baa8f5988f0f4d19d85260e15a",
+      "source_sha256": {"examples/local-cic-decimator/rtl/cic_decimator.sv": "9e2000affd39cdf22af5d7c19c15c64065b5614a423c78526ed5e9f61d1590b9"},
+      "diagnostics": []
+    },
+    "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=3": {
+      "target_sha256": "9ee1152b627aedb38251ca2a53baf0d57ff64a3ddf7b7e68773d485791d635f8",
+      "source_sha256": {"examples/local-cic-decimator/rtl/cic_decimator.sv": "9e2000affd39cdf22af5d7c19c15c64065b5614a423c78526ed5e9f61d1590b9"},
+      "diagnostics": []
     }
   }
 }

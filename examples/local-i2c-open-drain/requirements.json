@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "I2C-LINE",
+      "summary": "The solved SDA line follows the RC closed form: rising and falling threshold crossings, the low level of the pull-up and pull-down divider, a release cut off before VIH, a low level above VIL, and the same result with other solver settings.",
+      "goals": ["analog/rise-crossing", "analog/fall-crossing", "analog/low-level", "analog/interrupted-rise", "analog/low-above-vil", "analog/solver-settings"]
+    },
+    {
+      "id": "I2C-WINDOW",
+      "summary": "A 1 after a 0 is read correctly when the rise to VIH fits between the target's release and the sampling edge, and misread just outside it; a later sampling point reads what the middle one misses.",
+      "goals": ["boundary/just-inside", "boundary/just-outside", "sample/later-rescues"]
+    },
+    {
+      "id": "I2C-READ",
+      "summary": "The reading side shows exactly the byte that the solved line predicts: the sent byte, a 1 read as 0 after a slow rise, or a 0 read as 1 when the low level is above VIL.",
+      "goals": ["outcome/correct", "outcome/slow-rise", "outcome/low-too-high", "rtl/misread-predicted"]
+    },
+    {
+      "id": "I2C-NEGATIVE",
+      "summary": "Each broken netlist value and each RTL mutant fails with its planned label.",
+      "goals": ["negative/analog-faults", "negative/rtl-mutants"]
+    }
+  ]
+}

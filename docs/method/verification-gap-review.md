@@ -111,6 +111,7 @@
 | 領域ID | 追加例 | 確認する内容と範囲 |
 | --- | --- | --- |
 | SCOPE-PHYSICAL（AMS） | [SAR型ADCの実数モデル](../../examples/local-rnm-sar-adc/README.md)、[SPICEの回帰の自動判定](../../examples/local-spice-regression/README.md)、[LibertyとSPICEの対応付け](../../examples/local-liberty-vs-spice/README.md) | 動作モデルの適用範囲、解析の自動判定とコーナー・モンテカルロ、Libertyの値の出所。実PDK、雑音・リーク、メタスタビリティ、チップごとのばらつきは対象外 |
+| SCOPE-PHYSICAL（AMS） | [I2Cのオープンドレイン](../../examples/local-i2c-open-drain/README.md)、[ΔΣ変調器とCIC](../../examples/local-sigma-delta/README.md) | 立上りと取込みの時刻の境界、SNRの上下限とビット一致。SCLの遅れ、熱雑音・ジッター・有限の利得は対象外 |
 | SCOPE-POWER / RESET | [電源の立上りとパワーオンリセット](../../examples/local-por-sequence/README.md) | 電源のランプ・瞬時低下・再投入とリセットの同期解除。比較器の基準電圧の立上り、最小パルス幅とrecovery／removalは対象外 |
 
 セキュリティ・機能安全を補う次の例も追加しました。

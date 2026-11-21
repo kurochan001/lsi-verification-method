@@ -3172,6 +3172,33 @@
         "timeout"
       ],
       "tools": []
+    },
+    {
+      "id": "local-i2c-open-drain",
+      "script": "examples/local-i2c-open-drain/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "lsi-ngspice-config"
+      ]
+    },
+    {
+      "id": "local-sigma-delta",
+      "script": "examples/local-sigma-delta/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
     }
   ]
 }

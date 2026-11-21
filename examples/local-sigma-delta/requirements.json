@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SD-MOD",
+      "text": "変調器の実数モデルの1ビットの出力は、同じ入力の符号に対して、独立に書いたPythonのモデルとビット一致する。状態がちょうど0のときは+1と決め、最大と最小の入力の符号でも一致する。",
+      "goals": ["mod/plus", "mod/minus", "mod/zero-decision", "input/max", "input/min"]
+    },
+    {
+      "id": "SD-CIC",
+      "text": "CICの出力は、移動和を縦続した整数のモデルとビット一致する。積分器が折り返した後も一致する。",
+      "goals": ["cic/output", "cic/positive", "cic/negative", "cic/wrap", "cic/output-after-wrap"]
+    },
+    {
+      "id": "SD-RESET",
+      "text": "リセットは、変調器の状態とCICの履歴・位相を、途中でも初期値へ戻す。",
+      "goals": ["reset/midstream"]
+    },
+    {
+      "id": "SD-SNR",
+      "text": "公称の正弦波（振幅0.5）の測定の窓のSNRは、CICを含む線形の予測に、記録した包絡と余裕を足した上下限の間に入る。",
+      "goals": ["snr/window"]
+    },
+    {
+      "id": "SD-IDLE",
+      "text": "直流の入力では、1次の変調器は帯域内にトーンを出し、2次の変調器はそれを小さく保つ。",
+      "goals": ["idle/dc"]
+    },
+    {
+      "id": "SD-OVERLOAD",
+      "text": "満振幅に近い入力（振幅0.99）では、2次の変調器の状態が大きく育ち、SNRが公称の下限を割る。1次の変調器の状態は2未満に留まる。",
+      "goals": ["overload/window"]
+    }
+  ]
+}

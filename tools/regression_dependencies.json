@@ -482,6 +482,14 @@
     "examples/local-generated-ral/tests/test_frontdoor.py",
     "examples/local-host-common/runner.py",
     "examples/local-host-common/tests/test_runner.py",
+    "examples/local-i2c-open-drain/model.py",
+    "examples/local-i2c-open-drain/requirements.json",
+    "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
+    "examples/local-i2c-open-drain/run.py",
+    "examples/local-i2c-open-drain/sda.cir.in",
+    "examples/local-i2c-open-drain/solve.py",
+    "examples/local-i2c-open-drain/tb/i2c_od_tb.sv",
+    "examples/local-i2c-open-drain/tests/test_example.py",
     "examples/local-i2c/requirements.json",
     "examples/local-i2c/rtl/i2c_target.sv",
     "examples/local-i2c/run.py",
@@ -997,6 +1005,12 @@
     "examples/local-sha256/run.py",
     "examples/local-sha256/tb/sha256_tb.sv",
     "examples/local-sha256/tests/test_example.py",
+    "examples/local-sigma-delta/model.py",
+    "examples/local-sigma-delta/requirements.json",
+    "examples/local-sigma-delta/run.py",
+    "examples/local-sigma-delta/tb/sd_modulator_rnm.sv",
+    "examples/local-sigma-delta/tb/sd_tb.sv",
+    "examples/local-sigma-delta/tests/test_example.py",
     "examples/local-soc-regression/run.py",
     "examples/local-soc-regression/tests/test_runner.py",
     "examples/local-spec-change/capstone_checker.sv",
@@ -1395,6 +1409,7 @@
       "local-gate-sim",
       "local-gate-timing",
       "local-i2c",
+      "local-i2c-open-drain",
       "local-i2s-audio",
       "local-iir-biquad",
       "local-image-scaler",
@@ -1849,6 +1864,9 @@
     "local-i2c": [
       "local-common"
     ],
+    "local-i2c-open-drain": [
+      "local-exploration-common"
+    ],
     "local-i2s-audio": [
       "local-common"
     ],
@@ -2195,6 +2213,10 @@
       "local-image-sobel"
     ],
     "local-sha256": [
+      "local-common"
+    ],
+    "local-sigma-delta": [
+      "local-cic-decimator",
       "local-common"
     ],
     "local-soc-regression": [

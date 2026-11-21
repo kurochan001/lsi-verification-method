@@ -75,6 +75,7 @@
     "examples/local-fsm-hardening/rtl/hardened_lock.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
+    "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
     "examples/local-i2s-audio/rtl/i2s_rx.sv",
     "examples/local-i2s-audio/rtl/i2s_tx.sv",
@@ -6645,6 +6646,64 @@
         "MAX_H": 6,
         "MAX_W": 24
       }
+    },
+    {
+      "id": "local-i2c-open-drain/i2c_rx_master/default",
+      "file": "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
+      "top": "i2c_rx_master",
+      "sources": [
+        "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-i2c-open-drain/i2c_rx_master/SAMPLE=112",
+      "file": "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
+      "top": "i2c_rx_master",
+      "sources": [
+        "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv"
+      ],
+      "parameters": {
+        "SAMPLE": 112
+      }
+    },
+    {
+      "id": "local-i2c-open-drain/i2c_rx_master/DIV=50/SAMPLE=25",
+      "file": "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
+      "top": "i2c_rx_master",
+      "sources": [
+        "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv"
+      ],
+      "parameters": {
+        "DIV": 50,
+        "SAMPLE": 25
+      }
+    },
+    {
+      "id": "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=2",
+      "file": "examples/local-cic-decimator/rtl/cic_decimator.sv",
+      "top": "cic_decimator",
+      "sources": [
+        "examples/local-cic-decimator/rtl/cic_decimator.sv"
+      ],
+      "parameters": {
+        "IN_W": 2,
+        "RATE": 32,
+        "STAGES": 2
+      }
+    },
+    {
+      "id": "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=3",
+      "file": "examples/local-cic-decimator/rtl/cic_decimator.sv",
+      "top": "cic_decimator",
+      "sources": [
+        "examples/local-cic-decimator/rtl/cic_decimator.sv"
+      ],
+      "parameters": {
+        "IN_W": 2,
+        "RATE": 32,
+        "STAGES": 3
+      }
     }
   ],
   "examples": {
@@ -8984,6 +9043,23 @@
       "scope": "workflow",
       "targets": [],
       "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-i2c-open-drain": {
+      "scope": "dut",
+      "targets": [
+        "local-i2c-open-drain/i2c_rx_master/default",
+        "local-i2c-open-drain/i2c_rx_master/SAMPLE=112",
+        "local-i2c-open-drain/i2c_rx_master/DIV=50/SAMPLE=25"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sigma-delta": {
+      "scope": "shared-dut",
+      "targets": [
+        "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=2",
+        "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=3"
+      ],
+      "reason": "CICデシメーターのRTLを、この例の比と段数の構成で静的検査"
     }
   },
   "blackbox_sources": {
