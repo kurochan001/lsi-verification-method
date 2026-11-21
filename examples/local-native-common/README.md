@@ -1,6 +1,6 @@
 # C++モデル・SPICE協調例の共通実行処理
 
-[C++参照モデル](../local-cpp-reference/README.md)と[SPICE協調](../local-spice-cosim/README.md)で、Verilatorのビルド、実行結果の分類、件数・波形・ソースの照合を共通化します。各分野の期待値計算と判定規則は、それぞれの例に置いています。
+[C++参照モデル](../local-cpp-reference/README.md)、[SPICE協調](../local-spice-cosim/README.md)、[レイテンシに依らないストリームの比較](../local-latency-insensitive-compare/README.md)で、Verilatorのビルド、実行結果の分類、件数・波形・ソースの照合を共通化します。各分野の期待値計算と判定規則は、それぞれの例に置いています。
 
 ```mermaid
 flowchart LR

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "RL-WINDOW",
+      "description": "どの区間でも、通過数は区間の始まりの深さと、区間の2サイクル目以降の補充の合計で決まる上限を超えない。上限にちょうど届く区間がある。満杯から補充なしで深さちょうどの数を通し、次の要求は拒否する",
+      "goals": [
+        "window/tight",
+        "burst/depth-then-deny"
+      ]
+    },
+    {
+      "id": "RL-TOKEN",
+      "description": "1トークンちょうどで通し、1単位足りなければ拒否する。空のバケットは拒否する",
+      "goals": [
+        "grant/exact-token",
+        "deny/one-unit-short",
+        "deny/empty"
+      ]
+    },
+    {
+      "id": "RL-REFILL",
+      "description": "補充は深さで飽和する。補充の和が水位の幅を超える（桁あふれの境界のちょうど・1つ超え）場合も正しく飽和する。補充の速さ0・最大・1トークン未満",
+      "goals": [
+        "refill/saturate",
+        "refill/below-carry",
+        "refill/carry",
+        "rate/zero",
+        "rate/max",
+        "rate/fraction"
+      ]
+    },
+    {
+      "id": "RL-DEPTH",
+      "description": "深さ0では通さない。最大の深さで飽和する",
+      "goals": [
+        "depth/zero",
+        "depth/max"
+      ]
+    },
+    {
+      "id": "RL-CONFIG",
+      "description": "動作中に深さを下げると、そのサイクルから新しい深さで飽和する。補充の速さの変更と、動作中のリセット",
+      "goals": [
+        "config/depth-down",
+        "config/rate-change",
+        "reset/mid-run"
+      ]
+    }
+  ]
+}

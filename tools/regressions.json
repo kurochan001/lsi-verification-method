@@ -3006,6 +3006,172 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-portable-scenario",
+      "script": "examples/local-portable-scenario/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-tlm-platform",
+      "script": "examples/local-tlm-platform/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "c++",
+        "cc",
+        "make",
+        "verilator",
+        "lsi-systemc-config"
+      ]
+    },
+    {
+      "id": "local-synth-testbench",
+      "script": "examples/local-synth-testbench/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp",
+        "yowasp-yosys"
+      ]
+    },
+    {
+      "id": "local-trace-buffer",
+      "script": "examples/local-trace-buffer/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-latency-insensitive-compare",
+      "script": "examples/local-latency-insensitive-compare/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout",
+        "build-timeout"
+      ],
+      "tools": [
+        "c++",
+        "make",
+        "verilator"
+      ]
+    },
+    {
+      "id": "local-buffer-manager",
+      "script": "examples/local-buffer-manager/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-buffer-manager-formal",
+      "script": "examples/local-buffer-manager/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-otp-fuse",
+      "script": "examples/local-otp-fuse/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-rate-limiter",
+      "script": "examples/local-rate-limiter/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-rate-limiter-formal",
+      "script": "examples/local-rate-limiter/formal.py",
+      "kind": "formal",
+      "profile": false,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "yowasp-sby",
+        "yowasp-yosys",
+        "yowasp-yosys-smtbmc",
+        "yowasp-yosys-witness",
+        "z3"
+      ]
+    },
+    {
+      "id": "local-image-scaler",
+      "script": "examples/local-image-scaler/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-closure-trend",
+      "script": "examples/local-closure-trend/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": []
     }
   ]
 }

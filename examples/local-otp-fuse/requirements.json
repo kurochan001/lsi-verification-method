@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "OTP-READ",
+      "summary": "A read gives the bit-wise majority of the three copies, their OR, whether they disagree, and the lock.",
+      "goals": ["read/blank", "read/programmed", "idle/ready", "busy/held-request"]
+    },
+    {
+      "id": "OTP-WRITE-ONCE",
+      "summary": "A write programs the three copies, reads them back and locks the word only when the majority is the value; a locked word refuses every further write, and bits that are set cannot be cleared.",
+      "goals": ["write/ok", "write/refused-locked", "write/verify-failed"]
+    },
+    {
+      "id": "OTP-REDUNDANCY",
+      "summary": "One faulty cell in a bit position, stuck at 0 or at 1, in the data or in the lock row, is outvoted and the data copies report it; two in the same position are beyond the guarantee and the write is refused by the read-back.",
+      "goals": ["fault/corrected", "fault/stuck-one", "fault/lock-row"]
+    },
+    {
+      "id": "OTP-POWER-LOSS",
+      "summary": "A loss of power stops a pulse at once and programs nothing of it; a word cut short stays unlocked, and the same write later completes it.",
+      "goals": ["cut/data", "cut/lock", "cut/completed-later"]
+    },
+    {
+      "id": "OTP-LIFECYCLE",
+      "summary": "After every reset the lifecycle is loaded from words 0, 1 and 2 before the register block leaves reset; a stage counts when any copy is set, a gap gives the most restrictive state, and only TEST allows writing the keys.",
+      "goals": ["lc/test", "lc/advanced", "lc/cut-advance", "lc/gap", "key/allowed", "key/refused"]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "issues": [
+    {
+      "id": "BUG-001",
+      "kind": "rtl",
+      "title": "UART parity bit sampled one tick early",
+      "found_by": "ip-uart",
+      "events": [
+        [
+          "found",
+          "c01"
+        ],
+        [
+          "closed",
+          "c03"
+        ]
+      ]
+    },
+    {
+      "id": "BUG-002",
+      "kind": "rtl",
+      "title": "Boot ROM jumps before the status is final",
+      "found_by": "soc-boot",
+      "events": [
+        [
+          "found",
+          "c01"
+        ],
+        [
+          "closed",
+          "c04"
+        ],
+        [
+          "reopened",
+          "c07"
+        ],
+        [
+          "closed",
+          "c09"
+        ]
+      ]
+    },
+    {
+      "id": "ENV-001",
+      "kind": "environment",
+      "title": "DMA job hit the job time limit on a loaded runner",
+      "found_by": "ip-dma",
+      "events": [
+        [
+          "found",
+          "c03"
+        ],
+        [
+          "closed",
+          "c04"
+        ]
+      ]
+    },
+    {
+      "id": "BUG-003",
+      "kind": "testbench",
+      "title": "APB monitor samples on the same edge as the driver",
+      "found_by": "ip-apb",
+      "flaky_job": "ip-apb",
+      "events": [
+        [
+          "found",
+          "c05"
+        ],
+        [
+          "closed",
+          "c07"
+        ]
+      ]
+    },
+    {
+      "id": "BUG-004",
+      "kind": "rtl",
+      "title": "SoC DMA drops the last beat when the response is delayed",
+      "found_by": "soc-dma",
+      "events": [
+        [
+          "found",
+          "c08"
+        ],
+        [
+          "closed",
+          "c10"
+        ]
+      ]
+    },
+    {
+      "id": "BUG-005",
+      "kind": "rtl",
+      "title": "FIFO full flag stays high one cycle after a pop (found in review)",
+      "found_by": "review",
+      "events": [
+        [
+          "found",
+          "c10"
+        ]
+      ]
+    }
+  ],
+  "escapes": [
+    {
+      "id": "ESC-001",
+      "kind": "rtl",
+      "title": "DMA accepts a new request while the previous response is pending",
+      "last_campaign": "c11",
+      "phase": "integration",
+      "category": "stimulus",
+      "missed_check": "requests issued while a transfer is in progress",
+      "fixed_regression": "ip-dma: hold a request asserted during a busy transfer"
+    },
+    {
+      "id": "ESC-002",
+      "kind": "testbench",
+      "title": "The UART receive check accepts a sample taken a quarter bit early",
+      "last_campaign": "c11",
+      "phase": "silicon bring-up",
+      "category": "checker",
+      "missed_check": "sampling point within the middle half of each bit",
+      "fixed_regression": "ip-uart: bits that are correct only in the middle half"
+    }
+  ]
+}

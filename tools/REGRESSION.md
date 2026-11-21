@@ -28,7 +28,7 @@ python3 tools/run_regression.py --suite formal --list
 | --- | --- |
 | `--suite all`（既定） | 全登録例。集約ランナーを使い、その子は別に重複起動しない。 |
 | `--suite simulation` | シミュレーションとSTAの個別例。集約ランナーと証明専用の入口を選ばない。 |
-| `--suite formal` | 証明用の25例。除算器は`formal.py`、FIFOは両深さを含む。分割証明は内部タスクと依存判定を親から一度実行する。 |
+| `--suite formal` | 証明用の27例。除算器は`formal.py`、FIFOは両深さを含む。分割証明は内部タスクと依存判定を親から一度実行する。 |
 | `--example 名前` | 指定例へ絞る。複数回指定できる。親と子を同時に指定した場合は親から一度実行する。 |
 | `--profile smoke\|nightly` | 対応する例へ渡す。専用プロファイルがないフォーマル・STAは既定の全タスク・構成を実行する。 |
 

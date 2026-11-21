@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "ST-STIMULUS",
+      "text": "開始の後、LFSRは種から始まり、1パターンごとに1つ進む。ALUの4つの演算がすべて現れる。",
+      "goals": ["stimulus/op-add", "stimulus/op-sub", "stimulus/op-and", "stimulus/op-xor"]
+    },
+    {
+      "id": "ST-SIGNATURE",
+      "text": "署名は、全パターンの応答（桁上げのビットを含む）を1つずつ取り込み、最上位ビットが出るときに多項式を戻す。",
+      "goals": ["response/carry", "signature/feedback"]
+    },
+    {
+      "id": "ST-VERDICT",
+      "text": "最後の応答を取り込んだ次のクロックでdoneを立て、最終の署名が期待値と一致したときだけpassを立てる。誤った応答が1つ以上あればpassを立てない（打ち消し合う誤りは除く）。",
+      "goals": ["run/pass", "run/fail-on-fault"]
+    },
+    {
+      "id": "ST-CONTROL",
+      "text": "busyの間のstartは無視する。完了の後のstartで最初からやり直す。リセットは、実行中でも完了の後でも、すべてを初期値へ戻す。",
+      "goals": ["run/start-ignored", "run/restart", "reset/mid-run", "reset/after-done"]
+    },
+    {
+      "id": "ST-VIEW",
+      "text": "外から見る結果は、done・passの3ビットだけを見る見え方と、刺激・応答・署名まで見る見え方の両方で確かめる。",
+      "goals": ["view/chip", "view/full"]
+    }
+  ]
+}

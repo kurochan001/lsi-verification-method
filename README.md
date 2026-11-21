@@ -45,7 +45,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | --- | --- |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
-| 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
+| 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md)／[フォーマルの証明計画](docs/templates/formal-proof-plan.md)／[故障注入の計画](docs/templates/fault-injection-plan.md) |
 
 ### 4. テストベンチを作る
 
@@ -54,6 +54,8 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
 | C++参照モデルでRTLを照合する | [検証手順](docs/method/cpp-reference-verification.md)／[ストリーミングFIR](examples/local-cpp-reference/README.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
+| テストベンチの構成を決めてレビューする | [テストベンチ設計書](docs/templates/testbench-architecture.md)／[レビューの観点](docs/templates/review-checklists.md) |
+| テストの意図をブロックとSoCで再利用する | [シナリオのモデルから2つの実現](examples/local-portable-scenario/README.md)／[TLM-2.0とRTLで同じドライバー](examples/local-tlm-platform/README.md)／[レイテンシに依らない比較](examples/local-latency-insensitive-compare/README.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
 
 ### 5. 実行・解析・回帰を回す
@@ -64,6 +66,8 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[PASS後の保持と実行頻度](docs/method/random-search-management.md#過去のpassを恒久除外の理由にしない)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
 | 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
 | 失敗・再実行・採用結果をまとめる | [履歴レポート](tools/REPORTING.md)／[実際の時間切れから再実行する例](examples/local-regression-report/README.md) |
+| 検証の収束を指標で判断する | [指標と収束の手順](docs/method/verification-metrics-and-closure.md)／[推移の表を作る例](examples/local-closure-trend/README.md)／[流出不具合の分析](docs/templates/escape-analysis.md) |
+| シミュレーションを速くする | [性能の測り方と影響](docs/method/simulation-performance.md) |
 | 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
 
 ### 6. 検証の十分さを確かめる
@@ -96,6 +100,7 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 目的 | 入口 |
 | --- | --- |
 | 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
+| 試作・実機で見つけた不具合を回帰にする | [試作と実機評価の手順](docs/method/prototyping-and-post-silicon.md)／[合成できる自己判定テストベンチ](examples/local-synth-testbench/README.md)／[トレースバッファ](examples/local-trace-buffer/README.md) |
 | UVMで応答側・レジスタ・階層化を扱う | [応答側のagentとコールバック](examples/local-uvm-reactive/README.md)／[組込みレジスタシーケンス](examples/local-uvm-reg-sequences/README.md)／[sequenceの階層化とlock・grab](examples/local-uvm-layering/README.md) |
 | Cの参照モデルをDPIでつなぐ | [DPI-Cとファイル経由の2方式](examples/local-dpi-model/README.md) |
 | 再利用できるSVAを書く | [プロパティ集と3試験](examples/local-sva-patterns/README.md) |
@@ -235,6 +240,9 @@ flowchart TD
 | [継続的リグレッション](docs/method/continuous-regression.md) | 変更時・定期・サインオフの計画、予定と結果の照合、資源・再実行・証跡管理 |
 | [静的検査と警告管理](docs/method/lint-and-waivers.md) | 全DUTの構成台帳、新規・解消した警告、既知指摘と除外、入力変更時の再レビュー |
 | [失敗解析と回帰試験](docs/method/failure-analysis.md) | 元の証跡の保存、RTL・期待値・検査設定・環境の切分け、同一入力での修正確認 |
+| [検証の指標と収束](docs/method/verification-metrics-and-closure.md) | 不具合の検出の推移、未解決の件数、カバレッジの推移、合否の揺れ、流出の振り返り、収束の判断 |
+| [シミュレーションの性能](docs/method/simulation-performance.md) | 内訳の測り方、波形・4値と2値・ビルドの分け方の影響、速くするときの約束 |
+| [試作と実機での評価](docs/method/prototyping-and-post-silicon.md) | FPGA・エミュレーション・実チップとシミュレーションの違い、観測の手段、不具合を持ち帰って回帰にする流れ |
 | [AI提案のレビュー](docs/method/ai-verification-review.md) | 要求抜け、誤った履歴参照、前件未到達、DUTと参照モデルの相関した誤り |
 
 機能カバレッジの例では、パケットスイッチの「出力ポート×末尾の有無×受信側ready」をcrossで計測し、どの組合せを試したかを確認します。コードカバレッジの例では、基礎試験で残ったXORや拒否応答などの未達を、追加試験とDB統合で補います。未達の原因を調べ、刺激不足、到達不能、計測の問題、要求・実装の不足を分けて扱います。
@@ -314,28 +322,28 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | [バスプロトコル](docs/method/bus-protocol-verification.md) | 受理と完了、待ち中の保持、未完了・ID・順序、バースト、エラー応答、プロトコルごとの対応と未対応 |
 | <a id="fifo通信仲裁"></a>[FIFO・通信・仲裁](examples/README.md#fifo通信仲裁) | FIFO、ready/valid、UART・SPI・I²C、CAN、8b/10b符号、スクランブラー・PRBS、再送・パケットスイッチ |
 | <a id="割り込みタイマー周辺機能の結合"></a>[割り込み・タイマー・周辺機能の結合](examples/README.md#割り込みタイマー周辺機能の結合) | 割り込み、タイマー、ウォッチドッグ、周辺回路の接続 |
-| <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序 |
+| <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序、連結リストのバッファ管理 |
 | [メモリ](docs/method/memory-verification.md) | RAMのポートと衝突、Byte enable、ECCとスクラブ、MBIST、キャッシュ、DRAM、FIFO。機能検証と製造故障の検査の区別 |
 | [非同期検証（CDC/RDC）](docs/method/asynchronous-verification.md) | 同期構造、リコンバージェンス、複数ビット・パルス転送、非同期FIFO、リセット交差、遅延注入と物理制約 |
 | [DFT・製造テスト](docs/method/dft-verification.md) | 内部スキャン・ATPG、MBIST、LBISTのPRPG・MISRとエイリアシング、JTAG、テストモードと復帰 |
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | [低電力設計](docs/method/low-power-verification.md) | 電源状態表、隔離・保持・レベルシフター、起動と停止の順序、クロックゲーティング、wake-up、活動率からの電力見積り、UPFを実行できない範囲 |
 | [セキュリティ](docs/method/security-verification.md) | 資産と脅威のモデル、アクセス制御、ライフサイクル、定時間、情報の流れ、故障攻撃への対策、鍵の消去 |
-| <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、CORDIC、CIC、IIR、誤り訂正と誤り率、SHA-256、AES、ECC、アクセス保護、故障に強い状態機械、鍵の情報の流れ、乱数源の健全性試験、セキュアブート、故障注入キャンペーン、MBIST、JTAG・スキャン |
+| <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、CORDIC、CIC、IIR、誤り訂正と誤り率、SHA-256、AES、ECC、アクセス保護、故障に強い状態機械、鍵の情報の流れ、乱数源の健全性試験、セキュアブート、故障注入キャンペーン、OTP、MBIST、JTAG・スキャン、合成できる自己判定テストベンチ、トレースバッファ |
 | [演算データパス](docs/method/arithmetic-datapath-verification.md) | ビット一致・許容誤差・統計的な判定、固定小数点の丸めと飽和、全数・境界・ランダム・フォーマル、整数・有理数のモデル |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
-| <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
+| <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送、トークンバケット |
 | <a id="航空宇宙高信頼システム"></a>[航空宇宙・高信頼システム](examples/README.md#航空宇宙高信頼システム) | TMR、ECC・スクラブ、故障注入、FDIR、期限監視、保守と復帰 |
 | <a id="ロボティクスモーション制御"></a>[ロボティクス・モーション制御](examples/README.md#ロボティクスモーション制御) | PWM、直交エンコーダ、固定小数点PI、閉ループ、期限・進捗監視 |
 | <a id="オートモーティブ"></a>[オートモーティブ](examples/README.md#オートモーティブ) | E2E通信保護、窓付きウォッチドッグ、指令の更新期限、出力抑止、故障保持と復帰 |
 | <a id="アナログデジタル協調"></a>[アナログ・デジタル協調](examples/README.md#アナログデジタル協調) | ngspiceで解く線形RC回路、理想ADC／DAC、RTL電圧制御、時刻同期、解析解との比較、実数モデルの妥当性確認、SPICEの回帰とコーナー・モンテカルロ、Libertyの値の出所、パワーオンリセット |
-| <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC |
+| <a id="画像処理"></a>[画像処理](examples/README.md#画像処理) | ラインメモリ、3×3窓、Sobelフィルター、CPU付き画像処理SoC、有理比の縮小・拡大 |
 | <a id="プロセッサ"></a>[プロセッサ](examples/README.md#プロセッサ) | RISC-V、ISS比較、退出のフォーマル検査、公開の試験プログラム、特権・デバッグ、LR／SC、リネーム・ROB、デコーダ、PMP・Sv32・TLB、除算器、浮動小数点の加算器 |
 | [プロセッサの検証手順](docs/method/processor-verification.md) | 退出の単位での比較、命令列とハザード、例外・割り込みの精密さ、特権と保護、メモリ順序、デバッグ、性能カウンター |
 | <a id="静的タイミング解析"></a>[静的タイミング解析](examples/README.md#静的タイミング解析) | OpenSTA、setup／hold、制約の欠落・経路消失 |
 | [ゲートレベルとタイミング](docs/method/gate-level-and-timing-verification.md) | lint・合成・等価性・ゲートレベルシミュレーション・STA・制約の検証の分担、Xの楽観と悲観、初期値、スキャン挿入後の等価性、モード・コーナー別のSTA |
 | <a id="フォーマル検証等価性反例再現"></a>[フォーマル検証・等価性・反例再現](examples/README.md#フォーマル検証等価性反例再現) | 証明、到達性、等価性、反例再現、接続性、1データ追跡、レジスタの性質の生成、リセット後の値の確定 |
-| <a id="svauvm仕様生成ソフトウェア連携検証効率"></a>[SVA・UVM・仕様生成・ソフトウェア連携・検証効率](examples/README.md#svauvm仕様生成ソフトウェア連携検証効率) | アサーションとプロパティ集、機能／コードカバレッジ、UVM・RAL・応答側agent・階層化、生成、C・DPI・cocotb、探索・削減、時間短縮 |
+| <a id="svauvm仕様生成ソフトウェア連携検証効率"></a>[SVA・UVM・仕様生成・ソフトウェア連携・検証効率](examples/README.md#svauvm仕様生成ソフトウェア連携検証効率) | アサーションとプロパティ集、機能／コードカバレッジ、UVM・RAL・応答側agent・階層化、生成、C・DPI・cocotb、探索・削減、時間短縮、シナリオの再利用、TLM、レイテンシに依らない比較、収束の指標 |
 | [ハードウェアとソフトウェアの結合](docs/method/hw-sw-integration-verification.md) | レジスタ仕様からヘッダー・RAL・ドライバーへ、cocotb、ROM起動のSoC、割り込みハンドラー、DMA、実行環境の段階 |
 
 全例の詳細は[検証例一覧](examples/README.md)、構成・実行数・過去の確認結果は[集計と実行記録](examples/README.md#集計と実行記録)にまとめています。
@@ -481,13 +489,13 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
 4. **テンプレートの実案件への適用**：検証領域の適用範囲、サインオフ、[不具合票](docs/templates/verification-issue.md)、[AIへの依頼・採否](docs/templates/ai-verification-request.md)の雛形を、実際の担当・構成・証跡へ対応付けて見直します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
-5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。現在の自動選択計画は118例・145構成です（`python3 tools/run_kirimasim_examples.py --list`で確認できます）。過去の記録は80例・107構成の実測で、その後に加えた例の結果は毎日の実行で確かめています。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
+5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。現在の自動選択計画は124例・151構成です（`python3 tools/run_kirimasim_examples.py --list`で確認できます）。過去の記録は80例・107構成の実測で、その後に加えた例の結果は毎日の実行で確かめています。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
 
 ### 注意
 
 各例は教材として対象を限定しています。例えば、AXIの例で規格全体への適合、論理CDCモデルで物理的なメタスタビリティ、架空LibertyのSTAで実チップのタイミングを確認したとは扱いません。製品へ適用する際は、仕様・構成と必要な解析・試験を追加して判断します。
 
-- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（218ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
+- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（235ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
 - 規格や仕様書の本文は、このリポジトリに入れません。要求は自分の言葉で整理し、出典の版・節・段落を明記します。
 - 機密の仕様書を扱う場合は、AIを使える環境と範囲を先に決めます。
 - AIによるレビューは、人の承認ではありません。台帳と報告に、担当者と方法を明記します。

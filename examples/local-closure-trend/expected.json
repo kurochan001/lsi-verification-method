@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "note": "Counted by hand from data/ while writing the example, before trend.py existed. Neither trend.py nor recount.py produced these numbers.",
+  "campaigns": [
+    "c01",
+    "c02",
+    "c03",
+    "c04",
+    "c05",
+    "c06",
+    "c07",
+    "c08",
+    "c09",
+    "c10",
+    "c11"
+  ],
+  "passed": [
+    4,
+    3,
+    4,
+    5,
+    4,
+    6,
+    6,
+    5,
+    6,
+    6,
+    6
+  ],
+  "failed": [
+    2,
+    2,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0
+  ],
+  "incomplete": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "new_defects": [
+    2,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    0
+  ],
+  "reopened": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "closed": [
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    1,
+    1,
+    0
+  ],
+  "open": [
+    2,
+    2,
+    1,
+    0,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1
+  ],
+  "environment": [
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "coverage_excluded": [
+    2,
+    3,
+    2,
+    1,
+    2,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0
+  ],
+  "flaky": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "functional_first": [
+    55,
+    64
+  ],
+  "functional_last": [
+    94,
+    94
+  ],
+  "flaky_jobs": [
+    {
+      "job": "ip-apb",
+      "first": "c06"
+    }
+  ],
+  "denominator_changes": [
+    {
+      "campaign": "c07",
+      "job": "ip-fifo",
+      "metric": "functional",
+      "before": 20,
+      "after": 24
+    },
+    {
+      "campaign": "c10",
+      "job": "soc-dma",
+      "metric": "code",
+      "before": 380,
+      "after": 372
+    }
+  ],
+  "defects_found": 5,
+  "environment_issues": 1,
+  "escapes": [
+    "ESC-001",
+    "ESC-002"
+  ],
+  "verdict": {
+    "ready": false,
+    "reasons": [
+      "open-defects"
+    ]
+  }
+}

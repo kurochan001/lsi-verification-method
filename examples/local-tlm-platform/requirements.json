@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PLAT-ACCESS",
+      "text": "ドライバーのレジスタアクセス（向き、番地、書いた値、COUNT以外の読んだ値、エラーの応答）が、TLMのプラットフォーム・RTL・契約のモデルで一致する。番地の空き（遠い番地、メモリの1つ先、タイマーの最後のレジスタの1つ先、タイマーの範囲の1つ先、境界に合わない番地）はエラーを返す。",
+      "goals": ["bus/unmapped-error", "status/w1c-partial"]
+    },
+    {
+      "id": "PLAT-IRQ",
+      "text": "割り込み：許可していないpendingは線へ出ない。overrunはクリアするまで残る。もう一度有効にするとEXPIREDが0から数え直す。満了ごとに1回ずつ処理される。RTLでは、満了の間隔がLOAD＋1クロックである。",
+      "goals": ["irq/handled", "irq/masked-level", "status/overrun", "timer/reenable-reset", "timer/period"]
+    },
+    {
+      "id": "PLAT-MEMORY",
+      "text": "64語のメモリの最後の内容が、両方のプラットフォームとモデルで一致する。",
+      "goals": ["memory/readback"]
+    },
+    {
+      "id": "PLAT-RACE",
+      "text": "クリアの書込みと満了が同じクロックのエッジに重なったとき、RTLはpendingを残し、割り込みを失わない。この場面にRTLで到達する。",
+      "goals": ["race/clear-set"]
+    },
+    {
+      "id": "PLAT-WAIT",
+      "text": "バスの待ちは時間だけを変え、ドライバーが見る結果を変えない。",
+      "goals": ["bus/wait-state"]
+    },
+    {
+      "id": "PLAT-NEGATIVE",
+      "text": "RTLとTLMのモデルに入れた誤りを、比較で見つける。割り込みを失う誤りは、RTLの競合の場面でだけ見つかり、TLMのプラットフォームでは見つからない。",
+      "goals": ["negative/rtl-mutations", "negative/tlm-model", "negative/race-only-in-rtl"]
+    }
+  ]
+}

@@ -120,6 +120,15 @@
 | SCOPE-SECURITY | [故障に強い状態機械](../../examples/local-fsm-hardening/README.md)、[鍵の情報の流れ](../../examples/local-secret-flow/README.md)、[AES-128](../../examples/local-aes/README.md)、[セキュアブート](../../examples/local-secure-boot/README.md) | 1ビットの反転で権限を与えないことの証明、方針の表に沿った非干渉、時間と消去の証明、検証してから開くハードウェアの門。サイドチャネル、署名の検証、認証や適合の主張は対象外 |
 | SCOPE-SECURITY（安全機構） | [故障注入キャンペーン](../../examples/local-fault-campaign/README.md)、[乱数源の健全性試験](../../examples/local-trng-health/README.md) | 分母を明示した検出率と厳密な区間、構造的な除外の台帳、誤警報確率から求めた受容域。ISO 26262の指標、エントロピーの評価は対象外 |
 
+SoC・再利用・試作・検証の管理を補う次の例と文書も追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-SYSTEM-SW | [テストの意図の再利用](../../examples/local-portable-scenario/README.md)、[TLM-2.0とRTL](../../examples/local-tlm-platform/README.md)、[レイテンシに依らない比較](../../examples/local-latency-insensitive-compare/README.md) | 1つの意図からの2つの実現、仮想プラットフォームとRTLの照合と競合、時間を持たない原本との照合。PSSの言語、高位合成ツールは対象外 |
+| SCOPE-PROTOCOL-DATA | [バッファ管理](../../examples/local-buffer-manager/README.md)、[OTP](../../examples/local-otp-fuse/README.md)、[トークンバケット](../../examples/local-rate-limiter/README.md)、[縮小・拡大](../../examples/local-image-scaler/README.md) | 保存則の証明、電源断と多数決、区間の上限の証明、有理数のモデルとのビット一致。大きな構成の証明、セルの電気的な余裕は対象外 |
+| SCOPE-PHYSICAL（試作・実機） | [合成できる自己判定テストベンチ](../../examples/local-synth-testbench/README.md)、[トレースバッファ](../../examples/local-trace-buffer/README.md)、[試作と実機での評価](prototyping-and-post-silicon.md) | 合否だけが見える環境での判定、記録の持ち帰りと固定回帰。FPGAと実機では実行していない |
+| 管理 | [検証の指標と収束](verification-metrics-and-closure.md)、[シミュレーションの性能](simulation-performance.md)、[収束の指標の推移](../../examples/local-closure-trend/README.md) | 推移の表と独立の数え直し、性能の測り方。履歴は架空で、実プロジェクトの目安ではない |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

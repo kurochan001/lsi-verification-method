@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CT-OUTCOME",
+      "summary": "Each job is counted as passed, failed or incomplete. A time limit or a job that never started is incomplete and never a pass.",
+      "goals": ["hand-counts", "mutation1"]
+    },
+    {
+      "id": "CT-DEFECT",
+      "summary": "New, reopened, closed and open defects are counted per campaign; a reopened defect is not new, a fix counts in the campaign that verified it, and environment trouble is kept apart from circuit and testbench defects.",
+      "goals": ["hand-counts", "mutation2", "mutation3", "mutation4"]
+    },
+    {
+      "id": "CT-COVERAGE",
+      "summary": "Functional and code coverage are reported separately, only from jobs that passed, with the number of jobs left out and every change of denominator.",
+      "goals": ["hand-counts", "mutation5", "mutation6"]
+    },
+    {
+      "id": "CT-STABILITY",
+      "summary": "A job is flaky when the same plan (commit, seed and profile) gave both a pass and a fail; a different seed is a different plan, and an incomplete run is not a verdict.",
+      "goals": ["hand-counts", "mutation7"]
+    },
+    {
+      "id": "CT-ESCAPE",
+      "summary": "Defects found after the last campaign are listed as escapes with the check that should have found them.",
+      "goals": ["hand-counts", "mutation8"]
+    },
+    {
+      "id": "CT-CLOSURE",
+      "summary": "The closure check lists every criterion that is not met; it does not approve anything.",
+      "goals": ["hand-counts", "mutation9"]
+    },
+    {
+      "id": "CT-INPUT",
+      "summary": "A history with a missing or repeated result, decreasing dates, an unknown campaign, an impossible issue history or impossible coverage is refused with a stable label.",
+      "goals": ["reject-missing-result", "reject-duplicate-job", "reject-out-of-order", "reject-unknown-campaign", "reject-event-order", "reject-coverage-range", "reject-coverage-job"]
+    },
+    {
+      "id": "CT-REPORT",
+      "summary": "The table, its independent recount and the Markdown a reviewer reads agree, also on generated histories.",
+      "goals": ["inventory", "trend-table", "recount", "markdown-roundtrip", "random-01", "random-02", "random-03"]
+    }
+  ]
+}

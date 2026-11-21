@@ -22,6 +22,7 @@
     "examples/local-axi4-full/rtl/axi4_full_ram.sv",
     "examples/local-axi4/rtl/axi4_ram.sv",
     "examples/local-axis/rtl/axis_packet_fifo.sv",
+    "examples/local-buffer-manager/rtl/buffer_manager.sv",
     "examples/local-bus-bridge/rtl/bus_bridge.sv",
     "examples/local-cache-coherence/rtl/coherent_pair.sv",
     "examples/local-cache-dma/rtl/cache_dma.sv",
@@ -78,6 +79,7 @@
     "examples/local-i2s-audio/rtl/i2s_rx.sv",
     "examples/local-i2s-audio/rtl/i2s_tx.sv",
     "examples/local-iir-biquad/rtl/iir_biquad.sv",
+    "examples/local-image-scaler/rtl/image_scaler.sv",
     "examples/local-image-sobel/rtl/sobel_stream.sv",
     "examples/local-image-soc/rtl/cpu_ahb.sv",
     "examples/local-image-soc/rtl/image_dma.sv",
@@ -88,6 +90,9 @@
     "examples/local-irq-cdc/rtl/cdc_receiver.sv",
     "examples/local-irq-cdc/rtl/irq_pending.sv",
     "examples/local-jtag-tap/rtl/jtag_tap.sv",
+    "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv",
+    "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
+    "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
     "examples/local-lbist/rtl/lbist.sv",
     "examples/local-lbist/rtl/lbist_logic.sv",
     "examples/local-lec-netlist/rtl/event_meter.sv",
@@ -133,6 +138,8 @@
     "examples/local-network-echo/rtl/rx_frame_queue.sv",
     "examples/local-network-soc/rtl/network_nic.sv",
     "examples/local-network-soc/rtl/network_soc.sv",
+    "examples/local-otp-fuse/rtl/otp_ctrl.sv",
+    "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
     "examples/local-packet-crc/rtl/crc.sv",
     "examples/local-packet-switch/rtl/packet_switch.sv",
     "examples/local-performance-monitor/rtl/perf_monitor.sv",
@@ -140,6 +147,8 @@
     "examples/local-por-sequence/rtl/por_init_ctrl.sv",
     "examples/local-por-sequence/rtl/por_reset_sync.sv",
     "examples/local-por-sequence/rtl/por_sequence.sv",
+    "examples/local-portable-scenario/rtl/scn_dma.sv",
+    "examples/local-portable-scenario/rtl/scn_soc.sv",
     "examples/local-power-domains/rtl/pd_ctrl.sv",
     "examples/local-power-domains/rtl/pd_domain_a.sv",
     "examples/local-power-domains/rtl/pd_domain_b.sv",
@@ -153,6 +162,7 @@
     "examples/local-ram-ports/rtl/ram_ports_top.sv",
     "examples/local-ram-ports/rtl/ram_sp.sv",
     "examples/local-ram-ports/rtl/ram_tdp.sv",
+    "examples/local-rate-limiter/rtl/token_bucket.sv",
     "examples/local-recovery/rtl/timeout_guard.sv",
     "examples/local-reduction/rtl/reduction_irq.sv",
     "examples/local-register-formal/rtl/reg_block.sv",
@@ -193,12 +203,19 @@
     "examples/local-sync-ram-fifo/rtl/memory_reset_sync.sv",
     "examples/local-sync-ram-fifo/rtl/sync_dual_clock_ram.sv",
     "examples/local-sync-ram-fifo/rtl/sync_ram_async_fifo.sv",
+    "examples/local-synth-testbench/rtl/alu_unit.sv",
+    "examples/local-synth-testbench/rtl/selftest_harness.sv",
     "examples/local-systolic-array/rtl/systolic_array.sv",
     "examples/local-timer-watchdog/rtl/timer_watchdog.sv",
     "examples/local-tlb/rtl/sv32_tlb.sv",
+    "examples/local-tlm-platform/rtl/irq_timer.sv",
+    "examples/local-tlm-platform/rtl/periph_sram.sv",
+    "examples/local-tlm-platform/rtl/periph_sys.sv",
     "examples/local-tmr/rtl/plain_register.sv",
     "examples/local-tmr/rtl/tmr_register.sv",
     "examples/local-topk/rtl/topk_select.sv",
+    "examples/local-trace-buffer/rtl/frame_monitor.sv",
+    "examples/local-trace-buffer/rtl/trace_buffer.sv",
     "examples/local-transition-fault/rtl/TFSITE.sv",
     "examples/local-transition-fault/rtl/tf_core.sv",
     "examples/local-trng-health/rtl/trng_health.sv",
@@ -6277,6 +6294,357 @@
         "IMG_MAX": 80,
         "WAIT": 2
       }
+    },
+    {
+      "id": "local-portable-scenario/scn_dma/default",
+      "file": "examples/local-portable-scenario/rtl/scn_dma.sv",
+      "top": "scn_dma",
+      "sources": [
+        "examples/local-portable-scenario/rtl/scn_dma.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-portable-scenario/scn_soc/default",
+      "file": "examples/local-portable-scenario/rtl/scn_soc.sv",
+      "top": "scn_soc",
+      "sources": [
+        "examples/local-portable-scenario/rtl/scn_soc.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-portable-scenario/rtl/scn_dma.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-portable-scenario/scn_soc/WAIT=2",
+      "file": "examples/local-portable-scenario/rtl/scn_soc.sv",
+      "top": "scn_soc",
+      "sources": [
+        "examples/local-portable-scenario/rtl/scn_soc.sv",
+        "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
+        "examples/local-riscv-iss/rtl/rv32i_core.sv",
+        "examples/local-portable-scenario/rtl/scn_dma.sv"
+      ],
+      "parameters": {
+        "WAIT": 2
+      }
+    },
+    {
+      "id": "local-tlm-platform/periph_sys/default",
+      "file": "examples/local-tlm-platform/rtl/periph_sys.sv",
+      "top": "periph_sys",
+      "sources": [
+        "examples/local-tlm-platform/rtl/periph_sys.sv",
+        "examples/local-tlm-platform/rtl/irq_timer.sv",
+        "examples/local-tlm-platform/rtl/periph_sram.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-tlm-platform/periph_sys/WAIT=2",
+      "file": "examples/local-tlm-platform/rtl/periph_sys.sv",
+      "top": "periph_sys",
+      "sources": [
+        "examples/local-tlm-platform/rtl/periph_sys.sv",
+        "examples/local-tlm-platform/rtl/irq_timer.sv",
+        "examples/local-tlm-platform/rtl/periph_sram.sv"
+      ],
+      "parameters": {
+        "WAIT": 2
+      }
+    },
+    {
+      "id": "local-tlm-platform/irq_timer/default",
+      "file": "examples/local-tlm-platform/rtl/irq_timer.sv",
+      "top": "irq_timer",
+      "sources": [
+        "examples/local-tlm-platform/rtl/irq_timer.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-tlm-platform/periph_sram/default",
+      "file": "examples/local-tlm-platform/rtl/periph_sram.sv",
+      "top": "periph_sram",
+      "sources": [
+        "examples/local-tlm-platform/rtl/periph_sram.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-synth-testbench/alu_unit/default",
+      "file": "examples/local-synth-testbench/rtl/alu_unit.sv",
+      "top": "alu_unit",
+      "sources": [
+        "examples/local-synth-testbench/rtl/alu_unit.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-synth-testbench/selftest_harness/default",
+      "file": "examples/local-synth-testbench/rtl/selftest_harness.sv",
+      "top": "selftest_harness",
+      "sources": [
+        "examples/local-synth-testbench/rtl/selftest_harness.sv",
+        "examples/local-synth-testbench/rtl/alu_unit.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-synth-testbench/selftest_harness/GOLDEN=14544/PATTERNS=40/SEED=7467",
+      "file": "examples/local-synth-testbench/rtl/selftest_harness.sv",
+      "top": "selftest_harness",
+      "sources": [
+        "examples/local-synth-testbench/rtl/selftest_harness.sv",
+        "examples/local-synth-testbench/rtl/alu_unit.sv"
+      ],
+      "parameters": {
+        "GOLDEN": 14544,
+        "PATTERNS": 40,
+        "SEED": 7467
+      }
+    },
+    {
+      "id": "local-trace-buffer/trace_buffer/default",
+      "file": "examples/local-trace-buffer/rtl/trace_buffer.sv",
+      "top": "trace_buffer",
+      "sources": [
+        "examples/local-trace-buffer/rtl/trace_buffer.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-trace-buffer/trace_buffer/DEPTH=8",
+      "file": "examples/local-trace-buffer/rtl/trace_buffer.sv",
+      "top": "trace_buffer",
+      "sources": [
+        "examples/local-trace-buffer/rtl/trace_buffer.sv"
+      ],
+      "parameters": {
+        "DEPTH": 8
+      }
+    },
+    {
+      "id": "local-trace-buffer/frame_monitor/default",
+      "file": "examples/local-trace-buffer/rtl/frame_monitor.sv",
+      "top": "frame_monitor",
+      "sources": [
+        "examples/local-trace-buffer/rtl/frame_monitor.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-latency-insensitive-compare/dot_seq/default",
+      "file": "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
+      "top": "dot_seq",
+      "sources": [
+        "examples/local-latency-insensitive-compare/rtl/dot_seq.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-latency-insensitive-compare/dot_pipe/default",
+      "file": "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv",
+      "top": "dot_pipe",
+      "sources": [
+        "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-latency-insensitive-compare/dot_pipe/SPLIT=1",
+      "file": "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv",
+      "top": "dot_pipe",
+      "sources": [
+        "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv"
+      ],
+      "parameters": {
+        "SPLIT": 1
+      }
+    },
+    {
+      "id": "local-latency-insensitive-compare/li_dut/default",
+      "file": "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+      "top": "li_dut",
+      "sources": [
+        "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+        "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
+        "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-latency-insensitive-compare/li_dut/IMPL=1",
+      "file": "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+      "top": "li_dut",
+      "sources": [
+        "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+        "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
+        "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv"
+      ],
+      "parameters": {
+        "IMPL": 1
+      }
+    },
+    {
+      "id": "local-latency-insensitive-compare/li_dut/IMPL=1/SPLIT=1",
+      "file": "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+      "top": "li_dut",
+      "sources": [
+        "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+        "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
+        "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv"
+      ],
+      "parameters": {
+        "IMPL": 1,
+        "SPLIT": 1
+      }
+    },
+    {
+      "id": "local-buffer-manager/buffer_manager/default",
+      "file": "examples/local-buffer-manager/rtl/buffer_manager.sv",
+      "top": "buffer_manager",
+      "sources": [
+        "examples/local-buffer-manager/rtl/buffer_manager.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-buffer-manager/buffer_manager/NB=8/NQ=2",
+      "file": "examples/local-buffer-manager/rtl/buffer_manager.sv",
+      "top": "buffer_manager",
+      "sources": [
+        "examples/local-buffer-manager/rtl/buffer_manager.sv"
+      ],
+      "parameters": {
+        "NB": 8,
+        "NQ": 2
+      }
+    },
+    {
+      "id": "local-buffer-manager/buffer_manager/NB=4/NQ=2",
+      "file": "examples/local-buffer-manager/rtl/buffer_manager.sv",
+      "top": "buffer_manager",
+      "sources": [
+        "examples/local-buffer-manager/rtl/buffer_manager.sv"
+      ],
+      "parameters": {
+        "NB": 4,
+        "NQ": 2
+      }
+    },
+    {
+      "id": "local-buffer-manager/buffer_manager/NB=4/NQ=4",
+      "file": "examples/local-buffer-manager/rtl/buffer_manager.sv",
+      "top": "buffer_manager",
+      "sources": [
+        "examples/local-buffer-manager/rtl/buffer_manager.sv"
+      ],
+      "parameters": {
+        "NB": 4,
+        "NQ": 4
+      }
+    },
+    {
+      "id": "local-otp-fuse/otp_ctrl/default",
+      "file": "examples/local-otp-fuse/rtl/otp_ctrl.sv",
+      "top": "otp_ctrl",
+      "sources": [
+        "examples/local-otp-fuse/rtl/otp_ctrl.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-otp-fuse/otp_ctrl/PROG=5",
+      "file": "examples/local-otp-fuse/rtl/otp_ctrl.sv",
+      "top": "otp_ctrl",
+      "sources": [
+        "examples/local-otp-fuse/rtl/otp_ctrl.sv"
+      ],
+      "parameters": {
+        "PROG": 5
+      }
+    },
+    {
+      "id": "local-otp-fuse/otp_lifecycle_top/default",
+      "file": "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
+      "top": "otp_lifecycle_top",
+      "sources": [
+        "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
+        "examples/local-otp-fuse/rtl/otp_ctrl.sv",
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-otp-fuse/otp_lifecycle_top/PROG=5",
+      "file": "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
+      "top": "otp_lifecycle_top",
+      "sources": [
+        "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
+        "examples/local-otp-fuse/rtl/otp_ctrl.sv",
+        "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv"
+      ],
+      "parameters": {
+        "PROG": 5
+      }
+    },
+    {
+      "id": "local-rate-limiter/token_bucket/default",
+      "file": "examples/local-rate-limiter/rtl/token_bucket.sv",
+      "top": "token_bucket",
+      "sources": [
+        "examples/local-rate-limiter/rtl/token_bucket.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-rate-limiter/token_bucket/DEPTH_W=2/FRAC=2/RATE_W=3",
+      "file": "examples/local-rate-limiter/rtl/token_bucket.sv",
+      "top": "token_bucket",
+      "sources": [
+        "examples/local-rate-limiter/rtl/token_bucket.sv"
+      ],
+      "parameters": {
+        "DEPTH_W": 2,
+        "FRAC": 2,
+        "RATE_W": 3
+      }
+    },
+    {
+      "id": "local-rate-limiter/token_bucket/DEPTH_W=3/FRAC=3/RATE_W=4",
+      "file": "examples/local-rate-limiter/rtl/token_bucket.sv",
+      "top": "token_bucket",
+      "sources": [
+        "examples/local-rate-limiter/rtl/token_bucket.sv"
+      ],
+      "parameters": {
+        "DEPTH_W": 3,
+        "FRAC": 3,
+        "RATE_W": 4
+      }
+    },
+    {
+      "id": "local-image-scaler/image_scaler/default",
+      "file": "examples/local-image-scaler/rtl/image_scaler.sv",
+      "top": "image_scaler",
+      "sources": [
+        "examples/local-image-scaler/rtl/image_scaler.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-image-scaler/image_scaler/MAX_H=6/MAX_W=24",
+      "file": "examples/local-image-scaler/rtl/image_scaler.sv",
+      "top": "image_scaler",
+      "sources": [
+        "examples/local-image-scaler/rtl/image_scaler.sv"
+      ],
+      "parameters": {
+        "MAX_H": 6,
+        "MAX_W": 24
+      }
     }
   ],
   "examples": {
@@ -8525,6 +8893,97 @@
         "local-lockstep-monitor/lockstep_monitor/default"
       ],
       "reason": "題材のロックステップ監視のRTLを参照し、その既存の構成で静的検査"
+    },
+    "local-portable-scenario": {
+      "scope": "dut",
+      "targets": [
+        "local-portable-scenario/scn_dma/default",
+        "local-portable-scenario/scn_soc/default",
+        "local-portable-scenario/scn_soc/WAIT=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-tlm-platform": {
+      "scope": "dut",
+      "targets": [
+        "local-tlm-platform/periph_sys/default",
+        "local-tlm-platform/periph_sys/WAIT=2",
+        "local-tlm-platform/irq_timer/default",
+        "local-tlm-platform/periph_sram/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-synth-testbench": {
+      "scope": "dut",
+      "targets": [
+        "local-synth-testbench/alu_unit/default",
+        "local-synth-testbench/selftest_harness/default",
+        "local-synth-testbench/selftest_harness/GOLDEN=14544/PATTERNS=40/SEED=7467"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-trace-buffer": {
+      "scope": "dut",
+      "targets": [
+        "local-trace-buffer/trace_buffer/default",
+        "local-trace-buffer/trace_buffer/DEPTH=8",
+        "local-trace-buffer/frame_monitor/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-latency-insensitive-compare": {
+      "scope": "dut",
+      "targets": [
+        "local-latency-insensitive-compare/dot_seq/default",
+        "local-latency-insensitive-compare/dot_pipe/default",
+        "local-latency-insensitive-compare/dot_pipe/SPLIT=1",
+        "local-latency-insensitive-compare/li_dut/default",
+        "local-latency-insensitive-compare/li_dut/IMPL=1",
+        "local-latency-insensitive-compare/li_dut/IMPL=1/SPLIT=1"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-buffer-manager": {
+      "scope": "dut",
+      "targets": [
+        "local-buffer-manager/buffer_manager/default",
+        "local-buffer-manager/buffer_manager/NB=8/NQ=2",
+        "local-buffer-manager/buffer_manager/NB=4/NQ=2",
+        "local-buffer-manager/buffer_manager/NB=4/NQ=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-otp-fuse": {
+      "scope": "dut",
+      "targets": [
+        "local-otp-fuse/otp_ctrl/default",
+        "local-otp-fuse/otp_ctrl/PROG=5",
+        "local-otp-fuse/otp_lifecycle_top/default",
+        "local-otp-fuse/otp_lifecycle_top/PROG=5"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-rate-limiter": {
+      "scope": "dut",
+      "targets": [
+        "local-rate-limiter/token_bucket/default",
+        "local-rate-limiter/token_bucket/DEPTH_W=2/FRAC=2/RATE_W=3",
+        "local-rate-limiter/token_bucket/DEPTH_W=3/FRAC=3/RATE_W=4"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-image-scaler": {
+      "scope": "dut",
+      "targets": [
+        "local-image-scaler/image_scaler/default",
+        "local-image-scaler/image_scaler/MAX_H=6/MAX_W=24"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-closure-trend": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
     }
   },
   "blackbox_sources": {

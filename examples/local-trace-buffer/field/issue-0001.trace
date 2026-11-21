@@ -1,0 +1,19 @@
+# trace-buffer readout: depth=16 post=3 trigger=external(frame_monitor.error) revision=old
+# Read from the board after the field failure; written by examples/local-trace-buffer (field-old-revision).
+# index valid data trigger
+00 1 7e 0
+01 1 e7 0
+02 1 0a 0
+03 1 c7 0
+04 1 42 0
+05 1 7e 0
+06 1 7e 0
+07 1 10 0
+08 0 99 0
+09 1 20 0
+0a 1 30 0
+0b 1 40 0
+0c 1 7e 1
+0d 1 7e 0
+0e 0 3c 0
+0f 1 16 0

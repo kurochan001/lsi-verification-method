@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "TR-CAPTURE",
+      "text": "捕捉の間は毎クロック1サンプルを書く。トリガーの後にpost個を書いて止まる。窓は最後のmin(書いた数, DEPTH)個で、トリガーが早いときは前の部分が短くなる。postは0からDEPTH-1まで。",
+      "goals": ["capture/full", "capture/early-trigger", "capture/post-zero", "capture/post-max"]
+    },
+    {
+      "id": "TR-TRIGGER",
+      "text": "トリガーは、マスクした値の一致か、外部の信号（監視する回路のエラー）の最初の1回だけで、post の間の一致では掛け直さない。",
+      "goals": ["trigger/match", "trigger/mask", "trigger/external"]
+    },
+    {
+      "id": "TR-READ",
+      "text": "止まった後の読出しは、古いものから1つずつ返し、トリガーのサンプルに印を、最後に終わりの印を付ける。止まる前と、最後の後の要求は無視する。",
+      "goals": ["read/trigger-mark", "read/last", "read/past-end", "read/ignored-not-done"]
+    },
+    {
+      "id": "TR-CONTROL",
+      "text": "armは設定を取り込み、次のクロックから捕捉を始める。捕捉中のarmは捕捉をやり直し、止まった後のarmは次の捕捉を始める。リセットはすべてを初期値へ戻す。",
+      "goals": ["arm/from-idle", "arm/after-done", "arm/abort", "reset/mid-capture"]
+    },
+    {
+      "id": "TR-FIELD",
+      "text": "監視する回路は、フラグの間のバイトがMAXLEN個を超えたときだけエラーを出す。2つ続くフラグと、ちょうどMAXLEN個の枠は正しい通信として受け入れる。",
+      "goals": ["dut/double-flag", "dut/max-length-frame", "dut/error"]
+    }
+  ]
+}

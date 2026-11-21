@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "LI-STREAM", "text": "受け付けた取引の結果が、受け付けた順に、欠落・重複・余分なしで、時間を持たないC++のモデルと同じ値で出る。比べるのは順序と内容だけで、出る時刻は比べない。", "goals": ["stream/checkpoint", "data/max-positive", "data/min-negative", "data/zero", "data/lane3-negative"]},
+    {"id": "LI-FLOW", "text": "ready/validの規則を守る。提示した結果は受け取られるまで取り下げず、値も変えない。入力側・出力側とも、待ち・空き・待ちの解除を通る。", "goals": ["flow/input-wait", "flow/input-gap", "flow/output-stall", "flow/ready-without-valid", "flow/stall-release"]},
+    {"id": "LI-RESET", "text": "リセットは処理中の取引を取り消す。リセットの間は受付も提示もしない。リセットの後の最初の結果は、リセットの後に受け付けた最初の取引のものになる。", "goals": ["reset/cancel-busy", "reset/cancel-full", "reset/restart"]},
+    {"id": "LI-PIPE", "configs": ["pipe", "pipe-split"], "text": "パイプライン型は毎クロック受け付けられ、出力が詰まっても途中の段の内容を保ったまま、空いた段へ詰める。", "goals": ["pipe/back-to-back", "pipe/accept-during-stall", "pipe/full"]},
+    {"id": "LI-SEQ", "configs": ["seq"], "text": "逐次型は1件ずつ処理し、結果が受け取られるのと同じクロックに次の取引を受け付けられる。", "goals": ["seq/accept-on-delivery"]}
+  ]
+}

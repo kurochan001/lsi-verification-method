@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "PS-ACTIONS", "text": "シナリオのモデルの4種類のアクション（メモリの書込み、コピーの開始、完了の待ち、内容の照合）と両方のチャネルが、ブロック単体とSoCの両方の実現で実行され、同じ期待値と一致する。", "goals": ["action/fill", "action/copy-ch0", "action/copy-ch1", "action/wait", "action/check", "mode/block", "mode/soc"]},
+    {"id": "PS-CONCURRENT", "text": "2つのコピーが同時に進む場面、コピーの間にCPUや検証環境がほかの領域を書き込む場面と読む場面で、結果は順序に依らず期待値と一致する。両方のチャネルが同時に動いたことと、SoCでCPUとDMAがRAMを取り合ったことを観測する。", "goals": ["concurrent/two-copies", "concurrent/fill-during-copy", "concurrent/check-during-copy", "observed/both-active", "observed/ram-contention"]},
+    {"id": "PS-RESOURCES", "text": "資源の制約を守った再利用が正しく動く。終わったチャネルの再使用、コピー先だった領域からの読出し、同じ転送元を2つのチャネルで同時に読むこと。", "goals": ["conflict/channel-reuse", "conflict/read-after-copy", "conflict/shared-source"]},
+    {"id": "PS-ORDER", "text": "開始と逆の順に完了を待ってもよい。後から始めたチャネルが先に終わることを観測し、待ちが2回以上の確認を要した場面を含む。", "goals": ["order/wait-reversed", "observed/ch1-first", "observed/poll-repeated"]},
+    {"id": "PS-ERRORS", "text": "長さ0、長さ16超、終わりがメモリの外に出るコピーは、エラーとして完了し、何も動かさない。", "goals": ["error/len-zero", "error/len-over", "error/range"]},
+    {"id": "PS-BOUNDARY", "text": "1語と16語のコピー、最後の領域。ブロック単体では、メモリの応答が待たされる場面を含む。", "goals": ["boundary/len-one", "boundary/len-max", "boundary/last-region", "observed/memory-stall"]}
+  ]
+}

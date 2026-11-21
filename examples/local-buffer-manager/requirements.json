@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "BM-ENQUEUE",
+      "summary": "An enqueue takes the head of the free list and appends it to the queue; it is refused when the free list is empty. A released buffer is used again later.",
+      "goals": ["enq/accepted", "enq/refused-full", "queue/last", "enq/reuse"]
+    },
+    {
+      "id": "BM-DEQUEUE",
+      "summary": "A dequeue hands out the head of the queue, which becomes held; it is refused when the queue is empty.",
+      "goals": ["deq/accepted", "deq/refused-empty", "held/all"]
+    },
+    {
+      "id": "BM-RELEASE",
+      "summary": "Only a held buffer is released; releasing a free buffer (a second release) or a queued buffer is refused and changes nothing.",
+      "goals": ["release/accepted", "release/twice", "release/queued"]
+    },
+    {
+      "id": "BM-SAME-CYCLE",
+      "summary": "Operations of one cycle all see the state at its start, also when they touch the same queue or a free list of one or no buffer.",
+      "goals": ["same/one", "same/many", "free/swap-one", "free/refill-empty", "cycle/three"]
+    },
+    {
+      "id": "BM-CONSERVE",
+      "summary": "After every cycle each buffer is in exactly one place: the free list, one queue, or held; every list ends at its tail.",
+      "goals": ["cycle/idle"]
+    },
+    {
+      "id": "BM-RESET",
+      "summary": "A reset gives every buffer back to the free list, also with buffers in queues and held.",
+      "goals": ["reset/busy"]
+    }
+  ]
+}

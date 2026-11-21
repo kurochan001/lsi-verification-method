@@ -53,6 +53,7 @@ flowchart TD
 - [プロセッサ](#23-プロセッサ)
 - [通信の符号と信号処理](#24-通信の符号と信号処理)
 - [セキュリティと機能安全](#25-セキュリティと機能安全)
+- [再利用・試作・検証の管理](#26-再利用試作検証の管理)
 - [表記の参考資料](#表記の参考資料)
 
 ## 1. 基本用語
@@ -572,6 +573,24 @@ flowchart TD
 | セキュアブート／ハードウェアの門 | イメージを検証してから実行へ移る起動／検証の結果だけで開く、取込み・鍵・デバッグの許可。ROMが正しくても門の誤りは見えないので、誤ったROMでも確かめる。[実行例](../examples/local-secure-boot/README.md) |
 
 参照：[セキュリティの検証手順](method/security-verification.md)、[オートモーティブの検証手順](method/automotive-verification.md)、[航空宇宙の検証手順](method/aerospace-verification.md)。
+
+## 26. 再利用・試作・検証の管理
+
+テストの意図の再利用、試作と実機での観測、検証の収束の判断に関わる用語です。
+
+| 用語 | 意味・検証で確認すること |
+| --- | --- |
+| シナリオのモデル（アクション・資源・制約） | テストの意図を、行う動作・取り合う資源・順序の制約で書いたもの。同じモデルから、ブロック単体の刺激とSoC上の試験を作り、同じ期待値で照合する。[実行例](../examples/local-portable-scenario/README.md) |
+| 仮想プラットフォーム（TLM-2.0） | 回路をトランザクションの単位で表した高速なモデル。ソフトウェアを早く動かせるが、同じクロックで重なる出来事や待ちは見えない。[実行例](../examples/local-tlm-platform/README.md) |
+| レイテンシに依らない比較（ストリームの比較） | 出力を時刻ではなく、順序と内容の列として比べること。段数の違う実装を同じ原本と比べられる。ready/validの規則は別に監視する。[実行例](../examples/local-latency-insensitive-compare/README.md) |
+| 合成できる自己判定テストベンチ／チップの見え方 | 刺激・署名・合否まで回路で書き、チップの中で動く試験／合否のビットだけが外から見える状態。全部を見るシミュレーションとは見つかる誤りが違う。[実行例](../examples/local-synth-testbench/README.md) |
+| トレースバッファ（トリガー前後の窓） | 内部の信号をチップの中の記録に残す回路。トリガーの前後の窓を読み出し、状態の分かる時点からのシミュレーションの入力に直す。[実行例](../examples/local-trace-buffer/README.md) |
+| 保存則（バッファ管理） | すべてのバッファが、空きか、ちょうど1つのキューに属するという性質。リークと二重解放を見つける。[実行例](../examples/local-buffer-manager/README.md) |
+| OTP（一度だけ書ける記憶） | 書いたビットを戻せない記憶。書込みの順序（データの後にロック）、多数決、書込みの途中の電源断を確かめる。[実行例](../examples/local-otp-fuse/README.md) |
+| トークンバケット／区間の上限 | 一定の速さで補充する残高で通過を制限する方式／どの区間でも通過数が超えない量。通しすぎは上限で見え、通さなすぎは見えない。[実行例](../examples/local-rate-limiter/README.md) |
+| 収束の指標／合否の揺れ／流出 | 検証を終えてよいかを判断する推移／同じ計画で合格と不合格が入れ替わること／検証の後に見つかった不具合。[手順](method/verification-metrics-and-closure.md) |
+
+参照：[ハードウェアとソフトウェアの結合の検証手順](method/hw-sw-integration-verification.md)、[試作と実機での評価](method/prototyping-and-post-silicon.md)、[検証の指標と収束](method/verification-metrics-and-closure.md)。
 
 ## 表記の参考資料
 

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "stable_campaigns": 3,
+  "max_open": 0,
+  "functional_complete": true,
+  "flaky_resolved": true
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SCALE-MAP",
+      "description": "出力画素(x, y)は、中心を合わせた最近傍の元画素を取る。境界にちょうど乗る中心、同じ元画素の繰返し、元画素の飛越し、位相が元へ戻る位置で、厳密な有理数のモデルと一致する",
+      "goals": [
+        "map/tie-column",
+        "map/tie-row",
+        "map/repeat-column",
+        "map/skip-column",
+        "map/repeat-row",
+        "map/skip-row",
+        "phase/period-return"
+      ]
+    },
+    {
+      "id": "SCALE-EDGE",
+      "description": "右端と下端は元画像の最後の画素から取り、範囲の外を読まない。1画素幅の元画像と出力、最大の大きさ",
+      "goals": [
+        "edge/right",
+        "edge/bottom",
+        "size/one",
+        "size/max"
+      ]
+    },
+    {
+      "id": "SCALE-RATIO",
+      "description": "縮小・拡大・等倍の比",
+      "goals": [
+        "ratio/down",
+        "ratio/up",
+        "ratio/identity"
+      ]
+    },
+    {
+      "id": "SCALE-SIZE",
+      "description": "大きさはフレームの最初の画素を受け取るときに取り込み、フレームの途中の変更は無視する。続けて大きさの違うフレームを処理する",
+      "goals": [
+        "config/size-change",
+        "config/midframe-ignored"
+      ]
+    },
+    {
+      "id": "SCALE-CONFIG",
+      "description": "4つの大きさのそれぞれについて、0と上限を1つ超える値を拒否し、待機中は cfg_error を出して画素を受け取らない",
+      "goals": [
+        "config/error-in-w-zero",
+        "config/error-in-w-over",
+        "config/error-in-h-zero",
+        "config/error-in-h-over",
+        "config/error-out-w-zero",
+        "config/error-out-w-over",
+        "config/error-out-h-zero",
+        "config/error-out-h-over"
+      ]
+    },
+    {
+      "id": "SCALE-STREAM",
+      "description": "入力の途切れ、出力中の入力の待ち、出力の逆圧での保持。out_last はフレームの最後の画素だけに付く",
+      "goals": [
+        "stream/in-gap",
+        "stream/in-wait",
+        "stream/out-stall",
+        "frame/last"
+      ]
+    }
+  ]
+}

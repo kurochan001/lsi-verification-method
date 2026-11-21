@@ -122,6 +122,13 @@
     "examples/local-branch-predictor/requirements.json",
     "examples/local-branch-predictor/run.py",
     "examples/local-branch-predictor/tests/test_example.py",
+    "examples/local-buffer-manager/formal.py",
+    "examples/local-buffer-manager/model.py",
+    "examples/local-buffer-manager/requirements.json",
+    "examples/local-buffer-manager/rtl/buffer_manager.sv",
+    "examples/local-buffer-manager/run.py",
+    "examples/local-buffer-manager/tb/buffer_manager_tb.sv",
+    "examples/local-buffer-manager/tests/test_example.py",
     "examples/local-bus-bridge/requirements.json",
     "examples/local-bus-bridge/rtl/bus_bridge.sv",
     "examples/local-bus-bridge/run.py",
@@ -205,6 +212,26 @@
     "examples/local-clock-reset/run.py",
     "examples/local-clock-reset/tb/clock_reset_tb.sv",
     "examples/local-clock-reset/tests/test_example.py",
+    "examples/local-closure-trend/data/campaigns/c01.json",
+    "examples/local-closure-trend/data/campaigns/c02.json",
+    "examples/local-closure-trend/data/campaigns/c03.json",
+    "examples/local-closure-trend/data/campaigns/c04.json",
+    "examples/local-closure-trend/data/campaigns/c05.json",
+    "examples/local-closure-trend/data/campaigns/c06.json",
+    "examples/local-closure-trend/data/campaigns/c07.json",
+    "examples/local-closure-trend/data/campaigns/c08.json",
+    "examples/local-closure-trend/data/campaigns/c09.json",
+    "examples/local-closure-trend/data/campaigns/c10.json",
+    "examples/local-closure-trend/data/campaigns/c11.json",
+    "examples/local-closure-trend/data/criteria.json",
+    "examples/local-closure-trend/data/index.json",
+    "examples/local-closure-trend/data/issues.json",
+    "examples/local-closure-trend/expected.json",
+    "examples/local-closure-trend/recount.py",
+    "examples/local-closure-trend/requirements.json",
+    "examples/local-closure-trend/run.py",
+    "examples/local-closure-trend/tests/test_closure_trend.py",
+    "examples/local-closure-trend/trend.py",
     "examples/local-cocotb/requirements.json",
     "examples/local-cocotb/run.py",
     "examples/local-cocotb/test_apb.py",
@@ -472,6 +499,12 @@
     "examples/local-iir-biquad/run.py",
     "examples/local-iir-biquad/tb/iir_biquad_tb.sv",
     "examples/local-iir-biquad/tests/test_example.py",
+    "examples/local-image-scaler/model.py",
+    "examples/local-image-scaler/requirements.json",
+    "examples/local-image-scaler/rtl/image_scaler.sv",
+    "examples/local-image-scaler/run.py",
+    "examples/local-image-scaler/tb/image_scaler_tb.sv",
+    "examples/local-image-scaler/tests/test_example.py",
     "examples/local-image-sobel/model.py",
     "examples/local-image-sobel/requirements.json",
     "examples/local-image-sobel/rtl/sobel_stream.sv",
@@ -509,6 +542,16 @@
     "examples/local-jtag-tap/run.py",
     "examples/local-jtag-tap/tb/jtag_tap_tb.sv",
     "examples/local-jtag-tap/tests/test_example.py",
+    "examples/local-latency-insensitive-compare/harness.cpp",
+    "examples/local-latency-insensitive-compare/model/dot_model.cpp",
+    "examples/local-latency-insensitive-compare/model/dot_model.hpp",
+    "examples/local-latency-insensitive-compare/model/stream_compare.hpp",
+    "examples/local-latency-insensitive-compare/requirements.json",
+    "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv",
+    "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
+    "examples/local-latency-insensitive-compare/rtl/li_dut.sv",
+    "examples/local-latency-insensitive-compare/run.py",
+    "examples/local-latency-insensitive-compare/tests/test_example.py",
     "examples/local-lbist/model.py",
     "examples/local-lbist/requirements.json",
     "examples/local-lbist/rtl/lbist.sv",
@@ -669,6 +712,13 @@
     "examples/local-network-soc/run.py",
     "examples/local-network-soc/tb/network_soc_tb.sv",
     "examples/local-network-soc/tests/test_firmware.py",
+    "examples/local-otp-fuse/model.py",
+    "examples/local-otp-fuse/requirements.json",
+    "examples/local-otp-fuse/rtl/otp_ctrl.sv",
+    "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
+    "examples/local-otp-fuse/run.py",
+    "examples/local-otp-fuse/tb/otp_tb.sv",
+    "examples/local-otp-fuse/tests/test_example.py",
     "examples/local-packet-crc/requirements.json",
     "examples/local-packet-crc/rtl/crc.sv",
     "examples/local-packet-crc/run.py",
@@ -709,6 +759,13 @@
     "examples/local-por-sequence/solve.py",
     "examples/local-por-sequence/tb/por_tb.sv",
     "examples/local-por-sequence/tests/test_example.py",
+    "examples/local-portable-scenario/requirements.json",
+    "examples/local-portable-scenario/rtl/scn_dma.sv",
+    "examples/local-portable-scenario/rtl/scn_soc.sv",
+    "examples/local-portable-scenario/run.py",
+    "examples/local-portable-scenario/scenario.py",
+    "examples/local-portable-scenario/tb/portable_tb.sv",
+    "examples/local-portable-scenario/tests/test_example.py",
     "examples/local-power-domains/gen.py",
     "examples/local-power-domains/model.py",
     "examples/local-power-domains/power_intent.json",
@@ -765,6 +822,14 @@
     "examples/local-ram-ports/run.py",
     "examples/local-ram-ports/tb/ram_ports_tb.sv",
     "examples/local-ram-ports/tests/test_ram.py",
+    "examples/local-rate-limiter/formal.py",
+    "examples/local-rate-limiter/model.py",
+    "examples/local-rate-limiter/rate_limiter_formal.sv",
+    "examples/local-rate-limiter/requirements.json",
+    "examples/local-rate-limiter/rtl/token_bucket.sv",
+    "examples/local-rate-limiter/run.py",
+    "examples/local-rate-limiter/tb/token_bucket_tb.sv",
+    "examples/local-rate-limiter/tests/test_example.py",
     "examples/local-recovery/requirements.json",
     "examples/local-recovery/rtl/timeout_guard.sv",
     "examples/local-recovery/run.py",
@@ -1038,6 +1103,13 @@
     "examples/local-sync-ram-fifo/run.py",
     "examples/local-sync-ram-fifo/tb/sync_ram_fifo_tb.sv",
     "examples/local-sync-ram-fifo/tests/test_prefetch.py",
+    "examples/local-synth-testbench/model.py",
+    "examples/local-synth-testbench/requirements.json",
+    "examples/local-synth-testbench/rtl/alu_unit.sv",
+    "examples/local-synth-testbench/rtl/selftest_harness.sv",
+    "examples/local-synth-testbench/run.py",
+    "examples/local-synth-testbench/tb/selftest_tb.sv",
+    "examples/local-synth-testbench/tests/test_example.py",
     "examples/local-system-regression/run.py",
     "examples/local-system-regression/tests/test_runner.py",
     "examples/local-systolic-array/requirements.json",
@@ -1055,6 +1127,17 @@
     "examples/local-tlb/run.py",
     "examples/local-tlb/tb/tlb_tb.sv",
     "examples/local-tlb/tests/test_example.py",
+    "examples/local-tlm-platform/c/app.c",
+    "examples/local-tlm-platform/c/app.h",
+    "examples/local-tlm-platform/model.py",
+    "examples/local-tlm-platform/requirements.json",
+    "examples/local-tlm-platform/rtl/irq_timer.sv",
+    "examples/local-tlm-platform/rtl/periph_sram.sv",
+    "examples/local-tlm-platform/rtl/periph_sys.sv",
+    "examples/local-tlm-platform/run.py",
+    "examples/local-tlm-platform/tb/rtl_harness.cpp",
+    "examples/local-tlm-platform/tests/test_example.py",
+    "examples/local-tlm-platform/tlm/platform.cpp",
     "examples/local-tmr/model.py",
     "examples/local-tmr/requirements.json",
     "examples/local-tmr/rtl/plain_register.sv",
@@ -1070,6 +1153,15 @@
     "examples/local-topk/tb/topk_tb.sv",
     "examples/local-topk/tests/test_plan.py",
     "examples/local-topk/topk_formal.sv",
+    "examples/local-trace-buffer/field/issue-0001.trace",
+    "examples/local-trace-buffer/model.py",
+    "examples/local-trace-buffer/replay.py",
+    "examples/local-trace-buffer/requirements.json",
+    "examples/local-trace-buffer/rtl/frame_monitor.sv",
+    "examples/local-trace-buffer/rtl/trace_buffer.sv",
+    "examples/local-trace-buffer/run.py",
+    "examples/local-trace-buffer/tb/trace_tb.sv",
+    "examples/local-trace-buffer/tests/test_example.py",
     "examples/local-transition-fault/atpg.py",
     "examples/local-transition-fault/cells/tf_site.v",
     "examples/local-transition-fault/requirements.json",
@@ -1260,6 +1352,7 @@
       "local-axi4",
       "local-axi4-full",
       "local-axis",
+      "local-buffer-manager",
       "local-bus-bridge",
       "local-cache-coherence",
       "local-cache-dma",
@@ -1304,11 +1397,13 @@
       "local-i2c",
       "local-i2s-audio",
       "local-iir-biquad",
+      "local-image-scaler",
       "local-image-sobel",
       "local-image-soc",
       "local-interconnect",
       "local-irq-cdc",
       "local-jtag-tap",
+      "local-latency-insensitive-compare",
       "local-lbist",
       "local-lec-netlist",
       "local-linecode-8b10b",
@@ -1322,17 +1417,20 @@
       "local-mxfp4",
       "local-network-echo",
       "local-network-soc",
+      "local-otp-fuse",
       "local-packet-crc",
       "local-packet-switch",
       "local-performance-monitor",
       "local-pll-recovery",
       "local-por-sequence",
+      "local-portable-scenario",
       "local-power",
       "local-power-domains",
       "local-priority-irq",
       "local-progress",
       "local-pwm-adc",
       "local-ram-ports",
+      "local-rate-limiter",
       "local-recovery",
       "local-reduction",
       "local-register-formal",
@@ -1361,11 +1459,14 @@
       "local-sv32",
       "local-sva-patterns",
       "local-sync-ram-fifo",
+      "local-synth-testbench",
       "local-systolic-array",
       "local-timer-watchdog",
       "local-tlb",
+      "local-tlm-platform",
       "local-tmr",
       "local-topk",
+      "local-trace-buffer",
       "local-transition-fault",
       "local-trng-health",
       "local-uart",
@@ -1488,6 +1589,10 @@
       "local-riscv-decoder",
       "local-riscv-iss"
     ],
+    "local-buffer-manager": [
+      "local-common",
+      "local-formal-common"
+    ],
     "local-bus-bridge": [
       "local-apb",
       "local-apb-timer",
@@ -1546,6 +1651,9 @@
     ],
     "local-clock-reset": [
       "local-common"
+    ],
+    "local-closure-trend": [
+      "local-exploration-common"
     ],
     "local-cocotb": [
       "local-apb",
@@ -1747,6 +1855,9 @@
     "local-iir-biquad": [
       "local-common"
     ],
+    "local-image-scaler": [
+      "local-common"
+    ],
     "local-image-sobel": [
       "local-conv-window",
       "local-exploration-common"
@@ -1765,6 +1876,9 @@
     "local-jtag-tap": [
       "local-common",
       "local-riscv-debug"
+    ],
+    "local-latency-insensitive-compare": [
+      "local-native-common"
     ],
     "local-lbist": [
       "local-common"
@@ -1909,6 +2023,10 @@
       "local-riscv-decoder",
       "local-riscv-iss"
     ],
+    "local-otp-fuse": [
+      "local-common",
+      "local-secure-lifecycle"
+    ],
     "local-packet-crc": [
       "local-common"
     ],
@@ -1932,6 +2050,11 @@
     ],
     "local-por-sequence": [
       "local-exploration-common"
+    ],
+    "local-portable-scenario": [
+      "local-common",
+      "local-riscv-decoder",
+      "local-riscv-iss"
     ],
     "local-power": [
       "local-common"
@@ -1959,6 +2082,10 @@
     ],
     "local-ram-ports": [
       "local-exploration-common"
+    ],
+    "local-rate-limiter": [
+      "local-common",
+      "local-formal-common"
     ],
     "local-recovery": [
       "local-common"
@@ -2130,6 +2257,9 @@
     "local-sync-ram-fifo": [
       "local-memory-common"
     ],
+    "local-synth-testbench": [
+      "local-common"
+    ],
     "local-system-regression": [
       "local-apb",
       "local-axi4",
@@ -2152,11 +2282,17 @@
       "local-common",
       "local-sv32"
     ],
+    "local-tlm-platform": [
+      "local-exploration-common"
+    ],
     "local-tmr": [
       "local-exploration-common"
     ],
     "local-topk": [
       "local-formal-common"
+    ],
+    "local-trace-buffer": [
+      "local-common"
     ],
     "local-transition-fault": [
       "local-common",

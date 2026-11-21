@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "campaign": "c09",
+  "date": "2026-10-07",
+  "commit": "1a00007",
+  "profile": "nightly",
+  "seed": 25,
+  "summary": {
+    "success": true,
+    "complete": true,
+    "planned": 6,
+    "results": [
+      {
+        "id": "ip-fifo",
+        "example": "ip-fifo",
+        "success": true,
+        "started": true,
+        "message": "planned execution, JUnit, configuration and source hashes valid",
+        "returncode": 0,
+        "junit": 14
+      },
+      {
+        "id": "ip-uart",
+        "example": "ip-uart",
+        "success": true,
+        "started": true,
+        "message": "planned execution, JUnit, configuration and source hashes valid",
+        "returncode": 0,
+        "junit": 14
+      },
+      {
+        "id": "ip-apb",
+        "example": "ip-apb",
+        "success": true,
+        "started": true,
+        "message": "planned execution, JUnit, configuration and source hashes valid",
+        "returncode": 0,
+        "junit": 14
+      },
+      {
+        "id": "ip-dma",
+        "example": "ip-dma",
+        "success": true,
+        "started": true,
+        "message": "planned execution, JUnit, configuration and source hashes valid",
+        "returncode": 0,
+        "junit": 14
+      },
+      {
+        "id": "soc-boot",
+        "example": "soc-boot",
+        "success": true,
+        "started": true,
+        "message": "planned execution, JUnit, configuration and source hashes valid",
+        "returncode": 0,
+        "junit": 14
+      },
+      {
+        "id": "soc-dma",
+        "example": "soc-dma",
+        "success": true,
+        "started": true,
+        "message": "planned execution, JUnit, configuration and source hashes valid",
+        "returncode": 0,
+        "junit": 14
+      }
+    ]
+  },
+  "coverage": {
+    "ip-fifo": {
+      "functional": [
+        24,
+        24
+      ],
+      "code": [
+        208,
+        210
+      ]
+    },
+    "ip-uart": {
+      "functional": [
+        16,
+        16
+      ],
+      "code": [
+        331,
+        340
+      ]
+    },
+    "ip-apb": {
+      "functional": [
+        12,
+        12
+      ],
+      "code": [
+        146,
+        150
+      ]
+    },
+    "ip-dma": {
+      "functional": [
+        18,
+        18
+      ],
+      "code": [
+        401,
+        420
+      ]
+    },
+    "soc-boot": {
+      "functional": [
+        10,
+        10
+      ],
+      "code": [
+        551,
+        600
+      ]
+    },
+    "soc-dma": {
+      "functional": [
+        14,
+        14
+      ],
+      "code": [
+        366,
+        380
+      ]
+    }
+  }
+}
