@@ -20,56 +20,105 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 
 ## 目的から資料を選ぶ
 
+仕事を進める順（全体像→仕様→計画→テストベンチ→実行と回帰→十分さの確認）に並べ、その後に回路の種類別、個別の題材、応用分野、運用の資料を置いています。回路の種類別は、多くのIPで必要になる順です。
+
+### 1. 全体像をつかみ、手元で動かす
+
+| 目的 | 入口 |
+| --- | --- |
+| 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
+| 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
+| 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
+| 用語や結果の読み方を確認する | [用語集](docs/glossary.md)／[FAQの質問別案内](docs/faq.md#疑問に応じた確認の順序) |
+| 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
+
+### 2. 仕様とRTLを用意する
+
 | 目的 | 入口 |
 | --- | --- |
 | LSIの仕様書を書く | [設計意図・章立て・要求の書き方](docs/method/lsi-specification-writing.md)／[仕様書の記入用テンプレート](docs/templates/lsi-specification.md) |
 | 合成向けRTLを書く | [RTLの記述ルール](docs/method/synthesizable-rtl-guidelines.md) — ラッチ・多重駆動、代入、幅・符号、クロック・リセット、メモリ推論、合成結果の確認 |
-| RAMのポート構成とアドレス単位を検証する | [Single port・1R1W・True dual portの実行例](examples/local-ram-ports/README.md)／[Word・Byteアドレスの不具合検出](examples/local-ram-ports/README.md#word-byte) |
-| RAMを使う発展例を動かす | [4教材の入口・まとめて回帰](examples/local-memory-common/README.md)／[ECC付き部分書込み](examples/local-ecc-rmw/README.md)／[画像ダブルバッファ](examples/local-video-double-buffer/README.md)／[同期RAM型非同期FIFO](examples/local-sync-ram-fifo/README.md)／[非整列・エンディアン](examples/local-unaligned-memory/README.md) |
-| 検証の全体的な進め方を知る | [検証手法の案内](#検証の進め方)／[一般化した手順書](docs/method/spec-to-verification-method.md) |
-| 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[ネットリストからの構造解析](examples/local-cdc-structural/README.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
-| PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[PLL出力の周期・パルス幅・ジッター](examples/local-pll-clock-quality/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
-| 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
-| DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md)／[遷移故障と実速度の捕捉](examples/local-transition-fault/README.md) |
-| コードカバレッジの未達を除外してよいか判断する | [到達例と到達不能の証明による分類](examples/local-coverage-unreachable/README.md)／[コードカバレッジの手順](docs/method/code-coverage.md) |
-| 仕様から完了判断までを一通り試す | [APB＋割り込みの総合演習](docs/capstone-apb-irq/README.md)／[サインオフ記入例](docs/capstone-apb-irq/signoff-example.md) |
+
+### 3. 検証計画を立てる
+
+| 目的 | 入口 |
+| --- | --- |
 | 仕様書から検証項目を作る | [一段落から項目表を完成させる実例](docs/method/spec-to-test-items-walkthrough.md)／[記入用シート](docs/templates/spec-to-test-items.md) |
-| 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
-| 失敗・再実行・採用結果をまとめる | [履歴レポート](tools/REPORTING.md)／[実際の時間切れから再実行する例](examples/local-regression-report/README.md) |
-| kirimasimでの実行結果を見る | [版と環境ごと、例ごとの結果](docs/case-study-kirimasim/results.md)／[最新の実行](https://github.com/kurochan001/lsi-verification-method/actions/workflows/kirimasim.yml)／[対象と再実行の手順](docs/case-study-kirimasim/README.md) |
-| lintの指摘や失敗を解析する | [警告の扱い](docs/method/lint-and-waivers.md)／[失敗解析](docs/method/failure-analysis.md)／[不具合票](docs/templates/verification-issue.md) |
-| AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
 | 多すぎるクロス条件から検証項目を選ぶ | [選定理由と数値例](docs/method/cross-test-selection-walkthrough.md)／[判断を記録する雛形](docs/templates/interaction-coverage-plan.md) |
+| 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
+
+### 4. テストベンチを作る
+
+| 目的 | 入口 |
+| --- | --- |
 | ランダム検証を計画・実行する | [手順](docs/method/constrained-random-verification.md)／[Pythonで生成するFIFO例](examples/local-fifo/README.md)／[SV・UVMの制約付きランダム化](examples/local-uvm-random/README.md) |
-| 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[PASS後の保持と実行頻度](docs/method/random-search-management.md#過去のpassを恒久除外の理由にしない)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
 | C++参照モデルでRTLを照合する | [検証手順](docs/method/cpp-reference-verification.md)／[ストリーミングFIR](examples/local-cpp-reference/README.md) |
-| SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md)／[PWM・RCとADCの取り込み時刻](examples/local-pwm-spice/README.md) |
-| VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[SoCLibのCABA RAM](examples/local-vci-soclib/README.md) |
-| 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
-| 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
-| 自動生成した誤実装でテストを評価する | [MCY・機能等価性・検出率](examples/local-auto-mutation/README.md) |
-| 期限のない最終完了を証明する | [公平性と無限待機の反例](examples/local-liveness/README.md) |
 | UVMの基礎から実践へ進む | [基礎と学習案内](docs/method/uvm-basics.md)／[設定・協調・再利用](docs/method/uvm-practical-design.md) |
 | 既存の検証環境をUVMへ移す | [段階的な移行ガイド](docs/method/uvm-migration-guide.md)／[移行計画の雛形](docs/templates/uvm-migration-plan.md) |
-| 実プロジェクトのDV環境を読む | [公開プロジェクトの参照例13件](#公開プロジェクトの参照例13件)／[目的別の選び方・実行条件](docs/method/open-source-dv-environments.md) |
-| 対象の回路や検証方式に合う例を探す | [分野別の案内](#検証例一覧)／[全検証例の一覧](examples/README.md) |
+
+### 5. 実行・解析・回帰を回す
+
+| 目的 | 入口 |
+| --- | --- |
+| lintの指摘や失敗を解析する | [警告の扱い](docs/method/lint-and-waivers.md)／[失敗解析](docs/method/failure-analysis.md)／[不具合票](docs/templates/verification-issue.md) |
+| 探索の重複・再現性・失敗ケースの回帰化を管理する | [管理の考え方](docs/method/random-search-management.md)／[PASS後の保持と実行頻度](docs/method/random-search-management.md#過去のpassを恒久除外の理由にしない)／[入力の分類から固定再生までの演習](docs/method/random-search-management-walkthrough.md) |
+| 変更に影響する例を選んで実行する | [選択規則と証跡](tools/AFFECTED.md) |
+| 失敗・再実行・採用結果をまとめる | [履歴レポート](tools/REPORTING.md)／[実際の時間切れから再実行する例](examples/local-regression-report/README.md) |
+| 項目表と実行結果の対応を自動確認する | [照合の手順](docs/method/verification-plan-automation.md)／[割り込みで動かす例](examples/local-plan-traceability/README.md) |
+
+### 6. 検証の十分さを確かめる
+
+| 目的 | 入口 |
+| --- | --- |
+| コードカバレッジの未達を除外してよいか判断する | [到達例と到達不能の証明による分類](examples/local-coverage-unreachable/README.md)／[コードカバレッジの手順](docs/method/code-coverage.md) |
+| 自動生成した誤実装でテストを評価する | [MCY・機能等価性・検出率](examples/local-auto-mutation/README.md) |
+| 期限のない最終完了を証明する | [公平性と無限待機の反例](examples/local-liveness/README.md) |
+
+### 7. 回路の種類ごとに検証する
+
+| 目的 | 入口 |
+| --- | --- |
+| バスプロトコルを検証する | [共通の観点とプロトコルごとの対応表](docs/method/bus-protocol-verification.md)／[未対応の機能の一覧](docs/method/bus-protocol-verification.md#実行例が扱っていない機能) |
+| 非同期境界を検証する | [非同期検証の手順](docs/method/asynchronous-verification.md)／[ネットリストからの構造解析](examples/local-cdc-structural/README.md)／[リコンバージェンス](docs/method/asynchronous-verification.md#reconvergence)／[非同期FIFO](docs/method/asynchronous-verification.md#async-fifo) |
+| メモリとその周辺を検証する | [機能検証と製造故障の検査の分け方](docs/method/memory-verification.md)／[ECCメモリ](examples/local-ecc-memory/README.md)／[MBIST](examples/local-mbist/README.md)／[予備の行・列による修復](examples/local-memory-repair/README.md) |
+| 演算回路を検証する | [ビット一致・許容誤差・統計の使い分け](docs/method/arithmetic-datapath-verification.md)／[固定小数点FIR](examples/local-dsp/README.md)／[除算器](examples/local-divider/README.md)／[浮動小数点の加算器](examples/local-fp-adder/README.md) |
+| ハードウェアとソフトウェアを結合して検証する | [レジスタ仕様からドライバー・SoCまで](docs/method/hw-sw-integration-verification.md)／[SystemRDLからの生成](examples/local-register-spec/README.md)／[Cドライバ](examples/local-c-driver/README.md) |
+| 合成後の回路とタイミングを確かめる | [lint・等価性・ゲートレベル・STAの分担](docs/method/gate-level-and-timing-verification.md)／[合成後ネットリスト](examples/local-gate-sim/README.md)／[SDFの遅延つき](examples/local-gate-timing/README.md)／[OpenSTA](examples/local-sta/README.md)／[RTLとネットリストの等価性](examples/local-lec-netlist/README.md)／[モード・コーナー別のSTA](examples/local-sta-modes/README.md) |
+| DFT・製造テストの回路を検証する | [DFTの手順](docs/method/dft-verification.md)／[スキャン・ATPG](examples/local-scan-atpg/README.md)／[LBISTの実行例](examples/local-lbist/README.md)／[遷移故障と実速度の捕捉](examples/local-transition-fault/README.md) |
+| 低電力設計を検証する | [検証手順とUPFを実行できない範囲](docs/method/low-power-verification.md)／[排出・隔離・保持・復帰](examples/local-power/README.md)／[複数の電源領域とX注入](examples/local-power-domains/README.md)／[クロックゲート・切替・奇数分周](examples/local-clock-gating/README.md)／[活動率からの電力見積り](examples/local-power-estimate/README.md) |
+| プロセッサを検証する | [検証手順](docs/method/processor-verification.md)／[コアとISSの比較](examples/local-riscv-iss/README.md)／[例外・割り込み](examples/local-riscv-traps/README.md)／[退出のフォーマル検査](examples/local-riscv-formal/README.md)／[公開の試験プログラムとの照合](examples/local-riscv-official-tests/README.md)／[特権モードとPMP](examples/local-riscv-priv/README.md)／[デバッグ](examples/local-riscv-debug/README.md) |
+| セキュリティを検証する | [資産と脅威のモデルからの展開](docs/method/security-verification.md)／[アクセス保護](examples/local-access-control/README.md)／[ライフサイクル](examples/local-secure-lifecycle/README.md)／[定時間の証明](examples/local-constant-time/README.md) |
+| PLL・ADC・PWMの制御を検証する | [PLLのロック待ちと復帰](examples/local-pll-recovery/README.md)／[PLL出力の周期・パルス幅・ジッター](examples/local-pll-clock-quality/README.md)／[ADCの取り込みと変換](examples/local-adc-conversion/README.md)／[PWMからのADC起動](examples/local-pwm-adc/README.md) |
+| SPICEとRTLを協調して動かす | [接続・時刻・誤差の手順](docs/method/spice-cosimulation.md)／[RC電圧制御](examples/local-spice-cosim/README.md)／[PWM・RCとADCの取り込み時刻](examples/local-pwm-spice/README.md) |
+
+### 8. 個別の題材を深掘りする
+
+| 目的 | 入口 |
+| --- | --- |
+| 複数未完了・順不同応答をUVMで検証する | [ID・token・reset取消しの実行例](examples/local-uvm-outstanding/README.md) |
+| 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
+| RAMのポート構成とアドレス単位を検証する | [Single port・1R1W・True dual portの実行例](examples/local-ram-ports/README.md)／[Word・Byteアドレスの不具合検出](examples/local-ram-ports/README.md#word-byte) |
+| RAMを使う発展例を動かす | [4教材の入口・まとめて回帰](examples/local-memory-common/README.md)／[ECC付き部分書込み](examples/local-ecc-rmw/README.md)／[画像ダブルバッファ](examples/local-video-double-buffer/README.md)／[同期RAM型非同期FIFO](examples/local-sync-ram-fifo/README.md)／[非整列・エンディアン](examples/local-unaligned-memory/README.md) |
+| VCIバスと外部のSoCLibモデルを検証する | [検証の手順](docs/method/vci-soclib-verification.md)／[SoCLibのCABA RAM](examples/local-vci-soclib/README.md) |
+
+### 9. 応用分野でIPからSoCまで通す
+
+| 目的 | 入口 |
+| --- | --- |
 | 画像処理IPからCPU付きSoCへ進む | [画像処理の検証手順](docs/method/image-processing-verification.md)／[Sobel単体IP](examples/local-image-sobel/README.md)／[ROM起動SoC](examples/local-image-soc/README.md) |
 | ネットワークIPからCPU付きNICへ進む | [ネットワークの検証手順](docs/method/network-verification.md)／[ARP・UDPエコーIP](examples/local-network-echo/README.md)／[ネットワークSoC](examples/local-network-soc/README.md) |
+| オートモーティブの通信保護・故障反応を学ぶ | [検証手順](docs/method/automotive-verification.md)／[E2Eガード](examples/local-e2e-guard/README.md)／[小規模ECU](examples/local-automotive-ecu/README.md) |
 | 航空宇宙・高信頼の故障反応を学ぶ | [検証手順](docs/method/aerospace-verification.md)／[TMRレジスタ](examples/local-tmr/README.md)／[FDIRサブシステム](examples/local-fdir/README.md) |
 | ロボティクスの計測・制御・駆動を学ぶ | [検証手順](docs/method/robotics-verification.md)／[PWM・エンコーダ](examples/local-motion-io/README.md)／[1軸の閉ループ](examples/local-motion-control/README.md) |
-| オートモーティブの通信保護・故障反応を学ぶ | [検証手順](docs/method/automotive-verification.md)／[E2Eガード](examples/local-e2e-guard/README.md)／[小規模ECU](examples/local-automotive-ecu/README.md) |
-| プロセッサを検証する | [検証手順](docs/method/processor-verification.md)／[コアとISSの比較](examples/local-riscv-iss/README.md)／[例外・割り込み](examples/local-riscv-traps/README.md)／[退出のフォーマル検査](examples/local-riscv-formal/README.md)／[公開の試験プログラムとの照合](examples/local-riscv-official-tests/README.md)／[特権モードとPMP](examples/local-riscv-priv/README.md)／[デバッグ](examples/local-riscv-debug/README.md) |
-| 低電力設計を検証する | [検証手順とUPFを実行できない範囲](docs/method/low-power-verification.md)／[排出・隔離・保持・復帰](examples/local-power/README.md)／[複数の電源領域とX注入](examples/local-power-domains/README.md)／[クロックゲート・切替・奇数分周](examples/local-clock-gating/README.md)／[活動率からの電力見積り](examples/local-power-estimate/README.md) |
-| セキュリティを検証する | [資産と脅威のモデルからの展開](docs/method/security-verification.md)／[アクセス保護](examples/local-access-control/README.md)／[ライフサイクル](examples/local-secure-lifecycle/README.md)／[定時間の証明](examples/local-constant-time/README.md) |
-| 合成後の回路とタイミングを確かめる | [lint・等価性・ゲートレベル・STAの分担](docs/method/gate-level-and-timing-verification.md)／[合成後ネットリスト](examples/local-gate-sim/README.md)／[SDFの遅延つき](examples/local-gate-timing/README.md)／[OpenSTA](examples/local-sta/README.md)／[RTLとネットリストの等価性](examples/local-lec-netlist/README.md)／[モード・コーナー別のSTA](examples/local-sta-modes/README.md) |
-| ハードウェアとソフトウェアを結合して検証する | [レジスタ仕様からドライバー・SoCまで](docs/method/hw-sw-integration-verification.md)／[SystemRDLからの生成](examples/local-register-spec/README.md)／[Cドライバ](examples/local-c-driver/README.md) |
-| メモリとその周辺を検証する | [機能検証と製造故障の検査の分け方](docs/method/memory-verification.md)／[ECCメモリ](examples/local-ecc-memory/README.md)／[MBIST](examples/local-mbist/README.md)／[予備の行・列による修復](examples/local-memory-repair/README.md) |
-| バスプロトコルを検証する | [共通の観点とプロトコルごとの対応表](docs/method/bus-protocol-verification.md)／[未対応の機能の一覧](docs/method/bus-protocol-verification.md#実行例が扱っていない機能) |
-| 演算回路を検証する | [ビット一致・許容誤差・統計の使い分け](docs/method/arithmetic-datapath-verification.md)／[固定小数点FIR](examples/local-dsp/README.md)／[除算器](examples/local-divider/README.md)／[浮動小数点の加算器](examples/local-fp-adder/README.md) |
-| 手元で実行する | [準備と実行](#準備と実行)／[環境の一括準備・診断](tools/ENVIRONMENT.md) |
+
+### 10. 運用と参考資料
+
+| 目的 | 入口 |
+| --- | --- |
+| AIの検証提案を実行してレビューする | [レビュー手順](docs/method/ai-verification-review.md)／[悪い提案の演習](examples/local-ai-review/README.md) |
+| 実プロジェクトのDV環境を読む | [公開プロジェクトの参照例13件](#公開プロジェクトの参照例13件)／[目的別の選び方・実行条件](docs/method/open-source-dv-environments.md) |
+| kirimasimでの実行結果を見る | [版と環境ごと、例ごとの結果](docs/case-study-kirimasim/results.md)／[最新の実行](https://github.com/kurochan001/lsi-verification-method/actions/workflows/kirimasim.yml)／[対象と再実行の手順](docs/case-study-kirimasim/README.md) |
 | 文書・図・CIを確認する | [文書とツールの検査](tools/QUALITY.md)／[SVG図の一覧](docs/figures/README.md)／[変更時・毎晩のCI](tools/CI.md) |
-| 計画と結果を記録する | [適用範囲](docs/templates/verification-scope.md)／[サインオフ記録](docs/templates/signoff-record.md) |
-| 用語や結果の読み方を確認する | [用語集](docs/glossary.md)／[FAQの質問別案内](docs/faq.md#疑問に応じた確認の順序) |
 | 適用事例と由来を調べる | [IEEE 1800-2023のケーススタディ](docs/case-study-ieee1800/README.md)／[PROVENANCE.md](PROVENANCE.md) |
 
 資料は、**手法を読む → 小さな回路で試す → 計画と結果を記録する**、という順で使えます。実際の仕様へ適用するときは、例の要求や合格条件を、対象IPの仕様・構成に合わせて見直します。
