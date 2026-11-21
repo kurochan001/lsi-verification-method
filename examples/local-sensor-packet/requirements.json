@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SP-LANE",
+      "text": "レーンへ分配されたバイト列を元の順に合流し、決めた範囲のずれを吸収する。範囲を超えたずれ、最初のバイトの誤り、レーンの長さの不整合、始まらないレーン、早すぎる次のバーストは、レーンの誤りとして知らせてバーストを捨てる。",
+      "goals": [
+        "lanes/aligned",
+        "lanes/skew",
+        "lanes/skew-limit",
+        "lanes/overflow",
+        "lanes/bad-sync",
+        "lanes/length-mismatch",
+        "lanes/idle-strobe",
+        "lanes/missing",
+        "burst/multi-packet",
+        "burst/partial-word",
+        "burst/too-early",
+        "lanes/queue-full"
+      ]
+    },
+    {
+      "id": "SP-HEADER",
+      "text": "ヘッダーの1ビットの誤りは訂正して使い、2ビットの誤りと予約ビットの違反は知らせて、バーストの残りを捨てる。",
+      "goals": [
+        "header/clean",
+        "header/corrected-data",
+        "header/corrected-check",
+        "header/uncorrectable",
+        "header/reserved-bits",
+        "header/truncated"
+      ]
+    },
+    {
+      "id": "SP-PACKET",
+      "text": "この層が扱わない種類のパケットは、長さに従って読み飛ばす。",
+      "goals": [
+        "packet/ignored-short",
+        "packet/ignored-long"
+      ]
+    },
+    {
+      "id": "SP-ROW",
+      "text": "画素の行は、語数が範囲内でフレームの最初の行と同じときに画素として出し、CRCの結果を行の終わりに知らせる。途中で終わった行は知らせる。",
+      "goals": [
+        "row/crc-ok",
+        "row/crc-error",
+        "row/count-zero",
+        "row/count-max",
+        "row/count-over",
+        "row/width-mismatch",
+        "row/truncated"
+      ]
+    },
+    {
+      "id": "SP-SEQUENCE",
+      "text": "フレームとラインの開始・終了の順序と番号を確かめ、違反を知らせる。何も知らされなかったフレームだけを、きれいなフレームとして終える。",
+      "goals": [
+        "seq/frame-clean",
+        "seq/frame-restart",
+        "seq/frame-end-outside",
+        "seq/frame-number",
+        "seq/frame-end-in-line",
+        "seq/line-start-outside",
+        "seq/line-start-twice",
+        "seq/line-number",
+        "seq/line-end-outside",
+        "seq/line-end-without-row",
+        "seq/line-end-number",
+        "seq/row-outside-line",
+        "seq/row-twice",
+        "frame/dirty",
+        "frame/dirty-other"
+      ]
+    },
+    {
+      "id": "SP-RESET",
+      "text": "パケットの途中のリセットで状態を捨て、次のバーストから受け直す。",
+      "goals": [
+        "reset/midpacket"
+      ]
+    },
+    {
+      "id": "SP-PIPELINE",
+      "text": "きれいなフレームの画素の列は、既存のSobelパイプラインへそのまま渡せる。",
+      "goals": [
+        "pipeline/frame"
+      ]
+    }
+  ]
+}

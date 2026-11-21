@@ -367,6 +367,12 @@
     "examples/local-fec-ber/run.py",
     "examples/local-fec-ber/tb/fec_ber_tb.sv",
     "examples/local-fec-ber/tests/test_example.py",
+    "examples/local-fft/model.py",
+    "examples/local-fft/requirements.json",
+    "examples/local-fft/rtl/fft.sv",
+    "examples/local-fft/run.py",
+    "examples/local-fft/tb/fft_tb.sv",
+    "examples/local-fft/tests/test_example.py",
     "examples/local-fifo-formal/fifo.sby.in",
     "examples/local-fifo-formal/fifo_formal.sv",
     "examples/local-fifo-formal/run.py",
@@ -431,6 +437,12 @@
     "examples/local-i2c/run.py",
     "examples/local-i2c/tb/i2c_tb.sv",
     "examples/local-i2c/tests/test_i2c.py",
+    "examples/local-i2s-audio/requirements.json",
+    "examples/local-i2s-audio/rtl/i2s_rx.sv",
+    "examples/local-i2s-audio/rtl/i2s_tx.sv",
+    "examples/local-i2s-audio/run.py",
+    "examples/local-i2s-audio/tb/i2s_tb.sv",
+    "examples/local-i2s-audio/tests/test_example.py",
     "examples/local-iir-biquad/model.py",
     "examples/local-iir-biquad/requirements.json",
     "examples/local-iir-biquad/rtl/iir_biquad.sv",
@@ -844,6 +856,12 @@
     "examples/local-secure-lifecycle/run.py",
     "examples/local-secure-lifecycle/tb/secure_lifecycle_tb.sv",
     "examples/local-secure-lifecycle/tests/test_example.py",
+    "examples/local-sensor-packet/model.py",
+    "examples/local-sensor-packet/requirements.json",
+    "examples/local-sensor-packet/rtl/sensor_packet_rx.sv",
+    "examples/local-sensor-packet/run.py",
+    "examples/local-sensor-packet/tb/sensor_packet_tb.sv",
+    "examples/local-sensor-packet/tests/test_example.py",
     "examples/local-sha256/requirements.json",
     "examples/local-sha256/rtl/sha256_engine.sv",
     "examples/local-sha256/run.py",
@@ -1137,6 +1155,11 @@
     "examples/local-width-converter/run.py",
     "examples/local-width-converter/tb/width_tb.sv",
     "examples/local-width-converter/tests/test_example.py",
+    "examples/local-wishbone-apb/requirements.json",
+    "examples/local-wishbone-apb/rtl/wb_apb_bridge.sv",
+    "examples/local-wishbone-apb/run.py",
+    "examples/local-wishbone-apb/tb/wb_apb_tb.sv",
+    "examples/local-wishbone-apb/tests/test_example.py",
     "examples/local-workflow-regression/run.py",
     "examples/local-workflow-regression/tests/test_runner.py"
   ],
@@ -1194,12 +1217,14 @@
       "local-equivalence",
       "local-fdir",
       "local-fec-ber",
+      "local-fft",
       "local-fifo",
       "local-formal-data-integrity",
       "local-fp-adder",
       "local-gate-sim",
       "local-gate-timing",
       "local-i2c",
+      "local-i2s-audio",
       "local-iir-biquad",
       "local-image-sobel",
       "local-image-soc",
@@ -1244,6 +1269,7 @@
       "local-scan-atpg",
       "local-scrambler-prbs",
       "local-secure-lifecycle",
+      "local-sensor-packet",
       "local-sha256",
       "local-spi",
       "local-spice-cosim",
@@ -1269,7 +1295,8 @@
       "local-uvm-reg-sequences",
       "local-video-async",
       "local-video-double-buffer",
-      "local-width-converter"
+      "local-width-converter",
+      "local-wishbone-apb"
     ],
     "local-access-control": [
       "local-common"
@@ -1558,6 +1585,9 @@
     "local-fec-ber": [
       "local-common"
     ],
+    "local-fft": [
+      "local-common"
+    ],
     "local-fifo": [
       "local-irq-cdc"
     ],
@@ -1614,6 +1644,9 @@
       "local-common"
     ],
     "local-i2c": [
+      "local-common"
+    ],
+    "local-i2s-audio": [
       "local-common"
     ],
     "local-iir-biquad": [
@@ -1912,6 +1945,11 @@
     "local-secure-lifecycle": [
       "local-common"
     ],
+    "local-sensor-packet": [
+      "local-common",
+      "local-conv-window",
+      "local-image-sobel"
+    ],
     "local-sha256": [
       "local-common"
     ],
@@ -2068,6 +2106,9 @@
       "local-sync-ram-fifo"
     ],
     "local-width-converter": [
+      "local-common"
+    ],
+    "local-wishbone-apb": [
       "local-common"
     ],
     "local-workflow-regression": [

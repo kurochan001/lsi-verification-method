@@ -54,10 +54,10 @@ python3 -m unittest discover -s examples/local-functional-coverage/tests -v
 
 クラッシュ・ビルド失敗・DB欠落・不正なbin集合・予定外のヒット数を、未達の検出成功に数えません。binの未生成、重複、別ソースのカウンター、cross属性の欠落、全binが正の値でも件数が違う場合の拒否をセルフテストに含めます。
 
-`manifest.json`、ツール版、ビルド・実行ログ、ベクトル、波形、各ケースの`coverage.dat`、期待値と実測値を含む`result.json`、`executions.json`、`summary.json`、`junit.xml`を保存します。JUnitは全3例でsmoke 36件／nightly 48件です。既存Icarus共通ランナー83例のJUnitとは別集計です。
+`manifest.json`、ツール版、ビルド・実行ログ、ベクトル、波形、各ケースの`coverage.dat`、期待値と実測値を含む`result.json`、`executions.json`、`summary.json`、`junit.xml`を保存します。JUnitは全3例でsmoke 36件／nightly 48件です。既存Icarus共通ランナー87例のJUnitとは別集計です。
 
 2026-10-31にVerilator 5.052で全6構成のsmoke／nightly、計測不足と無効化の診断、セルフテスト8件が成功しました。既存の[UVMの24 binを使う例](../local-uvm-random/README.md)も、両構成のsmoke（JUnit 17件）を再実行して成功しました。
 
 ## 確認範囲
 
-明示したbin集合を計測する教材です。既存の`COVER`目標すべてをcovergroupへ置き換えた例でも、共通ランナーの全83例にネイティブ計測を追加した結果でもありません。4値・X伝搬の確認はIcarusの既存実行で継続します。全SystemVerilog構文や商用DBとの互換性、UCISの相互運用、コードカバレッジや仕様全体の網羅を確認した結果とは区別します。計画の作り方は[機能カバレッジの手法](../../docs/method/functional-coverage.md)を参照してください。
+明示したbin集合を計測する教材です。既存の`COVER`目標すべてをcovergroupへ置き換えた例でも、共通ランナーの全87例にネイティブ計測を追加した結果でもありません。4値・X伝搬の確認はIcarusの既存実行で継続します。全SystemVerilog構文や商用DBとの互換性、UCISの相互運用、コードカバレッジや仕様全体の網羅を確認した結果とは区別します。計画の作り方は[機能カバレッジの手法](../../docs/method/functional-coverage.md)を参照してください。

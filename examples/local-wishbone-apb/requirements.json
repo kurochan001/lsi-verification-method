@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "WBA-TRANSFER",
+      "text": "1つのWishboneの転送は、1つのAPBの転送になり、APBが終わった次のクロックに1回だけ応答する。待ちの長さに依らない。",
+      "goals": [
+        "wb/read",
+        "wb/write",
+        "wb/ack",
+        "wb/back-to-back",
+        "apb/setup",
+        "apb/wait0",
+        "apb/wait1",
+        "apb/wait-many"
+      ]
+    },
+    {
+      "id": "WBA-ERROR",
+      "text": "PSLVERRは転送の最後のクロックの値だけを取り、ACKの代わりにERRで返す。読出しデータは0にする。",
+      "goals": [
+        "wb/error",
+        "apb/error-flag-in-wait"
+      ]
+    },
+    {
+      "id": "WBA-SELECT",
+      "text": "書込みではSELをPSTRBへそのまま渡し、読出しではPSTRBを0にして、選ばれなかったバイトを0で返す。",
+      "goals": [
+        "select/write-none",
+        "select/write-partial",
+        "select/read-mask",
+        "apb/read-strobe-zero"
+      ]
+    },
+    {
+      "id": "WBA-IGNORE",
+      "text": "CYCとSTBがそろわないクロック、選択していないときのAPBの応答、SETUPのクロックのPREADYは、何も起こさない。",
+      "goals": [
+        "wb/cycle-without-strobe",
+        "wb/strobe-without-cycle",
+        "apb/ready-while-unselected",
+        "apb/ready-in-setup"
+      ]
+    },
+    {
+      "id": "WBA-LEAVE",
+      "text": "マスターがCYCを下げても、始めたAPBの転送は最後まで行う。その転送には応答せず、待っていた次の要求は、終わってから受け付ける。",
+      "goals": [
+        "leave/setup",
+        "leave/wait",
+        "leave/complete",
+        "leave/response",
+        "leave/no-answer",
+        "leave/new-request-waiting"
+      ]
+    },
+    {
+      "id": "WBA-RESET",
+      "text": "転送のどのクロックでリセットしても、APBの選択を外して待機に戻り、次の転送を正しく行う。",
+      "goals": [
+        "reset/mid-transfer",
+        "reset/first-transfer"
+      ]
+    }
+  ]
+}

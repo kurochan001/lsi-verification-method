@@ -66,12 +66,15 @@
     "examples/local-fdir/rtl/protected_store.sv",
     "examples/local-fec-ber/rtl/conv_encoder.sv",
     "examples/local-fec-ber/rtl/viterbi_decoder.sv",
+    "examples/local-fft/rtl/fft.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
     "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
     "examples/local-fp-adder/rtl/fp_adder.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
+    "examples/local-i2s-audio/rtl/i2s_rx.sv",
+    "examples/local-i2s-audio/rtl/i2s_tx.sv",
     "examples/local-iir-biquad/rtl/iir_biquad.sv",
     "examples/local-image-sobel/rtl/sobel_stream.sv",
     "examples/local-image-soc/rtl/cpu_ahb.sv",
@@ -168,6 +171,7 @@
     "examples/local-scrambler-prbs/rtl/ss_descrambler.sv",
     "examples/local-scrambler-prbs/rtl/ss_scrambler.sv",
     "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
+    "examples/local-sensor-packet/rtl/sensor_packet_rx.sv",
     "examples/local-sha256/rtl/sha256_engine.sv",
     "examples/local-spi/rtl/spi_master.sv",
     "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
@@ -205,7 +209,8 @@
     "examples/local-video-async/rtl/video_key.sv",
     "examples/local-video-async/rtl/video_reset_sync.sv",
     "examples/local-video-double-buffer/rtl/video_double_buffer.sv",
-    "examples/local-width-converter/rtl/axi_width64to32.sv"
+    "examples/local-width-converter/rtl/axi_width64to32.sv",
+    "examples/local-wishbone-apb/rtl/wb_apb_bridge.sv"
   ],
   "targets": [
     {
@@ -5937,6 +5942,120 @@
         "TSEG1": 14,
         "TSEG2": 5
       }
+    },
+    {
+      "id": "local-i2s-audio/i2s_tx/default",
+      "file": "examples/local-i2s-audio/rtl/i2s_tx.sv",
+      "top": "i2s_tx",
+      "sources": [
+        "examples/local-i2s-audio/rtl/i2s_tx.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-i2s-audio/i2s_tx/SLOT=32/WORD=24",
+      "file": "examples/local-i2s-audio/rtl/i2s_tx.sv",
+      "top": "i2s_tx",
+      "sources": [
+        "examples/local-i2s-audio/rtl/i2s_tx.sv"
+      ],
+      "parameters": {
+        "SLOT": 32,
+        "WORD": 24
+      }
+    },
+    {
+      "id": "local-i2s-audio/i2s_rx/default",
+      "file": "examples/local-i2s-audio/rtl/i2s_rx.sv",
+      "top": "i2s_rx",
+      "sources": [
+        "examples/local-i2s-audio/rtl/i2s_rx.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-i2s-audio/i2s_rx/SLOT=32/WORD=24",
+      "file": "examples/local-i2s-audio/rtl/i2s_rx.sv",
+      "top": "i2s_rx",
+      "sources": [
+        "examples/local-i2s-audio/rtl/i2s_rx.sv"
+      ],
+      "parameters": {
+        "SLOT": 32,
+        "WORD": 24
+      }
+    },
+    {
+      "id": "local-fft/fft/default",
+      "file": "examples/local-fft/rtl/fft.sv",
+      "top": "fft",
+      "sources": [
+        "examples/local-fft/rtl/fft.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fft/fft/LOGN=6",
+      "file": "examples/local-fft/rtl/fft.sv",
+      "top": "fft",
+      "sources": [
+        "examples/local-fft/rtl/fft.sv"
+      ],
+      "parameters": {
+        "LOGN": 6
+      }
+    },
+    {
+      "id": "local-fft/fft/SCALE=0",
+      "file": "examples/local-fft/rtl/fft.sv",
+      "top": "fft",
+      "sources": [
+        "examples/local-fft/rtl/fft.sv"
+      ],
+      "parameters": {
+        "SCALE": 0
+      }
+    },
+    {
+      "id": "local-sensor-packet/sensor_packet_rx/default",
+      "file": "examples/local-sensor-packet/rtl/sensor_packet_rx.sv",
+      "top": "sensor_packet_rx",
+      "sources": [
+        "examples/local-sensor-packet/rtl/sensor_packet_rx.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-sensor-packet/sensor_packet_rx/LANES=4/MAX_LINE=6",
+      "file": "examples/local-sensor-packet/rtl/sensor_packet_rx.sv",
+      "top": "sensor_packet_rx",
+      "sources": [
+        "examples/local-sensor-packet/rtl/sensor_packet_rx.sv"
+      ],
+      "parameters": {
+        "LANES": 4,
+        "MAX_LINE": 6
+      }
+    },
+    {
+      "id": "local-wishbone-apb/wb_apb_bridge/default",
+      "file": "examples/local-wishbone-apb/rtl/wb_apb_bridge.sv",
+      "top": "wb_apb_bridge",
+      "sources": [
+        "examples/local-wishbone-apb/rtl/wb_apb_bridge.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-wishbone-apb/wb_apb_bridge/AW=8",
+      "file": "examples/local-wishbone-apb/rtl/wb_apb_bridge.sv",
+      "top": "wb_apb_bridge",
+      "sources": [
+        "examples/local-wishbone-apb/rtl/wb_apb_bridge.sv"
+      ],
+      "parameters": {
+        "AW": 8
+      }
     }
   ],
   "examples": {
@@ -8070,6 +8189,41 @@
       "targets": [
         "local-can/can_node/default",
         "local-can/can_node/SJW=3/TSEG1=14/TSEG2=5"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-i2s-audio": {
+      "scope": "dut",
+      "targets": [
+        "local-i2s-audio/i2s_tx/default",
+        "local-i2s-audio/i2s_tx/SLOT=32/WORD=24",
+        "local-i2s-audio/i2s_rx/default",
+        "local-i2s-audio/i2s_rx/SLOT=32/WORD=24"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-fft": {
+      "scope": "dut",
+      "targets": [
+        "local-fft/fft/default",
+        "local-fft/fft/LOGN=6",
+        "local-fft/fft/SCALE=0"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-sensor-packet": {
+      "scope": "dut",
+      "targets": [
+        "local-sensor-packet/sensor_packet_rx/default",
+        "local-sensor-packet/sensor_packet_rx/LANES=4/MAX_LINE=6"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-wishbone-apb": {
+      "scope": "dut",
+      "targets": [
+        "local-wishbone-apb/wb_apb_bridge/default",
+        "local-wishbone-apb/wb_apb_bridge/AW=8"
       ],
       "reason": "自身のDUTと共有RTLを構成別に静的検査"
     }

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "I2S-TIMING",
+      "text": "送信器は、sckの立下りに合わせてwsとsdを変える。wsは、語の先頭（最上位）ビットより1ビット周期だけ早く変わる。語は最上位ビットから送る。",
+      "goals": ["loop/frame", "loop/msb-left", "loop/msb-right"]
+    },
+    {
+      "id": "I2S-CHANNEL",
+      "text": "wsが0のスロットは左、1のスロットは右の語を運ぶ。受信器は、左と右がそろった組だけを渡し、右から始まった最初の語は渡さない。",
+      "goals": ["loop/channels-differ", "ext/start-on-right"]
+    },
+    {
+      "id": "I2S-FLOW",
+      "text": "送信器は組を1つだけ待たせ、待ちがある間は次を受け取らない。フレームの先頭で待ちがなければ、0のフレームを送って1クロックだけunderrunを立てる。",
+      "goals": ["flow/accept", "flow/wait", "flow/idle-ready", "flow/underrun"]
+    },
+    {
+      "id": "I2S-SLAVE",
+      "text": "受信器は、外から来るsckの立上りだけでwsとsdを取り込む。sckの周期が一定でなくても結果は変わらない。",
+      "goals": ["ext/frame", "ext/stretched-clock", "ext/exact-slot"]
+    },
+    {
+      "id": "I2S-LENGTH",
+      "text": "受信器は、語長を超えるビットを捨て、足りないビットを0として扱う。スロットの長さが決めた長さと違えば、その数を数える。",
+      "goals": ["rx/pad-short", "rx/extra-bits", "error/short-slot", "error/long-slot"]
+    },
+    {
+      "id": "I2S-RESET",
+      "text": "フレームの途中のリセットで、送信器と受信器は初期状態へ戻り、その後のフレームを正しく送受する。",
+      "goals": ["reset/midframe"]
+    }
+  ]
+}

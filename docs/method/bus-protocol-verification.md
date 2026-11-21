@@ -135,7 +135,7 @@ flowchart TD
 | AXI4（システム） | 4KiBの境界をまたがない規則の検査、低電力インターフェース、ACE | 未着手 |
 | AXI4-Stream | TSTRB、TID・TDEST・TUSER、レーンの詰め替え、幅の変換 | 未着手 |
 | VCI | 複数IDの並行、LL／SC、連続しないパケット | 対象外としている |
-| そのほかのバス | TileLink、Wishbone、OBI、CHI | 未着手。[CORE-V-VERIFの参照例](../../examples/reference-core-v-verif/README.md)でOBIの環境を読める |
+| そのほかのバス | TileLink、Wishbone、OBI、CHI | Wishboneクラシックは[APBへのブリッジの実行例](../../examples/local-wishbone-apb/README.md)がある。ほかは未着手。[CORE-V-VERIFの参照例](../../examples/reference-core-v-verif/README.md)でOBIの環境を読める |
 | 共通 | 再利用できるプロパティ集（待ち中の保持、N サイクル以内の応答、タグによるデータの順序）と、その3種類の試験（正例・違反・空虚な成立） | [実行例あり](../../examples/local-sva-patterns/README.md) |
 | 共通 | 任意の1データを追跡するデータの完全性の非有界な証明 | [実行例あり](../../examples/local-formal-data-integrity/README.md) |
 

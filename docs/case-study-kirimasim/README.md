@@ -1,6 +1,6 @@
 # kirimasimでローカル検証例を実行する
 
-2026-11-21時点の登録表は161項目で、自動選択する計画は109例・136構成です。`python3 tools/run_kirimasim_examples.py --list`が、選択する例と構成数を表示します。以下の80例・107ジョブは2026-11-03の実測記録であり、その後に加えた例（LBIST、RAM、PLL・ADC・PWMなど）のkirimasimでの実行結果を含みません。追加した例の結果は、毎日の[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)で確かめます。Icarusでの確認は、各例のREADMEと[由来](../../PROVENANCE.md)を参照してください。
+2026-11-21時点の登録表は161項目で、自動選択する計画は113例・140構成です。`python3 tools/run_kirimasim_examples.py --list`が、選択する例と構成数を表示します。以下の80例・107ジョブは2026-11-03の実測記録であり、その後に加えた例（LBIST、RAM、PLL・ADC・PWMなど）のkirimasimでの実行結果を含みません。追加した例の結果は、毎日の[Kirimasim latest](../../tools/CI.md#kirimasimの最新版)で確かめます。Icarusでの確認は、各例のREADMEと[由来](../../PROVENANCE.md)を参照してください。
 
 2026-11-03に、このリポジトリのIcarus向け検証例を[kirimasim](https://github.com/kurochan001/kirimasim)で実行し、テストベンチ2件の修正後、80例・107構成のsmokeがすべてPASSしました。対象、実行方法、移植時に見つけた問題、確認できない範囲を記録します。これは教材側の回路とチェッカーを使った互換性確認であり、SystemVerilog全体への適合性評価ではありません。その後の版を含む[実行結果の一覧](results.md)は、別のページにまとめています。
 

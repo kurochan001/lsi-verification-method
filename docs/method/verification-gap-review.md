@@ -104,6 +104,7 @@
 | --- | --- | --- |
 | SCOPE-PROTOCOL-DATA | [CAN 2.0A](../../examples/local-can/README.md)、[8b/10b符号](../../examples/local-linecode-8b10b/README.md)、[スクランブラーとPRBS](../../examples/local-scrambler-prbs/README.md)、[AXI4の残りの機能](../../examples/local-axi4-full/README.md) | フレームと誤りの扱い、符号の全数と証明、同期と並列版の等価性、バイトレーンと排他アクセス。規格への適合、物理層、CAN FD、SJWによる打切りの検査は対象外 |
 | SCOPE-PROTOCOL-DATA（演算） | [CORDIC](../../examples/local-cordic/README.md)、[CICデシメーター](../../examples/local-cic-decimator/README.md)、[IIRフィルター](../../examples/local-iir-biquad/README.md)、[誤り訂正と誤り率](../../examples/local-fec-ber/README.md) | ビット一致、根拠つきの許容誤差、区間による統計の判定。任意のパラメーターについての証明、文献の式との照合は対象外 |
+| SCOPE-PROTOCOL-DATA | [I2S](../../examples/local-i2s-audio/README.md)、[固定小数点のFFT](../../examples/local-fft/README.md)、[センサーの受信パケット層](../../examples/local-sensor-packet/README.md)、[Wishbone→APBブリッジ](../../examples/local-wishbone-apb/README.md) | ビット列の形式、許容誤差と二乗和の検算、レーンの合流と誤り訂正、ブリッジの時系列と監視。左詰め・右詰め、規格の名前を持つセンサーの形式、Wishboneのパイプラインは対象外 |
 
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 

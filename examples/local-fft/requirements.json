@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "FFT-TRANSFORM",
+      "text": "N個の複素数のサンプルから、離散フーリエ変換のN個のビンを自然な順で出す。SCALEが0でなければNで割った値、0なら割らない値を出す。",
+      "goals": ["input/zero", "input/impulse", "input/constant", "peak/every-bin"]
+    },
+    {
+      "id": "FFT-ERROR",
+      "text": "出力は整数モデルとビットごとに一致し、数学的な変換との差は、導出した上限を超えない。出力の二乗和は、入力の二乗和から決まる範囲に入る。",
+      "goals": ["error/exact", "error/inexact"]
+    },
+    {
+      "id": "FFT-OVERFLOW",
+      "text": "範囲に収まらない結果は上下限に張り付き、overflowが立つ。overflowはそのフレームの最後のビンまで保たれ、次のフレームには残らない。",
+      "goals": ["input/full-scale", "input/most-negative", "saturate/positive", "saturate/negative", "overflow/set", "overflow/cleared-next-frame"]
+    },
+    {
+      "id": "FFT-HANDSHAKE",
+      "text": "サンプルはin_readyが1のクロックにだけ受け付ける。変換中と出力中に出されたサンプルは無視する。最後のビンの次のクロックから、次のフレームを受け付ける。",
+      "goals": ["handshake/gap", "handshake/offer-while-computing", "handshake/offer-while-sending", "handshake/back-to-back"]
+    },
+    {
+      "id": "FFT-RESET",
+      "text": "リセットは、読込み・変換・出力のどの途中でもフレームを捨て、次のフレームを最初のサンプルから受け付ける。",
+      "goals": ["reset/load", "reset/compute", "reset/send"]
+    }
+  ]
+}
