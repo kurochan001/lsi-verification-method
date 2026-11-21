@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "note": "Ranges are nominal values measured with the pinned ngspice and the made-up level-1 cards of model.py. They are teaching numbers, not properties of any real process.",
+  "tolerance": {
+    "rc_time": 0.001,
+    "rc_waveform": 0.0001,
+    "method": 0.001,
+    "range": 0.02,
+    "settings": 0.01,
+    "estimate": [
+      1.0,
+      2.5
+    ],
+    "ring_stage": [
+      0.7,
+      1.7
+    ],
+    "swing": [
+      0.99,
+      1.15
+    ]
+  },
+  "rc": [
+    {
+      "name": "1k-100n",
+      "r": 1000.0,
+      "c": 1e-07
+    },
+    {
+      "name": "47k-10p",
+      "r": 47000.0,
+      "c": 1e-11
+    },
+    {
+      "name": "220-1u",
+      "r": 220.0,
+      "c": 1e-06
+    }
+  ],
+  "inverter": {
+    "fast": {
+      "tphl": 3.67403e-11,
+      "tplh": 4.12133e-11
+    },
+    "typ": {
+      "tphl": 5.81722e-11,
+      "tplh": 6.44661e-11
+    },
+    "slow": {
+      "tphl": 9.45232e-11,
+      "tplh": 9.8648e-11
+    }
+  },
+  "ring": {
+    "fast": {
+      "period": 3.90266e-10
+    },
+    "typ": {
+      "period": 7.31817e-10
+    },
+    "slow": {
+      "period": 1.26949e-09
+    }
+  },
+  "grid_worst": {
+    "tphl": 9.452e-11,
+    "tplh": 1.056e-10
+  },
+  "temperature_inversion_margin": 0.03,
+  "monte_carlo": {
+    "limit": 6.45e-11,
+    "reference": {
+      "trials": 20000,
+      "passes": 18174,
+      "seed": 17,
+      "stream": "reference"
+    },
+    "reference_confidence": 0.999,
+    "alpha": 0.001,
+    "interval_confidence": 0.99,
+    "trials": {
+      "smoke": 300,
+      "nightly": 1000
+    },
+    "shift_for_negative": 0.02,
+    "acceptance": {
+      "300": [
+        254,
+        288
+      ],
+      "1000": [
+        872,
+        941
+      ]
+    }
+  }
+}

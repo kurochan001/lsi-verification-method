@@ -1,0 +1,44 @@
+/* SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ * Teaching library generated from characterized.json. The numbers were measured on a
+ * self-written level-1 transistor netlist; they describe no foundry process. */
+library(teaching_measured) {
+ delay_model : table_lookup;
+ time_unit : "1ns"; voltage_unit : "1V"; current_unit : "1mA";
+ capacitive_load_unit(1,pf); leakage_power_unit : "1nW";
+ nom_process : 1; nom_voltage : 1.8; nom_temperature : 27;
+ input_threshold_pct_rise : 50; input_threshold_pct_fall : 50;
+ output_threshold_pct_rise : 50; output_threshold_pct_fall : 50;
+ slew_lower_threshold_pct_rise : 20; slew_upper_threshold_pct_rise : 80;
+ slew_lower_threshold_pct_fall : 20; slew_upper_threshold_pct_fall : 80;
+ lu_table_template(delays) {
+  variable_1 : input_net_transition; variable_2 : total_output_net_capacitance;
+  index_1("0.01000,0.05000,0.10000"); index_2("0.01000,0.05000,0.10000");
+ }
+ lu_table_template(checks) {
+  variable_1 : constrained_pin_transition; variable_2 : related_pin_transition;
+  index_1("0.01000,0.10000"); index_2("0.01000,0.10000");
+ }
+ cell(DFF) {
+  area : 2;
+  ff(IQ,IQN) { clocked_on : "CLK"; next_state : "D"; }
+  pin(CLK) { direction : input; clock : true; capacitance : 0.002; }
+  pin(D) { direction : input; capacitance : 0.002;
+   timing() { related_pin : "CLK"; timing_type : setup_rising;
+    rise_constraint(checks) { index_1("0.01000,0.10000"); index_2("0.01000,0.10000"); values("0.00391,-0.02500","0.03750,0.00781"); }
+    fall_constraint(checks) { index_1("0.01000,0.10000"); index_2("0.01000,0.10000"); values("0.01328,-0.00859","0.04531,0.01953"); }
+   }
+   timing() { related_pin : "CLK"; timing_type : hold_rising;
+    rise_constraint(checks) { index_1("0.01000,0.10000"); index_2("0.01000,0.10000"); values("0.00156,0.02031","-0.00859,0.00703"); }
+    fall_constraint(checks) { index_1("0.01000,0.10000"); index_2("0.01000,0.10000"); values("0.01563,0.04219","0.02031,0.03984"); }
+   }
+  }
+  pin(Q) { direction : output; function : "IQ"; max_capacitance : 0.1;
+   timing() { related_pin : "CLK"; timing_type : rising_edge; timing_sense : non_unate;
+    cell_rise(delays) { index_1("0.01000,0.05000,0.10000"); index_2("0.01000,0.05000,0.10000"); values("0.10253,0.11936,0.13888","0.11826,0.13510,0.15461","0.13246,0.14930,0.16882"); }
+    cell_fall(delays) { index_1("0.01000,0.05000,0.10000"); index_2("0.01000,0.05000,0.10000"); values("0.09442,0.11125,0.13078","0.10995,0.12678,0.14630","0.12370,0.14053,0.16005"); }
+    rise_transition(delays) { index_1("0.01000,0.05000,0.10000"); index_2("0.01000,0.05000,0.10000"); values("0.01216,0.03416,0.06290","0.01210,0.03417,0.06290","0.01217,0.03418,0.06289"); }
+    fall_transition(delays) { index_1("0.01000,0.05000,0.10000"); index_2("0.01000,0.05000,0.10000"); values("0.01217,0.03417,0.06290","0.01215,0.03416,0.06290","0.01213,0.03416,0.06290"); }
+   }
+  }
+ }
+}

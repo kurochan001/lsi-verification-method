@@ -106,6 +106,13 @@
 | SCOPE-PROTOCOL-DATA（演算） | [CORDIC](../../examples/local-cordic/README.md)、[CICデシメーター](../../examples/local-cic-decimator/README.md)、[IIRフィルター](../../examples/local-iir-biquad/README.md)、[誤り訂正と誤り率](../../examples/local-fec-ber/README.md) | ビット一致、根拠つきの許容誤差、区間による統計の判定。任意のパラメーターについての証明、文献の式との照合は対象外 |
 | SCOPE-PROTOCOL-DATA | [I2S](../../examples/local-i2s-audio/README.md)、[固定小数点のFFT](../../examples/local-fft/README.md)、[センサーの受信パケット層](../../examples/local-sensor-packet/README.md)、[Wishbone→APBブリッジ](../../examples/local-wishbone-apb/README.md) | ビット列の形式、許容誤差と二乗和の検算、レーンの合流と誤り訂正、ブリッジの時系列と監視。左詰め・右詰め、規格の名前を持つセンサーの形式、Wishboneのパイプラインは対象外 |
 
+アナログ・ミックスドシグナルを補う次の例も追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-PHYSICAL（AMS） | [SAR型ADCの実数モデル](../../examples/local-rnm-sar-adc/README.md)、[SPICEの回帰の自動判定](../../examples/local-spice-regression/README.md)、[LibertyとSPICEの対応付け](../../examples/local-liberty-vs-spice/README.md) | 動作モデルの適用範囲、解析の自動判定とコーナー・モンテカルロ、Libertyの値の出所。実PDK、雑音・リーク、メタスタビリティ、チップごとのばらつきは対象外 |
+| SCOPE-POWER / RESET | [電源の立上りとパワーオンリセット](../../examples/local-por-sequence/README.md) | 電源のランプ・瞬時低下・再投入とリセットの同期解除。比較器の基準電圧の立上り、最小パルス幅とrecovery／removalは対象外 |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

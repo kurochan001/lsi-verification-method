@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SPICE-RC",
+      "summary": "Match the RC step against its closed-form solution at every solver point and in two measured times.",
+      "goals": [
+        "rc/analytic-waveform",
+        "rc/t50",
+        "rc/rise",
+        "rc/three-time-constants"
+      ]
+    },
+    {
+      "id": "SPICE-MEAS",
+      "summary": "Agree between ngspice meas and a separate waveform measurement, and with rough hand estimates.",
+      "goals": [
+        "meas/two-methods-delay",
+        "meas/two-methods-period",
+        "meas/gross-estimate",
+        "meas/ring-vs-stage"
+      ]
+    },
+    {
+      "id": "SPICE-RANGE",
+      "summary": "Keep the inverter delays and the ring period inside the recorded ranges.",
+      "goals": [
+        "range/inverter",
+        "range/ring"
+      ]
+    },
+    {
+      "id": "SPICE-CORNER",
+      "summary": "Run the named corners and the full grid; order by process and supply and record the temperature inversion.",
+      "goals": [
+        "corner/fast",
+        "corner/typ",
+        "corner/slow",
+        "corner/order",
+        "corner/grid-monotonic",
+        "corner/temperature-inversion"
+      ]
+    },
+    {
+      "id": "SPICE-SETTINGS",
+      "summary": "Show that tighter solver settings move the results by less than the allowed amount.",
+      "goals": [
+        "settings/rc",
+        "settings/inverter",
+        "settings/ring"
+      ]
+    },
+    {
+      "id": "SPICE-MC",
+      "summary": "Judge a seeded Monte Carlo pass count against an exact binomial acceptance region and report its interval.",
+      "goals": [
+        "mc/accept",
+        "mc/interval",
+        "mc/reproducible"
+      ]
+    },
+    {
+      "id": "SPICE-FAIL",
+      "summary": "Never pass a run that did not converge, did not finish, could not measure, produced a value that is not finite, or was not read.",
+      "goals": [
+        "fail/convergence",
+        "fail/timeout",
+        "fail/measure",
+        "fail/nonfinite",
+        "fail/netlist",
+        "fail/return-code-not-enough"
+      ]
+    },
+    {
+      "id": "SPICE-DETECT",
+      "summary": "Detect a wrong component, a wrong condition and a shifted process with the planned label.",
+      "goals": [
+        "detect/rc",
+        "detect/inverter",
+        "detect/ring",
+        "detect/corner",
+        "detect/yield-low",
+        "detect/yield-high"
+      ]
+    }
+  ]
+}

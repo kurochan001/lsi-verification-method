@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "POR-DETECT",
+      "summary": "The detector trips at the designed supply levels, with the designed hysteresis and delay, and does not chatter on a slow, rippled ramp.",
+      "goals": ["analog/step-delay", "analog/rise-threshold", "analog/fall-threshold", "analog/hysteresis-width", "analog/no-chatter"]
+    },
+    {
+      "id": "POR-BROWNOUT",
+      "summary": "A dip either produces one reset pulse of at least the analytic minimum width or produces nothing; the boundary follows the divider's RC constant.",
+      "goals": ["brownout/ignored-shallow", "brownout/ignored-short", "brownout/reset-shortest", "brownout/reset-long", "brownout/reset-in-cal", "analog/min-pulse", "analog/boundary-map"]
+    },
+    {
+      "id": "POR-RELEASE",
+      "summary": "Reset is released only after the supply reached the rising threshold, on a clock edge, after the configured number of clocks.",
+      "goals": ["cross/good-after-supply", "release/synchronous", "release/aborted"]
+    },
+    {
+      "id": "POR-REINIT",
+      "summary": "Whenever the detector falls, in any state and for any pulse width, every register is back at its reset value at once.",
+      "goals": ["reset/in-wait", "reset/in-load", "reset/in-cal", "reset/in-ready", "reset/in-fail", "pulse/between-clocks", "pulse/across-clock", "repower/full-off"]
+    },
+    {
+      "id": "POR-SEQUENCE",
+      "summary": "After release the controller waits, loads the straps once, calibrates within the time-out and only then reports ready.",
+      "goals": ["init/ready", "init/timeout", "init/done-first-clock", "init/done-last-clock", "init/late-done-ignored", "init/early-done-ignored", "cfg/held"]
+    },
+    {
+      "id": "POR-FLAG",
+      "summary": "The power-on flag is set by every reset and cleared only by a clear request seen while out of reset.",
+      "goals": ["flag/cleared", "flag/clear-in-reset-ignored", "flag/set-again"]
+    },
+    {
+      "id": "POR-SOLVER",
+      "summary": "The detector events do not depend on the solver step or integration method beyond two solver steps.",
+      "goals": ["analog/solver-settings"]
+    }
+  ]
+}

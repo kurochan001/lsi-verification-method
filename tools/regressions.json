@@ -2827,6 +2827,58 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-rnm-sar-adc",
+      "script": "examples/local-rnm-sar-adc/run.py",
+      "tools": [
+        "iverilog",
+        "vvp",
+        "lsi-ngspice-config"
+      ],
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ]
+    },
+    {
+      "id": "local-spice-regression",
+      "script": "examples/local-spice-regression/run.py",
+      "tools": [
+        "lsi-ngspice-config"
+      ],
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ]
+    },
+    {
+      "id": "local-liberty-vs-spice",
+      "script": "examples/local-liberty-vs-spice/run.py",
+      "tools": [
+        "lsi-ngspice-config"
+      ],
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ]
+    },
+    {
+      "id": "local-por-sequence",
+      "script": "examples/local-por-sequence/run.py",
+      "tools": [
+        "iverilog",
+        "vvp",
+        "lsi-ngspice-config"
+      ],
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ]
     }
   ]
 }

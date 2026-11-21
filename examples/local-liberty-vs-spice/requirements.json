@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "LIB-MODEL",
+      "summary": "トランジスタのモデルカードは、READMEに書いたレベル1の式どおりの電流を流し、インバーターはVDD/2で切り替わる。",
+      "goals": ["model/current", "model/threshold"]
+    },
+    {
+      "id": "LIB-DELAY",
+      "summary": "CLK→Qの遅延と出力の遷移時間は表と許容内で一致し、負荷とクロックの遷移時間とともに増え、負荷への傾きは最終段の電流から求めた値に合う。",
+      "goals": ["delay/table", "delay/load", "delay/slew", "delay/load-slope", "delay/estimate", "delay/interpolated"]
+    },
+    {
+      "id": "LIB-SETUP",
+      "summary": "セットアップ時間は表と一致し、表の値の内側では取り込み、外側では取り込まず、大きく割り込むとQは古い値のままになる。",
+      "goals": ["setup/table", "setup/boundary", "setup/violation", "setup/data-slew"]
+    },
+    {
+      "id": "LIB-HOLD",
+      "summary": "ホールド時間は表と一致し、表の値の内側では保ち、外側では保てず、大きく割り込むとQは古い値のままになる。負のホールド時間も現れる。",
+      "goals": ["hold/table", "hold/boundary", "hold/violation", "hold/clock-slew", "hold/negative"]
+    },
+    {
+      "id": "LIB-SEARCH",
+      "summary": "二分探索は、記録した試行だけで境界を裏付け、合否の基準を変えると結果が変わり、ソルバーの設定を厳しくしても結果は許容内に留まる。",
+      "goals": ["search/evidence", "search/criterion", "settings/robust"]
+    },
+    {
+      "id": "LIB-LIBERTY",
+      "summary": "Libertyのファイルは表と同じ値を持ち、既存の教材用Libertyが一定値の表であることと対比できる。",
+      "goals": ["liberty/round-trip", "liberty/existing-constant"]
+    },
+    {
+      "id": "LIB-FAILCLOSED",
+      "summary": "表の誤り、回路の誤り、解けない回路、時間切れ、測定の欠落、数値でない結果は、それぞれ決めたラベルで不合格になる。",
+      "goals": ["reject/table", "reject/spice-error", "reject/timeout", "reject/missing", "reject/invalid"]
+    }
+  ]
+}

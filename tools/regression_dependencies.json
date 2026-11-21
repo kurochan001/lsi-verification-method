@@ -498,6 +498,15 @@
     "examples/local-lec-netlist/rtl/event_meter.sv",
     "examples/local-lec-netlist/run.py",
     "examples/local-lec-netlist/tests/test_example.py",
+    "examples/local-liberty-vs-spice/cells.py",
+    "examples/local-liberty-vs-spice/characterize.py",
+    "examples/local-liberty-vs-spice/characterized.json",
+    "examples/local-liberty-vs-spice/ff_measured.lib",
+    "examples/local-liberty-vs-spice/measure.py",
+    "examples/local-liberty-vs-spice/model.py",
+    "examples/local-liberty-vs-spice/requirements.json",
+    "examples/local-liberty-vs-spice/run.py",
+    "examples/local-liberty-vs-spice/tests/test_example.py",
     "examples/local-linecode-8b10b/formal.py",
     "examples/local-linecode-8b10b/linecode_formal.sv",
     "examples/local-linecode-8b10b/model.py",
@@ -667,6 +676,16 @@
     "examples/local-pll-recovery/run.py",
     "examples/local-pll-recovery/tb/pll_guard_tb.sv",
     "examples/local-pll-recovery/tests/test_example.py",
+    "examples/local-por-sequence/model.py",
+    "examples/local-por-sequence/por.cir.in",
+    "examples/local-por-sequence/requirements.json",
+    "examples/local-por-sequence/rtl/por_init_ctrl.sv",
+    "examples/local-por-sequence/rtl/por_reset_sync.sv",
+    "examples/local-por-sequence/rtl/por_sequence.sv",
+    "examples/local-por-sequence/run.py",
+    "examples/local-por-sequence/solve.py",
+    "examples/local-por-sequence/tb/por_tb.sv",
+    "examples/local-por-sequence/tests/test_example.py",
     "examples/local-power-domains/gen.py",
     "examples/local-power-domains/model.py",
     "examples/local-power-domains/power_intent.json",
@@ -834,6 +853,14 @@
     "examples/local-riscv-traps/requirements.json",
     "examples/local-riscv-traps/run.py",
     "examples/local-riscv-traps/tests/test_example.py",
+    "examples/local-rnm-sar-adc/model.py",
+    "examples/local-rnm-sar-adc/requirements.json",
+    "examples/local-rnm-sar-adc/rtl/sar_logic.sv",
+    "examples/local-rnm-sar-adc/run.py",
+    "examples/local-rnm-sar-adc/solve.py",
+    "examples/local-rnm-sar-adc/tb/sar_adc_tb.sv",
+    "examples/local-rnm-sar-adc/tb/sar_cdac_rnm.sv",
+    "examples/local-rnm-sar-adc/tests/test_example.py",
     "examples/local-scan-atpg/atpg.py",
     "examples/local-scan-atpg/requirements.json",
     "examples/local-scan-atpg/rtl/scan_logic.sv",
@@ -886,6 +913,12 @@
     "examples/local-spice-cosim/rtl/rc_hysteresis.sv",
     "examples/local-spice-cosim/run.py",
     "examples/local-spice-cosim/tests/test_model.py",
+    "examples/local-spice-regression/expected.json",
+    "examples/local-spice-regression/model.py",
+    "examples/local-spice-regression/requirements.json",
+    "examples/local-spice-regression/run.py",
+    "examples/local-spice-regression/solve.py",
+    "examples/local-spice-regression/tests/test_example.py",
     "examples/local-sta-modes/check.tcl",
     "examples/local-sta-modes/constraints.tcl",
     "examples/local-sta-modes/contract.json",
@@ -1248,6 +1281,7 @@
       "local-packet-switch",
       "local-performance-monitor",
       "local-pll-recovery",
+      "local-por-sequence",
       "local-power",
       "local-power-domains",
       "local-priority-irq",
@@ -1266,6 +1300,7 @@
       "local-riscv-decoder",
       "local-riscv-iss",
       "local-riscv-pmp",
+      "local-rnm-sar-adc",
       "local-scan-atpg",
       "local-scrambler-prbs",
       "local-secure-lifecycle",
@@ -1677,6 +1712,11 @@
     "local-lec-netlist": [
       "local-exploration-common"
     ],
+    "local-liberty-vs-spice": [
+      "local-exploration-common",
+      "local-gate-timing",
+      "local-sta"
+    ],
     "local-linecode-8b10b": [
       "local-common",
       "local-formal-common"
@@ -1830,6 +1870,9 @@
     "local-pll-recovery": [
       "local-common"
     ],
+    "local-por-sequence": [
+      "local-exploration-common"
+    ],
     "local-power": [
       "local-common"
     ],
@@ -1935,6 +1978,9 @@
       "local-riscv-decoder",
       "local-riscv-iss"
     ],
+    "local-rnm-sar-adc": [
+      "local-memory-common"
+    ],
     "local-scan-atpg": [
       "local-common"
     ],
@@ -1980,6 +2026,9 @@
     ],
     "local-spice-cosim": [
       "local-native-common"
+    ],
+    "local-spice-regression": [
+      "local-exploration-common"
     ],
     "local-sta": [
       "local-irq-cdc"

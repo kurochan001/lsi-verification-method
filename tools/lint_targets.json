@@ -135,6 +135,9 @@
     "examples/local-packet-switch/rtl/packet_switch.sv",
     "examples/local-performance-monitor/rtl/perf_monitor.sv",
     "examples/local-pll-recovery/rtl/pll_guard.sv",
+    "examples/local-por-sequence/rtl/por_init_ctrl.sv",
+    "examples/local-por-sequence/rtl/por_reset_sync.sv",
+    "examples/local-por-sequence/rtl/por_sequence.sv",
     "examples/local-power-domains/rtl/pd_ctrl.sv",
     "examples/local-power-domains/rtl/pd_domain_a.sv",
     "examples/local-power-domains/rtl/pd_domain_b.sv",
@@ -165,6 +168,7 @@
     "examples/local-riscv-decoder/rtl/rv32i_decoder.sv",
     "examples/local-riscv-iss/rtl/rv32i_core.sv",
     "examples/local-riscv-pmp/rtl/pmp.sv",
+    "examples/local-rnm-sar-adc/rtl/sar_logic.sv",
     "examples/local-scan-atpg/rtl/scan_logic.sv",
     "examples/local-scrambler-prbs/rtl/prbs_check.sv",
     "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
@@ -6056,6 +6060,93 @@
       "parameters": {
         "AW": 8
       }
+    },
+    {
+      "id": "local-rnm-sar-adc/sar_logic/default",
+      "file": "examples/local-rnm-sar-adc/rtl/sar_logic.sv",
+      "top": "sar_logic",
+      "sources": [
+        "examples/local-rnm-sar-adc/rtl/sar_logic.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-rnm-sar-adc/sar_logic/BITS=8",
+      "file": "examples/local-rnm-sar-adc/rtl/sar_logic.sv",
+      "top": "sar_logic",
+      "sources": [
+        "examples/local-rnm-sar-adc/rtl/sar_logic.sv"
+      ],
+      "parameters": {
+        "BITS": 8
+      }
+    },
+    {
+      "id": "local-por-sequence/por_reset_sync/default",
+      "file": "examples/local-por-sequence/rtl/por_reset_sync.sv",
+      "top": "por_reset_sync",
+      "sources": [
+        "examples/local-por-sequence/rtl/por_reset_sync.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-por-sequence/por_reset_sync/STAGES=3",
+      "file": "examples/local-por-sequence/rtl/por_reset_sync.sv",
+      "top": "por_reset_sync",
+      "sources": [
+        "examples/local-por-sequence/rtl/por_reset_sync.sv"
+      ],
+      "parameters": {
+        "STAGES": 3
+      }
+    },
+    {
+      "id": "local-por-sequence/por_init_ctrl/default",
+      "file": "examples/local-por-sequence/rtl/por_init_ctrl.sv",
+      "top": "por_init_ctrl",
+      "sources": [
+        "examples/local-por-sequence/rtl/por_init_ctrl.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-por-sequence/por_init_ctrl/CAL_TIMEOUT=5/WAIT=2",
+      "file": "examples/local-por-sequence/rtl/por_init_ctrl.sv",
+      "top": "por_init_ctrl",
+      "sources": [
+        "examples/local-por-sequence/rtl/por_init_ctrl.sv"
+      ],
+      "parameters": {
+        "CAL_TIMEOUT": 5,
+        "WAIT": 2
+      }
+    },
+    {
+      "id": "local-por-sequence/por_sequence/default",
+      "file": "examples/local-por-sequence/rtl/por_sequence.sv",
+      "top": "por_sequence",
+      "sources": [
+        "examples/local-por-sequence/rtl/por_sequence.sv",
+        "examples/local-por-sequence/rtl/por_reset_sync.sv",
+        "examples/local-por-sequence/rtl/por_init_ctrl.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-por-sequence/por_sequence/CAL_TIMEOUT=5/STAGES=3/WAIT=2",
+      "file": "examples/local-por-sequence/rtl/por_sequence.sv",
+      "top": "por_sequence",
+      "sources": [
+        "examples/local-por-sequence/rtl/por_sequence.sv",
+        "examples/local-por-sequence/rtl/por_reset_sync.sv",
+        "examples/local-por-sequence/rtl/por_init_ctrl.sv"
+      ],
+      "parameters": {
+        "CAL_TIMEOUT": 5,
+        "STAGES": 3,
+        "WAIT": 2
+      }
     }
   ],
   "examples": {
@@ -8226,6 +8317,36 @@
         "local-wishbone-apb/wb_apb_bridge/AW=8"
       ],
       "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-rnm-sar-adc": {
+      "scope": "dut",
+      "targets": [
+        "local-rnm-sar-adc/sar_logic/default",
+        "local-rnm-sar-adc/sar_logic/BITS=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-por-sequence": {
+      "scope": "dut",
+      "targets": [
+        "local-por-sequence/por_reset_sync/default",
+        "local-por-sequence/por_reset_sync/STAGES=3",
+        "local-por-sequence/por_init_ctrl/default",
+        "local-por-sequence/por_init_ctrl/CAL_TIMEOUT=5/WAIT=2",
+        "local-por-sequence/por_sequence/default",
+        "local-por-sequence/por_sequence/CAL_TIMEOUT=5/STAGES=3/WAIT=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-spice-regression": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
+    },
+    "local-liberty-vs-spice": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "DUT用rtlディレクトリを持たない手順・モデル・生成物の例。各run.pyで別途確認"
     }
   },
   "blackbox_sources": {

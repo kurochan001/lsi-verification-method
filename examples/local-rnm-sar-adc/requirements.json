@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SAR-SEQUENCE",
+      "summary": "A conversion is one sample cycle, one trial per bit from the most significant bit, then a one-cycle done with the code.",
+      "goals": [
+        "sar/sample-then-msb",
+        "sar/keep",
+        "sar/drop",
+        "sar/all-ones",
+        "sar/all-zeros",
+        "sar/done-pulse"
+      ]
+    },
+    {
+      "id": "SAR-HANDSHAKE",
+      "summary": "A start is taken only while ready; a start during a conversion is ignored; reset abandons a conversion; the array tracks the input until the end of the sample cycle and ignores it afterwards.",
+      "goals": [
+        "start/idle-gap",
+        "start/held-while-busy",
+        "start/back-to-back",
+        "reset/mid-conversion",
+        "input/change-after-sample",
+        "input/track-until-sample-end"
+      ]
+    },
+    {
+      "id": "RNM-EXACT",
+      "summary": "The real-number model of the capacitor DAC decides every trial as exact arithmetic does, on both sides of every threshold and for every code.",
+      "goals": [
+        "rnm/threshold-above",
+        "rnm/threshold-below",
+        "rnm/every-code"
+      ]
+    },
+    {
+      "id": "MODEL-VALID",
+      "summary": "At a settled clock the real-number model and ngspice give the same codes and the same top-plate voltage within the stated tolerance, also beyond the rails, and the logic replays the ngspice decisions consistently.",
+      "goals": [
+        "model/vtop-within-tolerance",
+        "model/codes-agree",
+        "model/out-of-range-clamp",
+        "model/replay-consistent"
+      ]
+    },
+    {
+      "id": "LINEARITY",
+      "summary": "The nominal array has no missing code; the mismatched array loses the predicted codes; the transfer stays monotonic.",
+      "goals": [
+        "linearity/no-missing-ideal",
+        "linearity/missing-with-mismatch",
+        "linearity/monotonic"
+      ]
+    },
+    {
+      "id": "SETTLING",
+      "summary": "The ngspice waveforms follow the closed forms; codes at short clock periods follow the sampling shortfall formula; the model is valid above the computed minimum period and visibly wrong in ngspice only below it.",
+      "goals": [
+        "settling/analytic-sample",
+        "settling/analytic-trial",
+        "settling/predicted-codes",
+        "settling/minimum-period",
+        "settling/fast-clock-only-in-spice"
+      ]
+    },
+    {
+      "id": "SPICE-SETTINGS",
+      "summary": "Solver tolerances, step limits and the integration method do not change a code or move the top plate beyond the tolerance.",
+      "goals": [
+        "spice/options-insensitive"
+      ]
+    }
+  ]
+}
