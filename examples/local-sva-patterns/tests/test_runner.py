@@ -196,7 +196,9 @@ class Parsing(unittest.TestCase):
 class RealRun(unittest.TestCase):
     def test_smoke_passes_and_a_missing_tool_fails(self):
         self.assertEqual([name for name in TOOLS if not shutil.which(name)], [])
-        with tempfile.TemporaryDirectory() as tmp:
+        # The YoWASP tools replace /tmp inside their sandbox, so an absolute path below /tmp is
+        # invisible to them. Linux puts temporary directories there; ask for it on every platform.
+        with tempfile.TemporaryDirectory(dir='/tmp' if Path('/tmp').is_dir() else None) as tmp:
             out = Path(tmp) / 'out'
             run = subprocess.run([sys.executable, str(HERE / 'run.py'), '--out', str(out)], capture_output=True, text=True)
             self.assertEqual(run.returncode, 0, run.stdout[-2000:] + run.stderr[-2000:])

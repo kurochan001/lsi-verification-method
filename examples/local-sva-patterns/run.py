@@ -173,8 +173,12 @@ class Runner:
             v = P.execute([self.a.verilator, '--lint-only', '--assert', '--timing', '-Wno-fatal', '--top-module', 'probe', str(source)],
                           directory / f'{case}.verilator.log', self.a.build_timeout, directory)
             script = directory / f'{case}.ys'
-            script.write_text(f'read_verilog -sv -formal "{source}"\nhierarchy -top probe\nproc\n', encoding='utf-8')
-            y = P.execute([self.a.yosys, '-q', '-s', str(script)], directory / f'{case}.yosys.log', self.a.formal_timeout, directory)
+            # The YoWASP tools replace /tmp inside their sandbox, so an absolute path below /tmp (where
+            # Linux puts temporary output directories) is invisible to them. Copy the probe next to
+            # the script and name both relative to the working directory.
+            shutil.copy2(source, directory / source.name)
+            script.write_text(f'read_verilog -sv -formal "{source.name}"\nhierarchy -top probe\nproc\n', encoding='utf-8')
+            y = P.execute([self.a.yosys, '-q', '-s', script.name], directory / f'{case}.yosys.log', self.a.formal_timeout, directory)
             if v['error'] or y['error']:
                 return self.e.check('tool-acceptance', False, dict(case=case, error=v['error'] or y['error']))
             seen[case] = dict(verilator=v['returncode'] == 0, yosys=y['returncode'] == 0)
