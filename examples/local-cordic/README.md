@@ -191,6 +191,11 @@ JUnitは、2構成でsmoke 26件、nightly 30件です（構成ごとに、固�
 - `CORDIC_RESIDUAL`の検査は、テストベンチがRTLの内部の配列（`dut.z`・`dut.valid`・`dut.m`）を読みます。
 - Linuxとkirimasimでは実行していません。
 
+
+## kirimasimでの実行
+
+2026-11-21のKirimasim latest（kirimasim `cd1bdfafc49e`）では、この例はビルドの段階で止まります。kirimasimの内部の検査（SIR verifier）が、反復の段の`always_ff`について「書込みの集合の外へ書いている」という内部エラーを出すためです。原因は、generateのループの中で、genvarで選んだ配列の要素へ書くプロセスが、定数で偽になる`if`の分岐（この例では`MUTATION == 1 && i == ITER - 1`）を持つことでした。この形は規格で許されていて、Icarus Verilog 14.0とVerilator 5.052は正しく動きます。最小例を作って最新の`main`で再現し、[kirimasimの#144](https://github.com/kurochan001/kirimasim/issues/144)として報告しました。RTLは書き換えていないので、#144が直るまでKirimasim latestではこの例だけが不合格になります。
+
 ## 確認記録
 
 2026-11-21に、macOS arm64、Python 3.13、Icarus Verilog 14.0開発版（`ca6b8d3`）で実行しました。

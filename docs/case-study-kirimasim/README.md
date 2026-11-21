@@ -198,6 +198,10 @@ kirimasimとIcarusのどちらでも合格し、両者の出力も一致して�
 
 同じ形が増えないように、[`check_tb_races.py`](../../tools/check_tb_races.py)が全テストベンチをテキスト検索し、ツールのセルフテストの中で毎回確かめます。全数は保証しません。
 
+### CORDIC：generateの中の定数の分岐（kirimasimの#144）
+
+2026-11-21に加えた[CORDICの例](../../examples/local-cordic/README.md)は、Kirimasim latest（`cd1bdfafc49e`）でビルドの段階で止まりました。反復の段は、generateのループの中で、genvarで選んだ配列の要素へ書く`always_ff`です。そのプロセスに、定数で偽になる`if`の分岐（意図的な誤実装を選ぶ条件）があると、kirimasimの内部の検査が「書込みの集合の外へ書いている」という内部エラーを出します。条件が変数の場合や、generateを使わずに同じプロセスを書き並べた場合は動きます。規格で許される書き方で、Icarus Verilog 14.0とVerilator 5.052は正しく動くので、最小例を作って最新の`main`で再現し、[#144](https://github.com/kurochan001/kirimasim/issues/144)として報告しました。この例のRTLは書き換えていません。同じ日に加えたほかのIcarusだけで動く11例は、手元でビルドした同じコミットのkirimasimで、11／11とも合格しました。
+
 ## 5. 再実行する
 
 POSIX環境、Python 3.10以上、実行可能なkirimasimを別途用意します。全例用の[環境準備](../../tools/ENVIRONMENT.md)はkirimasimのインストール・ビルドを行いません。この実測で使ったビルドが必要な場合は、上記コミットと[kirimasim側のビルド手順](https://github.com/kurochan001/kirimasim/blob/d73d8922dfa20e19ccb9411adbe42a6d258bb49d/README.md)を確認してください。
