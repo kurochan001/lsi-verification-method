@@ -2958,26 +2958,26 @@
     },
     "local-riscv-debug/debug_system/default": {
       "target_sha256": "aeafaa787381bd883b9a23d783d0fac4647939f19b261a0ccc48eafa49af5dc3",
-      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace", "examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab", "examples/local-riscv-debug/rtl/debug_system.sv": "fc08486027f23a3a35b1d2eebf5581394e76286dcd6ad67f9ba1ecc0690eb76f", "examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace", "examples/local-riscv-debug/rtl/debug_module.sv": "46fe750ce4ffcd9040a830dafba6e074dbcb767d7c0ec8709c06950753d84298", "examples/local-riscv-debug/rtl/debug_system.sv": "fc08486027f23a3a35b1d2eebf5581394e76286dcd6ad67f9ba1ecc0690eb76f", "examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-riscv-debug/debug_system/PREDICT=2": {
       "target_sha256": "15b57ff91f0b94f279a6bda73683f6b49af869f77ca34a3ca379c0c72fba7842",
-      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace", "examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab", "examples/local-riscv-debug/rtl/debug_system.sv": "fc08486027f23a3a35b1d2eebf5581394e76286dcd6ad67f9ba1ecc0690eb76f", "examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
+      "source_sha256": {"examples/local-jtag-tap/rtl/jtag_tap.sv": "4289a704914e2f5f1d7e9bf1ee62b0fd265bec0f0b5e691778282d14d5a2d908", "examples/local-riscv-debug/rtl/debug_dtm.sv": "b0009e60e97168dc2d3433c81ce355b5c435270cb649fc1cfd8113acaf0ccace", "examples/local-riscv-debug/rtl/debug_module.sv": "46fe750ce4ffcd9040a830dafba6e074dbcb767d7c0ec8709c06950753d84298", "examples/local-riscv-debug/rtl/debug_system.sv": "fc08486027f23a3a35b1d2eebf5581394e76286dcd6ad67f9ba1ecc0690eb76f", "examples/local-riscv-debug/rtl/rv32i_debug_core.sv": "820647c0e5e1c9f40d30a8fb28ad442dc82f5860c792db49d3d40a9cf738bf2d", "examples/local-riscv-decoder/rtl/rv32i_decoder.sv": "df11fdc65faccaab9518e194a99461e4317bab3e36ddf20db85aaa7f58f52a7f", "examples/local-riscv-iss/rtl/rv32i_core.sv": "738785a240f512a7844487c3bb0340236913a48fdb41257a34f4eb9d15532996"},
       "diagnostics": [
         {"count": 1, "diagnostic": {"column": 35, "file": "examples/local-jtag-tap/rtl/jtag_tap.sv", "line": 15, "message": "Parameter is not used: 'BYPASS'", "rule": "UNUSEDPARAM", "severity": "Warning"}, "disposition": "known-debt", "expires": "ソース、依存ソース、トップ、パラメーター、ツール版、診断内容・件数の変更時", "impact": "仕様適合・幅や符号の妥当性・実装品質を承認する記録ではない。対象構成の動作試験・証明は別ゲート。", "method": "診断一覧・対象の位置・規則と適用範囲を照合し、未解決の指摘として登録。", "reason": "UNUSEDPARAMの既存指摘を未解決として記録。新規・増加・解消は再レビューする。", "reviewer": "Codex（初期の機械支援による整理。人の承認ではない）"}
       ]
     },
     "local-riscv-debug/debug_module/default": {
       "target_sha256": "412452baea8fe6c90c3f97a35e754ce546ee5aa9e435bb37832006b7083cf11e",
-      "source_sha256": {"examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab"},
+      "source_sha256": {"examples/local-riscv-debug/rtl/debug_module.sv": "46fe750ce4ffcd9040a830dafba6e074dbcb767d7c0ec8709c06950753d84298"},
       "diagnostics": []
     },
     "local-riscv-debug/debug_module/CMD_CYCLES=8": {
       "target_sha256": "49f689c7f09a720cd0e50629faff31270f93662ebd1f7357b170c96911cf6618",
-      "source_sha256": {"examples/local-riscv-debug/rtl/debug_module.sv": "9f2277495989b1bb8068b7944358df291382a0956105bcc72ddb2ef919c2aaab"},
+      "source_sha256": {"examples/local-riscv-debug/rtl/debug_module.sv": "46fe750ce4ffcd9040a830dafba6e074dbcb767d7c0ec8709c06950753d84298"},
       "diagnostics": []
     },
     "local-riscv-debug/debug_dtm/default": {

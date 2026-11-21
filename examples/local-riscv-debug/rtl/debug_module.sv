@@ -1,4 +1,5 @@
-// A debug module for one hart: dmcontrol, dmstatus, abstractcs, command and data0. The only
+// A debug module for one hart: dmcontrol, dmstatus, abstractcs, command and data0, as in the
+// RISC-V Debug Specification 1.0 (sections 3.7.1 and 3.14; checked against its register tables). The only
 // abstract command is Access Register with 32-bit registers. A command takes CMD_CYCLES clock
 // cycles, as an implementation that runs instructions for it would; meanwhile abstractcs.busy
 // is set and any use of command, data0 or abstractcs gives cmderr 1. Mutation 28 addresses the
@@ -36,6 +37,12 @@ module debug_module #(parameter MUTATION = 0, CMD_CYCLES = 512) (
     // What a new command would do: 0 start, otherwise the error it ends with at once.
     wire [31:0] c = dmi_wdata;
     wire unsupported = c[31:23] != 9'd0 || c[22:20] != 3'd2 || c[19] || c[18];  // bit 23 is reserved
+    // The CSRs that the attached core (rv32i_core with TRAPS = 1) has but does not hand to the
+    // debugger. A register the core has is "not supported" (cmderr 2); one it does not have at
+    // all is an exception (cmderr 3), as the specification requires for Access Register.
+    wire [11:0] csr = command[11:0];
+    wire core_csr = command[15:12] == 4'h0 && (csr == 12'h300 || csr == 12'h304 || csr == 12'h305 ||
+                    (csr >= 12'h340 && csr <= 12'h344));
     always @(posedge clk) begin
         if (!rst_n) begin
             seen <= 0; dmactive <= 0; haltreq_q <= 0; resumeack <= 0; resuming <= 0; busy <= 0; cmderr <= 0;
@@ -52,7 +59,7 @@ module debug_module #(parameter MUTATION = 0, CMD_CYCLES = 512) (
             end
             if (read) case (dmi_addr)
                 DATA0:      dmi_rdata <= data0;
-                DMCONTROL:  dmi_rdata <= {haltreq_q, 30'd0, dmactive};
+                DMCONTROL:  dmi_rdata <= {31'd0, dmactive};   // haltreq and resumereq read as zero
                 DMSTATUS:   dmi_rdata <= dmstatus;
                 ABSTRACTCS: dmi_rdata <= abstractcs;
                 default:    dmi_rdata <= 32'd0;     // command and everything else read as zero
@@ -81,7 +88,7 @@ module debug_module #(parameter MUTATION = 0, CMD_CYCLES = 512) (
                 end
             end
             // The register number is known one cycle after the command is taken.
-            if (busy && count == CYCLES && !reg_known) begin busy <= 0; cmderr <= 3'd2; end
+            if (busy && count == CYCLES && !reg_known) begin busy <= 0; cmderr <= core_csr ? 3'd2 : 3'd3; end
         end
     end
 endmodule

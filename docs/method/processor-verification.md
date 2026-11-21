@@ -78,7 +78,7 @@ flowchart LR
 | CSR | 各ビットの読み書き属性、読み書きの副作用、未実装の番号 | ビットごとの書込みと読出し、特権ごとの許可 |
 | 特権と保護 | モードの遷移、PMP・ページングの判定、MPRV | 判定回路の単体と、コアへ組み込んだ例外の両方 |
 | メモリの順序 | 自分のストアが見えること、他hartへの可視性、FENCE | リトマス試験の結果集合と抽象モデルの全探索 |
-| デバッグ | [停止・再開・1命令実行](../../examples/local-riscv-debug/README.md)、抽象コマンド、dcsr・dpc、JTAG経由のアクセス | 実行例あり。教材用の部分実装で、仕様の文書との照合と外部のデバッガーとの接続は未実施 |
+| デバッグ | [停止・再開・1命令実行](../../examples/local-riscv-debug/README.md)、抽象コマンド、dcsr・dpc、JTAG経由のアクセス | 実行例あり。教材用の部分実装で、実装した範囲はDebug Specification 1.0と照合済み。外部のデバッガーとの接続は未実施 |
 | 性能の観測 | 退出数、予測外れ数、サイクル数 | カウンターの値を独立に数えた件数と照合 |
 
 ## 4. 重点にするクロス
@@ -157,7 +157,7 @@ ISSとの比較で見つからない変異もあります。結果を変えな�
 | 退出の性質のフォーマル検査 | [RVFI相当の信号での検査](../../examples/local-riscv-formal/README.md)。命令ごとの結果・メモリアクセス・レジスタの一貫性・PCのつながり | 実行例あり。すべて有界検査で、帰納法の証明はない。`TRAPS=0`の構成だけ |
 | 外部の基準との照合 | [riscv-testsのrv32ui 40本](../../examples/local-riscv-official-tests/README.md)を、コアと自作ISSで実行 | 実行例あり。環境ヘッダーは最小版（コアに`mhartid`がなく、ISSがFENCEを実行できないため）。arch-test、Spike・Sailとの実行記録の比較は未着手 |
 | 特権と保護の統合 | [M／UモードとPMPの統合](../../examples/local-riscv-priv/README.md)。アクセスフォルト、タイマー・ソフトウェア割り込み、ベクター式のmtvec、割り込みの入れ子、WFI | 実行例あり。Sモード、ページングの統合、Smepmpは未着手 |
-| デバッグ | [停止・再開・1命令実行](../../examples/local-riscv-debug/README.md)、抽象コマンド、dcsr・dpc、JTAG経由のアクセス | 実行例あり。教材用の部分実装で、仕様の文書との照合と外部のデバッガーとの接続は未実施 |
+| デバッグ | [停止・再開・1命令実行](../../examples/local-riscv-debug/README.md)、抽象コマンド、dcsr・dpc、JTAG経由のアクセス | 実行例あり。教材用の部分実装で、実装した範囲はDebug Specification 1.0と照合済み。外部のデバッガーとの接続は未実施 |
 | アトミック命令 | [LR／SCとAMO](../../examples/local-riscv-atomic/README.md)、予約の無効化、リトマス試験 | 実行例あり。操作ポートを持つ回路で、コアへは未統合 |
 | アウトオブオーダーの資源管理 | [リネーム表・フリーリスト・ROB](../../examples/local-rename-rob/README.md)の保存則 | 実行例あり。証明はROB 4エントリーまで。発行キューとロード・ストアキューは未着手 |
 | 浮動小数点 | [加算器](../../examples/local-fp-adder/README.md)の丸めモード、例外フラグ、subnormal、NaN | 実行例あり。乗除算・FMA・変換は未着手。[CVFPUの参照例](../../examples/reference-cvfpu-uvm/README.md)は読解のみ |

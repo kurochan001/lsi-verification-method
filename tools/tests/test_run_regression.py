@@ -295,7 +295,8 @@ class CampaignTests(unittest.TestCase):
     @unittest.skipUnless(os.name=='posix','POSIX process groups required')
     def test_cancellation_stops_detached_grandchild(self):
         pidfile=self.root/'child.pid'
-        program='import subprocess,sys,time; p=subprocess.Popen([sys.executable,"-c","import time;time.sleep(60)"],start_new_session=True);open(sys.argv[1],"w").write(str(p.pid));time.sleep(60)'
+        # Write the pid to a temporary name and rename it, so the test never reads a created but still empty file.
+        program='import os,subprocess,sys,time; p=subprocess.Popen([sys.executable,"-c","import time;time.sleep(60)"],start_new_session=True);open(sys.argv[1]+".tmp","w").write(str(p.pid));os.replace(sys.argv[1]+".tmp",sys.argv[1]);time.sleep(60)'
         parent=subprocess.Popen([sys.executable,'-c',program,str(pidfile)],start_new_session=True)
         try:
             deadline=time.monotonic()+5

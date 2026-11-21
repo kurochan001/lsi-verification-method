@@ -18,7 +18,7 @@ ALLHALTED, ALLRUNNING, ALLRESUMEACK = 3 << 8, 3 << 10, 3 << 16   # the any and a
 STATUS_FIXED = 0x83                    # authenticated, version 3 (specification 1.0)
 ABSTRACT_IDLE = 0x1                    # one data register, not busy, no error
 BUSY = 1 << 12
-CMDERR = {'busy': 1, 'not-supported': 2, 'halt-resume': 4}
+CMDERR = {'busy': 1, 'not-supported': 2, 'exception': 3, 'halt-resume': 4}
 DCSR, DPC, GPR = 0x7b0, 0x7b1, 0x1000
 CAUSE = {'ebreak': 1, 'haltreq': 3, 'step': 4}
 SCAN_CLOCKS = 4 * 47                   # one dmi scan of the bench: 47 TCK periods of four clocks
@@ -94,7 +94,7 @@ class Script:
         self.cover('dtm/dtmcs')
         self.instruction(DMI_IR)
         self.write(DMCONTROL, DMACTIVE | HALTREQ)
-        self.read(DMCONTROL, DMACTIVE | HALTREQ, label='DBG_STATUS')
+        self.read(DMCONTROL, DMACTIVE, label='DBG_STATUS')   # haltreq reads as zero
         self.read(DMSTATUS, STATUS_FIXED | ALLRUNNING, label='DBG_STATUS')
         self.row(RELEASE)
 
@@ -274,6 +274,10 @@ class Debugger:
         s.read(DATA0, 0x600dda7a)
         s.cover('abstract/sticky-error')
         s.clear_error()
+        # registers the hart does not have at all: a floating-point register and a trigger CSR
+        for missing in (0x1020, 0x7a0):
+            s.command(access(missing), 'exception')
+            s.clear_error()
         s.cover('abstract/unknown-register')
         s.read_register(GPR + probe, regs[probe])
         s.cover('abstract/clear')
