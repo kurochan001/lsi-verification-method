@@ -101,6 +101,8 @@ LSIの仕様から検証を計画し、刺激・観測・期待値の比較・�
 | 再利用できるSVAを書く | [プロパティ集と3試験](examples/local-sva-patterns/README.md) |
 | データの欠落・重複やレジスタ・リセットを証明する | [1データ追跡](examples/local-formal-data-integrity/README.md)／[レジスタの性質の生成](examples/local-register-formal/README.md)／[リセット後の値の確定](examples/local-reset-x-formal/README.md) |
 | 時間のかかるカウンターの試験を短くする | [幅の縮小・ロード・forceの比較](examples/local-long-counter/README.md) |
+| 通信の符号とフレームを検証する | [CAN 2.0A](examples/local-can/README.md)／[8b/10b符号](examples/local-linecode-8b10b/README.md)／[スクランブラーとPRBS](examples/local-scrambler-prbs/README.md)／[AXI4の残りの機能](examples/local-axi4-full/README.md) |
+| 信号処理の回路を許容誤差や統計で判定する | [CORDIC](examples/local-cordic/README.md)／[CICデシメーター](examples/local-cic-decimator/README.md)／[IIRフィルター](examples/local-iir-biquad/README.md)／[誤り訂正と誤り率](examples/local-fec-ber/README.md) |
 | 別クロックの画像処理を非同期FIFOでつなぐ | [カラーキー・YCbCr→RGB・アルファ合成・表示の実行例](examples/local-video-async/README.md) — 画素とSOF/EOLの対応、prefill、供給速度、表示underflowと復帰 |
 | RAMのポート構成とアドレス単位を検証する | [Single port・1R1W・True dual portの実行例](examples/local-ram-ports/README.md)／[Word・Byteアドレスの不具合検出](examples/local-ram-ports/README.md#word-byte) |
 | RAMを使う発展例を動かす | [4教材の入口・まとめて回帰](examples/local-memory-common/README.md)／[ECC付き部分書込み](examples/local-ecc-rmw/README.md)／[画像ダブルバッファ](examples/local-video-double-buffer/README.md)／[同期RAM型非同期FIFO](examples/local-sync-ram-fifo/README.md)／[非整列・エンディアン](examples/local-unaligned-memory/README.md) |
@@ -308,9 +310,9 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 
 | 分野 | 主な題材 |
 | --- | --- |
-| <a id="バスレジスタアドレス"></a>[バス・レジスタ・アドレス](examples/README.md#バスレジスタアドレス) | APB・AHB・AXI・VCI、幅変換、アドレスマップ、SoCLibモデル |
+| <a id="バスレジスタアドレス"></a>[バス・レジスタ・アドレス](examples/README.md#バスレジスタアドレス) | APB・AHB・AXI・VCI、幅変換、アドレスマップ、SoCLibモデル、AXI4のWRAP・狭い転送・排他アクセス |
 | [バスプロトコル](docs/method/bus-protocol-verification.md) | 受理と完了、待ち中の保持、未完了・ID・順序、バースト、エラー応答、プロトコルごとの対応と未対応 |
-| <a id="fifo通信仲裁"></a>[FIFO・通信・仲裁](examples/README.md#fifo通信仲裁) | FIFO、ready/valid、UART・SPI・I²C、再送・パケットスイッチ |
+| <a id="fifo通信仲裁"></a>[FIFO・通信・仲裁](examples/README.md#fifo通信仲裁) | FIFO、ready/valid、UART・SPI・I²C、CAN、8b/10b符号、スクランブラー・PRBS、再送・パケットスイッチ |
 | <a id="割り込みタイマー周辺機能の結合"></a>[割り込み・タイマー・周辺機能の結合](examples/README.md#割り込みタイマー周辺機能の結合) | 割り込み、タイマー、ウォッチドッグ、周辺回路の接続 |
 | <a id="dmaメモリ順序制御"></a>[DMA・メモリ・順序制御](examples/README.md#dmaメモリ順序制御) | DMA、DRAM、キャッシュ、コヒーレンシ、可視性と順序 |
 | [メモリ](docs/method/memory-verification.md) | RAMのポートと衝突、Byte enable、ECCとスクラブ、MBIST、キャッシュ、DRAM、FIFO。機能検証と製造故障の検査の区別 |
@@ -319,7 +321,7 @@ AIは、要求の整理、テスト・アサーション案の作成、未達や
 | <a id="cdcクロックリセット低電力"></a>[CDC・クロック・リセット・低電力](examples/README.md#cdcクロックリセット低電力) | 非同期転送、クロック停止、リセット、隔離・保持・復帰 |
 | [低電力設計](docs/method/low-power-verification.md) | 電源状態表、隔離・保持・レベルシフター、起動と停止の順序、クロックゲーティング、wake-up、活動率からの電力見積り、UPFを実行できない範囲 |
 | [セキュリティ](docs/method/security-verification.md) | 資産と脅威のモデル、アクセス制御、ライフサイクル、定時間、情報の流れ、故障攻撃への対策、鍵の消去 |
-| <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
+| <a id="演算故障注入保護性能dft"></a>[演算・故障注入・保護・性能・DFT](examples/README.md#演算故障注入保護性能dft) | DSP、CORDIC、CIC、IIR、誤り訂正と誤り率、SHA-256、ECC、アクセス保護、MBIST、JTAG・スキャン |
 | [演算データパス](docs/method/arithmetic-datapath-verification.md) | ビット一致・許容誤差・統計的な判定、固定小数点の丸めと飽和、全数・境界・ランダム・フォーマル、整数・有理数のモデル |
 | <a id="ai用回路"></a>[AI用回路](examples/README.md#ai用回路) | シストリックアレイ、再量子化、活性化、畳み込み、Top-K、GEMM |
 | <a id="ネットワークパケット処理"></a>[ネットワーク・パケット処理](examples/README.md#ネットワークパケット処理) | Ethernet FCS、ARP、IPv4／UDP、NIC・DMA、スイッチ・クレジット・再送 |
@@ -479,13 +481,13 @@ SystemVerilogの言語規格を仕様書として、要求の抽出、既存テ�
 2. **ツールの汎用化**：[項目表と実行結果の照合](docs/method/verification-plan-automation.md)を起点に、要求の抽出・照合案の提案・承認・統合も、規格の節構成やkirimasim-testsの配置から切り離していきます。既存の照合キットと新しい実績照合ツールは、対象と役割を分けて扱います。
 3. **実際の開発案件での試行**：小規模なIP（レジスタブロックと1つのバスインターフェース）で検証手順を一通り実施し、要求の抽出漏れ、要求とテストの対応付け案の採用率、検出した不具合、仕様上の課題、故障注入時の検出率、工数を評価します。
 4. **テンプレートの実案件への適用**：検証領域の適用範囲、サインオフ、[不具合票](docs/templates/verification-issue.md)、[AIへの依頼・採否](docs/templates/ai-verification-request.md)の雛形を、実際の担当・構成・証跡へ対応付けて見直します。手順書の台帳例と記録の雛形は運用案であり、現行の照合キットが対応済みの汎用形式ではありません。
-5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。現在の自動選択計画は101例・128構成です（`python3 tools/run_kirimasim_examples.py --list`で確認できます）。過去の記録は80例・107構成の実測で、その後に加えた例の結果は毎日の実行で確かめています。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
+5. **kirimasimでのUVM例の実行**：今の[kirimasimでの実行](docs/case-study-kirimasim/results.md)は、UVMを使わない例が対象です。現在の自動選択計画は109例・136構成です（`python3 tools/run_kirimasim_examples.py --list`で確認できます）。過去の記録は80例・107構成の実測で、その後に加えた例の結果は毎日の実行で確かめています。kirimasimがUVMに対応したら、[この進め方](docs/case-study-kirimasim/README.md#kirimasimがuvmに対応したら)でUVMの例も実行します。2026-11-07時点では、Linuxのビルドは固定版のUVMの解析が通り、その次のloweringで未実装の連想配列のために止まります。macOSのビルドは解析で止まります（[#110](https://github.com/kurochan001/kirimasim/issues/110)）。今の状況は、[毎日の実行](tools/CI.md#kirimasimの最新版)のSummaryで確認できます。
 
 ### 注意
 
 各例は教材として対象を限定しています。例えば、AXIの例で規格全体への適合、論理CDCモデルで物理的なメタスタビリティ、架空LibertyのSTAで実チップのタイミングを確認したとは扱いません。製品へ適用する際は、仕様・構成と必要な解析・試験を追加して判断します。
 
-- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（187ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
+- RTLの書き方は、Icarus・Verilator・Yosysで同じソースを読めることを優先しています。多くのRTLは`reg`と`always @(posedge ...)`で書き、`always_ff`は一部だけです。RTLには遅延がないので、`` `timescale``はテストベンチには必ず書き、RTLでは一部（203ファイル中27）にしか書いていません。`` `default_nettype none``も使わず、暗黙のネットはVerilatorのlintで確認します。製品のコーディング規約の見本ではありません。
 - 規格や仕様書の本文は、このリポジトリに入れません。要求は自分の言葉で整理し、出典の版・節・段落を明記します。
 - 機密の仕様書を扱う場合は、AIを使える環境と範囲を先に決めます。
 - AIによるレビューは、人の承認ではありません。台帳と報告に、担当者と方法を明記します。

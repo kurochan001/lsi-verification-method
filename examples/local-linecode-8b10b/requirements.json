@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "LC-ENCODE",
+      "description": "全データ符号と全制御符号を、両方のランニングディスパリティで、モデルと同じ10ビット符号にする。制御符号でない制御要求は k_err にして、ディスパリティを動かさない",
+      "goals": ["enc/all-data-both-disparities", "enc/all-control-both-disparities", "enc/illegal-control", "enc/idle-holds-plus"]
+    },
+    {
+      "id": "LC-BALANCE",
+      "description": "符号ごとのディスパリティは0か±2で、累積は±1を超えない。同じビットの連続は5以下で、符号の中と、2つの符号にまたがる場合の両方で5に達する",
+      "goals": ["disparity/d7-both-forms", "disparity/alternate-7", "run/five-inside", "run/five-across"]
+    },
+    {
+      "id": "LC-DECODE",
+      "description": "1024通りの10ビット符号を両方のディスパリティで復号し、値・制御・符号違反・ディスパリティ違反・復号後のディスパリティをモデルと一致させる",
+      "goals": ["dec/all-codes-both-disparities", "dec/code-error", "dec/disparity-error"]
+    },
+    {
+      "id": "LC-ERROR",
+      "description": "1ビットの反転を全ビット位置で入れ、違反の後も次の符号を復号する。すぐには違反にならない反転が、後のディスパリティ違反として現れる",
+      "goals": ["dec/one-bit-each-position", "dec/goes-on-after-error", "dec/late-disparity-error"]
+    },
+    {
+      "id": "LC-ALIGN",
+      "description": "コンマでワードの境界を決める。受信が10ビットに満たない間はコンマにしない。両方の極性、境界どおりのコンマ、ビットの欠落や重複の後の再整列、ビットのないサイクル",
+      "goals": ["align/needs-ten-bits", "align/first-comma", "align/both-polarities", "align/comma-on-boundary", "align/realigned", "align/idle-cycle"]
+    },
+    {
+      "id": "LC-ALIGN-ENABLE",
+      "description": "整列を止めている間は、境界からずれたコンマを無視する。K.28.7の後ろにできる偽のコンマは、整列を許していると境界を動かす",
+      "goals": ["align/comma-ignored", "align/false-comma-after-k28-7"]
+    },
+    {
+      "id": "LC-RESET",
+      "description": "動作中のリセットで、符号器と復号器のディスパリティと整列の状態が初期値へ戻る",
+      "goals": ["reset/mid-stream"]
+    }
+  ]
+}

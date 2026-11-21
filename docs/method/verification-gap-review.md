@@ -98,6 +98,13 @@
 | SCOPE-PROTOCOL-DATA | [再利用できるプロパティ集](../../examples/local-sva-patterns/README.md)、[1データ追跡](../../examples/local-formal-data-integrity/README.md) | 3試験と2形式の一致、ツールの差、データの欠落・重複・順序の非有界の証明。活性と、プロパティ集の一部の非有界の証明は対象外 |
 | SCOPE-CONFIG-REG / RESET | [レジスタの性質の生成と証明](../../examples/local-register-formal/README.md)、[リセット後の値の確定](../../examples/local-reset-x-formal/README.md)、[長時間カウンターの時間短縮](../../examples/local-long-counter/README.md) | フィールド属性ごとの証明と生成器の検算、不定の初期値からの証明、時間短縮の3方法の検出力。非同期リセット、読出しの副作用を持つレジスタは対象外 |
 
+さらに、通信・信号処理を補う次の例も追加しました。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-PROTOCOL-DATA | [CAN 2.0A](../../examples/local-can/README.md)、[8b/10b符号](../../examples/local-linecode-8b10b/README.md)、[スクランブラーとPRBS](../../examples/local-scrambler-prbs/README.md)、[AXI4の残りの機能](../../examples/local-axi4-full/README.md) | フレームと誤りの扱い、符号の全数と証明、同期と並列版の等価性、バイトレーンと排他アクセス。規格への適合、物理層、CAN FD、SJWによる打切りの検査は対象外 |
+| SCOPE-PROTOCOL-DATA（演算） | [CORDIC](../../examples/local-cordic/README.md)、[CICデシメーター](../../examples/local-cic-decimator/README.md)、[IIRフィルター](../../examples/local-iir-biquad/README.md)、[誤り訂正と誤り率](../../examples/local-fec-ber/README.md) | ビット一致、根拠つきの許容誤差、区間による統計の判定。任意のパラメーターについての証明、文献の式との照合は対象外 |
+
 データパスと外部メモリ・通信の相互作用を補う例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

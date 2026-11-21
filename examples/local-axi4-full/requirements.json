@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "AXF-BURST",
+      "text": "FIXED・INCR・WRAPの各ビートのアドレスが、バーストの種類・サイズ・開始アドレスから決まる値になる。WRAPは長さ2・4・8・16で、容器の上端から下端へ折り返す。",
+      "goals": [
+        "burst/write-fixed",
+        "burst/write-incr",
+        "burst/write-wrap",
+        "burst/read-fixed",
+        "burst/read-incr",
+        "burst/read-wrap",
+        "wrap/len2",
+        "wrap/len4",
+        "wrap/len8",
+        "wrap/len16",
+        "wrap/start-mid",
+        "wrap/start-top",
+        "wrap/narrow",
+        "fixed/last-beat-wins",
+        "fixed/read-repeats"
+      ]
+    },
+    {
+      "id": "AXF-NARROW",
+      "text": "狭い転送と、サイズに整列していない開始アドレスでは、各ビートが運ぶバイトレーンが、そのビートのアドレスから容器の終わりまでになる。",
+      "goals": [
+        "size/byte",
+        "size/half",
+        "size/word",
+        "unaligned/write",
+        "unaligned/read",
+        "strobe/partial",
+        "strobe/zero",
+        "strobe/outside-lanes"
+      ]
+    },
+    {
+      "id": "AXF-LENGTH",
+      "text": "1ビートから256ビートまでのバーストを、ビート数とLASTの位置を保って運ぶ。",
+      "goals": [
+        "length/1",
+        "length/256-write",
+        "length/256-read"
+      ]
+    },
+    {
+      "id": "AXF-BOUNDARY",
+      "text": "INCRバーストは4KiBの境界をまたがない。ちょうど境界で終わる要求は実行し、1ビートまたは1バイトでもまたぐ要求はSLVERRで拒否して書き込まない。",
+      "goals": [
+        "boundary/4k-exact",
+        "boundary/4k-cross-rejected",
+        "boundary/4k-cross-by-one-byte",
+        "boundary/unaligned-last-bytes",
+        "boundary/memory-end"
+      ]
+    },
+    {
+      "id": "AXF-ERROR",
+      "text": "対応しないサイズ・予約されたバースト種別・WRAPの不正な長さと非整列・FIXEDの17ビート以上・WLASTの位置の不一致にSLVERRを返す。拒否した要求はメモリを変えない。",
+      "goals": [
+        "resp/okay",
+        "resp/exokay",
+        "resp/slverr",
+        "error/reserved-burst",
+        "error/size",
+        "error/wrap-length",
+        "error/wrap-unaligned",
+        "error/fixed-length",
+        "error/wlast-early",
+        "error/wlast-missing",
+        "error/no-write"
+      ]
+    },
+    {
+      "id": "AXF-EXCLUSIVE",
+      "text": "排他読出しはIDごとの予約を作り、同じ形の排他書込みは、予約が残っているときだけ実行してEXOKAYを返す。予約のバイト範囲に重なる書込みは予約を消す。",
+      "goals": [
+        "excl/success",
+        "excl/second-write-fails",
+        "excl/fail-other-write",
+        "excl/adjacent-write-keeps",
+        "excl/one-byte-overlap",
+        "excl/fail-mismatch",
+        "excl/other-id-attempt-keeps",
+        "excl/race-loser",
+        "excl/malformed-read",
+        "excl/multi-beat",
+        "excl/reset-clears",
+        "excl/normal-read-keeps",
+        "excl/error-read"
+      ]
+    },
+    {
+      "id": "AXF-HANDSHAKE",
+      "text": "書込みと読出しは各1件ずつ処理し、処理中は次のアドレスを受けない。保持中の応答は変えず、データがアドレスより先に来ても待つ。",
+      "goals": [
+        "stall/b",
+        "stall/r",
+        "handshake/aw-held-busy",
+        "handshake/ar-held-busy",
+        "channel/w-before-aw",
+        "handshake/idle-ready"
+      ]
+    },
+    {
+      "id": "AXF-RESET",
+      "text": "バーストの途中と応答の保持中のリセットで待機状態へ戻り、メモリと予約を消す。",
+      "goals": [
+        "reset/mid-burst",
+        "reset/pending-response",
+        "reset/vectors"
+      ]
+    }
+  ]
+}

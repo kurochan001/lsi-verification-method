@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CIC-WIDTH",
+      "text": "出力は、入力の幅と（比×遅延）の段数乗から決まる幅を持ち、最大振幅の入力でも折り返さない。",
+      "goals": ["range/min", "range/max", "msb/positive", "msb/negative"]
+    },
+    {
+      "id": "CIC-WRAP",
+      "text": "積分器が途中で折り返しても、出力は厳密な和に一致する。",
+      "goals": ["wrap/integrator", "wrap/output-after-wrap"]
+    },
+    {
+      "id": "CIC-PHASE",
+      "text": "再開の後、受理したサンプルのRATE個ごとに1つ出力する。受理しないサイクルは数えない。syncは履歴と同じサイクルのサンプルを捨て、位相を合わせ直す。",
+      "goals": ["phase/first-output", "phase/gap", "phase/sync-realign", "sync/discard-sample"]
+    },
+    {
+      "id": "CIC-RESET",
+      "text": "リセットは、周期の途中でも履歴と位相を初期値へ戻す。",
+      "goals": ["reset/midstream"]
+    },
+    {
+      "id": "CIC-ARITH",
+      "text": "出力は、移動和の縦続として書いた整数モデルとビット一致する。",
+      "goals": ["result/zero", "result/positive", "result/negative"]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SP-GEN",
+      "description": "PRBS生成器：1クロックにWビットを時間順に出し、enableがなければ保持する。seed_loadはenableに優先する",
+      "goals": [
+        "gen/run",
+        "gen/hold",
+        "gen/load-over-enable"
+      ]
+    },
+    {
+      "id": "SP-GEN-ZERO",
+      "description": "PRBS生成器：履歴が全0のときは0を出し続け、zeroで知らせる。0でない値のロードで抜ける",
+      "goals": [
+        "gen/zero-flag",
+        "gen/all-zero-stays-zero",
+        "gen/leave-zero-by-load"
+      ]
+    },
+    {
+      "id": "SP-CHK-LOCK",
+      "description": "検査器：履歴が埋まった後、誤りのないLOCKビットで同期する。同期中の誤りフラグがLOSS個たまると同期を外し、再び同期する。LOSS−1個では外さない",
+      "goals": [
+        "chk/lock",
+        "chk/lock-lost-at-loss-flags",
+        "chk/lock-again",
+        "chk/below-loss-keeps-lock",
+        "chk/single-error-keeps-lock",
+        "chk/hold"
+      ]
+    },
+    {
+      "id": "SP-CHK-SLIP",
+      "description": "検査器：1ビットのずれの後、種なしで再び誤りなしになる",
+      "goals": [
+        "chk/slip-realigned"
+      ]
+    },
+    {
+      "id": "SP-CHK-COUNT",
+      "description": "検査器：誤りフラグは同期中だけ数え、上限で止まる",
+      "goals": [
+        "chk/count-while-locked",
+        "chk/no-count-while-unlocked",
+        "chk/count-saturates"
+      ]
+    },
+    {
+      "id": "SP-CHK-ZERO",
+      "description": "検査器：0に張り付いた入力では同期せず、stuckで知らせる",
+      "goals": [
+        "chk/stuck-zero-never-locks"
+      ]
+    },
+    {
+      "id": "SP-SCR",
+      "description": "スクランブラー：s[n]=d[n]^s[n-TAP]^s[n-N]。validがなければ保持する。リセット後の0のデータは0でないビット列になる。データが帰還と一致し続けると履歴が全0になり、0のデータは0のまま出る",
+      "goals": [
+        "scr/run",
+        "scr/hold",
+        "scr/zero-data-is-scrambled",
+        "scr/lockup-by-data",
+        "scr/leave-lockup"
+      ]
+    },
+    {
+      "id": "SP-DSC",
+      "description": "デスクランブラー：d[n]=r[n]^r[n-TAP]^r[n-N]。開始・ずれからNビットで元のデータに戻り、1ビットの誤りは3ビットの誤りになる。validがなければ保持する",
+      "goals": [
+        "dsc/wrong-before-n-bits",
+        "dsc/aligned-after-n-bits",
+        "dsc/one-error-becomes-three",
+        "dsc/slip-disturbs",
+        "dsc/slip-realigned",
+        "dsc/hold"
+      ]
+    },
+    {
+      "id": "SP-RESET",
+      "description": "動作中のリセットで、4つの回路がリセット値から始まる",
+      "goals": [
+        "reset/while-locked"
+      ]
+    }
+  ]
+}

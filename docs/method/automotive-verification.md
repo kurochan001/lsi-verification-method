@@ -66,7 +66,7 @@ AEC-Q100の役割は[Renesasの適格性評価の説明](https://www.renesas.com
 | センサーとアクチュエータ | 取得、演算期限、PWM、異常停止と再開 | [モーションI/O](../../examples/local-motion-io/README.md)、[閉ループ制御](../../examples/local-motion-control/README.md) |
 | 電源・アナログ接続 | 電圧応答、変換、時刻と初期化 | [RC回路とSPICE](../../examples/local-spice-cosim/README.md) |
 
-CAN／CAN FD、LIN、車載Ethernetは、フレーム形式・仲裁・時間・エラー処理が異なります。教材の48ビット保護フレームは通信コントローラーより後を扱い、これらのバス規格への適合を検査するものではありません。既存の[Ethernet例](../../examples/local-network-echo/README.md)も、車載Ethernet・TSNの実装とは区別します。
+CAN／CAN FD、LIN、車載Ethernetは、フレーム形式・仲裁・時間・エラー処理が異なります。教材の48ビット保護フレームは通信コントローラーより後を扱い、これらのバス規格への適合を検査するものではありません。CAN 2.0Aのフレーム・調停・エラー処理そのものは、[CANコントローラーの例](../../examples/local-can/README.md)が3ノードで扱います。こちらも規格への適合の検査ではなく、CAN FDと物理層は対象外です。既存の[Ethernet例](../../examples/local-network-echo/README.md)も、車載Ethernet・TSNの実装とは区別します。
 
 ## 2. 通信の保護を判定へ落とす
 

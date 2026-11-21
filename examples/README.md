@@ -38,6 +38,7 @@
 | [AHB-Lite](local-ahb/README.md) | アドレス／データのパイプライン、バイトレーン、2サイクルERROR、ランダム転送 | Icarus |
 | [AXI4-Lite](local-axi/README.md) | AW／Wの独立受付、WSTRB、応答保持、読書き競合、ランダム転送 | Icarus |
 | [AXI4のバースト・ID](local-axi4/README.md) | INCRバースト、複数未完了転送、ID、RLAST、4KiB境界 | Icarus |
+| [AXI4の残りのバースト・狭い転送・排他アクセス](local-axi4-full/README.md) | WRAPとFIXED、狭い転送と整列していない開始アドレスのバイトレーン、排他アクセス、256ビートと4KiB境界。ビートごとの番地とレーンを別の書き方で求めるモデルと照合 | Icarus |
 | [AHB／AXI-Lite→APB](local-bus-bridge/README.md) | 応答変換、レジスタ・タイマーへの接続、IRQ、リセット | Icarus |
 | [AXI4-Liteの幅変換](local-width-converter/README.md) | 64→32ビット、部分書込み、応答集約、途中リセット | Icarus |
 | [アドレスマップ](local-address-map/README.md) | RAM・タイマー・GPIOのデコード、別名、未割当、バイトストローブ、IRQ集約 | Icarus |
@@ -57,6 +58,9 @@
 | [AXI4-Stream](local-axis/README.md) | パケット境界、TKEEP・TLAST、データ順序、途中パケットの破棄 | Icarus |
 | [パケットスイッチ](local-packet-switch/README.md) | 2×2の経路選択・パケット単位の仲裁、先頭提示時の占有、入力の空白と出力待ち、末尾での解放 | Icarus |
 | [CRC・ACK・再送リンク](local-retry-link/README.md) | フレーム／ACKの消失・破損、再送と重複排除、配送結果が確定しない再送上限、待ち・両端リセット | Icarus |
+| [CAN 2.0Aのコントローラー](local-can/README.md) | 周波数の違うクロックの3ノード。ビットスタッフ、CRC-15、ACK、調停と再送、5種類のエラーとエラーフレーム、エラーカウンターとerror passive／bus-off、再同期 | Icarus |
+| [8b/10b符号](local-linecode-8b10b/README.md) | 全文字×両ディスパリティと全1,024符号の全数、連続長、コンマ検出とワード整列、符号違反とディスパリティ違反。復号(符号化(x))＝x と逆向きの証明 | Icarus＋フォーマル |
+| [スクランブラーとPRBS](local-scrambler-prbs/README.md) | PRBSの生成器と種なしで同期する検査器、自己同期スクランブラー。同期の獲得と再同期、誤りの計数と拡大、全0のロックアップ、1ビット版と並列版の等価性の証明 | Icarus＋フォーマル |
 | [クレジット方式のフロー制御](local-credit-link/README.md) | 2仮想チャネルの受付・送信・クレジット返却、保持、リセット | Icarus |
 
 ## 割り込み・タイマー・周辺機能の結合
@@ -126,6 +130,10 @@ DFTの題材は、[スキャン・ATPG・MBIST・LBIST・JTAGの検証手順](..
 | --- | --- | --- |
 | [C++参照モデルとFIR](local-cpp-reference/README.md) | 3タップFIR、8／12ビット、丸め・飽和、入力受付、提示時刻、待ち・リセット、参照モデルへの故障注入 | Verilator＋C++17 |
 | [固定小数点DSP](local-dsp/README.md) | 2タップFIRの符号、丸め、上下限、飽和、履歴 | Icarus |
+| [CORDIC](local-cordic/README.md) | 回転とベクタリング。整数モデルとのビット一致と、導出した上限つきの許容誤差の2段。16ビット角度の全数、反復ごとの残差、ゲイン補正、象限の折返し | Icarus |
+| [CICデシメーター](local-cic-decimator/README.md) | ビット成長、途中の段の折返し、デシメーションの位相を、移動和で書いた厳密な整数モデルと照合。幅を1ビット削る誤りの見え方の違い | Icarus |
+| [IIRフィルター（biquad）](local-iir-biquad/README.md) | 係数の量子化、飽和と折返しによる発振、丸め方ごとのリミットサイクル。ビット一致と、上限を式で導いた周波数応答の許容誤差を分けて判定 | Icarus |
+| [誤り訂正と誤り率](local-fec-ber/README.md) | 畳み込み符号とビタビ復号。ビット一致に加え、雑音下の誤り率を区間で判定。試行の単位、試行数、誤って不合格にする確率を明示。統計で合否を決める最初の例 | Icarus |
 | [ECCの故障注入](local-ecc/README.md) | SECDEDの誤りなし・1ビット誤り・2ビット誤りの全数検査、訂正・検出、保証範囲外の診断 | Icarus |
 | [ECC付きメモリ](local-ecc-memory/README.md) | 読出し修復、スクラビング、通常書込みとの競合 | Icarus |
 | [SHA-256](local-sha256/README.md) | 最大119バイトのパディング、1／2ブロックの連鎖、反復演算、hashlibとの照合、結果保持 | Icarus |
@@ -376,17 +384,17 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`を読解し、I/O修正をC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | [Caliptra](reference-caliptra/README.md) | 暗号・鍵管理IP、SHA-512の期待ベクトル・予測器・比較器、zeroizeと機能カバレッジ | 固定ソース・接続・商用VIPを含む依存を確認。RTL・UVM・セキュリティ評価は未実施 |
 
-13件は上流を読む参照例で、下記の172登録項目・150ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
+13件は上流を読む参照例で、下記の182登録項目・160ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は75例・161構成、各検証例が出力するJUnit件数の合計はsmoke 1209件／nightly 1531件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は83例・180構成、各検証例が出力するJUnit件数の合計はsmoke 1481件／nightly 1843件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-現在の統合計画は、172登録項目・150ルートジョブです。nightly対応の個別例に加え、集約7本、フォーマル20例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて21行、`aggregate`は共通lintの2行を含めて9行です。従来のSBY証明例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
+現在の統合計画は、182登録項目・160ルートジョブです。nightly対応の個別例に加え、集約7本、フォーマル22例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて23行、`aggregate`は共通lintの2行を含めて9行です。従来のSBY証明例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
 
 共通シミュレーションランナーとは別に数える例と、共通ランナーの件数のうち最近加えた例の内訳を下表に示します。JUnit件数は各例が出力する件数です。
 
@@ -412,7 +420,7 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [PWM・RCとADCの取り込み時刻](local-pwm-spice/README.md) | 15 | 19 | 独自（実行処理はRAM教材の共通処理の`sim.py`を再利用） |
 | [E2E通信保護](local-e2e-guard/README.md) | 24 | 28 | 独自 |
 | [小規模ECU](local-automotive-ecu/README.md) | 30 | 34 | 独自 |
-| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の1209／1531件の内数） |
+| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の1481／1843件の内数） |
 | [PLL出力の測定実習](local-pll-clock-quality/README.md) | 16 | 20 | 共通シミュレーションランナー（同上） |
 | [複数電源領域](local-power-domains/README.md)・[クロックゲーティング](local-clock-gating/README.md)・[メモリの修復](local-memory-repair/README.md)・[遷移故障](local-transition-fault/README.md)の4例の合計 | 69 | 85 | 共通シミュレーションランナー（同上）。内訳は順に20／24、16／20、18／22、15／19 |
 | [CDC／RDCの構造解析](local-cdc-structural/README.md) | 29 | 31 | 独自（証跡は探索用の共通処理） |
@@ -435,10 +443,13 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [UVMの応答側agent](local-uvm-reactive/README.md) | 20 | 24 | 独自（UVM） |
 | [UVMの組込みレジスタシーケンス](local-uvm-reg-sequences/README.md) | 26 | 28 | 独自（UVM） |
 | [UVMのsequenceの階層化](local-uvm-layering/README.md) | 11 | 13 | 独自（UVM） |
+| [CAN](local-can/README.md)・[8b/10b符号](local-linecode-8b10b/README.md)・[スクランブラーとPRBS](local-scrambler-prbs/README.md)・[AXI4の残りの機能](local-axi4-full/README.md)・[CORDIC](local-cordic/README.md)・[CIC](local-cic-decimator/README.md)・[IIR](local-iir-biquad/README.md)・[誤り訂正](local-fec-ber/README.md)の8例の合計 | 272 | 312 | 共通シミュレーションランナー（上の内数）。内訳は順に28／32、12／14、60／68、10／12、26／30、26／30、80／90、30／36。IIRの件数は周波数応答の判定5件を含む |
+| 8b/10b符号のフォーマル（`formal.py`） | 12 | 12 | 共通フォーマルランナー。smokeとnightlyの区別なし |
+| スクランブラーとPRBSのフォーマル（`formal.py`） | 30 | 30 | 共通フォーマルランナー。smokeとnightlyの区別なし |
 
 RAMを使う発展4例には、[まとめて回帰する入口](local-memory-common/README.md)も用意しています。
 
-共通lintの対象は187 RTLファイル・188モジュール・473構成です。2026-11-21に加えたテストベンチの技法の9例の17構成は警告0件です。2026-11-21に加えたプロセッサ関連の20構成は、JTAG TAPを含む4構成に既存の既知の警告が1件ずつ出るほかは警告0件です。2026-11-20の[レビューで追加した教材](../PROVENANCE.md#review-additions-20261120)のRTL 28構成、RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
+共通lintの対象は203 RTLファイル・204モジュール・503構成です。2026-11-21に加えた通信・信号処理の8例の30構成は警告0件です。2026-11-21に加えたテストベンチの技法の9例の17構成は警告0件です。2026-11-21に加えたプロセッサ関連の20構成は、JTAG TAPを含む4構成に既存の既知の警告が1件ずつ出るほかは警告0件です。2026-11-20の[レビューで追加した教材](../PROVENANCE.md#review-additions-20261120)のRTL 28構成、RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
 
 各例の既定計画には正常動作・変異・診断があり、予定した反例や未到達の識別も成功と判定します。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果・親判定・lint・セルフテストを分けた実行数、設定、残る制限は[最新のレビューと確認記録](../PROVENANCE.md#verification-gaps-20261107)を参照してください。
 

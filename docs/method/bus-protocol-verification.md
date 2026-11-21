@@ -130,14 +130,14 @@ flowchart TD
 | --- | --- | --- |
 | APB | PSTRB（部分書込み）、複数スレーブの選択とデコードの結合、PPROTとPSLVERRの全組合せ | PSTRBは未着手。バイトストローブそのものは、APBの2相を持たない簡易バスの[アドレスマップ](../../examples/local-address-map/README.md)が扱う |
 | AHB | WRAPのバースト、INCR4以外の長さ、HPROT、ロック（HMASTLOCK）、複数マスター、フルAHBの仲裁 | 未着手 |
-| AXI4 | WRAPとFIXEDのバースト、狭い転送（データ幅より小さいAxSIZE）、整列していない開始アドレス、5ビート以上（最大256ビート）、排他アクセス（AxLOCK） | 未着手。まとめて1つの例にする計画 |
+| AXI4 | WRAPとFIXEDのバースト、狭い転送（データ幅より小さいAxSIZE）、整列していない開始アドレス、5ビート以上（最大256ビート）、排他アクセス（AxLOCK） | [実行例あり](../../examples/local-axi4-full/README.md)。読みと書きを時間的に重ねた試験は未着手 |
 | AXI4 | AxCACHE・AxPROT・AxQOS・AxREGION・USER、読出しのデータのインターリーブ | ポートを省略。未着手 |
 | AXI4（システム） | 4KiBの境界をまたがない規則の検査、低電力インターフェース、ACE | 未着手 |
 | AXI4-Stream | TSTRB、TID・TDEST・TUSER、レーンの詰め替え、幅の変換 | 未着手 |
 | VCI | 複数IDの並行、LL／SC、連続しないパケット | 対象外としている |
 | そのほかのバス | TileLink、Wishbone、OBI、CHI | 未着手。[CORE-V-VERIFの参照例](../../examples/reference-core-v-verif/README.md)でOBIの環境を読める |
-| 共通 | 再利用できるプロパティ集（待ち中の保持、N サイクル以内の応答、タグによるデータの順序）と、その3種類の試験（正例・違反・空虚な成立） | 未着手 |
-| 共通 | 任意の1データを追跡するデータの完全性の非有界な証明 | 未着手 |
+| 共通 | 再利用できるプロパティ集（待ち中の保持、N サイクル以内の応答、タグによるデータの順序）と、その3種類の試験（正例・違反・空虚な成立） | [実行例あり](../../examples/local-sva-patterns/README.md) |
+| 共通 | 任意の1データを追跡するデータの完全性の非有界な証明 | [実行例あり](../../examples/local-formal-data-integrity/README.md) |
 
 公開プロジェクトでは、[PULP AXIの参照例](../../examples/reference-pulp-axi/README.md)と[Mirafraの検証用IPの参照例](../../examples/reference-mirafra-vip/README.md)が、広い機能を持つ検証環境の入口です。
 

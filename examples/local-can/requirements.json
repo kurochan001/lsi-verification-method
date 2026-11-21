@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CAN-FRAME",
+      "text": "標準フォーマットのデータフレームとリモートフレームを、SOFからEOFまで定められたビット列で送り、送信側以外のノードが識別子・RTR・長さ・データを受け取る。長さコードが8を超えるフレームのデータは8バイトとする。",
+      "goals": [
+        "frame/dlc0",
+        "frame/dlc8",
+        "frame/dlc-over-8",
+        "frame/remote",
+        "frame/back-to-back"
+      ]
+    },
+    {
+      "id": "CAN-STUFF",
+      "text": "SOFからCRC列までは、同じ値が5ビット続いた直後に反転したビットを挿入する。受信側はそのビットを取り除く。CRC列の最後の5ビットが同じ値のときも、その後に挿入する。",
+      "goals": [
+        "frame/stuff-dominant",
+        "frame/stuff-recessive",
+        "frame/tail-stuff"
+      ]
+    },
+    {
+      "id": "CAN-ARBITRATION",
+      "text": "識別子とRTRの送信中にレセッシブを出してドミナントを読んだ送信側は、誤りとせずに受信へ切り替わり、バスが空いた後に再送する。",
+      "goals": [
+        "arb/lost-id",
+        "arb/lost-rtr",
+        "arb/three-way",
+        "arb/retransmit"
+      ]
+    },
+    {
+      "id": "CAN-ERROR",
+      "text": "ビット・スタッフ・CRC・フォーム・ACKの誤りを検出したノードは、エラーフラグを出してフレームを無効にし、送信側は再送する。過負荷の条件には過負荷フラグで応える。",
+      "goals": [
+        "error/bit",
+        "error/stuff",
+        "error/crc",
+        "error/form",
+        "error/ack",
+        "error/overload",
+        "error/bit-in-flag",
+        "error/stuff-in-arbitration",
+        "error/retransmit"
+      ]
+    },
+    {
+      "id": "CAN-COUNTERS",
+      "text": "送信エラーカウンターと受信エラーカウンターは、定められた量だけ増減する。エラーパッシブの送信側は、ACKの誤りだけではカウンターを増やさない。",
+      "goals": [
+        "count/tx-decrement",
+        "count/rx-decrement",
+        "count/rx-clamp",
+        "count/rx-plus8",
+        "count/ack-hold"
+      ]
+    },
+    {
+      "id": "CAN-CONFINEMENT",
+      "text": "どちらかのカウンターが128以上のノードはエラーパッシブになり、パッシブのエラーフラグを出し、送信の後に8ビット待つ。送信エラーカウンターが256以上のノードはバスから離れ、11ビットのレセッシブを128回見てから戻る。",
+      "goals": [
+        "state/error-passive",
+        "state/passive-flag",
+        "state/suspend",
+        "state/bus-off",
+        "state/recover"
+      ]
+    },
+    {
+      "id": "CAN-TIMING",
+      "text": "ノードは、バスが空いているときのレセッシブからドミナントへのエッジにビットの先頭を合わせ、フレームの途中のエッジでは再同期ジャンプ幅までビットの長さを伸縮する。クロックの周波数が異なる3ノードが同じビット列を読む。",
+      "goals": [
+        "timing/hard-sync",
+        "timing/lengthen",
+        "timing/shorten"
+      ]
+    },
+    {
+      "id": "CAN-HOST",
+      "text": "送信要求は、バッファが空いているときだけ受け取る。受け取った要求は、成功するまで保持する。",
+      "goals": [
+        "host/ready-idle",
+        "host/request-while-busy"
+      ]
+    }
+  ]
+}

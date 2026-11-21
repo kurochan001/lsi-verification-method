@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "FEC-ENCODE", "text": "符号器は、生成多項式7と5（8進）の2ビットのシンボルを、入力と同じサイクルに出す。", "goals": ["encode/all-transitions"]},
+    {"id": "FEC-ROUNDTRIP", "text": "誤りのない通信路では、復号した列は送った列と一致する。入力の空きサイクルと、切れ目なく続くフレームでも同じである。", "goals": ["roundtrip/clean-frame", "roundtrip/gaps-in-valid", "roundtrip/continuous-frames", "roundtrip/long-stream-with-errors"]},
+    {"id": "FEC-CORRECT", "text": "1ビットの誤りと、7シンボル以内に並ぶ2ビットの誤りは訂正する。", "goals": ["correct/single-c0", "correct/single-c1", "correct/double-same-symbol", "correct/double-adjacent", "correct/double-apart"]},
+    {"id": "FEC-BEYOND", "text": "訂正能力を超える誤りでは、復号器の出力は参照モデルとビット一致する（送った列とは一致しない）。", "goals": ["beyond/three-errors-miscorrected"]},
+    {"id": "FEC-TIE", "text": "2つの経路の距離が等しいときは、2つ前の入力が0だった側の経路を残す。最良の状態が複数あるときは、番号の小さい状態の経路からビットを取り出す。", "goals": ["tie/lower-predecessor-wins", "tie/lowest-best-state"]},
+    {"id": "FEC-LATENCY", "text": "n番目のシンボルのビットは、n+DEPTH-1番目のシンボルを受け取った次のサイクルに出る。それより前に有効な出力はない。", "goals": ["latency/silent-before-depth", "latency/first-output"]},
+    {"id": "FEC-RESET", "text": "リセットは符号器と復号器を開始状態へ戻し、出力待ちのビットを捨てる。次のフレームは正しく復号する。", "goals": ["reset/mid-frame", "reset/restart-decodes"]},
+    {"id": "FEC-NOISE", "text": "雑音のある通信路でも、復号器の出力は参照モデルとビット一致する。", "goals": ["noise/bit-exact-frame"]},
+    {"id": "FEC-STAT", "text": "二元対称通信路での誤りビット数と誤りフレーム数は、独立に求めた基準値のまわりの区間に入る。", "goals": ["stat/bit-errors-within-interval", "stat/frame-errors-within-interval"]}
+  ]
+}

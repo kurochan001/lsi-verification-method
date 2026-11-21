@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CORDIC-ROTATE",
+      "text": "回転モードは、入力のベクトルを指定の角度だけ回した結果を、ゲインを補正して出す。",
+      "goals": ["rotate/quadrant0", "rotate/quadrant1", "rotate/quadrant2", "rotate/quadrant3", "rotate/angle-zero", "rotate/half-turn", "operand/most-negative", "operand/longest"]
+    },
+    {
+      "id": "CORDIC-VECTOR",
+      "text": "ベクタリングモードは、入力のベクトルの大きさと、x軸からの角度を出す。大きさが0のベクトルの角度は規定しない。",
+      "goals": ["vector/quadrant0", "vector/quadrant1", "vector/quadrant2", "vector/quadrant3", "vector/x-axis-positive", "vector/x-axis-negative", "vector/y-axis", "vector/zero", "vector/short"]
+    },
+    {
+      "id": "CORDIC-FOLD",
+      "text": "反復が収束しない範囲の入力は、最初の段で180度回してから反復に渡す。",
+      "goals": ["fold/rotation", "fold/just-inside", "fold/boundary", "fold/vectoring"]
+    },
+    {
+      "id": "CORDIC-ERROR",
+      "text": "出力は整数モデルとビットごとに一致し、数学的な結果との差は、導出した上限を超えない。",
+      "goals": ["error/inexact", "error/at-limit"]
+    },
+    {
+      "id": "CORDIC-CONTROL",
+      "text": "結果は、受け付けてから ITER+2 クロック後に1クロックだけ有効になる。リセットは、パイプラインの途中の演算を捨てる。",
+      "goals": ["valid/back-to-back", "valid/gap", "mode/interleaved", "reset/pending"]
+    }
+  ]
+}

@@ -96,6 +96,11 @@
     "examples/local-axi4-formal/axi4_formal.sv",
     "examples/local-axi4-formal/run.py",
     "examples/local-axi4-formal/tests/test_plan.py",
+    "examples/local-axi4-full/requirements.json",
+    "examples/local-axi4-full/rtl/axi4_full_ram.sv",
+    "examples/local-axi4-full/run.py",
+    "examples/local-axi4-full/tb/axi4_full_tb.sv",
+    "examples/local-axi4-full/tests/test_axi4_full.py",
     "examples/local-axi4/requirements.json",
     "examples/local-axi4/rtl/axi4_ram.sv",
     "examples/local-axi4/run.py",
@@ -142,6 +147,12 @@
     "examples/local-cache-dma/run.py",
     "examples/local-cache-dma/tb/cache_tb.sv",
     "examples/local-cache-dma/tests/test_example.py",
+    "examples/local-can/model.py",
+    "examples/local-can/requirements.json",
+    "examples/local-can/rtl/can_node.sv",
+    "examples/local-can/run.py",
+    "examples/local-can/tb/can_tb.sv",
+    "examples/local-can/tests/test_example.py",
     "examples/local-cdc-bridge/requirements.json",
     "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
     "examples/local-cdc-bridge/rtl/packet_fifo.sv",
@@ -168,6 +179,11 @@
     "examples/local-cdc-structural/targets.json",
     "examples/local-cdc-structural/tests/test_cdc.py",
     "examples/local-cdc-structural/waivers.json",
+    "examples/local-cic-decimator/requirements.json",
+    "examples/local-cic-decimator/rtl/cic_decimator.sv",
+    "examples/local-cic-decimator/run.py",
+    "examples/local-cic-decimator/tb/cic_tb.sv",
+    "examples/local-cic-decimator/tests/test_example.py",
     "examples/local-clock-gating/model.py",
     "examples/local-clock-gating/requirements.json",
     "examples/local-clock-gating/rtl/clock_gate.sv",
@@ -219,6 +235,12 @@
     "examples/local-conv-window/run.py",
     "examples/local-conv-window/tb/conv_window_tb.sv",
     "examples/local-conv-window/tests/test_example.py",
+    "examples/local-cordic/model.py",
+    "examples/local-cordic/requirements.json",
+    "examples/local-cordic/rtl/cordic.sv",
+    "examples/local-cordic/run.py",
+    "examples/local-cordic/tb/cordic_tb.sv",
+    "examples/local-cordic/tests/test_example.py",
     "examples/local-counter-snapshot/requirements.json",
     "examples/local-counter-snapshot/rtl/counter.sv",
     "examples/local-counter-snapshot/run.py",
@@ -337,6 +359,14 @@
     "examples/local-fdir/run.py",
     "examples/local-fdir/tb/fdir_tb.sv",
     "examples/local-fdir/tests/test_fdir.py",
+    "examples/local-fec-ber/expected.json",
+    "examples/local-fec-ber/model.py",
+    "examples/local-fec-ber/requirements.json",
+    "examples/local-fec-ber/rtl/conv_encoder.sv",
+    "examples/local-fec-ber/rtl/viterbi_decoder.sv",
+    "examples/local-fec-ber/run.py",
+    "examples/local-fec-ber/tb/fec_ber_tb.sv",
+    "examples/local-fec-ber/tests/test_example.py",
     "examples/local-fifo-formal/fifo.sby.in",
     "examples/local-fifo-formal/fifo_formal.sv",
     "examples/local-fifo-formal/run.py",
@@ -401,6 +431,12 @@
     "examples/local-i2c/run.py",
     "examples/local-i2c/tb/i2c_tb.sv",
     "examples/local-i2c/tests/test_i2c.py",
+    "examples/local-iir-biquad/model.py",
+    "examples/local-iir-biquad/requirements.json",
+    "examples/local-iir-biquad/rtl/iir_biquad.sv",
+    "examples/local-iir-biquad/run.py",
+    "examples/local-iir-biquad/tb/iir_biquad_tb.sv",
+    "examples/local-iir-biquad/tests/test_example.py",
     "examples/local-image-sobel/model.py",
     "examples/local-image-sobel/requirements.json",
     "examples/local-image-sobel/rtl/sobel_stream.sv",
@@ -450,6 +486,18 @@
     "examples/local-lec-netlist/rtl/event_meter.sv",
     "examples/local-lec-netlist/run.py",
     "examples/local-lec-netlist/tests/test_example.py",
+    "examples/local-linecode-8b10b/formal.py",
+    "examples/local-linecode-8b10b/linecode_formal.sv",
+    "examples/local-linecode-8b10b/model.py",
+    "examples/local-linecode-8b10b/requirements.json",
+    "examples/local-linecode-8b10b/rtl/comma_align.sv",
+    "examples/local-linecode-8b10b/rtl/dec_8b10b.sv",
+    "examples/local-linecode-8b10b/rtl/dec_8b10b_comb.sv",
+    "examples/local-linecode-8b10b/rtl/enc_8b10b.sv",
+    "examples/local-linecode-8b10b/rtl/enc_8b10b_comb.sv",
+    "examples/local-linecode-8b10b/run.py",
+    "examples/local-linecode-8b10b/tb/linecode_tb.sv",
+    "examples/local-linecode-8b10b/tests/test_example.py",
     "examples/local-lint/fixtures/implicit.sv",
     "examples/local-lint/fixtures/latch.sv",
     "examples/local-lint/fixtures/unconnected.sv",
@@ -780,6 +828,17 @@
     "examples/local-scan-atpg/run.py",
     "examples/local-scan-atpg/tb/scan_tb.sv",
     "examples/local-scan-atpg/tests/test_example.py",
+    "examples/local-scrambler-prbs/formal.py",
+    "examples/local-scrambler-prbs/model.py",
+    "examples/local-scrambler-prbs/requirements.json",
+    "examples/local-scrambler-prbs/rtl/prbs_check.sv",
+    "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
+    "examples/local-scrambler-prbs/rtl/ss_descrambler.sv",
+    "examples/local-scrambler-prbs/rtl/ss_scrambler.sv",
+    "examples/local-scrambler-prbs/run.py",
+    "examples/local-scrambler-prbs/scrambler_prbs_formal.sv",
+    "examples/local-scrambler-prbs/tb/scrambler_prbs_tb.sv",
+    "examples/local-scrambler-prbs/tests/test_example.py",
     "examples/local-secure-lifecycle/requirements.json",
     "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
     "examples/local-secure-lifecycle/run.py",
@@ -1099,13 +1158,16 @@
       "local-axi",
       "local-axi-reorder",
       "local-axi4",
+      "local-axi4-full",
       "local-axis",
       "local-bus-bridge",
       "local-cache-coherence",
       "local-cache-dma",
+      "local-can",
       "local-cdc-bridge",
       "local-cdc-handshake",
       "local-cdc-structural",
+      "local-cic-decimator",
       "local-clock-gating",
       "local-clock-reset",
       "local-code-coverage",
@@ -1113,6 +1175,7 @@
       "local-connectivity",
       "local-constant-time",
       "local-conv-window",
+      "local-cordic",
       "local-counter-snapshot",
       "local-coverage-unreachable",
       "local-cpp-reference",
@@ -1130,12 +1193,14 @@
       "local-ecc-rmw",
       "local-equivalence",
       "local-fdir",
+      "local-fec-ber",
       "local-fifo",
       "local-formal-data-integrity",
       "local-fp-adder",
       "local-gate-sim",
       "local-gate-timing",
       "local-i2c",
+      "local-iir-biquad",
       "local-image-sobel",
       "local-image-soc",
       "local-interconnect",
@@ -1143,6 +1208,7 @@
       "local-jtag-tap",
       "local-lbist",
       "local-lec-netlist",
+      "local-linecode-8b10b",
       "local-liveness",
       "local-lockstep-monitor",
       "local-long-counter",
@@ -1176,6 +1242,7 @@
       "local-riscv-iss",
       "local-riscv-pmp",
       "local-scan-atpg",
+      "local-scrambler-prbs",
       "local-secure-lifecycle",
       "local-sha256",
       "local-spi",
@@ -1295,6 +1362,10 @@
       "local-axi4",
       "local-formal-common"
     ],
+    "local-axi4-full": [
+      "local-axi4",
+      "local-common"
+    ],
     "local-axis": [
       "local-common"
     ],
@@ -1336,6 +1407,9 @@
     "local-cache-dma": [
       "local-common"
     ],
+    "local-can": [
+      "local-common"
+    ],
     "local-cdc-bridge": [
       "local-apb",
       "local-async-fifo",
@@ -1349,6 +1423,9 @@
       "local-cdc-handshake",
       "local-exploration-common",
       "local-irq-cdc"
+    ],
+    "local-cic-decimator": [
+      "local-common"
     ],
     "local-clock-gating": [
       "local-common"
@@ -1377,6 +1454,9 @@
       "local-formal-common"
     ],
     "local-conv-window": [
+      "local-common"
+    ],
+    "local-cordic": [
       "local-common"
     ],
     "local-counter-snapshot": [
@@ -1475,6 +1555,9 @@
       "local-timer-watchdog",
       "local-tmr"
     ],
+    "local-fec-ber": [
+      "local-common"
+    ],
     "local-fifo": [
       "local-irq-cdc"
     ],
@@ -1533,6 +1616,9 @@
     "local-i2c": [
       "local-common"
     ],
+    "local-iir-biquad": [
+      "local-common"
+    ],
     "local-image-sobel": [
       "local-conv-window",
       "local-exploration-common"
@@ -1557,6 +1643,10 @@
     ],
     "local-lec-netlist": [
       "local-exploration-common"
+    ],
+    "local-linecode-8b10b": [
+      "local-common",
+      "local-formal-common"
     ],
     "local-lint": [
       "@local-lint-targets",
@@ -1814,6 +1904,10 @@
     ],
     "local-scan-atpg": [
       "local-common"
+    ],
+    "local-scrambler-prbs": [
+      "local-common",
+      "local-formal-common"
     ],
     "local-secure-lifecycle": [
       "local-common"

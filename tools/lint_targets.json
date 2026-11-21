@@ -18,11 +18,13 @@
     "examples/local-automotive-ecu/rtl/automotive_ecu.sv",
     "examples/local-axi-reorder/rtl/reorder.sv",
     "examples/local-axi/rtl/axi_lite_regs.sv",
+    "examples/local-axi4-full/rtl/axi4_full_ram.sv",
     "examples/local-axi4/rtl/axi4_ram.sv",
     "examples/local-axis/rtl/axis_packet_fifo.sv",
     "examples/local-bus-bridge/rtl/bus_bridge.sv",
     "examples/local-cache-coherence/rtl/coherent_pair.sv",
     "examples/local-cache-dma/rtl/cache_dma.sv",
+    "examples/local-can/rtl/can_node.sv",
     "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
     "examples/local-cdc-bridge/rtl/packet_fifo.sv",
     "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
@@ -33,6 +35,7 @@
     "examples/local-cdc-structural/rtl/cdc_no_sync.sv",
     "examples/local-cdc-structural/rtl/cdc_reconvergence.sv",
     "examples/local-cdc-structural/rtl/cdc_reset_release.sv",
+    "examples/local-cic-decimator/rtl/cic_decimator.sv",
     "examples/local-clock-gating/rtl/clock_gate.sv",
     "examples/local-clock-gating/rtl/clock_switch.sv",
     "examples/local-clock-gating/rtl/odd_divider.sv",
@@ -42,6 +45,7 @@
     "examples/local-connectivity/rtl/soc_top.sv",
     "examples/local-constant-time/rtl/constant_time_compare.sv",
     "examples/local-conv-window/rtl/conv_window.sv",
+    "examples/local-cordic/rtl/cordic.sv",
     "examples/local-counter-snapshot/rtl/counter.sv",
     "examples/local-coverage-unreachable/rtl/guarded_unit.sv",
     "examples/local-cpp-reference/rtl/saturating_fir.sv",
@@ -60,12 +64,15 @@
     "examples/local-equivalence/rtl/fifo_pair.sv",
     "examples/local-fdir/rtl/fdir_node.sv",
     "examples/local-fdir/rtl/protected_store.sv",
+    "examples/local-fec-ber/rtl/conv_encoder.sv",
+    "examples/local-fec-ber/rtl/viterbi_decoder.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
     "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
     "examples/local-fp-adder/rtl/fp_adder.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
+    "examples/local-iir-biquad/rtl/iir_biquad.sv",
     "examples/local-image-sobel/rtl/sobel_stream.sv",
     "examples/local-image-soc/rtl/cpu_ahb.sv",
     "examples/local-image-soc/rtl/image_dma.sv",
@@ -79,6 +86,11 @@
     "examples/local-lbist/rtl/lbist.sv",
     "examples/local-lbist/rtl/lbist_logic.sv",
     "examples/local-lec-netlist/rtl/event_meter.sv",
+    "examples/local-linecode-8b10b/rtl/comma_align.sv",
+    "examples/local-linecode-8b10b/rtl/dec_8b10b.sv",
+    "examples/local-linecode-8b10b/rtl/dec_8b10b_comb.sv",
+    "examples/local-linecode-8b10b/rtl/enc_8b10b.sv",
+    "examples/local-linecode-8b10b/rtl/enc_8b10b_comb.sv",
     "examples/local-liveness/rtl/fair_arbiter.sv",
     "examples/local-lockstep-monitor/rtl/lockstep_monitor.sv",
     "examples/local-long-counter/rtl/long_counter.sv",
@@ -151,6 +163,10 @@
     "examples/local-riscv-iss/rtl/rv32i_core.sv",
     "examples/local-riscv-pmp/rtl/pmp.sv",
     "examples/local-scan-atpg/rtl/scan_logic.sv",
+    "examples/local-scrambler-prbs/rtl/prbs_check.sv",
+    "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
+    "examples/local-scrambler-prbs/rtl/ss_descrambler.sv",
+    "examples/local-scrambler-prbs/rtl/ss_scrambler.sv",
     "examples/local-secure-lifecycle/rtl/secure_lifecycle.sv",
     "examples/local-sha256/rtl/sha256_engine.sv",
     "examples/local-spi/rtl/spi_master.sv",
@@ -5611,6 +5627,316 @@
         "examples/local-sva-patterns/rtl/event_cross.sv"
       ],
       "parameters": {}
+    },
+    {
+      "id": "local-linecode-8b10b/enc_8b10b_comb/default",
+      "file": "examples/local-linecode-8b10b/rtl/enc_8b10b_comb.sv",
+      "top": "enc_8b10b_comb",
+      "sources": [
+        "examples/local-linecode-8b10b/rtl/enc_8b10b_comb.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-linecode-8b10b/enc_8b10b/default",
+      "file": "examples/local-linecode-8b10b/rtl/enc_8b10b.sv",
+      "top": "enc_8b10b",
+      "sources": [
+        "examples/local-linecode-8b10b/rtl/enc_8b10b.sv",
+        "examples/local-linecode-8b10b/rtl/enc_8b10b_comb.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-linecode-8b10b/dec_8b10b_comb/default",
+      "file": "examples/local-linecode-8b10b/rtl/dec_8b10b_comb.sv",
+      "top": "dec_8b10b_comb",
+      "sources": [
+        "examples/local-linecode-8b10b/rtl/dec_8b10b_comb.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-linecode-8b10b/dec_8b10b/default",
+      "file": "examples/local-linecode-8b10b/rtl/dec_8b10b.sv",
+      "top": "dec_8b10b",
+      "sources": [
+        "examples/local-linecode-8b10b/rtl/dec_8b10b.sv",
+        "examples/local-linecode-8b10b/rtl/dec_8b10b_comb.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-linecode-8b10b/comma_align/default",
+      "file": "examples/local-linecode-8b10b/rtl/comma_align.sv",
+      "top": "comma_align",
+      "sources": [
+        "examples/local-linecode-8b10b/rtl/comma_align.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-scrambler-prbs/prbs_gen/default",
+      "file": "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
+      "top": "prbs_gen",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/prbs_gen.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-scrambler-prbs/prbs_gen/W=8",
+      "file": "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
+      "top": "prbs_gen",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/prbs_gen.sv"
+      ],
+      "parameters": {
+        "W": 8
+      }
+    },
+    {
+      "id": "local-scrambler-prbs/prbs_gen/N=31/TAP=28/W=16",
+      "file": "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
+      "top": "prbs_gen",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/prbs_gen.sv"
+      ],
+      "parameters": {
+        "N": 31,
+        "TAP": 28,
+        "W": 16
+      }
+    },
+    {
+      "id": "local-scrambler-prbs/prbs_check/default",
+      "file": "examples/local-scrambler-prbs/rtl/prbs_check.sv",
+      "top": "prbs_check",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/prbs_check.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-scrambler-prbs/prbs_check/W=8",
+      "file": "examples/local-scrambler-prbs/rtl/prbs_check.sv",
+      "top": "prbs_check",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/prbs_check.sv"
+      ],
+      "parameters": {
+        "W": 8
+      }
+    },
+    {
+      "id": "local-scrambler-prbs/prbs_check/N=31/TAP=28/W=16",
+      "file": "examples/local-scrambler-prbs/rtl/prbs_check.sv",
+      "top": "prbs_check",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/prbs_check.sv"
+      ],
+      "parameters": {
+        "N": 31,
+        "TAP": 28,
+        "W": 16
+      }
+    },
+    {
+      "id": "local-scrambler-prbs/ss_scrambler/default",
+      "file": "examples/local-scrambler-prbs/rtl/ss_scrambler.sv",
+      "top": "ss_scrambler",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/ss_scrambler.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-scrambler-prbs/ss_scrambler/W=8",
+      "file": "examples/local-scrambler-prbs/rtl/ss_scrambler.sv",
+      "top": "ss_scrambler",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/ss_scrambler.sv"
+      ],
+      "parameters": {
+        "W": 8
+      }
+    },
+    {
+      "id": "local-scrambler-prbs/ss_descrambler/default",
+      "file": "examples/local-scrambler-prbs/rtl/ss_descrambler.sv",
+      "top": "ss_descrambler",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/ss_descrambler.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-scrambler-prbs/ss_descrambler/W=8",
+      "file": "examples/local-scrambler-prbs/rtl/ss_descrambler.sv",
+      "top": "ss_descrambler",
+      "sources": [
+        "examples/local-scrambler-prbs/rtl/ss_descrambler.sv"
+      ],
+      "parameters": {
+        "W": 8
+      }
+    },
+    {
+      "id": "local-axi4-full/axi4_full_ram/default",
+      "file": "examples/local-axi4-full/rtl/axi4_full_ram.sv",
+      "top": "axi4_full_ram",
+      "sources": [
+        "examples/local-axi4-full/rtl/axi4_full_ram.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cordic/cordic/default",
+      "file": "examples/local-cordic/rtl/cordic.sv",
+      "top": "cordic",
+      "sources": [
+        "examples/local-cordic/rtl/cordic.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cordic/cordic/GUARD=2/ITER=12/WIDTH=12",
+      "file": "examples/local-cordic/rtl/cordic.sv",
+      "top": "cordic",
+      "sources": [
+        "examples/local-cordic/rtl/cordic.sv"
+      ],
+      "parameters": {
+        "GUARD": 2,
+        "ITER": 12,
+        "WIDTH": 12
+      }
+    },
+    {
+      "id": "local-cic-decimator/cic_decimator/default",
+      "file": "examples/local-cic-decimator/rtl/cic_decimator.sv",
+      "top": "cic_decimator",
+      "sources": [
+        "examples/local-cic-decimator/rtl/cic_decimator.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-cic-decimator/cic_decimator/DELAY=2/RATE=5/STAGES=2",
+      "file": "examples/local-cic-decimator/rtl/cic_decimator.sv",
+      "top": "cic_decimator",
+      "sources": [
+        "examples/local-cic-decimator/rtl/cic_decimator.sv"
+      ],
+      "parameters": {
+        "DELAY": 2,
+        "RATE": 5,
+        "STAGES": 2
+      }
+    },
+    {
+      "id": "local-iir-biquad/iir_biquad/default",
+      "file": "examples/local-iir-biquad/rtl/iir_biquad.sv",
+      "top": "iir_biquad",
+      "sources": [
+        "examples/local-iir-biquad/rtl/iir_biquad.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-iir-biquad/iir_biquad/ROUND=0",
+      "file": "examples/local-iir-biquad/rtl/iir_biquad.sv",
+      "top": "iir_biquad",
+      "sources": [
+        "examples/local-iir-biquad/rtl/iir_biquad.sv"
+      ],
+      "parameters": {
+        "ROUND": 0
+      }
+    },
+    {
+      "id": "local-iir-biquad/iir_biquad/ROUND=2",
+      "file": "examples/local-iir-biquad/rtl/iir_biquad.sv",
+      "top": "iir_biquad",
+      "sources": [
+        "examples/local-iir-biquad/rtl/iir_biquad.sv"
+      ],
+      "parameters": {
+        "ROUND": 2
+      }
+    },
+    {
+      "id": "local-iir-biquad/iir_biquad/SAT=0",
+      "file": "examples/local-iir-biquad/rtl/iir_biquad.sv",
+      "top": "iir_biquad",
+      "sources": [
+        "examples/local-iir-biquad/rtl/iir_biquad.sv"
+      ],
+      "parameters": {
+        "SAT": 0
+      }
+    },
+    {
+      "id": "local-iir-biquad/iir_biquad/FRAC=6",
+      "file": "examples/local-iir-biquad/rtl/iir_biquad.sv",
+      "top": "iir_biquad",
+      "sources": [
+        "examples/local-iir-biquad/rtl/iir_biquad.sv"
+      ],
+      "parameters": {
+        "FRAC": 6
+      }
+    },
+    {
+      "id": "local-fec-ber/conv_encoder/default",
+      "file": "examples/local-fec-ber/rtl/conv_encoder.sv",
+      "top": "conv_encoder",
+      "sources": [
+        "examples/local-fec-ber/rtl/conv_encoder.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fec-ber/viterbi_decoder/default",
+      "file": "examples/local-fec-ber/rtl/viterbi_decoder.sv",
+      "top": "viterbi_decoder",
+      "sources": [
+        "examples/local-fec-ber/rtl/viterbi_decoder.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-fec-ber/viterbi_decoder/DEPTH=24",
+      "file": "examples/local-fec-ber/rtl/viterbi_decoder.sv",
+      "top": "viterbi_decoder",
+      "sources": [
+        "examples/local-fec-ber/rtl/viterbi_decoder.sv"
+      ],
+      "parameters": {
+        "DEPTH": 24
+      }
+    },
+    {
+      "id": "local-can/can_node/default",
+      "file": "examples/local-can/rtl/can_node.sv",
+      "top": "can_node",
+      "sources": [
+        "examples/local-can/rtl/can_node.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-can/can_node/SJW=3/TSEG1=14/TSEG2=5",
+      "file": "examples/local-can/rtl/can_node.sv",
+      "top": "can_node",
+      "sources": [
+        "examples/local-can/rtl/can_node.sv"
+      ],
+      "parameters": {
+        "SJW": 3,
+        "TSEG1": 14,
+        "TSEG2": 5
+      }
     }
   ],
   "examples": {
@@ -7666,6 +7992,84 @@
         "local-sva-patterns/tagged_queue/default",
         "local-sva-patterns/tagged_queue/LAT=2",
         "local-sva-patterns/event_cross/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-linecode-8b10b": {
+      "scope": "dut",
+      "targets": [
+        "local-linecode-8b10b/enc_8b10b_comb/default",
+        "local-linecode-8b10b/enc_8b10b/default",
+        "local-linecode-8b10b/dec_8b10b_comb/default",
+        "local-linecode-8b10b/dec_8b10b/default",
+        "local-linecode-8b10b/comma_align/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-scrambler-prbs": {
+      "scope": "dut",
+      "targets": [
+        "local-scrambler-prbs/prbs_gen/default",
+        "local-scrambler-prbs/prbs_gen/W=8",
+        "local-scrambler-prbs/prbs_gen/N=31/TAP=28/W=16",
+        "local-scrambler-prbs/prbs_check/default",
+        "local-scrambler-prbs/prbs_check/W=8",
+        "local-scrambler-prbs/prbs_check/N=31/TAP=28/W=16",
+        "local-scrambler-prbs/ss_scrambler/default",
+        "local-scrambler-prbs/ss_scrambler/W=8",
+        "local-scrambler-prbs/ss_descrambler/default",
+        "local-scrambler-prbs/ss_descrambler/W=8"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-axi4-full": {
+      "scope": "dut",
+      "targets": [
+        "local-axi4-full/axi4_full_ram/default"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-cordic": {
+      "scope": "dut",
+      "targets": [
+        "local-cordic/cordic/default",
+        "local-cordic/cordic/GUARD=2/ITER=12/WIDTH=12"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-cic-decimator": {
+      "scope": "dut",
+      "targets": [
+        "local-cic-decimator/cic_decimator/default",
+        "local-cic-decimator/cic_decimator/DELAY=2/RATE=5/STAGES=2"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-iir-biquad": {
+      "scope": "dut",
+      "targets": [
+        "local-iir-biquad/iir_biquad/default",
+        "local-iir-biquad/iir_biquad/ROUND=0",
+        "local-iir-biquad/iir_biquad/ROUND=2",
+        "local-iir-biquad/iir_biquad/SAT=0",
+        "local-iir-biquad/iir_biquad/FRAC=6"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-fec-ber": {
+      "scope": "dut",
+      "targets": [
+        "local-fec-ber/conv_encoder/default",
+        "local-fec-ber/viterbi_decoder/default",
+        "local-fec-ber/viterbi_decoder/DEPTH=24"
+      ],
+      "reason": "自身のDUTと共有RTLを構成別に静的検査"
+    },
+    "local-can": {
+      "scope": "dut",
+      "targets": [
+        "local-can/can_node/default",
+        "local-can/can_node/SJW=3/TSEG1=14/TSEG2=5"
       ],
       "reason": "自身のDUTと共有RTLを構成別に静的検査"
     }

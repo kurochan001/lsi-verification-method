@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "IIR-ARITH", "goals": ["rounding/tie", "rounding/negative", "feedback/active", "impulse/sample"]},
+    {"id": "IIR-OVERFLOW", "goals": ["overflow/positive", "overflow/negative", "overflow/exact-high", "overflow/exact-low", "overflow/zero-input-tail"]},
+    {"id": "IIR-LIMIT", "goals": ["limit/zero-input-tail"]},
+    {"id": "IIR-STATE", "goals": ["state/clear", "clear/offer", "reset/pending", "coef/rewrite", "coef/write-with-accept", "coef/ignored-address"]},
+    {"id": "IIR-HANDSHAKE", "goals": ["handshake/idle", "handshake/held-offer", "handshake/stall", "handshake/back-to-back"]}
+  ]
+}
