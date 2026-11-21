@@ -8,7 +8,8 @@
 // The previous character is kept as (data, k, disparity before it); the auxiliary assertion
 // ai_previous states that the kept code and the encoder's present disparity are what the encoder
 // gives for it. It is proved, not assumed, and makes the two-code properties inductive.
-// SIDE selects the properties: 0 all, 1 forward and line only, 2 backward only.
+// SIDE selects the properties: 0 all, 1 forward and line only, 2 backward only,
+// 3 backward with ap_other alone (so that a counterexample can only break ap_other).
 module linecode_formal #(parameter MUTATION = 0, SIDE = 0) (
     input wire clk, rst_n, valid, k,
     input wire [7:0] data,
@@ -94,7 +95,7 @@ module linecode_formal #(parameter MUTATION = 0, SIDE = 0) (
     always @(posedge clk) if (!f_past) as_initial_reset: assume(!rst_n);
 
     generate
-        if (SIDE != 2) begin : g_forward
+        if (SIDE == 0 || SIDE == 1) begin : g_forward
             always @(posedge clk) if (f_past) begin
                 ai_rd_equal: assert(enc_rd == dec_rd);
                 ai_previous: assert(prev_valid ? (!again_k_err && prev_code == again_code && enc_rd == again_next)
@@ -120,13 +121,17 @@ module linecode_formal #(parameter MUTATION = 0, SIDE = 0) (
         end
         if (SIDE != 1) begin : g_backward
             always @(posedge clk) if (f_past) begin
-                if (!free_code_err && !free_disp_err)
-                    ap_accept: assert(!back_k_err && back_code == free_code && back_next == free_next);
                 if (free_disp_err)
                     ap_other: assert(!free_code_err && !other_k_err && other_code == free_code);
-                ap_dec_rd: assert(free_next == (free_weight == 4'd5 ? free_rd : free_weight > 4'd5));
                 cp_disparity_error: cover(free_disp_err);
                 cp_balanced_reject: cover(free_code_err && free_weight == 4'd5);
+            end
+        end
+        if (SIDE == 0 || SIDE == 2) begin : g_backward_accept
+            always @(posedge clk) if (f_past) begin
+                if (!free_code_err && !free_disp_err)
+                    ap_accept: assert(!back_k_err && back_code == free_code && back_next == free_next);
+                ap_dec_rd: assert(free_next == (free_weight == 4'd5 ? free_rd : free_weight > 4'd5));
             end
         end
     endgenerate

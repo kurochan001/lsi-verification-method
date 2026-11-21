@@ -280,7 +280,8 @@ class FormalPlanTests(unittest.TestCase):
                          [f'detect-mutation{m}' for m in range(1, 8)] + [f'forward-misses-mutation{m}' for m in (5, 6, 7)])
         self.assertEqual(plan[0]['parameters'], dict(MUTATION=0, SIDE=F.ALL))
         self.assertEqual({c['parameters']['SIDE'] for c in plan[2:6]}, {F.FORWARD_ONLY})
-        self.assertEqual({c['parameters']['SIDE'] for c in plan[6:9]}, {F.BACKWARD_ONLY})
+        self.assertEqual([c['parameters']['SIDE'] for c in plan[6:9]], [F.BACKWARD_ONLY, F.OTHER_ONLY, F.BACKWARD_ONLY])
+        self.assertEqual(F.properties({}, plan[7])['assert'], {'ap_other'})
         for case in plan[9:]:
             self.assertEqual((case['mode'], case['expect'], case['category'], case['parameters']['SIDE']),
                              ('prove', 'PASS', 'diagnostic', F.FORWARD_ONLY))

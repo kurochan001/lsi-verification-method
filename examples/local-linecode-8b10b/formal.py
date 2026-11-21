@@ -22,20 +22,24 @@ FORWARD = {'ai_rd_equal', 'ai_previous', 'ap_k_err', 'ap_roundtrip', 'ap_dispari
 BACKWARD = {'ap_accept', 'ap_other', 'ap_dec_rd'}
 FORWARD_COVERS = {'cp_comma_minus', 'cp_comma_plus', 'cp_d7_plus', 'cp_alternate_7', 'cp_run_across', 'cp_false_comma'}
 BACKWARD_COVERS = {'cp_disparity_error', 'cp_balanced_reject'}
-ALL, FORWARD_ONLY, BACKWARD_ONLY = 0, 1, 2
+ALL, FORWARD_ONLY, BACKWARD_ONLY, OTHER_ONLY = 0, 1, 2, 3
 # Mutants of the encoder are shown against the forward side, mutants of the decoder against the backward side.
 FAILURES = {1: (FORWARD_ONLY, 'ap_roundtrip'), 2: (FORWARD_ONLY, 'ap_roundtrip'), 3: (FORWARD_ONLY, 'ap_rd_step'),
-            4: (FORWARD_ONLY, 'ap_roundtrip'), 5: (BACKWARD_ONLY, 'ap_accept'), 6: (BACKWARD_ONLY, 'ap_other'),
+            4: (FORWARD_ONLY, 'ap_roundtrip'), 5: (BACKWARD_ONLY, 'ap_accept'), 6: (OTHER_ONLY, 'ap_other'),
             7: (BACKWARD_ONLY, 'ap_dec_rd')}
+# Mutant 6 can break ap_accept or ap_other, depending on the counterexample the solver picks
+# (macOS and Linux picked different ones), so its task checks ap_other alone.
 # The round trip never shows the decoder a code the encoder does not send: these decoder mutants pass it.
 FORWARD_BLIND = (5, 6, 7)
 
 
 def properties(parameters, case):
     side = case['parameters']['SIDE']
-    return {'assert': (FORWARD if side != BACKWARD_ONLY else set()) | (BACKWARD if side != FORWARD_ONLY else set()),
+    forward = side in (ALL, FORWARD_ONLY)
+    backward = {ALL: BACKWARD, BACKWARD_ONLY: BACKWARD, OTHER_ONLY: {'ap_other'}}.get(side, set())
+    return {'assert': (FORWARD if forward else set()) | backward,
             'assume': {'as_initial_reset'},
-            'cover': (FORWARD_COVERS if side != BACKWARD_ONLY else set()) | (BACKWARD_COVERS if side != FORWARD_ONLY else set())}
+            'cover': (FORWARD_COVERS if forward else set()) | (BACKWARD_COVERS if side != FORWARD_ONLY else set())}
 
 
 def plan(bound, demo_bug):
