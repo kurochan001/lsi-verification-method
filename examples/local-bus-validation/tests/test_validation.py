@@ -14,6 +14,13 @@ V=load_example('local-bus-validation')
 
 
 class ValidationTest(unittest.TestCase):
+    def test_a_child_summary_needs_a_finished_plan_not_only_a_success_flag(self):
+        good=dict(success=True,complete=True,planned=7,results=7)
+        self.assertTrue(V.child_success(good))
+        for change in (dict(success=False),dict(complete=False),dict(results=6),dict(planned=0,results=0),dict(planned='7'),dict(success=1)):
+            self.assertFalse(V.child_success({**good,**change}),change)
+        self.assertFalse(V.child_success(dict(success=True)));self.assertFalse(V.child_success([]))
+
     def test_cross_denominators_are_explicit(self):
         self.assertEqual(len(V.cross_plan('ahb')),12)
         self.assertEqual(len(V.cross_plan('axi')),22)

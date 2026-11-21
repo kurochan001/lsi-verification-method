@@ -49,6 +49,6 @@ python3 examples/local-pll-clock-quality/run.py --configuration p20ns --demo-bug
 python3 -m unittest discover -s examples/local-pll-clock-quality/tests
 ```
 
-`p20ns-boundaries/wave.vcd` には `pll_clk`、`measure`、`clock_permit`、`work_reset_n` が含まれます。`clock_edges.csv` には実測した時刻、High／Low幅、周期、TIE、隣接周期の差をps単位で残します。立上り行の `pulse_ps` は直前のLow幅、立下り行ではHigh幅を表します。測定対象外の周期・TIE・隣接周期差は0です。`p20ns-detect-phase-drift/simulation.log` では、しきい値超過時の値と各状態を確認できます。
+`p20ns-boundaries/wave.vcd` には `pll_clk`、`measure`、`clock_permit`、`work_reset_n` が含まれます。波形の隣の `wave.vcd.edges.csv` には実測した時刻、High／Low幅、周期、TIE、隣接周期の差をps単位で残します。立上り行の `pulse_ps` は直前のLow幅、立下り行ではHigh幅を表します。測定対象外の周期・TIE・隣接周期差は0です。`p20ns-detect-phase-drift/simulation.log` では、しきい値超過時の値と各状態を確認できます。
 
 クロック外乱はテストベンチで与えます。実PLLの位相ノイズ、RMSジッター、電気的なエッジ、実装後のタイミングや実機の測定は別の確認です。ツールの版と実行結果は[実行記録](../../PROVENANCE.md#pll-clock-quality)を参照してください。

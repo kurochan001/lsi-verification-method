@@ -40,7 +40,7 @@ def violations(p, rows):
 
 
 def simulate(rows, parameters):
-    """The bench writes clock_edges.csv into its working directory, so run it in a temporary one."""
+    """Run in a temporary directory so that nothing a simulator writes can land in the repository."""
     here = os.getcwd()
     with tempfile.TemporaryDirectory() as tmp:
         os.chdir(tmp)

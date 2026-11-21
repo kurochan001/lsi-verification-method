@@ -235,6 +235,11 @@ def run_fixtures(args,out,results):
     results.append(dict(id=d.name,status=status,message=message,seconds=e['seconds']))
 
 
+def child_success(summary):
+    """A child regression counts only when its whole plan finished and passed, not on a bare success flag."""
+    return (isinstance(summary,dict) and summary.get('success') is True and summary.get('complete') is True and
+            type(summary.get('planned')) is int and summary['planned']>0 and summary.get('results')==summary['planned'])
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--stage',choices=('all','bus','fixtures','bridges','axi4'),default='all')
@@ -266,7 +271,7 @@ def main():
                 command=[sys.executable,str(HERE.parent/directory/'run.py'),'--profile',args.profile,'--seed',str(args.seed),'--iverilog',args.iverilog,'--vvp',args.vvp,'--timeout',str(args.timeout),'--out',str(out/stage)]
                 e=SUPPORT.execute(command,out/(stage+'.log'),args.build_timeout*4,out)
                 child=out/stage/'summary.json'
-                ok=not e['error'] and e['returncode']==0 and child.exists() and json.loads(child.read_text())['success']
+                ok=not e['error'] and e['returncode']==0 and child.exists() and child_success(json.loads(child.read_text()))
                 results.append(dict(id=stage,status='pass' if ok else 'error',message='child regression',seconds=e['seconds']))
     except (OSError,ValueError,KeyError,TypeError) as exc:results.append(dict(id='runner',status='error',message=str(exc),seconds=0))
     complete=[r['id'] for r in results]==planned
