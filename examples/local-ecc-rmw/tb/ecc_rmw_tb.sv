@@ -114,5 +114,10 @@ module ecc_rmw_tb;
         if(checks!=expected_checks)fail("completion count differs");
         $display("COUNT steps=%0d",checks);$display("RESULT PASS checks=%0d",checks);$finish;
     end
-    initial begin #10000000;fail("timeout");end
+    // A hang is not a detection: it gets its own label, so a mutation that only
+    // stalls the bench is reported as an error instead of the expected ECC_RMW.
+    initial begin
+        #10000000;$display("CHECK_FAIL ECC_RMW_TIMEOUT");
+        $fatal(1,"case=%s seed=%0d step=%0d reason=timeout",test_name,seed,checks);
+    end
 endmodule

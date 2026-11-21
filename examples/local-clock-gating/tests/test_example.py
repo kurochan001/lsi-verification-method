@@ -24,7 +24,7 @@ def labels(result):
 
 class ExampleTests(SystemContract, unittest.TestCase):
     EXAMPLE = 'local-clock-gating'
-    GOALS = 12
+    GOALS = 13
 
     def test_fixed_scenario_alone_reaches_every_goal(self):
         if not ICARUS:
@@ -130,7 +130,13 @@ class ModelTests(unittest.TestCase):
     def test_fixed_scenario_has_what_every_goal_needs(self):
         rows, counts = M.vectors(self.PARAMETERS, 17, 0)
         signals = [row[1] for row in rows]
-        self.assertEqual(signals.count(SIGNAL['SW_RST']), 5)       # start, and two recoveries
+        # start, two recoveries, and one reset released with clk_b still selected
+        self.assertEqual(signals.count(SIGNAL['SW_RST']), 7)
+        release = [i for i, row in enumerate(rows) if row[1] == SIGNAL['CHECK_RELEASE']]
+        self.assertEqual(len(release), 1)
+        # The check follows the release directly, and neither select nor a clock stop is in between.
+        self.assertEqual(rows[release[0] - 1][1:], [SIGNAL['SW_RST'], 1])
+        self.assertEqual([row[2] for row in rows[:release[0]] if row[1] == SIGNAL['SEL']][-1], 1)
         self.assertEqual(sum(row[1] == SIGNAL['CHECK_ACTIVE'] and row[2] == 0 for row in rows), 2)
         self.assertEqual(signals.count(SIGNAL['DIV_RST']), 3)
         self.assertEqual(counts['switch_windows'], signals.count(SIGNAL['WINDOW_CLOSE']))

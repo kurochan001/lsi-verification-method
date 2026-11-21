@@ -58,7 +58,7 @@ toolsディレクトリ全体を単純に重ねる配置ではありません。
 
 ## 動作確認する場所と依存ファイル
 
-元の構成を持つkirimasim-testsのチェックアウトを用意します。このリポジトリの`tools/`全体をそのまま重ねるのではなく、上表の対応先へ復元します。特に、`reference/*.py`は元の`tools/`直下、`test_matching_kit.py`は元の`tools/test_matching_kit.py`、`generators/`は元のリポジトリ直下です。複製元のパスと版は[由来](../PROVENANCE.md)で確認できます。
+元の構成を持つkirimasim-testsのチェックアウトを用意します。このリポジトリの`tools/`全体をそのまま重ねるのではなく、上表の対応先へ復元します。特に、`reference/*.py`は元の`tools/`直下、`test_matching_kit.py`は元の`tools/test_matching_kit.py`、`generators/`は元のリポジトリ直下です。複製元のパスと版は[由来](../PROVENANCE.md)で確認できます。`test_matching_kit.py`は復元先で動かすテストで、このリポジトリのセルフテストには入れておらず、ここでは実行しません。
 
 次の依存ファイルは、このリポジトリには含めていません。
 

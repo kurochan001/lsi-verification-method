@@ -28,4 +28,10 @@ python3 examples/local-pwm-adc/run.py --profile nightly --seed 42 --out artifact
 
 [pwm_adc_trigger.sv](rtl/pwm_adc_trigger.sv)がPWMと起動信号のRTL、[pwm_adc_tb.sv](tb/pwm_adc_tb.sv)がADCとの接続・自己判定、[model.py](model.py)が期待値、[requirements.json](requirements.json)が4要求・12目標です。周期16／10の2構成で実行し、smoke／nightlyのJUnitは16／20件です。`period16-boundaries/wave.vcd` の `level` と `up`、`active_sample`、`adc_start`、`busy`、`result_valid` を並べると、上下のどちらで起動したかと値が出るまでの遅延を追えます。
 
+ランナーとモデルのセルフテストは9件です。起動が搬送波の1周期に1回であること、デューティ0%と100%、不正な設定の拒否、ADC側の列がADCのモデルの再実行と一致すること、計画の名前とラベル、seedの再現、全構成の実行と証跡、`--demo-bug`の終了コード、期待値を書き換えたときにテストベンチが不合格にすることを確かめます。2026-11-21のレビューで、この例にセルフテストがないことが分かり、追加しました。
+
+```sh
+python3 -m unittest discover -s examples/local-pwm-adc/tests
+```
+
 PWMとADCは同一クロックで接続しています。PWMの電力段、ゲートドライバ、アナログの電流波形、最適なサンプリング位置の評価は別の確認です。使用したシミュレータと検証結果は[実行記録](../../PROVENANCE.md#pll-adc-pwm)を参照してください。

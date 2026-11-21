@@ -9,7 +9,7 @@ P = load_example('local-secure-lifecycle')
 
 class ExampleTests(SystemContract, unittest.TestCase):
     EXAMPLE = 'local-secure-lifecycle'
-    GOALS = 15
+    GOALS = 16
 
     def test_nonsecure_write_has_no_side_effect(self):
         p = P.Plan(3, 0xa55a)

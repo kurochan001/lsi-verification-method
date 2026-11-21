@@ -20,15 +20,15 @@ module owned_tb;
  if(wvalid && wready)begin
  expected_word={initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+3),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+2),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat+1),initial_byte(v[5]+128*write_turn+16*write_slot+4*write_beat)};
  if(wdata!==expected_word || wstrb!==15)fail("OWN_DATA");write_beat=write_beat+1;end
- if(busy)begin $display("COVER engine/busy");if(owners[2*head+:2]!=2)fail("OWN_STATE");end
+ if(busy)begin $display("COVER engine/busy");if(owners[2*head+:2]!==2'd2)fail("OWN_STATE");end
  @(posedge clk);#1;@(negedge clk);cycles=cycles+1;gate=STALL_PERIOD==0 || cycles%STALL_PERIOD!=0;if(cycles>8000)fail("OWN_TIMEOUT");
  end endtask
  task command(input integer op,input integer selected,input integer bad);
  begin host_op=op;host_slot=selected;host_valid=1;#1;
  if(!host_ready || host_error!==bad[0])fail("OWN_RESPONSE");if(bad)$display("COVER host/reject");
  tick();host_valid=0;
- if(!bad && op==1)begin if(owners[2*selected+:2]!=1)fail("OWN_STATE");$display("COVER host/publish");end
- if(!bad && op==2)begin if(owners[2*selected+:2]!=0)fail("OWN_STATE");$display("COVER host/reclaim");end
+ if(!bad && op==1)begin if(owners[2*selected+:2]!==2'd1)fail("OWN_STATE");$display("COVER host/publish");end
+ if(!bad && op==2)begin if(owners[2*selected+:2]!==2'd0)fail("OWN_STATE");$display("COVER host/reclaim");end
  end endtask
  task reset_all;begin rst_n=0;host_valid=0;tick();rst_n=1;for(integer a=0;a<8192;a=a+1)begin ram.memory[a]=initial_byte(a);expected_memory[a]=initial_byte(a);end tick();end endtask
  task publish(input integer t,input integer s);
@@ -53,7 +53,7 @@ module owned_tb;
  for(slot=1;slot<DEPTH;slot=slot+1)begin command(2,slot,0);publish(turn,slot);if(busy)$display("COVER host/dynamic");end
  end
  while(retired<(turn+1)*DEPTH)tick();
- if(retired!=(turn+1)*DEPTH || owners!={DEPTH{2'b11}})fail("OWN_STATE");
+ if(32'(retired)!==32'((turn+1)*DEPTH) || owners!=={DEPTH{2'b11}})fail("OWN_STATE");
  if(errors!==(v[2] && turn==0 ? (1<<(DEPTH-1)):0))fail("OWN_STATUS");
  if(v[2] && turn==0)$display("COVER completion/error");if(!irq)fail("OWN_IRQ");$display("COVER completion/irq");
  command(4,0,0);if(irq)fail("OWN_IRQ");$display("COVER irq/ack");if(turn>0)$display("COVER ring/wrap");

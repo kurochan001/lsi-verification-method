@@ -204,7 +204,10 @@ def classify(case, execution, output):
         return "error", execution["error"]
     failures = re.findall(r"^CHECK_FAIL (\w+)$", output, re.MULTILINE)
     passes = re.findall(r"^RESULT PASS checks=(\d+)$", output, re.MULTILINE)
-    completed = (execution["returncode"] == 0 and not failures and
+    # A failure line that carries extra detail is still a failure, not a clean completion.
+    malformed = [line for line in output.splitlines()
+                 if line.startswith("CHECK_FAIL") and not re.fullmatch(r"CHECK_FAIL \w+", line)]
+    completed = (execution["returncode"] == 0 and not failures and not malformed and
                  passes == [str(case["checks"])])
     expected = case["expected_failure"]
     if expected:

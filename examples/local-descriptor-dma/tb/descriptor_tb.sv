@@ -7,9 +7,16 @@ module descriptor_tb;
  wire[12:0]araddr,awaddr;wire[7:0]arlen,awlen;wire[1:0]arid,rid,rresp,awid,bid,bresp;wire[31:0]rdata,wdata;wire[3:0]wstrb;
  descriptor_dma #(.DEPTH(DEPTH),.MUTATION(MUTATION)) dut(.*);
  wire raw_arready,raw_awready,raw_wready;wire[1:0]raw_rresp,raw_bresp;
- integer tick_count=0,fetches=0,write_beat=0,active_slot=0,checks=0,fd,n,v[0:11];reg monitor=0,abort_fired=0;
+ integer tick_count=0,fetches=0,copy_reads=0,write_beat=0,active_slot=0,checks=0,fd,n,v[0:12];reg monitor=0,abort_fired=0;reg[95:0]engine_before;
  wire permit=STALL_PERIOD==0 || tick_count%(STALL_PERIOD+1)==STALL_PERIOD;
  wire abort_hold=!abort_fired && v[5]!=0 && ((v[5]==1 && arid==0 && fetches==v[4]) || (v[5]==2 && arid==1 && fetches-1==v[4]));
+ // Aborts 3-5 are timed from the controller state: between two programming writes, in the
+ // cycle before the start write, and together with the last fetch beat.
+ wire abort_point=!abort_fired && fetches-1==v[4] && (
+  (v[5]==3 && dut.state==3 && dut.program_index==1 && !dut.phase) ||
+  (v[5]==4 && dut.state==3 && dut.program_index==3 && !dut.phase) ||
+  (v[5]==5 && dut.state==2 && dut.beat==3 && rvalid));
+ wire[95:0]engine_setup={dut.copy_engine.source_reg,dut.copy_engine.dest_reg,dut.copy_engine.words_reg};
  assign arready=raw_arready && permit && !abort_hold;assign awready=raw_awready && permit;assign wready=raw_wready && permit;
  assign rresp=raw_rresp | ((v[3]==1 && rid==0 && fetches-1==v[4]) || (v[3]==3 && rid==1 && fetches-1==v[4]) ? 2'b10:0);
  assign bresp=raw_bresp | (v[3]==4 && fetches-1==v[4] ? 2'b10:0);
@@ -35,7 +42,7 @@ module descriptor_tb;
  if(active_slot==0 && fetches>0)$display("COVER ring/wrap");
  end
  if(arvalid && arready && arid==1)begin
- if(araddr!==source_address(active_slot) || arlen!==active_slot)fail("SG_COPY_ADDRESS");
+ if(araddr!==source_address(active_slot) || arlen!==active_slot)fail("SG_COPY_ADDRESS");copy_reads<=copy_reads+1;
  end
  if(awvalid && awready)begin
  if(awaddr!==destination_address(active_slot) || awlen!==active_slot || awid!==2)fail("SG_COPY_ADDRESS");write_beat=0;
@@ -48,7 +55,7 @@ module descriptor_tb;
  initial begin
  if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"args required");$dumpfile(wave);$dumpvars(0,descriptor_tb);fd=$fopen(vectors,"r");@(negedge clk);
  while(!$feof(fd))begin
- n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10],v[11]);if(n!=12)$fatal(1,"bad row");
+ n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10],v[11],v[12]);if(n!=13)$fatal(1,"bad row");
  reset_all();abort_fired=0;
  if(v[6])begin start_head=0;start_count=1;start=1;tick();start=0;if(!busy)fail("SG_RESET");reset_all();$display("COVER reset/active");end
  for(integer a=0;a<8192;a=a+1)begin memory.memory[a]=initial_byte(v[2],a);expected[a]=initial_byte(v[2],a);end
@@ -60,14 +67,19 @@ module descriptor_tb;
  end
  if(v[11]&(1<<slot))for(integer a=0;a<4*(slot+1);a=a+1)expected[destination_address(slot)+a]=initial_byte(v[2],source_address(slot)+a);
  end
- fetches=0;write_beat=0;monitor=1;start_head=v[0];start_count=v[1];start=1;tick();start=0;
+ fetches=0;copy_reads=0;write_beat=0;monitor=1;start_head=v[0];start_count=v[1];start=1;tick();start=0;
  begin: completion
  for(integer guard=0;guard<3000;guard=guard+1)begin
  if(done)disable completion;if(irq)fail("SG_IRQ");
- if(v[5] && !abort_fired && arvalid && abort_hold)begin abort_req=1;tick();abort_req=0;abort_fired=1;end else tick();
+ if(v[5] && !abort_fired && ((arvalid && abort_hold) || abort_point))begin engine_before=engine_setup;abort_req=1;tick();abort_req=0;abort_fired=1;end else tick();
  end fail("SG_TIMEOUT");end
  if({error,aborted,completed}!=={v[8][0],v[9][0],v[7][2:0]})fail("SG_STATUS");
  if(!irq)fail("SG_IRQ");if(fetches!=v[10])fail("SG_FETCH");
+ // An abort that arrives before the start write must stop before the copy engine reads,
+ // and one that arrives during the fetch must not program the engine at all.
+ if(v[5] && !abort_fired)fail("SG_ABORT_POINT");
+ if(copy_reads!=v[12])fail("SG_COPY_COUNT");
+ if((v[5]==1 || v[5]==5) && engine_setup!==engine_before)fail("SG_ABORT_SETUP");
  for(integer a=0;a<8192;a=a+1)if(memory.memory[a]!==expected[a])fail("SG_MEMORY");
  monitor=0;
  if(v[1]==0)$display("COVER ring/empty");if(v[1]==DEPTH && !error && !aborted)$display("COVER ring/full");

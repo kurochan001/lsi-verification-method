@@ -52,4 +52,6 @@ python3 -m unittest discover -s examples/local-memory-order/tests -v
 
 [共通手順](../local-common/README.md)を利用します。構成は`two-by-two`、smokeは48ペア×1 seed、nightlyは500×3 seed。固定12ペアは別枠です。JUnitは7／9件です。セルフテスト6件には、ターゲットと要求元の間へ意図的にRDATA破損を入れる検出確認もあります。
 
+2026-11-21のレビューで、[複数マスター接続の例](../local-interconnect/README.md)と同じ試験の抜けが見つかりました。テストベンチのモニターに「自分の書込み・読出しが未完了の間、`awready`・`arready`は0」の検査（`IC_READY`）を足し、作業用の写しでreadyを常時1にする誤りがsmokeで不合格になることを確かめました。受理後もvalidを出し続ける刺激は、あちらの例にあります。あわせて、ターゲット側の`RRESP`の比較を、Xを見逃さない`!==`に直しました。
+
 これは本RAMの書込みの反映時点、読出し値の確定時点、ストローブ規則の検証です。AXIが全マスター間へ単一のメモリ順序を要求するという説明ではありません。キャッシュ整合性、メモリバリア、排他アクセス、アウトオブオーダー、動作中リセットの計画は含めません。一般規則は[Arm AXI仕様](https://documentation-service.arm.com/static/5f915b62f86e16515cdc3b1c)、対象回路の範囲は[元の接続例](../local-interconnect/README.md)を参照してください。

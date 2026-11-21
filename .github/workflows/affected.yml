@@ -136,6 +136,14 @@ jobs:
           --tool-bin "$PWD/artifacts/ci-native/install/bin"
           --tool-bin "$PWD/artifacts/ci-env/formal/bin"
           --tool-bin "$PWD/artifacts/ci-ngspice/install/bin"
+      # The selected jobs do not run the runners' own tests; a push that only changes a test would otherwise wait for Nightly.
+      - name: All local selftests, without skips
+        if: ${{ !cancelled() && steps.selection.outputs.jobs != '0' }}
+        env:
+          COCOTB_PYTHON: ${{ github.workspace }}/artifacts/ci-env/python/bin/python
+        run: |
+          export PATH="$PWD/artifacts/ci-native/install/bin:$PWD/artifacts/ci-env/formal/bin:$PWD/artifacts/ci-ngspice/install/bin:$PATH"
+          artifacts/ci-env/python/bin/python tools/run_selftests.py --jobs 2 --timeout 600 --out artifacts/ci/selftests
       - name: Preserve results, including failures
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7

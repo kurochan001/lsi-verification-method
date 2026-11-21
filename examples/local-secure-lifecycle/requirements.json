@@ -27,6 +27,7 @@
       "goals": [
         "tamper/zeroize",
         "tamper/observable",
+        "tamper/write-rejected",
         "irq/w1c"
       ]
     },

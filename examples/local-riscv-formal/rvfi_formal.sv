@@ -173,10 +173,11 @@ module rvfi_formal #(parameter PREDICT = 0, MUTATION = 0, CHECK = 15, CLASS = 0,
     reg prev_valid = 1'b0, prev_load, prev2_valid = 1'b0, waited = 1'b0;
     reg [4:0] prev_rd, prev2_rd;
     reg [31:0] last_pc;
+    reg last_branch = 1'b0;  // the previous retirement was a conditional branch
     always @(posedge clk) begin
         if (rst_n && dmem_valid && !dmem_ready) waited <= 1'b1;
         if (rvfi_valid) begin
-            rvfi_order <= rvfi_order + 32'd1; first <= 1'b0; last_pc <= rvfi_pc_rdata;
+            rvfi_order <= rvfi_order + 32'd1; first <= 1'b0; last_pc <= rvfi_pc_rdata; last_branch <= is_branch;
             next_pc <= spec_pc_wdata; next_pc_known <= spec_pc_known;
             if (is_ebreak) stopped <= 1'b1;
             if (rvfi_rd_addr != 5'd0 && rvfi_rd_addr == track) begin track_known <= 1'b1; track_value <= rvfi_rd_wdata; end
@@ -233,7 +234,7 @@ module rvfi_formal #(parameter PREDICT = 0, MUTATION = 0, CHECK = 15, CLASS = 0,
         cp_auipc:      cover(rvfi_valid && is_auipc && rvfi_rd_addr != 5'd0);
         cp_jal:        cover(rvfi_valid && is_jal && rvfi_order != 32'd0);
         cp_jalr:       cover(rvfi_valid && is_jalr && rs1_known && rvfi_rs1_addr != 5'd0);
-        cp_taken:      cover(rvfi_valid && !first && next_pc_known && is_op && last_pc + 32'd4 != rvfi_pc_rdata);
+        cp_taken:      cover(rvfi_valid && !first && next_pc_known && is_op && last_branch && last_pc + 32'd4 != rvfi_pc_rdata);
         cp_not_taken:  cover(rvfi_valid && is_branch && rs1_known && rs2_known && rvfi_rs1_addr != 5'd0 && !branches(f3, rs1_value, rs2_value));
         cp_load:       cover(rvfi_valid && is_load && f3 == 3'd1 && rvfi_rd_addr != 5'd0 && lane == 2'd2);
         cp_store:      cover(rvfi_valid && is_store && f3 == 3'd0 && rs2_known && rvfi_rs2_addr != 5'd0 && lane == 2'd3);

@@ -25,7 +25,9 @@ def boundary_vectors():
             vector(src=64,dst=4092,words=6),vector(fault=1),vector(fault=2),vector(abort=1),vector(abort=2),
             vector(reset=1),vector(mask=1),vector(src=3),vector(dst=4),vector(src=8188,words=2),
             # The largest length and one more, and a destination that runs past the end.
-            vector(words=32),vector(words=33),vector(dst=8188,words=2)]
+            vector(words=32),vector(words=33),vector(dst=8188,words=2),
+            # Only the destination is unaligned; it neither overlaps the source nor leaves the memory.
+            vector(dst=258)]
 def random_vectors(seed,iterations):
     rng=random.Random(seed);rows=[]
     for _ in range(iterations):

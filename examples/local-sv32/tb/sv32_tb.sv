@@ -9,6 +9,11 @@ module sv32_tb;
     sv32_walk #(.MUTATION(MUTATION)) dut(.*);
     integer fd,n,checks=0,level=1;reg [63:0] v[0:21];string vectors,wave;
     reg [31:0] last_pte=0;reg saved_bare=0,saved_user=0,saved_sum=0,saved_mxr=0,pending=0;reg [1:0] saved_kind=0;
+    // True when the leaf is refused for its R/W/X bits alone: valid, aligned, A set, D set for a
+    // store, and the privilege check passes. Used only to name coverage goals.
+    wire only_permission=last_pte[0] && (last_pte[1] || !last_pte[2]) && last_pte[6] &&
+        (saved_kind!=1 || last_pte[7]) && (level==0 || last_pte[19:10]==0) &&
+        (saved_user ? last_pte[4] : !last_pte[4] || (saved_sum && saved_kind!=2));
     task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"step=%0d",checks);end endtask
     initial begin
         if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"arguments required");
@@ -23,6 +28,11 @@ module sv32_tb;
             if(resp_valid && (physical_address!==v[17][33:0] || fault!==v[18][1:0]))fail("VM_RESULT");
             if(resp_valid && (leaf_flags!==v[19][7:0] || large_page!==v[20][0] || global_mapping!==v[21][0]))fail("VM_METADATA");
             if(!rst_n)begin if(pending)$display("COVER reset/pending");pending=0;end
+            if(rst_n && req_ready && !req_valid)$display("COVER request/idle");
+            if(rst_n && req_valid && !req_ready)begin
+                if(mem_valid)$display("COVER request/blocked-by-walk");
+                if(resp_valid)$display("COVER request/blocked-by-response");
+            end
             if(req_ready && req_valid)begin
                 pending=1;saved_bare=bare;saved_user=user_mode;saved_sum=sum_enable;saved_mxr=mxr;saved_kind=kind;level=1;last_pte=0;
             end
@@ -53,6 +63,8 @@ module sv32_tb;
                         if(saved_user && !last_pte[4])$display("COVER deny/user");
                         if(!saved_user && last_pte[4] && saved_kind==2)$display("COVER deny/supervisor-execute-user");
                         if(level==1 && last_pte[19:10]!=0)$display("COVER deny/superpage-alignment");
+                        if(only_permission && saved_kind==1 && !last_pte[2])$display("COVER deny/write");
+                        if(only_permission && saved_kind==2 && !last_pte[3])$display("COVER deny/execute");
                     end
                 end
                 if(resp_ready)pending=0;

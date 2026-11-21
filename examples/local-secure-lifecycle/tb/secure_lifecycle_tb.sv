@@ -55,6 +55,7 @@ module secure_lifecycle_tb;
                     if (re && error && !secure) $display("COVER access/nonsecure-denied");
                     if ((re || we) && !known_addr) $display("COVER access/unknown");
                     if (we && error) $display("COVER reject/denied-write");
+                    if (we && error && tamper && secure == 0 && index == 8'h10) $display("COVER tamper/write-rejected");
                     if (we && index == 8'h18 && wdata[0] && !error) $display("COVER lock/set");
                     if (we && error && dut.locked && (index == 8'h00 || index == 8'h08)) $display("COVER lock/sticky");
                     if (we && index == 8'h14 && !error && wdata[1:0] != 0) $display("COVER irq/w1c");

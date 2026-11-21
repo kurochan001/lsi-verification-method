@@ -262,6 +262,13 @@ class ProcessCleanupTests(unittest.TestCase):
             status,_=MODULE.classify(dict(checks=1,expected_failure='IRQ_SET_WINS'),result,'CHECK_FAIL IRQ_SET_WINS\n')
             self.assertEqual(status,'error')
 
+    def test_a_failure_line_with_detail_is_never_a_clean_pass(self):
+        ok=dict(error=None,returncode=0)
+        for log in ('CHECK_FAIL DATA addr=3\nRESULT PASS checks=1\n','CHECK_FAIL\nRESULT PASS checks=1\n'):
+            self.assertEqual(MODULE.classify(dict(checks=1,expected_failure=None),ok,log)[0],'error',log)
+            self.assertEqual(MODULE.classify(dict(checks=1,expected_failure='IRQ_SET_WINS'),ok,log)[0],'error',log)
+        self.assertEqual(MODULE.classify(dict(checks=1,expected_failure=None),ok,'RESULT PASS checks=1\n')[0],'pass')
+
     def test_cleanup_wait_is_bounded_and_does_not_mask_error(self):
         proc=mock.Mock(pid=12345)
         proc.wait.side_effect=subprocess.TimeoutExpired(['simulator'],5)

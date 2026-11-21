@@ -53,5 +53,30 @@ class RmwTests(unittest.TestCase):
             sim=R.S.Simulator(R,SimpleNamespace(iverilog='iverilog',vvp='vvp',timeout=30,waves=False),tmp)
             self.assertEqual(sim.execute(case)['status'],'detected')
 
+    def test_one_sweep_repairs_every_word_and_a_restarting_scrubber_is_caught(self):
+        rows=R.M.stimulus(32,8,17,0)
+        sweep=next(i for i,row in enumerate(rows) if row[0]==4 and [r[0] for r in rows[i-8:i]]==[3]*8)
+        self.assertEqual(sorted(r[1] for r in rows[sweep-8:sweep]),list(range(8)))
+        self.assertEqual([(r[0],r[1],r[6]) for r in rows[sweep+1:sweep+9]],[(2,a,0) for a in range(8)])
+        advance="scrub_address<=scrub_address==AW'(DEPTH-1) ? '0 : scrub_address+1'b1;"
+        text=(HERE/'rtl/ecc_rmw_ram.sv').read_text();self.assertEqual(text.count(advance),2)
+        with tempfile.TemporaryDirectory() as tmp:
+            # Only the advance after a repair write is broken; the clean-word path stays correct.
+            broken=Path(tmp)/'ecc_rmw_ram.sv';head,tail=text.rsplit(advance,1);broken.write_text(head+"scrub_address<='0;"+tail)
+            original=R.SOURCES
+            try:
+                R.SOURCES=[broken,original[1]]
+                sim=R.S.Simulator(R,SimpleNamespace(iverilog='iverilog',vvp='vvp',timeout=30,waves=False),Path(tmp)/'out')
+                result=sim.execute(R.cases(SimpleNamespace(seed=17,profile='smoke'))[0])
+            finally:R.SOURCES=original
+            self.assertEqual(result['status'],'fail',result);self.assertIn('ECC_RMW',result['message'])
+
+    def test_bench_timeout_has_its_own_label_and_is_not_a_detection(self):
+        bench=(HERE/'tb/ecc_rmw_tb.sv').read_text()
+        self.assertIn('$display("CHECK_FAIL ECC_RMW_TIMEOUT")',bench);self.assertNotIn('fail("timeout")',bench)
+        case=dict(checks=1,expected_failure=R.LABEL);stopped=dict(returncode=1,error=None)
+        self.assertEqual(R.S.E.P.classify(case,stopped,'CHECK_FAIL ECC_RMW\n')[0],'detected')
+        self.assertNotEqual(R.S.E.P.classify(case,stopped,'CHECK_FAIL ECC_RMW_TIMEOUT\n')[0],'detected')
+
 
 if __name__=='__main__':unittest.main()

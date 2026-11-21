@@ -76,3 +76,5 @@ python3 -m unittest discover -s examples/local-dma-ownership/tests -v
 ```
 
 [共通手順](../local-common/README.md)を使い、smokeは12操作列、nightlyは60列×3 seedに固定4列を加えます。JUnit14／18件、確認6件です。実行するコピーは各1〜4ワード・非重複領域で、任意の共有メモリ所有権プロトコルや動的tailポインターの検証ではありません。
+
+2026-11-21のレビューで、所有者の状態（`owners`）と完了数の比較が`!=`で、値がXだと検査を通ることが分かりました。Xを見逃さない`!==`に直し、smoke・nightlyとセルフテストが合格することを確かめました。件数は変わりません。

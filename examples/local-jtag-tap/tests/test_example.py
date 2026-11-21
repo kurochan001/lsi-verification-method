@@ -9,7 +9,7 @@ P = load_example('local-jtag-tap')
 
 class ExampleTests(SystemContract, unittest.TestCase):
     EXAMPLE = 'local-jtag-tap'
-    GOALS = 14
+    GOALS = 16
 
     def test_idcode_capture_and_ir_update(self):
         p = P.Plan(0x12345679)
@@ -26,6 +26,15 @@ class ExampleTests(SystemContract, unittest.TestCase):
         p = P.Plan(0x12345679)
         p.fixed()
         self.assertIn(0xa5, [row[6] for row in p.rows])
+
+    def test_fixed_scenario_pauses_and_resumes_on_the_ir_side(self):
+        p = P.Plan(0x12345679)
+        p.fixed()
+        states = [row[7] for row in p.rows]
+        visited = [s for i, s in enumerate(states) if i == 0 or states[i - 1] != s]
+        text = ','.join(map(str, visited))
+        self.assertIn(f'{P.SHIFT_IR},{P.EXIT1_IR},{P.PAUSE_IR},{P.EXIT2_IR},{P.SHIFT_IR},{P.EXIT1_IR},{P.UPD_IR}', text)
+        self.assertIn(f'{P.PAUSE_DR},{P.EXIT2_DR}', text)
 
     def test_tlr_resets_state_and_instruction(self):
         p = P.Plan(0xdeadbeef)

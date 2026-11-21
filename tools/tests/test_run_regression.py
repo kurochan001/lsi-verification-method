@@ -49,6 +49,8 @@ class CampaignTests(unittest.TestCase):
         self.assertEqual([j['example'] for j in R.make_plan(self.entries,self.args(),self.root)],['local-parent'])
         jobs=R.make_plan(self.entries,self.args(suite='formal'),self.root);self.assertEqual([j['example'] for j in jobs],['local-proof'])
         jobs=R.make_plan(self.entries,self.args(suite='simulation'),self.root);self.assertEqual(len(jobs),2);self.assertEqual({j['configuration']['width'] for j in jobs},{1,8})
+        with self.assertRaisesRegex(ValueError,'outside the selected suite'):R.make_plan(self.entries,self.args(suite='simulation',example=['local-proof']),self.root)
+        self.assertEqual([j['example'] for j in R.make_plan(self.entries,self.args(suite='formal',example=['local-proof']),self.root)],['local-proof'])
     def test_explicit_child_does_not_expand_to_its_parent(self):
         jobs=R.make_plan(self.entries,self.args(example=['local-child']),self.root);self.assertEqual(len(jobs),2)
         self.assertTrue(all(j['example']=='local-child' for j in jobs))

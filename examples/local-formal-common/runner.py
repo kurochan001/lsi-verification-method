@@ -33,10 +33,12 @@ def inventory(path,plugin,parameters,case):
     return {k:sorted(v.elements()) for k,v in found.items()}
 
 def observed(log):
-    def names(pattern):return {s.rsplit('.',1)[-1] for s in re.findall(pattern,log)}
+    def names(pattern,text=log):return {s.rsplit('.',1)[-1] for s in re.findall(pattern,text)}
     return (names(r'Reached cover statement in step \d+ at [\w.]+: ([\w.]+)'),
             names(r'Unreached cover statement at [\w.]+: ([\w.]+)'),
-            names(r'Assert failed in [\w.]+: ([\w.]+)'))
+            # An induction-step violation starts from an arbitrary state. Only base-case and
+            # bounded-engine violations are counterexamples that confirm a planned property.
+            names(r'Assert failed in [\w.]+: ([\w.]+)',''.join(l+'\n' for l in log.splitlines() if '.induction:' not in l)))
 
 def witnessed_traces(engine,out):
     """Counterexample and cover traces, each with its witness. An induction-step trace starts
@@ -77,7 +79,7 @@ def run(plugin,args):
         try:versions[name]=importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:versions[name]='not installed in runner environment'
     P.write_json(out/'manifest.json',dict(schema_version=1,created_at=datetime.now(timezone.utc).isoformat(),python=sys.version,
-        configurations=configs,cases=cases,scope=plugin.SCOPE,packages=versions,timeout=args.timeout,
+        configurations=configs,cases=cases,check_ids=[config+'-'+case['id'] for config in configs for case in cases],scope=plugin.SCOPE,packages=versions,timeout=args.timeout,
         source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}))
     tools={}
     for name,command in [('yosys',[args.yosys,'-V']),('sby',[args.sby,'--version']),('z3',['z3','--version'])]:tools[name]=P.execute(command,out/(name+'-version.log'),args.timeout,out)

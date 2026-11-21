@@ -43,6 +43,12 @@ python3 examples/local-pll-clock-quality/run.py --configuration p20ns --demo-bug
 
 最後のコマンドは通常検証の入力にも異常を加えるため、終了コード1が期待結果です。smoke／nightlyのJUnitは16／20件です。各構成で[3要求・7観測目標](requirements.json)を確認します。[run.py](run.py)が回帰、[model.py](model.py)がクロック刺激、[pll_clock_quality_tb.sv](tb/pll_clock_quality_tb.sv)が計測・照合を行います。
 
+ランナーとモデルのセルフテストは8件です。刺激のパルス幅から5つの量を別に計算し直し、正常な刺激がどの上限にもちょうど乗ること、各異常がねらった上限を超えること、測定区間の外の短いパルス、計画の名前とラベル、seedの再現、全構成の実行と証跡、`--demo-bug`の終了コードを確かめます。周期の異常（+801 ps）は次の周期との差も1202 psになり、テストベンチは先に調べる周期の違反として報告します。2026-11-21のレビューで、この例にセルフテストがないことが分かり、追加しました。
+
+```sh
+python3 -m unittest discover -s examples/local-pll-clock-quality/tests
+```
+
 `p20ns-boundaries/wave.vcd` には `pll_clk`、`measure`、`clock_permit`、`work_reset_n` が含まれます。`clock_edges.csv` には実測した時刻、High／Low幅、周期、TIE、隣接周期の差をps単位で残します。立上り行の `pulse_ps` は直前のLow幅、立下り行ではHigh幅を表します。測定対象外の周期・TIE・隣接周期差は0です。`p20ns-detect-phase-drift/simulation.log` では、しきい値超過時の値と各状態を確認できます。
 
 クロック外乱はテストベンチで与えます。実PLLの位相ノイズ、RMSジッター、電気的なエッジ、実装後のタイミングや実機の測定は別の確認です。ツールの版と実行結果は[実行記録](../../PROVENANCE.md#pll-clock-quality)を参照してください。

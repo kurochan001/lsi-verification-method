@@ -31,6 +31,8 @@ module activation_tb;
             if (rst_n && held && out_y !== held_y) fail("ACT_HOLD");
             // The expected value is the exact function scaled by 1024*256; the
             // tolerance is in 1/256 output LSB and arrives with each row.
+            // An unknown output makes the comparisons below false, so it is rejected by itself.
+            if (out_valid && ^out_y === 1'bx) fail("ACT_TOLERANCE");
             error = $signed(out_y) * 256 - $signed(v[6]);
             if (out_valid && (error > $signed(v[7]) || -error > $signed(v[7]))) fail("ACT_TOLERANCE");
             if (!rst_n) begin

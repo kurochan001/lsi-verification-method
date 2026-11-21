@@ -63,8 +63,13 @@ module width_tb;
  end
  end
  integer fd,n,cycles,aw_delay,w_delay,stall,b_seen,r_seen,expected_sub,aw_cycle,w_cycle,first_write_half,recovery_addr;
- reg recovering=0;reg [63:0] v[0:10];string vectors,wave;
+ reg recovering=0;reg [63:0] v[0:16];string vectors,wave;
  reg aw_sent,w_sent,ar_sent,finished,ah,wh,rh,bh,dh;
+ // A row may carry a second operation on the same address. It is offered as soon as the
+ // adapter has taken the first request and is held until the adapter takes it, so the
+ // adapter is busy when it first appears. next_kind: 0 none, 1 write, 2 read.
+ integer next_kind,phase,active_kind;reg [63:0] first_data,next_data;reg [7:0] first_strb,next_strb;
+ reg first_taken,next_aw_sent,next_w_sent,next_ar_sent,next_blocked,next_aw,next_w,next_ar;
  task reset_bus;begin
  rst_n=0;s_awvalid=0;s_wvalid=0;s_arvalid=0;s_bready=0;s_rready=0;
  repeat(2)@(negedge clk);rst_n=1;@(negedge clk);
@@ -75,8 +80,10 @@ module width_tb;
  if(!$value$plusargs("VECTORS=%s",vectors)||!$value$plusargs("WAVE=%s",wave))$fatal(1,"arguments required");
  $dumpfile(wave);$dumpvars(0,width_tb);fd=$fopen(vectors,"r");if(!fd)$fatal(1,"input missing");repeat(2)@(negedge clk);
  while(!$feof(fd))begin
- n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10]);if(n!=11)$fatal(1,"bad row");
+ n=$fscanf(fd,"%h %h %h %h %h %h %h %h %h %h %h %h %h %h %h %h %h\n",v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7],v[8],v[9],v[10],v[11],v[12],v[13],v[14],v[15],v[16]);if(n!=17)$fatal(1,"bad row");
  kind=v[0];addr=v[1];tx_data=v[2];tx_strb=v[3];aw_delay=v[4];w_delay=v[5];stall=v[6];error_addr=v[7];expected_sub=v[10];
+ next_kind=v[11];next_data=v[15];next_strb=v[16];first_data=tx_data;first_strb=tx_strb;
+ if(next_kind!=0 && kind!=1 && kind!=2)$fatal(1,"a second operation needs a complete first one");
  seen_sub=0;completed_sub=0;expected_half=0;
  if(kind==0)reset_bus();
  else begin
@@ -85,28 +92,57 @@ module width_tb;
  for(integer h=0;h<2;h=h+1)begin
  if(addr+h*4!=error_addr)for(integer l=0;l<4;l=l+1)if(tx_strb[h*4+l] && (kind!=3 || h==first_write_half))expected_memory[addr+h*4+l]=tx_data[8*(h*4+l)+:8];
  end end
+ if(next_kind==1 && addr%8==0)begin
+ for(integer h=0;h<2;h=h+1)begin
+ if(addr+h*4!=error_addr)for(integer l=0;l<4;l=l+1)if(next_strb[h*4+l])expected_memory[addr+h*4+l]=next_data[8*(h*4+l)+:8];
+ end end
  aw_sent=0;w_sent=0;ar_sent=0;aw_cycle=-1;w_cycle=-1;finished=0;b_seen=0;r_seen=0;cycles=0;
+ phase=0;active_kind=kind;first_taken=0;next_aw_sent=0;next_w_sent=0;next_ar_sent=0;next_blocked=0;
  while(!finished && cycles<300)begin
  // After each handshake the payload changes, so the adapter must use its own copy.
- s_awvalid=(kind==1 || kind==3) && !aw_sent && cycles>=aw_delay;s_awaddr=aw_sent ? ~addr:addr;
- s_wvalid=(kind==1 || kind==3) && !w_sent && cycles>=w_delay;s_wdata=w_sent ? ~tx_data:tx_data;s_wstrb=w_sent ? ~tx_strb:tx_strb;
- s_arvalid=(kind==2 || kind==4) && !ar_sent;s_araddr=ar_sent ? ~addr:addr;
+ next_aw=next_kind==1 && first_taken && !next_aw_sent;next_w=next_kind==1 && first_taken && !next_w_sent;
+ next_ar=next_kind==2 && first_taken && !next_ar_sent;
+ s_awvalid=((kind==1 || kind==3) && !aw_sent && cycles>=aw_delay) || next_aw;s_awaddr=(aw_sent && !next_aw) ? ~addr:addr;
+ s_wvalid=((kind==1 || kind==3) && !w_sent && cycles>=w_delay) || next_w;
+ s_wdata=next_w ? next_data:w_sent ? ~first_data:first_data;s_wstrb=next_w ? next_strb:w_sent ? ~first_strb:first_strb;
+ s_arvalid=((kind==2 || kind==4) && !ar_sent) || next_ar;s_araddr=(ar_sent && !next_ar) ? ~addr:addr;
  s_bready=b_seen>=stall;s_rready=r_seen>=stall;
  #1;ah=s_awvalid&&s_awready;wh=s_wvalid&&s_wready;rh=s_arvalid&&s_arready;bh=s_bvalid&&s_bready;dh=s_rvalid&&s_rready;
- if((s_bvalid && kind!=1 && kind!=3) || (s_rvalid && kind!=2 && kind!=4))fail("WIDTH_CHANNEL");
+ if((s_bvalid && active_kind!=1 && active_kind!=3) || (s_rvalid && active_kind!=2 && active_kind!=4))fail("WIDTH_CHANNEL");
+ if(phase==0 && ((next_aw && !s_awready) || (next_w && !s_wready) || (next_ar && !s_arready)))next_blocked=1;
  if(s_bvalid)b_seen=b_seen+1;if(s_rvalid)r_seen=r_seen+1;
  if((bh || dh) && kind>=3)fail("WIDTH_RESET");
  if(bh || dh)begin
- if((bh ? s_bresp:s_rresp)!==v[9][1:0])fail("WIDTH_RESPONSE");
- if(dh && s_rdata!==v[8])fail("WIDTH_READ");finished=1;
+ if((bh ? s_bresp:s_rresp)!==(phase==0 ? v[9][1:0]:v[13][1:0]))fail("WIDTH_RESPONSE");
+ if(dh && s_rdata!==(phase==0 ? v[8]:v[12]))fail("WIDTH_READ");
+ if(next_kind!=0 && phase==0)begin
+ // The first operation is complete: its lower transfers are counted before the second may start.
+ if(seen_sub!=expected_sub || completed_sub!=expected_sub)fail("WIDTH_SUBCOUNT");
+ phase=1;active_kind=next_kind;expected_sub=v[14];tx_data=next_data;tx_strb=next_strb;
+ seen_sub=0;completed_sub=0;expected_half=0;b_seen=0;r_seen=0;
+ end else finished=1;
  end
- @(posedge clk);#1;if(ah)begin aw_sent=1;aw_cycle=cycles;end if(wh)begin w_sent=1;w_cycle=cycles;end if(rh)ar_sent=1;@(negedge clk);cycles=cycles+1;
+ @(posedge clk);#1;
+ if(ah)begin if(next_aw)next_aw_sent=1;else begin aw_sent=1;aw_cycle=cycles;end end
+ if(wh)begin if(next_w)next_w_sent=1;else begin w_sent=1;w_cycle=cycles;end end
+ if(rh)begin if(next_ar)next_ar_sent=1;else ar_sent=1;end
+ first_taken=(kind==1) ? aw_sent && w_sent:ar_sent;
+ @(negedge clk);cycles=cycles+1;
  if(kind>=3 && completed_sub==1)begin reset_bus();recovering=1;recovery_addr=addr;$display("COVER reset/partial");finished=1;end
  end
  if(!finished)fail("WIDTH_TIMEOUT");
  s_awvalid=0;s_wvalid=0;s_arvalid=0;s_bready=0;s_rready=0;
  if(seen_sub!=expected_sub || completed_sub!=expected_sub)fail("WIDTH_SUBCOUNT");
  for(integer i=0;i<64;i=i+1)if(memory[i]!==expected_memory[i])fail("WIDTH_MEMORY");
+ if(next_kind!=0)begin
+ // The goal needs the second request to have waited while the adapter was busy.
+ if(!next_blocked)fail("WIDTH_OVERLAP");
+ if(kind==1 && next_kind==1)$display("COVER overlap/write-during-write");
+ if(kind==1 && next_kind==2)$display("COVER overlap/read-during-write");
+ if(kind==2 && next_kind==1)$display("COVER overlap/write-during-read");
+ if(kind==2 && next_kind==2)$display("COVER overlap/read-during-read");
+ end
+ tx_strb=first_strb;
  if(kind==1 || kind==3)begin
  if(tx_strb==0)$display("COVER strobe/zero");else if(tx_strb==255)$display("COVER strobe/full");else $display("COVER strobe/partial");
  if(tx_strb[3:0]==0 && tx_strb[7:4]!=0)$display("COVER strobe/upper-only");

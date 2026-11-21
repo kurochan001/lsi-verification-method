@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "WIDTH",
@@ -19,7 +19,11 @@
         "error/lower",
         "error/upper",
         "reset/partial",
-        "reset/recovery"
+        "reset/recovery",
+        "overlap/write-during-write",
+        "overlap/read-during-write",
+        "overlap/write-during-read",
+        "overlap/read-during-read"
       ]
     }
   ]

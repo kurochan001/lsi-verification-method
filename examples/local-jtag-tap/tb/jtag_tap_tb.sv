@@ -65,8 +65,9 @@ module jtag_tap_tb;
                     if (dut.state == 8 && dut.ir == 4'b0010) begin $display("COVER preload/update"); preloaded=1; end
                     if (dut.state == 15 && dut.ir == 4'b0011 && preloaded && pin_out == dut.bsr_update) begin $display("COVER preload/drive"); preloaded=0; end
                 end
-                if (dut.state == 6 || dut.state == 7 || dut.state == 13 || dut.state == 14)
-                    $display("COVER pause/exit2");
+                if (dut.state == 7 && prev_state == 6) $display("COVER pause/dr");
+                if (dut.state == 14 && prev_state == 13) $display("COVER pause/ir");
+                if (dut.state == 11 && prev_state == 14) $display("COVER pause/ir-resume");
             end
             prev_tck = tck; prev_state = dut.state;
             checks = checks + 1;

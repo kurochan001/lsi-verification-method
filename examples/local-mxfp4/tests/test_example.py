@@ -15,6 +15,32 @@ spec=importlib.util.spec_from_file_location('mxfp4_runner_test',HERE/'run.py')
 RUN=importlib.util.module_from_spec(spec);spec.loader.exec_module(RUN)
 
 
+class ImportedSources(unittest.TestCase):
+    RECORD=json.loads((HERE/'upstream.json').read_text(encoding='utf-8'))
+
+    @staticmethod
+    def digest(path):
+        import hashlib
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    def test_tracked_files_match_the_recorded_current_hashes(self):
+        present={str(p.relative_to(HERE/'upstream')) for p in (HERE/'upstream').rglob('*') if p.is_file()}
+        self.assertEqual(present,set(self.RECORD['local_sha256']))
+        self.assertEqual(set(self.RECORD['files_sha256']),set(self.RECORD['local_sha256']))
+        for name,expected in self.RECORD['local_sha256'].items():
+            self.assertEqual(self.digest(HERE/'upstream'/name),expected,name)
+
+    def test_every_file_that_differs_from_the_source_has_a_recorded_reason(self):
+        source,local,changes=(self.RECORD[k] for k in ('files_sha256','local_sha256','local_changes'))
+        self.assertEqual({name for name in local if local[name]!=source[name]},set(changes))
+        for name,change in changes.items():
+            self.assertIn(change['basis'],('git','record','record+git','none'),name)
+            self.assertTrue(change['reason'].strip(),name)
+        # A file with no record must say so instead of carrying an invented reason.
+        self.assertEqual([n for n,c in changes.items() if c['basis']=='none'],['rtl/quant_encoder.sv'])
+        self.assertTrue(all('理由の記録なし' in c['reason'] for c in changes.values() if c['basis']=='none'))
+
+
 class NumericContract(unittest.TestCase):
     def test_all_midpoints_choose_even_encodings(self):
         midpoints=[Fraction(1,4),Fraction(3,4),Fraction(5,4),Fraction(7,4),Fraction(5,2),Fraction(7,2),Fraction(5)]

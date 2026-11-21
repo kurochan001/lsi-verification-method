@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 2,
+  "revision": 3,
   "requirements": [
     {
       "id": "JTAG-TAP",
@@ -27,7 +27,9 @@
     {
       "id": "JTAG-TDO",
       "goals": [
-        "pause/exit2",
+        "pause/dr",
+        "pause/ir",
+        "pause/ir-resume",
         "tdo/lsb-first"
       ]
     }

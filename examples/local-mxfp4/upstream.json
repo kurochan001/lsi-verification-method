@@ -3,6 +3,7 @@
   "commit": "347edbb8e45454e84945a13c1815e08937feff3f",
   "retrieved": "2026-10-30",
   "scope": "RTL and the plain SystemVerilog benches only; the source repository is not public. The 78 other files of the import (documents, figures, UVM environment, reproduction cases, Makefile) were removed on 2026-11-13.",
+  "note": "files_sha256 is the hash of each file in the source commit. local_sha256 is the hash of the file tracked here. local_changes lists every file whose two hashes differ; basis says where the reason comes from (git: this repository history, record: README/PROVENANCE text written at import time, none: no record). The source repository is not public and the original files are not kept here, so a reason with basis record cannot be checked against a diff.",
   "files_sha256": {
     "rtl/amax_tree32.sv": "1c0bd609ebf642fab43ecb2bf32df2d155037732c882e04de14982b4e3bb5926",
     "rtl/e2m1_decode.sv": "816eeb09415b87ed71e81736f5ff2eaa50851d00d182a599b665329beeecee0d",
@@ -32,5 +33,89 @@
     "tb/tb_quant_encoder.sv": "44737fcc1fa607e387627a3332d3e324ba4f54adfa1336a0b4e3795103aa4238",
     "tb/tb_quant_q34.sv": "f586779c3a7917c38d474be83bf64a96fe08589560824faff403000a2eaad510",
     "tb/tb_top.sv": "ebcfbb2703e6a948f2cc610de4db73292825e54ad705e6d4d6c47afc0d6a943d"
+  },
+  "local_sha256": {
+    "rtl/amax_tree32.sv": "1c0bd609ebf642fab43ecb2bf32df2d155037732c882e04de14982b4e3bb5926",
+    "rtl/e2m1_decode.sv": "816eeb09415b87ed71e81736f5ff2eaa50851d00d182a599b665329beeecee0d",
+    "rtl/e2m1_quantize.sv": "50084365b040cd555d1b0cb8a9171ce117c892950c88ad644ae05c62c4a148f1",
+    "rtl/elem_mul.sv": "a0aa4d7af3c0ca0db4451d8cf72c5d19c8f27c4fa916b77ba2532f9563ac4e15",
+    "rtl/gemm_ctrl_fsm.sv": "923e7746ba92ed5b000455d151c72ad6417b21a14603c2e7f479ae9b263dbc2b",
+    "rtl/mxfp4_bdp.sv": "b12aa72819fb74f6fd910e3d650f856d8066b735fcfe9c4f00b33630b707b6ec",
+    "rtl/mxfp4_bdp_fifo.sv": "27b6d3a0a171e267cc3571ebb5462a92e2dfa5627108ec0518a5618e8e8f3d0a",
+    "rtl/mxfp4_fifo.sv": "4fee2d0566b584d291d2d8da0343ac2b145f273858d204124d9e0ab2495c517b",
+    "rtl/mxfp4_fp32_add_core.sv": "cbc5bda05e8efd8b8719bdde834009bdda7756b45bf4ca4de063c8313da0b837",
+    "rtl/mxfp4_fp32_add_nearfar.sv": "9f03c5ee6be72bc0a691cf8d18d71c767e8e807e5b41426a7fd0c2b72c3f5bfe",
+    "rtl/mxfp4_gemm_top.sv": "11c813059dd4101dd1beee2df52c1d287f5d6967fb68d1bae3501fc3582aa671",
+    "rtl/mxfp4_i2f.sv": "86bed386c6abb6cb8467711a88ce60df0dc9b0ebfc2cea04696b21fb64c5215e",
+    "rtl/mxfp4_lza.sv": "684075deb68e04eb9c01207bd3e2e1a495770d6b9985638fcb2d0c6421986e2c",
+    "rtl/mxfp4_pkg.sv": "ba75713a2fee20329a3cd6bbcc91b4d344c5e971b0fed2778df8eb268b61ba90",
+    "rtl/quant_encoder.sv": "94df50437199e7d1b0bbfbfa82b84ce9ee4337ae3d40bd3aca275797ef93db8f",
+    "rtl/reduce_tree.sv": "74a17c1f86bf58bcff4dd59b9944ab632bebe9da296b8a1703f7a7ef16f8929b",
+    "rtl/scale_add.sv": "947119dd79e667584b42f450c4356830c2108283a3ff60fd9e74921660458208",
+    "tb/mxfp4_bdp_sva.sv": "63ed8a89f96a21baff7dbd34cba736ef5d14137f56b10b8fbe3844ab443c2be0",
+    "tb/mxfp4_ref_pkg.sv": "ed62903962f7e581f2a6a986d440c0047887840ce3bfe0517e615c144fbe9d9b",
+    "tb/tb_bdp_flow.sv": "2256229143cf91cef2a931b3a75844515be36a37c5d223552a233ca83053b119",
+    "tb/tb_fp32_add.sv": "416a6c90b2b331bdd38910cc9003d395050f35a9f66f981ab8e0e650b8e4bab1",
+    "tb/tb_gradual_uf.sv": "c90ffe75c6fb6b10db8677ccf165538259b1a1590816e4f2e16b66e56de90711",
+    "tb/tb_mxfp4_bdp.sv": "d3f45490531d9e84cd2e9dc19e955747f591a8eac3d87afb8abfc1b29e85eb0d",
+    "tb/tb_mxfp4_gemm_top.sv": "6b0f4a0ccb9f3ff6442c3a33f556dff03bd3e6f03f1cb1c574b5e212086776bf",
+    "tb/tb_nearfar.sv": "65949fff81f1318b64b8d161ba1475f11e5ed560e0f80e5ca0679ffacb16cd8c",
+    "tb/tb_quant_encoder.sv": "c7a28f8a02ed00829be1e9675e995a9f9251712024b8f67bb96934b9ec610c50",
+    "tb/tb_quant_q34.sv": "a1905eed1a4fa8b7bed9749ea1f616393b182f6b2d69866527c2fab7830a139d",
+    "tb/tb_top.sv": "b23cd0fecb9d1be223bfd24124956dc997df7584d53ec528b28c5e45bdfedcf4"
+  },
+  "local_changes": {
+    "rtl/mxfp4_gemm_top.sv": {
+      "basis": "record",
+      "reason": "長方形GEMMのA/Bバッファで、共通の書込みアドレス幅を狭い側の配列へそのまま渡していた箇所を直し、KBLK=1で幅0になり得る宣言を直した（READMEの「取り込み時の修正」とPROVENANCE.mdの取り込みの記録）。取り込み元との差分そのものは保存していない。"
+    },
+    "rtl/quant_encoder.sv": {
+      "basis": "none",
+      "reason": "理由の記録なし。最初の取り込みのコミット（b3cd107）の時点で取り込み元のハッシュと違っていて、このファイルを名指しした記録がない。その後は変えていない。"
+    },
+    "tb/mxfp4_bdp_sva.sv": {
+      "basis": "git",
+      "reason": "2026-11-13にコメント中のシミュレータ名を「Ghost」へ置き換えた（コミット3bdda6d、コメントだけ）。最初の取り込みのコミットでは取り込み元のハッシュと一致していた。"
+    },
+    "tb/mxfp4_ref_pkg.sv": {
+      "basis": "record",
+      "reason": "参照モデルの引数x/yとローカル変数X/Yの紛らわしい名前を変え、VerilatorのSIMILARNAME警告を解消した（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_bdp_flow.sv": {
+      "basis": "record",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_fp32_add.sv": {
+      "basis": "record",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_gradual_uf.sv": {
+      "basis": "record",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_mxfp4_bdp.sv": {
+      "basis": "record+git",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。2026-11-13にコメント中のシミュレータ名を「Ghost」へ置き換えた（コミット3bdda6d、コメントだけ）。"
+    },
+    "tb/tb_mxfp4_gemm_top.sv": {
+      "basis": "record",
+      "reason": "GEMMのテストを構成変更可能にし（KBLK=1、非2冪の3、長方形構成）、出力の保持・処理中リセット・再起動の確認を足した。不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_nearfar.sv": {
+      "basis": "record",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_quant_encoder.sv": {
+      "basis": "record",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_quant_q34.sv": {
+      "basis": "record",
+      "reason": "不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。"
+    },
+    "tb/tb_top.sv": {
+      "basis": "record+git",
+      "reason": "クラスの32要素の乱数配列を同じ要素配置のpacked配列へ変え、Verilator 5.052のUNDRIVEN警告を回避した。不一致とシミュレーション時間切れを$fatalで非ゼロ終了にした（READMEの「取り込み時の修正」）。取り込み元との差分そのものは保存していない。2026-11-13にコメント中のシミュレータ名を「Ghost」へ置き換えた（コミット3bdda6d、コメントだけ）。"
+    }
   }
 }

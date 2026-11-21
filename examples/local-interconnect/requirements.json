@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "ROUTE",
@@ -32,6 +32,13 @@
       "id": "BURST",
       "goals": [
         "burst/multiple"
+      ]
+    },
+    {
+      "id": "READY",
+      "goals": [
+        "ready/write-busy",
+        "ready/read-busy"
       ]
     }
   ]

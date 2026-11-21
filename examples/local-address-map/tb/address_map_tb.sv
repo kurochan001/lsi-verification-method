@@ -55,6 +55,8 @@ module address_map_tb;
                 if (irq == 2'b11) $display("COVER irq/map");
                 if (!pslverr && pwrite && pstrb == 4'hf &&
                     (paddr == 12'h10c || paddr == 12'h20c) && pwdata[0]) $display("COVER irq/w1c");
+                if (!pslverr && pwrite && pstrb == 4'hf && !pwdata[0] &&
+                    ((paddr == 12'h10c && irq[0]) || (paddr == 12'h20c && irq[1]))) $display("COVER irq/zero-write-hold");
                 if (pslverr && pwrite) $display("COVER sideeffect/no-write");
                 if (recovering && !pslverr) begin $display("COVER reset/recovery"); recovering = 0; end
             end

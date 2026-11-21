@@ -103,6 +103,8 @@ def invalid_frames(max_frame):
             dict(data=udp(b'port',destination_port=PORT+1),reason=4),
             dict(data=arp(target_ip=bytes((192,0,2,9))),reason=4),
             dict(data=with_fcs(bytes(max_frame)),reason=2),
+            # One byte over the limit: the boundary of the length check, not only a comfortable margin.
+            dict(data=with_fcs(bytes(max_frame-3)),reason=2),
             # Each frame below passes every other check, so only the named term can reject it.
             dict(data=good,link_error=True,link_at=0,reason=3),dict(data=good,link_error=True,link_at=-1,reason=3),
             dict(data=udp(b'addr',destination_ip=bytes((192,0,2,9))),reason=4),

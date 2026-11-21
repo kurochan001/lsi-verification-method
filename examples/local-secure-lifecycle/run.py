@@ -172,6 +172,9 @@ class Plan:
         self.step(cs=1, we=1, addr=KEY0, wdata=0x44444444, secure=1)
         self.step(cs=1, we=1, addr=KEY1, wdata=0x55555555, secure=1)
         self.step(tamper=1)
+        # A write that every other rule accepts is still refused while tamper is high, and has no effect.
+        self.step(cs=1, we=1, addr=SCRATCH, wdata=0x0badf00d, secure=0, tamper=1)
+        self.step(cs=1, re=1, addr=SCRATCH, secure=0)
         self.step(cs=1, re=1, addr=KEY0, secure=1)
         self.step(cs=1, re=1, addr=KEY1, secure=1)
         self.step(cs=1, re=1, addr=STATUS, secure=1)

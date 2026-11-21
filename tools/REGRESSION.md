@@ -32,6 +32,8 @@ python3 tools/run_regression.py --suite formal --list
 | `--example 名前` | 指定例へ絞る。複数回指定できる。親と子を同時に指定した場合は親から一度実行する。 |
 | `--profile smoke\|nightly` | 対応する例へ渡す。専用プロファイルがないフォーマル・STAは既定の全タスク・構成を実行する。 |
 
+`--example`で名指しした例が、選んだスイートに入らない場合は、黙って外さずにエラーで止まります。
+
 `--suite simulation`には反例をシミュレーションで再現する例があり、その内部では新しいBMCも実行します。`--suite formal`は証明専用の入口の選択です。部分選択の成功を全例の成功と扱いません。
 
 [共通lintと警告管理](../examples/local-lint/README.md)は`--suite all`に含みます。`--example local-lint`なら、全DUTの構成別lintと負例を実行します。子の`local-lint-targets`は親から一度起動します。lintは固定計画で、nightlyでも同じ範囲です。既知指摘が残った差分なしの成功と、警告0件を区別します。新しい[失敗解析](../examples/local-failure-triage/README.md)、[AIレビュー](../examples/local-ai-review/README.md)、[複数クロックUVM](../examples/local-uvm-multiclock/README.md)はシミュレーション例として両プロファイルに登録しています。

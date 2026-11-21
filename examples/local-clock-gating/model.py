@@ -14,7 +14,8 @@ placed off that grid, so no input ever changes together with a clock edge.
 import random
 
 SIGNALS = dict(EN=0, SEL=1, RUN_A=2, RUN_B=3, SW_RST=4, DIV_RST=5,
-               CHECK_GATE=8, CHECK_ACTIVE=9, WINDOW_OPEN=10, WINDOW_CLOSE=11, CHECK_DIV=12)
+               CHECK_GATE=8, CHECK_ACTIVE=9, WINDOW_OPEN=10, WINDOW_CLOSE=11, CHECK_DIV=12,
+               CHECK_RELEASE=13)
 INPUTS = {0, 1, 2, 3, 4, 5}
 GRID = 1000
 
@@ -202,6 +203,23 @@ class Scenario:
     def check_divider(self, time):
         self.divider_at = self.add(time, 'CHECK_DIV', self.divider_expected(time))
 
+    def reset_with_b_selected(self):
+        """Reset and release while clk_b stays selected, both clocks running. After the release
+        clk_a must never be enabled: the reset state requests neither clock. The reset is applied
+        while clk_b is low, so no pulse is cut, and released while clk_a is high, so the first edge
+        of clk_a afterwards is a falling one that would enable clk_a from a wrong reset value."""
+        if self.selected != 'b':
+            raise ValueError('clk_b must be the selected clock')
+        low = self.clock['b'].next_rise(self.switch_at) + self.half['b']
+        asserted = self.add(low + 300, 'SW_RST', 0)
+        rise = self.clock['a'].next_rise(asserted + 2 * GRID)
+        released = self.add(rise + 300, 'SW_RST', 1)
+        sample = rise + self.half['a'] + 300
+        taken = self.clock['b'].next_rise(released)
+        self.switch_at = self.add(sample, 'CHECK_RELEASE', 2 if taken + self.half['b'] < sample else 0)
+        self.check_active(released + self.bound(), 'b')
+        self.window('b')
+
     def reset_divider(self, time, low=2 * GRID):
         self.divider_total += self.divider_expected(time)
         self.add(time, 'DIV_RST', 0)
@@ -254,6 +272,7 @@ def switch_boundaries(s):
     s.switch()                                    # a to b again after the recovery
     s.switch_from_stopped_clock(stop_delay=2 * GRID + s.half['b'])  # stop b at its other level
     s.switch_to_stopped_target(stop_delay=2 * GRID + s.half['b'])
+    s.reset_with_b_selected()                     # reset released with b still selected
 
 
 def divider_boundaries(s):

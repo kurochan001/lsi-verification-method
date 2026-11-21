@@ -7,7 +7,7 @@ module stream_dma_tb;
  wire m_valid,m_ready,m_last;wire[31:0]m_data;wire[3:0]m_keep;reg s_valid=0,s_last=0;wire s_ready;reg[31:0]s_data=0;reg[3:0]s_keep=0;
  wire f_valid,f_last;wire[31:0]f_data;wire[3:0]f_keep;reg f_ready=0;
  wire ram_arready,ram_awready,ram_wready;wire[1:0]ram_rresp,ram_bresp;reg gate=1;
- integer fd,n,checks=0,cycles,sent,seen,reads,writes,write_addresses,read_responses,write_responses,mode,position,base,expected_words;reg[31:0]v[0:7];string vectors,wave;
+ integer fd,n,checks=0,cycles,sent,seen,reads,writes,write_addresses,read_responses,write_responses,forwarded,mode,position,base,expected_words;reg[31:0]v[0:7];string vectors,wave;
  reg hold_m=0;reg[36:0]saved_m;reg hold_s=0;reg[36:0]saved_s;
  // A one-beat test adapter accepts W before allowing AW in mode 6.
  // It buffers W until the existing RAM accepts AW; B still comes from that RAM.
@@ -30,7 +30,7 @@ module stream_dma_tb;
  function automatic[31:0]payload(input integer b);payload=v[3]^(32'h01020304*b)^32'ha1b2c3d4;endfunction
  function automatic[3:0]mask(input integer b);integer left;begin left=v[2]-4*b;mask=left>=4?15:(1<<left)-1;end endfunction
  task fail(input string label);begin $display("CHECK_FAIL %s",label);$fatal(1,"row=%0d cycle=%0d sent=%0d seen=%0d",checks,cycles,sent,seen);end endtask
- task tick;reg[31:0]expected;reg accepted_r,accepted_b;begin
+ task tick;reg[31:0]expected;reg accepted_r,accepted_b,accepted_m;begin
  #1;
  if(hold_m && (!m_valid || {m_last,m_keep,m_data}!==saved_m))fail("STREAM_HOLD");hold_m=m_valid&&!m_ready;saved_m={m_last,m_keep,m_data};
  if(hold_s && (!s_valid || {s_last,s_keep,s_data}!==saved_s))fail("STREAM_SOURCE");hold_s=s_valid&&!s_ready;saved_s={s_last,s_keep,s_data};
@@ -39,7 +39,10 @@ module stream_dma_tb;
  if(wvalid && wready)begin if(wdata!==payload(writes) || wstrb!==mask(writes) || !wlast)fail("STREAM_MEMORY");if(w_first && write_addresses==writes)$display("COVER write/w-before-aw");writes=writes+1;end
  // done must not come before the last B handshake: every write accepted so far has its response by then.
  if(done && write_responses!==writes)fail("STREAM_RESPONSE");
- accepted_r=rvalid && rready;accepted_b=bvalid && bready;
+ // A beat offered to the stream must come from a completed R transfer: data seen while
+ // rready is low has not been transferred yet.
+ if(m_valid && read_responses<=forwarded)fail("STREAM_RESPONSE");
+ accepted_r=rvalid && rready;accepted_b=bvalid && bready;accepted_m=m_valid && m_ready;
  if(s_valid && s_ready)sent=sent+1;
  if(f_valid && !f_ready)$display("COVER stream/held");
  if(f_valid && f_ready)begin
@@ -47,9 +50,9 @@ module stream_dma_tb;
  base=v[1]+4*seen;expected={initial_byte(base+3),initial_byte(base+2),initial_byte(base+1),initial_byte(base)};
  for(integer lane=0;lane<4;lane=lane+1)if(f_keep[lane] && f_data[8*lane+:8]!==expected[8*lane+:8])fail("STREAM_DATA");seen=seen+1;
  end
- @(posedge clk);#1;if(accepted_r)read_responses=read_responses+1;if(accepted_b)write_responses=write_responses+1;@(negedge clk);cycles=cycles+1;if(cycles>2000)fail("STREAM_TIMEOUT");
+ @(posedge clk);#1;if(accepted_r)read_responses=read_responses+1;if(accepted_b)write_responses=write_responses+1;if(accepted_m)forwarded=forwarded+1;@(negedge clk);cycles=cycles+1;if(cycles>2000)fail("STREAM_TIMEOUT");
  end endtask
- task reset_all;begin rst_n=0;start=0;s_valid=0;f_ready=0;hold_m=0;hold_s=0;gate=1;tick();rst_n=1;for(integer a=0;a<8192;a=a+1)ram.memory[a]=initial_byte(a);reads=0;writes=0;write_addresses=0;read_responses=0;write_responses=0;seen=0;sent=0;tick();end endtask
+ task reset_all;begin rst_n=0;start=0;s_valid=0;f_ready=0;hold_m=0;hold_s=0;gate=1;tick();rst_n=1;for(integer a=0;a<8192;a=a+1)ram.memory[a]=initial_byte(a);reads=0;writes=0;write_addresses=0;read_responses=0;write_responses=0;forwarded=0;seen=0;sent=0;tick();end endtask
  task begin_transfer;begin start=1;tick();start=0;end endtask
  task drive_source;begin
  s_valid=direction && sent<(v[2]+3)/4;s_data=payload(sent);s_keep=mask(sent);s_last=4*(sent+1)>=v[2];

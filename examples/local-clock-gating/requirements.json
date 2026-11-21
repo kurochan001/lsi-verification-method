@@ -27,7 +27,8 @@
       "goals": [
         "switch/target-stopped",
         "switch/current-stopped",
-        "switch/reset-recovery"
+        "switch/reset-recovery",
+        "switch/release-on-b"
       ]
     },
     {

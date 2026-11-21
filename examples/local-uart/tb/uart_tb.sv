@@ -89,15 +89,26 @@ module uart_tb;
       end
     end
   endtask
-  task drive_rx(input reg [7:0] value, input bit flip_parity, input bit bad_stop, input integer offset);
+  // One data or parity bit. With window set, the bit carries its value only in the middle
+  // half; the first and last quarters carry the opposite value. A receiver that samples in
+  // the middle half reads the same frame, one that samples near a bit boundary does not.
+  task drive_bit(input bit value, input bit window);
     begin
+      if (window) begin rxd = !value; #(BIT_NS / 4); rxd = value; #(BIT_NS / 2); rxd = !value; #(BIT_NS / 4); end
+      else begin rxd = value; #(BIT_NS); end
+    end
+  endtask
+  task drive_rx(input reg [7:0] value, input bit flip_parity, input bit bad_stop, input integer offset);
+    bit window;
+    begin
+      window = (offset & 2) != 0;
       if (expect_rx) fail("UART_RX_PENDING");
       expected_rx = value; expected_pe = PARITY != 0 && flip_parity; expected_fe = bad_stop;
       expect_rx = 1;
-      @(negedge clk); #(offset == 0 ? 1 : 7);
+      @(negedge clk); #((offset & 1) == 0 ? 1 : 7);
       rx_active = 1; rxd = 0; #(BIT_NS);
-      for (integer b = 0; b < 8; b = b + 1) begin rxd = value[b]; #(BIT_NS); end
-      if (PARITY != 0) begin rxd = parity_for(value) ^ flip_parity; #(BIT_NS); end
+      for (integer b = 0; b < 8; b = b + 1) drive_bit(value[b], window);
+      if (PARITY != 0) drive_bit(parity_for(value) ^ flip_parity, window);
       rxd = !bad_stop; #(BIT_NS);
       // A low line after a bad stop bit must not be received as a new start bit.
       if (bad_stop) #(2 * BIT_NS);
@@ -166,8 +177,9 @@ module uart_tb;
           if (mode == 5 && PARITY != 0) $display("COVER rx/parity-framing-error");
           if (busy != 0) $display("COVER tx/busy-ignore");
           if (overlap_seen) $display("COVER duplex/simultaneous");
-          if (phase == 0) $display("COVER phase/early");
+          if ((phase & 1) == 0) $display("COVER phase/early");
           else $display("COVER phase/late");
+          if ((phase & 2) != 0) $display("COVER phase/center-window");
           if (recovering) begin $display("COVER reset/recovery"); recovering = 0; end
         end
         3: begin false_start(); $display("COVER rx/false-start"); end

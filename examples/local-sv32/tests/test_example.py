@@ -8,7 +8,7 @@ P=load_example('local-sv32')
 
 
 class Sv32Tests(SystemContract,unittest.TestCase):
-    EXAMPLE='local-sv32';GOALS=17
+    EXAMPLE='local-sv32';GOALS=22
 
     def test_metadata_preserves_global_bit_from_nonleaf(self):
         p=P.Plan(0);p.cycle(rst=0);va=0x81234567;root=0x3fffff

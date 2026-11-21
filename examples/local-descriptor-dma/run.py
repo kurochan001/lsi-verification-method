@@ -8,24 +8,31 @@ HERE=Path(__file__).resolve().parent
 NAME='local-descriptor-dma';TOP='descriptor_tb';CONFIGS={'ring2':dict(DEPTH=2,STALL_PERIOD=0),'ring4-stalls':dict(DEPTH=4,STALL_PERIOD=3)}
 ITERATIONS={'smoke':20,'nightly':160};SOURCES=[HERE.parent/'local-axi4/rtl/axi4_ram.sv',HERE.parent/'local-dma/rtl/apb_dma.sv',HERE/'rtl/descriptor_dma.sv',HERE/'tb/descriptor_tb.sv']
 def row(depth,head,count,seed=17,fault=0,position=0,abort=0,reset=0):
-    invalid=head>=depth or count>depth;complete=0;fetches=0;written=0;err=int(invalid);stopped=0
+    # abort: 1 while the fetch address waits, 2 while the copy read address waits, 3 between two
+    # programming writes, 4 in the cycle before the start write, 5 with the last fetch beat.
+    # Only abort 2 arrives after the copy engine has started, so only it lets a copy read out.
+    invalid=head>=depth or count>depth;complete=0;fetches=0;written=0;err=int(invalid);stopped=0;copy_reads=0
     if not invalid:
         for index in range(count):
             slot=(head+index)%depth;fetches+=1
-            if index==position and fault in (1,2,3):err=1;break
-            if index==position and abort:stopped=1;break
+            if index==position and fault in (1,2):err=1;break
+            if index==position and abort in (1,3,4,5):stopped=1;break
+            copy_reads+=1
+            if index==position and fault==3:err=1;break
+            if index==position and abort==2:stopped=1;break
             written|=1<<slot
             if index==position and fault==4:err=1;break
             complete+=1
-    return [head,count,seed,fault,position,abort,reset,complete,err,stopped,fetches,written]
+    return [head,count,seed,fault,position,abort,reset,complete,err,stopped,fetches,written,copy_reads]
 def vectors(seed,iterations,depth,boundary=False):
     rows=[row(depth,0,0),row(depth,0,1),row(depth,depth-1,depth),row(depth,0,depth,fault=1),row(depth,0,depth,fault=2),
         row(depth,0,depth,fault=3,position=1),row(depth,0,depth,fault=4,position=1),row(depth,0,depth,abort=1),row(depth,0,depth,abort=2,position=1),
-        row(depth,depth,1),row(depth,0,depth+1),row(depth,0,depth,reset=1)]
+        row(depth,depth,1),row(depth,0,depth+1),row(depth,0,depth,reset=1),
+        row(depth,0,depth,abort=3,position=1),row(depth,0,depth,abort=4),row(depth,depth-1,depth,abort=5,position=1)]
     if not boundary:
         rng=random.Random(seed)
         for _ in range(iterations):
-            count=rng.randint(0,depth);fault=rng.randrange(5) if count else 0;abort=rng.randrange(3) if count and not fault else 0
+            count=rng.randint(0,depth);fault=rng.randrange(5) if count else 0;abort=rng.randrange(6) if count and not fault else 0
             rows.append(row(depth,rng.randrange(depth),count,rng.randrange(256),fault,rng.randrange(count) if count else 0,abort,int(rng.randrange(10)==0)))
     return rows
 def make_cases(args,parameters):

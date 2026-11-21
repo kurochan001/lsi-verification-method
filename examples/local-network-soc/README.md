@@ -88,7 +88,7 @@ python3 examples/local-network-soc/run.py --profile smoke --out artifacts/networ
 python3 examples/local-network-soc/run.py --profile nightly --out artifacts/network-soc-nightly
 ```
 
-Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 54件／nightly 58件です。nightlyはランダムseedを1→3へ増やします。
+Python 3・Icarus Verilog・vvpを使います。最大96バイト・WAIT 0と、128バイト・WAIT 2の2構成で、JUnitはsmoke 54件／nightly 58件です。nightlyはランダムseedを1→3へ増やします。2026-11-21に、[ネットワークIPの例](../local-network-echo/README.md)の不正フレームへ最大長＋1バイトの境界を足したので、この例の`reject`・`w1c-race`・`drop-irq`もそのフレームを含みます。受信キューが1バイト超えたフレームを受理する誤りは、`NET_SOC_REASON`で不合格になります。ケース数は変わりません。
 
 送信全バイト、件数・破棄数・reset数、全DMAのアドレスと応答、RAM読戻し、ROMに一致するリタイア命令列、CPUの比較ループ、終了署名を照合します。RX DMAのデータとRAMは受信したフレームと比較し、DUT内部のコピーや長さを基準にしません。比較ループはそのPCで数え、全バイトとの完全一致を要求します。破棄したフレームの理由と3種類の破棄カウンターも別々に照合します。
 

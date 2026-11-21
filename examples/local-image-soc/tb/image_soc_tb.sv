@@ -87,7 +87,7 @@ module image_soc_tb;
             if(ahb_hold && {dut.haddr,dut.hwdata,dut.hwrite,dut.htrans,dut.hsize,dut.hburst}!==held_ahb)fail("SOC_AHB_HOLD");
             ahb_hold=!dut.hready;held_ahb={dut.haddr,dut.hwdata,dut.hwrite,dut.htrans,dut.hsize,dut.hburst};
             if(dut.htrans[1] && dut.hready)begin
-                if(dut.haddr!==dut.cpu_addr || dut.hwrite!==dut.cpu_write || dut.hsize!=2 || dut.hburst!=0)fail("SOC_AHB");
+                if(dut.haddr!==dut.cpu_addr || dut.hwrite!==dut.cpu_write || dut.hsize!==3'd2 || dut.hburst!==3'd0)fail("SOC_AHB");
                 $display("COVER bus/ahb-address");
             end
             if(dut.cpu_valid && !dut.cpu_ready)$display("COVER bus/ahb-wait");
@@ -121,35 +121,40 @@ module image_soc_tb;
             r_hold=dut.rvalid && !dut.rready;held_r={dut.rdata,dut.rid,dut.rresp,dut.rlast};
             b_hold=dut.bvalid && !dut.bready;held_b={dut.bid,dut.bresp};
             if(ar_hold || aw_hold || w_hold || r_hold)$display("COVER bus/axi-backpressure");
+            // The memory takes one request per direction: no address is accepted while a burst or its
+            // response is outstanding, and no write data outside a burst.
+            if(rleft!=0 && dut.arready!==1'b0)fail("SOC_AXI_READY");
+            if(bcredit!=0 && dut.awready!==1'b0)fail("SOC_AXI_READY");
+            if(wleft==0 && dut.wready!==1'b0)fail("SOC_AXI_READY");
             if(dut.arvalid && dut.arready)begin
-                if(rleft!=0 || dut.araddr!=32'(src_base)+32'(4*issued) || dut.arsize!=2 || dut.arburst!=1 || dut.arid!=0 ||
-                   dut.arlen!=(N-issued>=4 ? 3 : N-issued-1))fail("SOC_AXI_READ");
+                if(rleft!=0 || dut.araddr!==32'(src_base)+32'(4*issued) || dut.arsize!==3'd2 || dut.arburst!==2'd1 || dut.arid!==2'd0 ||
+                   dut.arlen!==8'(N-issued>=4 ? 3 : N-issued-1))fail("SOC_AXI_READ");
                 rleft=int'(dut.arlen)+1;issued=issued+rleft;$display("COVER dma/read-burst");
-                if(dut.arlen!=3)$display("COVER dma/tail-burst");
+                if(dut.arlen!==8'd3)$display("COVER dma/tail-burst");
             end
             if(dut.rvalid && dut.rready)begin
-                if(rleft==0 || dut.rid!=0 || dut.rlast!=(rleft==1) || dut.rresp!=(scenario==1 && (fault<0 || rd_pixels==fault) ? 2 : 0) ||
+                if(rleft==0 || dut.rid!==2'd0 || dut.rlast!==(rleft==1) || dut.rresp!==2'(scenario==1 && (fault<0 || rd_pixels==fault) ? 2 : 0) ||
                    dut.rdata!=={24'd0,inputs[completed*N+rd_pixels]})fail("SOC_AXI_READ");
                 rleft=rleft-1;rd_pixels=rd_pixels+1;
-                if(dut.rresp!=0)$display("COVER dma/read-error");
-                if(dut.rresp!=0 && fault>=0)$display("COVER dma/read-error-single");
+                if(dut.rresp!==2'd0)$display("COVER dma/read-error");
+                if(dut.rresp!==2'd0 && fault>=0)$display("COVER dma/read-error-single");
             end
             if(dut.awvalid && dut.awready)begin
-                if(bcredit!=0 || wleft!=0 || dut.awaddr!=32'(dst_base)+32'(4*addressed) || dut.awsize!=2 || dut.awburst!=1 || dut.awid!=0 ||
-                   dut.awlen!=(N-addressed>=4 ? 3 : N-addressed-1))fail("SOC_AXI_WRITE");
+                if(bcredit!=0 || wleft!=0 || dut.awaddr!==32'(dst_base)+32'(4*addressed) || dut.awsize!==3'd2 || dut.awburst!==2'd1 || dut.awid!==2'd0 ||
+                   dut.awlen!==8'(N-addressed>=4 ? 3 : N-addressed-1))fail("SOC_AXI_WRITE");
                 wleft=int'(dut.awlen)+1;addressed=addressed+wleft;bcredit=1;$display("COVER dma/write-burst");
                 if(src_base!=4096)$display("COVER config/relocated");
             end
             if(dut.wvalid && dut.wready)begin
-                if(wleft==0 || dut.wlast!=(wleft==1) || dut.wstrb!=1)fail("SOC_AXI_WRITE");
+                if(wleft==0 || dut.wlast!==(wleft==1) || dut.wstrb!==4'd1)fail("SOC_AXI_WRITE");
                 if(dut.wdata!=={24'd0,golden[completed*N+wr_pixels]})fail("SOC_PIXEL");
                 wleft=wleft-1;wr_pixels=wr_pixels+1;pixels=pixels+1;
             end
             if(dut.bvalid && dut.bready)begin
-                if(bcredit!=1 || wleft!=0 || dut.bid!=0 || dut.bresp!=(scenario==2 && (fault<0 || b_count==fault) ? 2 : 0))fail("SOC_AXI_WRITE");
+                if(bcredit!=1 || wleft!=0 || dut.bid!==2'd0 || dut.bresp!==2'(scenario==2 && (fault<0 || b_count==fault) ? 2 : 0))fail("SOC_AXI_WRITE");
                 bcredit=0;b_count=b_count+1;
-                if(dut.bresp!=0)$display("COVER dma/write-error");
-                if(dut.bresp!=0 && fault>=0)$display("COVER dma/write-error-single");
+                if(dut.bresp!==2'd0)$display("COVER dma/write-error");
+                if(dut.bresp!==2'd0 && fault>=0)$display("COVER dma/write-error-single");
                 if(wr_pixels==N)$display("COVER completion/last-b-response");
             end
             if(dut.ram_req && !dut.ram_ready && dut.wvalid && dut.wready)$display("COVER ram/cpu-dma-contention");
@@ -184,7 +189,7 @@ module image_soc_tb;
             if(cpu_hold && dut.cpu_valid && irq && dut.cpu.st_mie && dut.cpu.ie_meie)$display("COVER irq/waits-for-access");
             cpu_hold=dut.cpu_valid && !dut.cpu_ready;cpu_held={dut.cpu_write,dut.cpu_addr};
             if(dut.cpu_valid && dut.cpu_ready)begin
-                if(dut.cpu_write && dut.cpu_be!=15)fail("SOC_CPU_ACCESS");
+                if(dut.cpu_write && dut.cpu_be!==4'd15)fail("SOC_CPU_ACCESS");
                 if(!dut.cpu_write && dut.cpu_addr<32'h1000)$display("COVER boot/rom-data");
                 if(!dut.cpu_write && dut.cpu_addr>=32'(dst_base) && dut.cpu_addr<32'(dst_base)+4*N)begin
                     if(completed==0)fail("SOC_FIRMWARE");
@@ -194,11 +199,11 @@ module image_soc_tb;
                 end
             end
             if(ret_valid)begin
-                if(ret_pc>=4*words || ret_pc[1:0]!=0 || ret_insn!==rom_words[ret_pc/4])fail("SOC_ROM");
+                if(ret_pc>=4*words || ret_pc[1:0]!==2'd0 || ret_insn!==rom_words[ret_pc/4])fail("SOC_ROM");
                 $fdisplay(trace_fd,"%08x %08x %0d %0d %08x %08x %08x",ret_pc,ret_insn,ret_rd,ret_mem,ret_wdata,ret_mem_addr,ret_mem_data);
                 if(ret_pc==0)$display("COVER boot/rom");
                 if(ret_mem==3)begin
-                    if(ret_mem_addr!=32'h8000000b)fail("SOC_TRAP");
+                    if(ret_mem_addr!==32'h8000000b)fail("SOC_TRAP");
                     $display("COVER firmware/interrupt");
                 end
                 if(ret_insn==32'h30200073)$display("COVER firmware/mret");

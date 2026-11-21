@@ -32,6 +32,12 @@ python3 examples/local-pll-recovery/run.py --profile nightly --seed 42 --out art
 
 [pll_guard.sv](rtl/pll_guard.sv)は監視とリセット制御、[pll_guard_tb.sv](tb/pll_guard_tb.sv)は動作モデルと自己判定、[model.py](model.py)は固定・ランダムの試験条件、[requirements.json](requirements.json)は3要求・9目標です。smoke／nightlyのJUnitは14／18件です。例えば `slow-pll-boundaries/wave.vcd` で `pll_clk`、`pll_locked`、`probe`、`ack`、`clock_missing`、`clock_permit`、`work_reset_n` を順に追えます。
 
+ランナーとモデルのセルフテストは7件です。固定シナリオが9目標を1回ずつ持つことと各行の整合、ランダムな区間の構成とseedの再現、計画の名前とラベル、全構成の実行と証跡、`--demo-bug`の終了コード、期待値を書き換えたときにテストベンチが不合格にすることを確かめます。2026-11-21のレビューで、この例にセルフテストがないことが分かり、追加しました。
+
+```sh
+python3 -m unittest discover -s examples/local-pll-recovery/tests
+```
+
 PLL本体の発振・周波数追従はTBがシナリオとして与えます。ジッター、位相ノイズ、ロック時間の物理的な妥当性、特定マクロの再初期化手順、CDC/RDC制約と実装後タイミングは別の確認です。個々のPLLを使う場合は、ロック喪失後のリセット要否も対象マクロの仕様に従います。 [AMDのロック確認例](https://docs.amd.com/r/en-US/pg046-aurora-8b10b/Step-3-MMCM-Lock-Check)
 
 使用したシミュレータと検証結果は[実行記録](../../PROVENANCE.md#pll-adc-pwm)を参照してください。

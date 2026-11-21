@@ -61,7 +61,7 @@ module clock_gating_tb;
     longint switch_rise_at = 0, switch_fall_at = 0;
     reg switch_rose = 0, switch_fell = 0;
     reg [1:0] last_active = 0;
-    reg a_to_b = 0, b_to_a = 0, select_high = 0, target_stopped = 0, current_stopped = 0, recovered = 0;
+    reg a_to_b = 0, b_to_a = 0, select_high = 0, target_stopped = 0, current_stopped = 0, recovered = 0, release_on_b = 0;
     always @(sw_out) begin
         if (armed) begin
             $fdisplay(trace_fd, "%0d,sw_out,%b", $time, sw_out);
@@ -187,6 +187,12 @@ module clock_gating_tb;
                     if (divider_rises != value) fail("DIV_EDGES");
                     if (divider_releases >= 2 && value >= 2) divider_restart = 1;
                 end
+                13: begin
+                    // Shortly after a reset release: the reset state must not enable a clock by itself.
+                    if (^{sw_out, active_a, active_b} === 1'bx) fail("CK_X");
+                    if ({active_b, active_a} !== value[1:0]) fail("CS_ACTIVE");
+                    if (sel === 1'b1) release_on_b = 1;
+                end
                 default: $fatal(1, "unknown signal");
             endcase
             checks = checks + 1;
@@ -201,6 +207,7 @@ module clock_gating_tb;
         if (target_stopped) $display("COVER switch/target-stopped");
         if (current_stopped) $display("COVER switch/current-stopped");
         if (recovered) $display("COVER switch/reset-recovery");
+        if (release_on_b) $display("COVER switch/release-on-b");
         if (duty_measured >= 2) $display("COVER divider/duty");
         if (divider_restart) $display("COVER divider/restart");
         $fclose(fd);

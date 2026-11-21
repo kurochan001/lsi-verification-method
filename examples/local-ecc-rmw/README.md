@@ -32,6 +32,8 @@ RTLの状態は`IDLE → READ → DECODE → WRITE → RESPONSE`です。途中�
 
 4種類の変異は、非選択バイトの上書き、ECCの再計算漏れ、訂正通知の欠落、スクラブ有効時に旧値で部分書き込みを上書きする誤りです。通常試験と区別して検出します。セルフテストでは、未知値を内部保持値へ与えた診断が4値比較で拒否されることも確認します。X注入の診断を物理SEUとは呼びません。
 
+固定試験には、全8ワードへ訂正可能な故障を1個ずつ入れてからスクラブを1巡させ、その後の全ワードの読出しで訂正の通知が出ないことを確かめる手順があります。訂正の書戻しの後に巡回の番地を0へ戻す、進めない、1つ飛ばす、といった誤りは、1巡で直せるワードが減るので、この読出しで見つかります。テストベンチの時間切れは、検査の失敗とは別のラベル（`ECC_RMW_TIMEOUT`）で報告します。変異で回路が止まっただけの実行を、予定どおりの検出とは数えません。
+
 ```sh
 python3 examples/local-ecc-rmw/run.py --out artifacts/ecc-rmw-smoke
 python3 examples/local-ecc-rmw/run.py --profile nightly --seed 42 --out artifacts/ecc-rmw-nightly
@@ -39,10 +41,12 @@ python3 examples/local-ecc-rmw/run.py --waves --out artifacts/ecc-rmw-wave
 python3 -m unittest discover -s examples/local-ecc-rmw/tests -v
 ```
 
-smokeは2構成×1 seed、nightlyは2構成×3 seedです。固定試験に加えるランダム操作は各seed 32／128組、JUnitは10／14件です。セルフテストは5件です。波形は`width32/seed17/trace.vcd`などで、`state`、`read_word`、`write_word`、要求・応答・スクラブ信号を追います。注入成立と訂正通知を先に確認し、その後の再読出しが訂正なしで正しいことを確認します。
+smokeは2構成×1 seed、nightlyは2構成×3 seedです。固定試験に加えるランダム操作は各seed 32／128組、JUnitは10／14件です。セルフテストは7件です。波形は`width32/seed17/trace.vcd`などで、`state`、`read_word`、`write_word`、要求・応答・スクラブ信号を追います。注入成立と訂正通知を先に確認し、その後の再読出しが訂正なしで正しいことを確認します。
 
 ## ファイルと確認範囲
 
 [ecc_rmw_ram.sv](rtl/ecc_rmw_ram.sv)がRAM・符号化・復号・直列化制御、[ecc_rmw_tb.sv](tb/ecc_rmw_tb.sv)が入力とNBA後の判定、[run.py](run.py)が回帰計画です。共通の実行環境・証跡は[共通手順](../local-memory-common/README.md)を参照してください。
 
 2026-11-20にIcarus Verilog 14.0開発版でsmoke／nightlyを実行しています。正確な版と結果は[実行記録](../../PROVENANCE.md#memory-integration-four)へ記録します。他シミュレータでの実行、特定のSRAMマクロへの合成、物理タイミング、ECCの故障率やスクラブ周期の設計は未確認です。3bit以上の故障に、任意の訂正・検出を保証しません。
+
+2026-11-21に、レビューで見つかった試験の抜けを補いました。それまでの固定試験は、1巡に置く訂正可能な故障が1個だけで、訂正の書戻しの後に巡回の番地を0へ戻す回路でもsmoke・nightlyが合格していました。全ワードへ故障を入れる手順を足し、作業用の写しのRTLで、番地を0へ戻す・進めない・1つ飛ばすの3通りの誤りがsmokeで不合格になることを確かめています。番地を0へ戻す誤りは、セルフテストでも毎回確かめます。JUnitの件数は変わりません。

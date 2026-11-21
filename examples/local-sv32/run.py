@@ -63,14 +63,21 @@ class Plan:
         return can_accept
 
     def transfer(self,*,va=0x81234567,root=0x3fffff,kind=0,user=1,sum_enable=0,mxr=0,
-                 memory=None,bare=0,stall=0):
+                 memory=None,bare=0,stall=0,idle=0,pressure=None):
+        """One request and its response. `idle` adds cycles where the walker is ready but
+        nothing is offered. `pressure` is a different request held on the inputs for every
+        cycle after acceptance; the walker is busy, so it must never be taken."""
         request=dict(va=va,root=root,kind=kind,user=user,sum_enable=sum_enable,mxr=mxr,memory=memory or {},bare=bare)
+        for _ in range(idle):
+            if not self.cycle():raise ValueError('walker not idle')
         if not self.cycle(request=request):raise ValueError('request blocked')
+        def busy(**options):
+            if self.cycle(request=pressure,**options):raise ValueError('busy walker accepted the next request')
         while self.reads:
-            for _ in range(self.wait):self.cycle(mem_ready=0)
-            self.cycle()
-        for _ in range(stall):self.cycle(ready=0)
-        self.cycle()
+            for _ in range(self.wait):busy(mem_ready=0)
+            busy()
+        for _ in range(stall):busy(ready=0)
+        busy()
 
 
 def page_table(va,root,l1,l0=0):
@@ -82,8 +89,12 @@ def page_table(va,root,l1,l0=0):
 def vectors(seed,iterations,wait,boundary=False):
     p=Plan(wait);p.cycle(rst=0);va=0x81234567;root=0x3fffff;pointer=(0x2fffff<<10)|1
     def run(l1,l0=0,**options):p.transfer(memory=page_table(va,root,l1,l0),**options)
-    p.transfer(bare=1,va=0xffffffff,stall=3)
-    run(pointer,(0x3abcde<<10)|0xdf,stall=2) # 4K, PA above 32 bits
+    # A different request waits on the inputs while the walker is busy. Bare would answer at
+    # once and the walk would fetch other PTEs, so taking either one early is visible.
+    waiting_bare=dict(va=0x13572468,root=0x155555,kind=2,user=0,sum_enable=1,mxr=1,memory={},bare=1)
+    waiting_walk=dict(va=0x2468ace0,root=0x0aaaaa,kind=1,user=0,sum_enable=0,mxr=0,memory={},bare=0)
+    p.transfer(bare=1,va=0xffffffff,stall=3,idle=2,pressure=waiting_walk)
+    run(pointer,(0x3abcde<<10)|0xdf,stall=2,idle=1,pressure=waiting_bare) # 4K, PA above 32 bits
     run((0x300000<<10)|0xdf) # aligned 4M
     run((0x300001<<10)|0xdf) # misaligned 4M
     run(pointer,(0x1234<<10)|0x59,mxr=1) # execute-only readable with MXR
@@ -94,6 +105,11 @@ def vectors(seed,iterations,wait,boundary=False):
     run(pointer,(0x1234<<10)|0x9f) # A=0
     run(pointer,(0x1234<<10)|0x5f,kind=1) # D=0
     run(pointer,(0x1234<<10)|0xd5,kind=1) # reserved R=0,W=1
+    run(pointer,(0x1234<<10)|0xdb,kind=1) # store to a page with W=0; every other bit allows it
+    run(pointer,(0x1234<<10)|0xdb,kind=0) # the same page still reads
+    run(pointer,(0x1234<<10)|0xd7,kind=2) # execute from a page with X=0
+    run(pointer,(0x1234<<10)|0xd7,kind=1,idle=1) # the same page still accepts the store
+    run((0x300000<<10)|0xdb,kind=1);run((0x300000<<10)|0xd7,kind=2) # the same two refusals on a 4M leaf
     run(0);run(pointer,1) # invalid V, last-level non-leaf
     run(pointer|0x40) # reserved A on non-leaf
     p.transfer(memory={root*4096+((va>>22)&1023)*4:None})
@@ -106,8 +122,12 @@ def vectors(seed,iterations,wait,boundary=False):
             flags=rng.randrange(256);ppn=rng.getrandbits(22)
             if rng.randrange(2):l1=ptr;l0=(ppn<<10)|flags
             else:l1=((ppn&~1023)<<10)|flags;l0=0
+            waiting=None
+            if rng.randrange(3)==0:
+                waiting=dict(va=rng.getrandbits(32),root=rng.getrandbits(22),kind=rng.randrange(3),user=rng.randrange(2),
+                             sum_enable=rng.randrange(2),mxr=rng.randrange(2),memory={},bare=rng.randrange(2))
             p.transfer(va=address,root=root,kind=rng.randrange(3),user=rng.randrange(2),sum_enable=rng.randrange(2),mxr=rng.randrange(2),
-                       memory=page_table(address,root,l1,l0),stall=rng.randrange(3))
+                       memory=page_table(address,root,l1,l0),stall=rng.randrange(3),idle=rng.randrange(4)//3,pressure=waiting)
     p.cycle();return p.rows
 
 

@@ -32,7 +32,7 @@ module e2e_guard_tb;
    inputs=inputs+int'(in_valid&&in_ready);
    @(posedge clk);#1;rows=rows+1;
    obs[0]=0;obs[1]=32'(out_valid);obs[2]=32'(out_data);obs[3]=32'(accepted);obs[4]=32'(rejected);obs[5]=32'(reject_code);
-   if(old_valid&&rst_n&&!flush&&!out_ready&&(!out_valid||out_data!=old_data))fail("E2E_HOLD");
+   if(old_valid&&rst_n&&!flush&&!out_ready&&(out_valid!==1'b1||out_data!==old_data))fail("E2E_HOLD");
    for(integer j=3;j<6;j=j+1)if(64'(obs[j])!==e[j])fail("E2E_STATUS");
    for(integer j=1;j<3;j=j+1)if(64'(obs[j])!==e[j])begin
     $display("FIELD %0d actual=%h expected=%h",j,obs[j],e[j]);
@@ -59,7 +59,7 @@ module e2e_guard_tb;
    $fdisplay(cf,"%0d,%0d,%0d,%0d,%0d,%012h,%0d,%0d,%0d,%0d,%0d,%0d",rows,rst_n,flush,in_valid,pre_ready,in_frame,out_ready,out_valid,out_data,accepted,rejected,reject_code);
    @(negedge clk);
   end
-  if(!$feof(ef)||rows!=checks||out_valid||inputs!=validated+rejects||validated!=retired+cancels)fail("E2E_COMPLETION");
+  if(!$feof(ef)||rows!=checks||out_valid!==1'b0||inputs!=validated+rejects||validated!=retired+cancels)fail("E2E_COMPLETION");
   $display("COUNT rows=%0d",rows);$display("COUNT inputs=%0d",inputs);$display("COUNT validated=%0d",validated);$display("COUNT rejected=%0d",rejects);$display("COUNT retired=%0d",retired);$display("COUNT cancelled=%0d",cancels);$display("COUNT resets=%0d",resets);
   $display("RESULT PASS checks=%0d",rows);$fclose(fd);$fclose(ef);$fclose(cf);$finish;
  end

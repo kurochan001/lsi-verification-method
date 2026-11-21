@@ -38,6 +38,9 @@ module memory_order_tb;
    if(dut.s_rvalid[t] && dut.s_rready[t] && dut.s_rlast[t])priority_r[t]=!owner_r[t];
   end
   for(integer m=0;m<2;m=m+1)begin
+   // One outstanding request per master and direction: ready stays low until its response completes.
+   if(active_w[m] && awready[m]!==1'b0)fail("IC_READY");
+   if(active_r[m] && arready[m]!==1'b0)fail("IC_READY");
    if(awvalid[m] && awready[m])begin aw_seen[m]=1;active_w[m]=1;address_w[m]=awaddr[15*m+:15];end
    if(arvalid[m] && arready[m])begin ar_seen[m]=1;active_r[m]=1;address_r[m]=araddr[15*m+:15];end
    if(bvalid[m] && !active_w[m])fail("IC_RESPONSE");
@@ -77,7 +80,7 @@ module memory_order_tb;
   clock_index=clock_index+1;expected_ports=0;
   for(integer t=0;t<2;t=t+1)begin
    if(dut.s_rvalid[t]!==expected_valid[t])fail("ORDER_TIMING");
-   if(expected_valid[t] && (dut.s_rdata[t]!==snapshot[t] || dut.s_rid[t]!==expected_id[t] || dut.s_rresp[t]!=0 || dut.s_rlast[t]!==(rb_model[t]==rl_model[t])))fail("ORDER_READ");
+   if(expected_valid[t] && (dut.s_rdata[t]!==snapshot[t] || dut.s_rid[t]!==expected_id[t] || dut.s_rresp[t]!==2'b00 || dut.s_rlast[t]!==(rb_model[t]==rl_model[t])))fail("ORDER_READ");
    if(expected_valid[t])begin
     expected_ports[owner_r[t]]=1;
     if(!rvalid[owner_r[t]] || rdata[32*owner_r[t]+:32]!==snapshot[t])fail("ORDER_READ");

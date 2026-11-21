@@ -7,7 +7,7 @@ from system_test_support import SystemContract
 P=load_example('local-interconnect')
 
 class SystemTest(SystemContract,unittest.TestCase):
-    EXAMPLE='local-interconnect';GOALS=12
+    EXAMPLE='local-interconnect';GOALS=14
 
     def test_byte_strobes_preserve_other_bytes(self):
         p=P.Plan();p.batch(P.request(1,0,seed=0x11223344))

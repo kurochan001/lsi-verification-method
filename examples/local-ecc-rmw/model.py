@@ -57,6 +57,11 @@ def stimulus(width=32, depth=8, seed=17, iterations=32):
         p.step(3,2,fault=pair);p.step(1,2,0x55,1);p.step(2,2)
         p.step(4);p.step(2,2);p.step(1,2,0x10203040,full);p.step(2,2)
     p.step(3,3,fault=8);p.step(4);p.step(2,3)
+    # One sweep must repair every word: a correctable fault in each word, then no read
+    # may report a correction.  A scrubber that restarts, stays or skips after its own
+    # repair write spends the sweep on fewer words and leaves a later one unrepaired.
+    for address in range(depth):p.step(3,address,fault=1<<((5*address+3)%p.code_width))
+    p.step(4);p.read_all()
     p.step(3,1,fault=16);p.step(6,1,0xdeadbeef,5);p.step(2,1)
     p.step(7,1,0xaa,1);p.step(2,1)
     # Abort a pending RMW before its commit and check retention.

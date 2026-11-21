@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "UART-DATA",
@@ -74,10 +74,11 @@
     },
     {
       "id": "UART-PHASE",
-      "description": "受信波形の2種類の開始位相",
+      "description": "受信波形の2種類の開始位相と、各ビットの中央の半分だけが有効な波形",
       "goals": [
         "phase/early",
-        "phase/late"
+        "phase/late",
+        "phase/center-window"
       ]
     }
   ]

@@ -26,6 +26,7 @@
         "irq/timer",
         "irq/gpio",
         "irq/w1c",
+        "irq/zero-write-hold",
         "irq/map"
       ]
     },

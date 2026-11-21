@@ -37,6 +37,11 @@ module interconnect_tb;
    if(dut.s_rvalid[t] && dut.s_rready[t] && dut.s_rlast[t])priority_r[t]=!owner_r[t];
   end
   for(integer m=0;m<2;m=m+1)begin
+   // One outstanding request per master and direction: ready stays low until its response completes.
+   if(active_w[m] && awready[m]!==1'b0)fail("IC_READY");
+   if(active_r[m] && arready[m]!==1'b0)fail("IC_READY");
+   if(active_w[m] && awvalid[m])$display("COVER ready/write-busy");
+   if(active_r[m] && arvalid[m])$display("COVER ready/read-busy");
    if(awvalid[m] && awready[m])begin aw_seen[m]=1;active_w[m]=1;address_w[m]=awaddr[15*m+:15];end
    if(arvalid[m] && arready[m])begin ar_seen[m]=1;active_r[m]=1;address_r[m]=araddr[15*m+:15];end
    if(bvalid[m] && !active_w[m])fail("IC_RESPONSE");
@@ -63,8 +68,9 @@ module interconnect_tb;
    aw_done=0;ar_done=0;finished=op==0;wb=0;rb=0;blocked=0;tick=0;
    while(!finished && tick<600)begin
     // After AW/AR acceptance the address, length and ID change; the interconnect must use its own copy.
+    // Odd IDs keep the valid high with those changed values until the response: it must not be accepted.
     awaddr[15*m+:15]=aw_done ? ~address:address;araddr[15*m+:15]=ar_done ? ~address:address;awlen[8*m+:8]=aw_done ? ~(beats-1):beats-1;arlen[8*m+:8]=ar_done ? ~(beats-1):beats-1;awid[2*m+:2]=aw_done ? ~ident:ident;arid[2*m+:2]=ar_done ? ~ident:ident;
-    awvalid[m]=op==1 && !aw_done && tick>=awd;arvalid[m]=op==2 && !ar_done && tick>=awd;
+    awvalid[m]=op==1 && (aw_done ? ident[0]:tick>=awd);arvalid[m]=op==2 && (ar_done ? ident[0]:tick>=awd);
     wvalid[m]=op==1 && wb<beats && tick>=wd;wdata[32*m+:32]=seed+32'h01030507*wb;wstrb[4*m+:4]=mask(mode,wb);wlast[m]=wb==beats-1;
     bready[m]=op==1 && blocked>=stall;rready[m]=op==2 && blocked>=stall;
     @(posedge clk);

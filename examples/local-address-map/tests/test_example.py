@@ -9,7 +9,7 @@ P = load_example('local-address-map')
 
 class ExampleTests(SystemContract, unittest.TestCase):
     EXAMPLE = 'local-address-map'
-    GOALS = 13
+    GOALS = 14
 
     def test_alias_and_strict_decode_differ(self):
         alias = P.Plan(1)

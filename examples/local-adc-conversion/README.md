@@ -30,6 +30,12 @@ python3 examples/local-adc-conversion/run.py --profile nightly --seed 42 --out a
 
 [adc_capture.sv](rtl/adc_capture.sv)が変換モデル、[adc_capture_tb.sv](tb/adc_capture_tb.sv)が自己判定TB、[model.py](model.py)が期待値、[requirements.json](requirements.json)が3要求・8目標です。取り込み／変換を2／4サイクル、1／1サイクルとした2構成で試します。smoke／nightlyのJUnitは14／18件です。`acq2-conv4-boundaries/wave.vcd` では `start`、`vin_uv`、`sampled_code`、`busy`、`result_valid`、`result_ready` を順に確認できます。
 
+ランナーとモデルのセルフテストは8件です。期待コードを別の求め方（整数の切捨てと上下限）と照合し、結果が出る時刻、再要求とリセット、計画の名前とラベル、seedの再現、全構成の実行と証跡、`--demo-bug`の終了コード、期待値を書き換えたときにテストベンチが不合格にすることを確かめます。2026-11-21のレビューで、この例にセルフテストがないことが分かり、追加しました。
+
+```sh
+python3 -m unittest discover -s examples/local-adc-conversion/tests
+```
+
 このモデルは電圧コードと制御の教材です。サンプルホールド回路の整定、入力負荷、ノイズ、オフセットやゲイン誤差、INL/DNLは、回路モデルや測定結果を使って別途評価します。 [Analog DevicesのADC静特性資料](https://www.analog.com/media/en/training-seminars/tutorials/mt-010.pdf)
 
 使用したシミュレータと検証結果は[実行記録](../../PROVENANCE.md#pll-adc-pwm)を参照してください。

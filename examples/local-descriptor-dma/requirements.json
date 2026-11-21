@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "requirements": [
     {
       "id": "DESCRIPTOR",
@@ -15,6 +15,9 @@
         "fault/type4",
         "abort/type1",
         "abort/type2",
+        "abort/type3",
+        "abort/type4",
+        "abort/type5",
         "command/invalid",
         "reset/active",
         "reset/recovery"

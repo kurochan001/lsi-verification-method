@@ -23,5 +23,12 @@ class SystemTest(SystemContract,unittest.TestCase):
     def test_invalid_configuration_has_no_bus_effects(self):
         for row in (P.vector(src=3),P.vector(dst=4),P.vector(src=8188,words=2),P.vector(words=33)):
             self.assertEqual(row[8:14],[1,0,0,0,0,0])
+        # Each rejection rule needs a fixed row that breaks that rule alone; an unaligned
+        # destination that also overlapped the source would be rejected by the overlap rule.
+        def only(src,dst,words):
+            return [bool(src%4),bool(dst%4),words>32,src+4*words>8192,dst+4*words>8192,
+                    bool(words and src<dst+4*words and dst<src+4*words)]
+        alone={tuple(only(*row[:3])) for row in P.boundary_vectors() if sum(only(*row[:3]))==1}
+        self.assertEqual(len(alone),6,alone)
 
 if __name__=='__main__':unittest.main()

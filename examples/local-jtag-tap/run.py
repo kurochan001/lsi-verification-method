@@ -149,6 +149,14 @@ class Plan:
         self.go_shift_dr()
         self.clock(1); self.clock(0); self.clock(1); self.clock(0)
         self.clock(1); self.clock(1); self.clock(0)
+        # The same pause on the IR side: two bits, Exit1-IR, Pause-IR held for
+        # two clocks, Exit2-IR, back to Shift-IR for the remaining two bits.
+        self.go_shift_ir()
+        self.clock(0, 0); self.clock(1, 1)
+        self.clock(0); self.clock(0); self.clock(1); self.clock(0)
+        self.clock(0, 0); self.clock(1, 0)
+        self.exit_ir()
+        self.shift_dr([1, 1, 0, 1, 0, 0, 1, 0])
         # Reset recovery after a short TRST pulse.
         self.reset()
         self.clock(0)

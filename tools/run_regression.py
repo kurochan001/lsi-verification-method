@@ -78,6 +78,8 @@ def make_plan(entries,args,root=ROOT):
     if selected-entries.keys():raise ValueError('unknown examples: '+','.join(sorted(selected-entries.keys())))
     if args.suite=='formal':selected={n for n in selected if entries[n]['kind']=='formal'}
     elif args.suite=='simulation':selected={n for n in selected if entries[n]['kind'] in ('simulation','sta')}
+    # A suite must not silently drop an example that was named explicitly.
+    if args.example and set(args.example)-selected:raise ValueError('examples outside the selected suite: '+','.join(sorted(set(args.example)-selected)))
     # Aggregates only run in the all suite. A child already owned by a selected
     # parent is executed once through that parent, with its own evidence retained.
     owned=set().union(*(descendants(n,entries) for n in selected)) if selected else set()

@@ -32,7 +32,9 @@ def boundary_vectors(parity):
         rows.append([1, 0x96, 0x69, 0, 0, 1])
         rows.append([5, 0x5a, 0xa5, 0, 0, 0])  # parity and framing errors together
     rows += [[2, 0x3c, 0xc3, 0, 1, 0], [3, 0, 0, 0, 0, 0],
-             [4, 0x5a, 0, 0, 0, 0], [0, 0x96, 0x69, 1, 0, 1]]
+             [4, 0x5a, 0, 0, 0, 0], [0, 0x96, 0x69, 1, 0, 1],
+             # Phase 2 and 3: each data bit is valid only in its middle half (early and late start).
+             [0, 0x3c, 0xa5, 0, 0, 2], [0, 0xc3, 0x5a, 1, 1, 3]]
     return rows
 
 
@@ -42,7 +44,7 @@ def random_vectors(parity, seed, frames):
     choices = [0] * 7 + [2, 3, 4] + ([1] if parity else [])
     for _ in range(frames):
         rows.append([rng.choice(choices), rng.randrange(256), rng.randrange(256),
-                     rng.randrange(2), rng.randrange(3), rng.randrange(2)])
+                     rng.randrange(2), rng.randrange(3), rng.randrange(4)])
     # Always exercise recovery after any final reset/error command.
     rows.append([0, 0x96, 0x69, 0, 1, 0])
     return rows

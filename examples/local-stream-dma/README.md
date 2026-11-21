@@ -53,7 +53,7 @@ sequenceDiagram
   Note over D: B受理後に次へ<br/>最終なら完了
 ```
 
-図は1メモリアクセス分で、信号の提示開始時刻と待ちサイクルは省略しています。AWの受理とRAMへのAW転送は、同じハンドシェイクを二つの境界で表しています。DMAはAWとWを独立に提示し、テスト用バッファが受理順を作ります。B応答の前にdoneになる実装は、doneが出ている間の応答件数の照合で失敗にします（`STREAM_RESPONSE`）。固定の操作には、メモリの終端を越える転送を両方向で含み、拒否されることを確かめます。
+図は1メモリアクセス分で、信号の提示開始時刻と待ちサイクルは省略しています。AWの受理とRAMへのAW転送は、同じハンドシェイクを二つの境界で表しています。DMAはAWとWを独立に提示し、テスト用バッファが受理順を作ります。B応答の前にdoneになる実装は、doneが出ている間の応答件数の照合で失敗にします（`STREAM_RESPONSE`）。MM2Sでは、Streamへ出すビートが、受取りの済んだRに対応していることも同じラベルで照合します。`rready`が0の間に見えた`rdata`を使ってStreamへ出す実装は、Rの受取りより先にビートが出るので失敗にします。固定の操作には、メモリの終端を越える転送を両方向で含み、拒否されることを確かめます。
 
 ## 実行
 
@@ -66,3 +66,11 @@ python3 -m unittest discover -s examples/local-stream-dma/tests -v
 [共通手順](../local-common/README.md)を使います。FIFO深さ2の待ちなしと、深さ4・AR/AW/Wの周期的受付停止の2構成です。S2MMでは1ビートのテスト用バッファでWを先に受理し、その後でAWと保持したWをRAMへ渡すケースも実行します。B応答は実RAMから返します。smoke18操作、nightly120操作×3 seedへ固定18操作を加え、各13目標を要求します。KEEP・LAST・WSTRB・データの4種類の変異です。JUnit14／18件、確認7件です。
 
 Streamの基本信号は[AMDの説明](https://docs.amd.com/r/2023.1-English/ug1393-vitis-application-acceleration/Streaming-Interfaces)、メモリ側は[Arm AXI仕様](https://documentation-service.arm.com/static/602a9df190ee6824a1e02b98)を参照しています。商用DMAの実装・レジスタ配置・全属性・大規模バースト・全二重動作への適合性は対象外です。
+
+## レビューで補った確認（2026-11-21）
+
+それまでのテストベンチは、DMAが出す`rready`と、DMAが実際にデータを取り込むサイクルの対応を見ていませんでした。作業用の写しのRTLで`rready`を反転（読出し待ちの状態でだけ0）しても、RAMが`rvalid`とデータを保持するので、nightlyが合格していました。上の照合を足し、この誤りを固定シナリオが`STREAM_RESPONSE`で検出することを確かめました。`bready`を反転した誤りは、以前からある完了時の照合で同じく検出します。
+
+`rready`や`bready`を常に1にする変更は、この試験でも合格します。RとBは、DMAが要求を渡した後にしか来ません。その時点でDMAは必ず応答待ちの状態にいるので、規則に反せず、結果も変わりません。検査は足していません。
+
+JUnitの件数（14／18件）、13目標、セルフテスト7件は変わりません。Icarus Verilog 14.0開発版で、2構成のsmoke（seed 17・3・8）とnightlyが合格しました。kirimasimでは実行していません。

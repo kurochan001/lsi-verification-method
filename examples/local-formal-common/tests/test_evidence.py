@@ -51,6 +51,15 @@ class EvidenceTest(unittest.TestCase):
         self.assertEqual(self.judge(case=case,log=log),'error')
         self.assertEqual(self.judge(case=case,log=log,traces=['witness.vcd']),'pass')
         self.assertEqual(self.judge(case=case,log=log.replace('cp_full','unknown_goal'),traces=['witness.vcd']),'error')
+    def test_an_induction_step_violation_does_not_confirm_the_planned_property(self):
+        case=EQ.plan(12,0)[2];execution=dict(error=None,returncode=2)
+        base='SBY 0:00:00 [task] engine_0.basecase: ##   0:00:00  Assert failed in equivalence_formal: '
+        step='SBY 0:00:00 [task] engine_0.induction: ##   0:00:00  Assert failed in equivalence_formal: '
+        self.assertEqual(R.observed(step+'ap_control\n')[2],set())
+        self.assertEqual(R.observed(base+'ap_control\n'+step+'ap_data\n')[2],{'ap_control'})
+        # The real counterexample breaks another property; the planned one fails only in the induction step.
+        self.assertEqual(self.judge(case,execution,'FAIL',base+'ap_data\n'+step+'ap_control\n',['trace.vcd']),'error')
+        self.assertEqual(self.judge(case,execution,'FAIL',base+'ap_control\n'+step+'ap_data\n',['trace.vcd']),'detected')
     def test_mutation_requires_intended_assertion_and_counterexample(self):
         case=EQ.plan(12,0)[2];execution=dict(error=None,returncode=2)
         for log,traces in [('Assert failed in equivalence_formal: ap_data',['trace.vcd']),('Assert failed in equivalence_formal: ap_control',[])]:
