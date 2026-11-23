@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "MUL-DATA",
+      "goals": [
+        "mul/zero",
+        "mul/max",
+        "mul/one",
+        "mul/hi-lane",
+        "mul/lo-only",
+        "mul/same-operands"
+      ]
+    },
+    {
+      "id": "MUL-TIME",
+      "goals": [
+        "mul/pipelined",
+        "vld/active",
+        "vld/off"
+      ]
+    },
+    {
+      "id": "MUL-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

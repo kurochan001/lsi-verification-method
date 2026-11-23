@@ -27,6 +27,7 @@
     "examples/local-cache-coherence/rtl/coherent_pair.sv",
     "examples/local-cache-dma/rtl/cache_dma.sv",
     "examples/local-can/rtl/can_node.sv",
+    "examples/local-canfd/rtl/canfd_tx.sv",
     "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
     "examples/local-cdc-bridge/rtl/packet_fifo.sv",
     "examples/local-cdc-handshake/rtl/cdc_handshake.sv",
@@ -42,6 +43,7 @@
     "examples/local-clock-gating/rtl/clock_switch.sv",
     "examples/local-clock-gating/rtl/odd_divider.sv",
     "examples/local-clock-reset/rtl/clock_reset.sv",
+    "examples/local-clock-switch/rtl/clock_switch.sv",
     "examples/local-code-coverage/rtl/command_unit.sv",
     "examples/local-compositional-formal/rtl/blocks.sv",
     "examples/local-connectivity/rtl/soc_top.sv",
@@ -70,11 +72,14 @@
     "examples/local-fec-ber/rtl/viterbi_decoder.sv",
     "examples/local-fft/rtl/fft.sv",
     "examples/local-fifo/rtl/sync_fifo.sv",
+    "examples/local-flash-ctrl/rtl/flash_ctrl.sv",
+    "examples/local-flash-ctrl/rtl/flash_model.sv",
     "examples/local-formal-data-integrity/rtl/width_downsizer.sv",
     "examples/local-fp-adder/rtl/fp_adder.sv",
     "examples/local-fsm-hardening/rtl/hardened_lock.sv",
     "examples/local-gate-sim/rtl/burst_arbiter.sv",
     "examples/local-gate-timing/rtl/mc_scale.sv",
+    "examples/local-hw-semaphore/rtl/hw_semaphore.sv",
     "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
     "examples/local-i2c/rtl/i2c_target.sv",
     "examples/local-i2s-audio/rtl/i2s_rx.sv",
@@ -88,8 +93,10 @@
     "examples/local-image-soc/rtl/image_memory.sv",
     "examples/local-image-soc/rtl/image_soc.sv",
     "examples/local-interconnect/rtl/axi_interconnect.sv",
+    "examples/local-iommu/rtl/iommu.sv",
     "examples/local-irq-cdc/rtl/cdc_receiver.sv",
     "examples/local-irq-cdc/rtl/irq_pending.sv",
+    "examples/local-jtag-apb/rtl/jtag_apb.sv",
     "examples/local-jtag-tap/rtl/jtag_tap.sv",
     "examples/local-latency-insensitive-compare/rtl/dot_pipe.sv",
     "examples/local-latency-insensitive-compare/rtl/dot_seq.sv",
@@ -112,6 +119,7 @@
     "examples/local-motion-control/rtl/motion_axis.sv",
     "examples/local-motion-io/rtl/quadrature_decoder.sv",
     "examples/local-motion-io/rtl/safe_pwm.sv",
+    "examples/local-mul-pipe/rtl/mul_pipe.sv",
     "examples/local-mxfp4/rtl/mp_add.sv",
     "examples/local-mxfp4/rtl/mp_bdp.sv",
     "examples/local-mxfp4/rtl/mp_encoder.sv",
@@ -139,11 +147,14 @@
     "examples/local-network-echo/rtl/rx_frame_queue.sv",
     "examples/local-network-soc/rtl/network_nic.sv",
     "examples/local-network-soc/rtl/network_soc.sv",
+    "examples/local-noc-mesh/rtl/mesh2x2.sv",
+    "examples/local-noc-mesh/rtl/router.sv",
     "examples/local-otp-fuse/rtl/otp_ctrl.sv",
     "examples/local-otp-fuse/rtl/otp_lifecycle_top.sv",
     "examples/local-packet-crc/rtl/crc.sv",
     "examples/local-packet-switch/rtl/packet_switch.sv",
     "examples/local-performance-monitor/rtl/perf_monitor.sv",
+    "examples/local-plic/rtl/plic.sv",
     "examples/local-pll-recovery/rtl/pll_guard.sv",
     "examples/local-por-sequence/rtl/por_init_ctrl.sv",
     "examples/local-por-sequence/rtl/por_reset_sync.sv",
@@ -182,6 +193,8 @@
     "examples/local-riscv-iss/rtl/rv32i_core.sv",
     "examples/local-riscv-pmp/rtl/pmp.sv",
     "examples/local-rnm-sar-adc/rtl/sar_logic.sv",
+    "examples/local-rtc/rtl/rtc.sv",
+    "examples/local-rvwmo-litmus/rtl/litmus.sv",
     "examples/local-scan-atpg/rtl/scan_logic.sv",
     "examples/local-scrambler-prbs/rtl/prbs_check.sv",
     "examples/local-scrambler-prbs/rtl/prbs_gen.sv",
@@ -223,6 +236,8 @@
     "examples/local-uart/rtl/uart.sv",
     "examples/local-unaligned-memory/rtl/byte_word_ram.sv",
     "examples/local-unaligned-memory/rtl/unaligned_memory.sv",
+    "examples/local-usb-linecode/rtl/usb_linecode.sv",
+    "examples/local-usb-linecode/rtl/usb_linecode_rx.sv",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
     "examples/local-uvm-layering/rtl/frame_port.sv",
     "examples/local-uvm-multiclock/rtl/reset_mailbox.sv",
@@ -6704,6 +6719,327 @@
         "RATE": 32,
         "STAGES": 3
       }
+    },
+    {
+      "id": "local-plic/plic/NS=4",
+      "file": "examples/local-plic/rtl/plic.sv",
+      "top": "plic",
+      "sources": [
+        "examples/local-plic/rtl/plic.sv"
+      ],
+      "parameters": {
+        "NS": 4
+      }
+    },
+    {
+      "id": "local-plic/plic/NS=6",
+      "file": "examples/local-plic/rtl/plic.sv",
+      "top": "plic",
+      "sources": [
+        "examples/local-plic/rtl/plic.sv"
+      ],
+      "parameters": {
+        "NS": 6
+      }
+    },
+    {
+      "id": "local-mul-pipe/mul_pipe/STAGES=2",
+      "file": "examples/local-mul-pipe/rtl/mul_pipe.sv",
+      "top": "mul_pipe",
+      "sources": [
+        "examples/local-mul-pipe/rtl/mul_pipe.sv"
+      ],
+      "parameters": {
+        "STAGES": 2
+      }
+    },
+    {
+      "id": "local-mul-pipe/mul_pipe/STAGES=3",
+      "file": "examples/local-mul-pipe/rtl/mul_pipe.sv",
+      "top": "mul_pipe",
+      "sources": [
+        "examples/local-mul-pipe/rtl/mul_pipe.sv"
+      ],
+      "parameters": {
+        "STAGES": 3
+      }
+    },
+    {
+      "id": "local-rvwmo-litmus/litmus/DRAIN=2",
+      "file": "examples/local-rvwmo-litmus/rtl/litmus.sv",
+      "top": "litmus",
+      "sources": [
+        "examples/local-rvwmo-litmus/rtl/litmus.sv"
+      ],
+      "parameters": {
+        "DRAIN": 2
+      }
+    },
+    {
+      "id": "local-rvwmo-litmus/litmus/DRAIN=3",
+      "file": "examples/local-rvwmo-litmus/rtl/litmus.sv",
+      "top": "litmus",
+      "sources": [
+        "examples/local-rvwmo-litmus/rtl/litmus.sv"
+      ],
+      "parameters": {
+        "DRAIN": 3
+      }
+    },
+    {
+      "id": "local-iommu/iommu/TLB=1",
+      "file": "examples/local-iommu/rtl/iommu.sv",
+      "top": "iommu",
+      "sources": [
+        "examples/local-iommu/rtl/iommu.sv"
+      ],
+      "parameters": {
+        "TLB": 1
+      }
+    },
+    {
+      "id": "local-iommu/iommu/TLB=3",
+      "file": "examples/local-iommu/rtl/iommu.sv",
+      "top": "iommu",
+      "sources": [
+        "examples/local-iommu/rtl/iommu.sv"
+      ],
+      "parameters": {
+        "TLB": 3
+      }
+    },
+    {
+      "id": "local-flash-ctrl/flash_ctrl/DIV=1",
+      "file": "examples/local-flash-ctrl/rtl/flash_ctrl.sv",
+      "top": "flash_ctrl",
+      "sources": [
+        "examples/local-flash-ctrl/rtl/flash_ctrl.sv"
+      ],
+      "parameters": {
+        "DIV": 1
+      }
+    },
+    {
+      "id": "local-flash-ctrl/flash_ctrl/DIV=4",
+      "file": "examples/local-flash-ctrl/rtl/flash_ctrl.sv",
+      "top": "flash_ctrl",
+      "sources": [
+        "examples/local-flash-ctrl/rtl/flash_ctrl.sv"
+      ],
+      "parameters": {
+        "DIV": 4
+      }
+    },
+    {
+      "id": "local-flash-ctrl/flash_model/DIV=1",
+      "file": "examples/local-flash-ctrl/rtl/flash_model.sv",
+      "top": "flash_model",
+      "sources": [
+        "examples/local-flash-ctrl/rtl/flash_model.sv"
+      ],
+      "parameters": {
+        "DIV": 1
+      }
+    },
+    {
+      "id": "local-flash-ctrl/flash_model/DIV=4",
+      "file": "examples/local-flash-ctrl/rtl/flash_model.sv",
+      "top": "flash_model",
+      "sources": [
+        "examples/local-flash-ctrl/rtl/flash_model.sv"
+      ],
+      "parameters": {
+        "DIV": 4
+      }
+    },
+    {
+      "id": "local-rtc/rtc/DIV=4",
+      "file": "examples/local-rtc/rtl/rtc.sv",
+      "top": "rtc",
+      "sources": [
+        "examples/local-rtc/rtl/rtc.sv"
+      ],
+      "parameters": {
+        "DIV": 4
+      }
+    },
+    {
+      "id": "local-rtc/rtc/DIV=9",
+      "file": "examples/local-rtc/rtl/rtc.sv",
+      "top": "rtc",
+      "sources": [
+        "examples/local-rtc/rtl/rtc.sv"
+      ],
+      "parameters": {
+        "DIV": 9
+      }
+    },
+    {
+      "id": "local-clock-switch/clock_switch/BOOT=1",
+      "file": "examples/local-clock-switch/rtl/clock_switch.sv",
+      "top": "clock_switch",
+      "sources": [
+        "examples/local-clock-switch/rtl/clock_switch.sv"
+      ],
+      "parameters": {
+        "BOOT": 1
+      }
+    },
+    {
+      "id": "local-clock-switch/clock_switch/BOOT=4",
+      "file": "examples/local-clock-switch/rtl/clock_switch.sv",
+      "top": "clock_switch",
+      "sources": [
+        "examples/local-clock-switch/rtl/clock_switch.sv"
+      ],
+      "parameters": {
+        "BOOT": 4
+      }
+    },
+    {
+      "id": "local-canfd/canfd_tx/RATIO=3",
+      "file": "examples/local-canfd/rtl/canfd_tx.sv",
+      "top": "canfd_tx",
+      "sources": [
+        "examples/local-canfd/rtl/canfd_tx.sv"
+      ],
+      "parameters": {
+        "RATIO": 3
+      }
+    },
+    {
+      "id": "local-canfd/canfd_tx/RATIO=5",
+      "file": "examples/local-canfd/rtl/canfd_tx.sv",
+      "top": "canfd_tx",
+      "sources": [
+        "examples/local-canfd/rtl/canfd_tx.sv"
+      ],
+      "parameters": {
+        "RATIO": 5
+      }
+    },
+    {
+      "id": "local-usb-linecode/usb_linecode/PKT=0",
+      "file": "examples/local-usb-linecode/rtl/usb_linecode.sv",
+      "top": "usb_linecode",
+      "sources": [
+        "examples/local-usb-linecode/rtl/usb_linecode.sv"
+      ],
+      "parameters": {
+        "PKT": 0
+      }
+    },
+    {
+      "id": "local-usb-linecode/usb_linecode/PKT=1",
+      "file": "examples/local-usb-linecode/rtl/usb_linecode.sv",
+      "top": "usb_linecode",
+      "sources": [
+        "examples/local-usb-linecode/rtl/usb_linecode.sv"
+      ],
+      "parameters": {
+        "PKT": 1
+      }
+    },
+    {
+      "id": "local-usb-linecode/usb_linecode_rx/PKT=0",
+      "file": "examples/local-usb-linecode/rtl/usb_linecode_rx.sv",
+      "top": "usb_linecode_rx",
+      "sources": [
+        "examples/local-usb-linecode/rtl/usb_linecode_rx.sv"
+      ],
+      "parameters": {
+        "PKT": 0
+      }
+    },
+    {
+      "id": "local-usb-linecode/usb_linecode_rx/PKT=1",
+      "file": "examples/local-usb-linecode/rtl/usb_linecode_rx.sv",
+      "top": "usb_linecode_rx",
+      "sources": [
+        "examples/local-usb-linecode/rtl/usb_linecode_rx.sv"
+      ],
+      "parameters": {
+        "PKT": 1
+      }
+    },
+    {
+      "id": "local-noc-mesh/mesh2x2/BUF=1",
+      "file": "examples/local-noc-mesh/rtl/mesh2x2.sv",
+      "top": "mesh2x2",
+      "sources": [
+        "examples/local-noc-mesh/rtl/router.sv",
+        "examples/local-noc-mesh/rtl/mesh2x2.sv"
+      ],
+      "parameters": {
+        "BUF": 1
+      }
+    },
+    {
+      "id": "local-noc-mesh/mesh2x2/BUF=2",
+      "file": "examples/local-noc-mesh/rtl/mesh2x2.sv",
+      "top": "mesh2x2",
+      "sources": [
+        "examples/local-noc-mesh/rtl/router.sv",
+        "examples/local-noc-mesh/rtl/mesh2x2.sv"
+      ],
+      "parameters": {
+        "BUF": 2
+      }
+    },
+    {
+      "id": "local-noc-mesh/router/BUF=1",
+      "file": "examples/local-noc-mesh/rtl/router.sv",
+      "top": "router",
+      "sources": [
+        "examples/local-noc-mesh/rtl/router.sv"
+      ],
+      "parameters": {
+        "BUF": 1
+      }
+    },
+    {
+      "id": "local-noc-mesh/router/BUF=2",
+      "file": "examples/local-noc-mesh/rtl/router.sv",
+      "top": "router",
+      "sources": [
+        "examples/local-noc-mesh/rtl/router.sv"
+      ],
+      "parameters": {
+        "BUF": 2
+      }
+    },
+    {
+      "id": "local-jtag-apb/jtag_apb/default",
+      "file": "examples/local-jtag-apb/rtl/jtag_apb.sv",
+      "top": "jtag_apb",
+      "sources": [
+        "examples/local-jtag-apb/rtl/jtag_apb.sv"
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "local-hw-semaphore/hw_semaphore/KMAX=2/WIN=8",
+      "file": "examples/local-hw-semaphore/rtl/hw_semaphore.sv",
+      "top": "hw_semaphore",
+      "sources": [
+        "examples/local-hw-semaphore/rtl/hw_semaphore.sv"
+      ],
+      "parameters": {
+        "WIN": 8,
+        "KMAX": 2
+      }
+    },
+    {
+      "id": "local-hw-semaphore/hw_semaphore/KMAX=3/WIN=16",
+      "file": "examples/local-hw-semaphore/rtl/hw_semaphore.sv",
+      "top": "hw_semaphore",
+      "sources": [
+        "examples/local-hw-semaphore/rtl/hw_semaphore.sv"
+      ],
+      "parameters": {
+        "WIN": 16,
+        "KMAX": 3
+      }
     }
   ],
   "examples": {
@@ -9060,6 +9396,112 @@
         "local-sigma-delta/cic_decimator/IN_W=2/RATE=32/STAGES=3"
       ],
       "reason": "CICデシメーターのRTLを、この例の比と段数の構成で静的検査"
+    },
+    "local-plic": {
+      "scope": "dut",
+      "targets": [
+        "local-plic/plic/NS=4",
+        "local-plic/plic/NS=6"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-mul-pipe": {
+      "scope": "dut",
+      "targets": [
+        "local-mul-pipe/mul_pipe/STAGES=2",
+        "local-mul-pipe/mul_pipe/STAGES=3"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-rvwmo-litmus": {
+      "scope": "dut",
+      "targets": [
+        "local-rvwmo-litmus/litmus/DRAIN=2",
+        "local-rvwmo-litmus/litmus/DRAIN=3"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-iommu": {
+      "scope": "dut",
+      "targets": [
+        "local-iommu/iommu/TLB=1",
+        "local-iommu/iommu/TLB=3"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-flash-ctrl": {
+      "scope": "dut",
+      "targets": [
+        "local-flash-ctrl/flash_ctrl/DIV=1",
+        "local-flash-ctrl/flash_ctrl/DIV=4",
+        "local-flash-ctrl/flash_model/DIV=1",
+        "local-flash-ctrl/flash_model/DIV=4"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-rtc": {
+      "scope": "dut",
+      "targets": [
+        "local-rtc/rtc/DIV=4",
+        "local-rtc/rtc/DIV=9"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-clock-switch": {
+      "scope": "dut",
+      "targets": [
+        "local-clock-switch/clock_switch/BOOT=1",
+        "local-clock-switch/clock_switch/BOOT=4"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-canfd": {
+      "scope": "dut",
+      "targets": [
+        "local-canfd/canfd_tx/RATIO=3",
+        "local-canfd/canfd_tx/RATIO=5"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-usb-linecode": {
+      "scope": "dut",
+      "targets": [
+        "local-usb-linecode/usb_linecode/PKT=0",
+        "local-usb-linecode/usb_linecode/PKT=1",
+        "local-usb-linecode/usb_linecode_rx/PKT=0",
+        "local-usb-linecode/usb_linecode_rx/PKT=1"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-noc-mesh": {
+      "scope": "dut",
+      "targets": [
+        "local-noc-mesh/mesh2x2/BUF=1",
+        "local-noc-mesh/mesh2x2/BUF=2",
+        "local-noc-mesh/router/BUF=1",
+        "local-noc-mesh/router/BUF=2"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-jtag-apb": {
+      "scope": "dut",
+      "targets": [
+        "local-jtag-apb/jtag_apb/default"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-hw-semaphore": {
+      "scope": "dut",
+      "targets": [
+        "local-hw-semaphore/hw_semaphore/KMAX=2/WIN=8",
+        "local-hw-semaphore/hw_semaphore/KMAX=3/WIN=16"
+      ],
+      "reason": "各RTLモジュールを検証例のパラメーターで検査する。"
+    },
+    "local-domain-expansion": {
+      "scope": "workflow",
+      "targets": [],
+      "reason": "子の回帰を起動し、実行証跡を照合する。"
     }
   },
   "blackbox_sources": {

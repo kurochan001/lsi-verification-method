@@ -168,6 +168,11 @@
     "examples/local-can/run.py",
     "examples/local-can/tb/can_tb.sv",
     "examples/local-can/tests/test_example.py",
+    "examples/local-canfd/requirements.json",
+    "examples/local-canfd/rtl/canfd_tx.sv",
+    "examples/local-canfd/run.py",
+    "examples/local-canfd/tb/canfd_tb.sv",
+    "examples/local-canfd/tests/test_example.py",
     "examples/local-cdc-bridge/requirements.json",
     "examples/local-cdc-bridge/rtl/cdc_apb_bridge.sv",
     "examples/local-cdc-bridge/rtl/packet_fifo.sv",
@@ -212,6 +217,11 @@
     "examples/local-clock-reset/run.py",
     "examples/local-clock-reset/tb/clock_reset_tb.sv",
     "examples/local-clock-reset/tests/test_example.py",
+    "examples/local-clock-switch/requirements.json",
+    "examples/local-clock-switch/rtl/clock_switch.sv",
+    "examples/local-clock-switch/run.py",
+    "examples/local-clock-switch/tb/clock_switch_tb.sv",
+    "examples/local-clock-switch/tests/test_example.py",
     "examples/local-closure-trend/data/campaigns/c01.json",
     "examples/local-closure-trend/data/campaigns/c02.json",
     "examples/local-closure-trend/data/campaigns/c03.json",
@@ -326,6 +336,8 @@
     "examples/local-dma/run.py",
     "examples/local-dma/tb/dma_tb.sv",
     "examples/local-dma/tests/test_system.py",
+    "examples/local-domain-expansion/run.py",
+    "examples/local-domain-expansion/tests/test_runner.py",
     "examples/local-dpi-model/model.py",
     "examples/local-dpi-model/model/packet_cli.c",
     "examples/local-dpi-model/model/packet_dpi.c",
@@ -425,6 +437,12 @@
     "examples/local-fifo/run.py",
     "examples/local-fifo/tb/fifo_tb.sv",
     "examples/local-fifo/tests/test_runner.py",
+    "examples/local-flash-ctrl/requirements.json",
+    "examples/local-flash-ctrl/rtl/flash_ctrl.sv",
+    "examples/local-flash-ctrl/rtl/flash_model.sv",
+    "examples/local-flash-ctrl/run.py",
+    "examples/local-flash-ctrl/tb/flash_tb.sv",
+    "examples/local-flash-ctrl/tests/test_example.py",
     "examples/local-formal-common/runner.py",
     "examples/local-formal-common/tests/test_evidence.py",
     "examples/local-formal-data-integrity/data_integrity_formal.sv",
@@ -482,6 +500,11 @@
     "examples/local-generated-ral/tests/test_frontdoor.py",
     "examples/local-host-common/runner.py",
     "examples/local-host-common/tests/test_runner.py",
+    "examples/local-hw-semaphore/requirements.json",
+    "examples/local-hw-semaphore/rtl/hw_semaphore.sv",
+    "examples/local-hw-semaphore/run.py",
+    "examples/local-hw-semaphore/tb/semaphore_tb.sv",
+    "examples/local-hw-semaphore/tests/test_example.py",
     "examples/local-i2c-open-drain/model.py",
     "examples/local-i2c-open-drain/requirements.json",
     "examples/local-i2c-open-drain/rtl/i2c_rx_master.sv",
@@ -538,6 +561,11 @@
     "examples/local-interconnect/run.py",
     "examples/local-interconnect/tb/interconnect_tb.sv",
     "examples/local-interconnect/tests/test_system.py",
+    "examples/local-iommu/requirements.json",
+    "examples/local-iommu/rtl/iommu.sv",
+    "examples/local-iommu/run.py",
+    "examples/local-iommu/tb/iommu_tb.sv",
+    "examples/local-iommu/tests/test_example.py",
     "examples/local-irq-cdc/requirements.json",
     "examples/local-irq-cdc/rtl/cdc_receiver.sv",
     "examples/local-irq-cdc/rtl/irq_pending.sv",
@@ -545,6 +573,11 @@
     "examples/local-irq-cdc/tb/cdc_delay_model.sv",
     "examples/local-irq-cdc/tb/irq_tb.sv",
     "examples/local-irq-cdc/tests/test_runner.py",
+    "examples/local-jtag-apb/requirements.json",
+    "examples/local-jtag-apb/rtl/jtag_apb.sv",
+    "examples/local-jtag-apb/run.py",
+    "examples/local-jtag-apb/tb/jtag_apb_tb.sv",
+    "examples/local-jtag-apb/tests/test_example.py",
     "examples/local-jtag-tap/requirements.json",
     "examples/local-jtag-tap/rtl/jtag_tap.sv",
     "examples/local-jtag-tap/run.py",
@@ -654,6 +687,13 @@
     "examples/local-motion-io/support.py",
     "examples/local-motion-io/tb/motion_io_tb.sv",
     "examples/local-motion-io/tests/test_motion_io.py",
+    "examples/local-mul-pipe/formal/mul_pipe_formal.sv",
+    "examples/local-mul-pipe/requirements.json",
+    "examples/local-mul-pipe/rtl/mul_pipe.sv",
+    "examples/local-mul-pipe/run.py",
+    "examples/local-mul-pipe/tb/mul_pipe_tb.sv",
+    "examples/local-mul-pipe/tests/test_example.py",
+    "examples/local-mul-pipe/tests/test_formal.py",
     "examples/local-mxfp4/MULTIPRECISION.md",
     "examples/local-mxfp4/multiprecision.py",
     "examples/local-mxfp4/reference.py",
@@ -720,6 +760,12 @@
     "examples/local-network-soc/run.py",
     "examples/local-network-soc/tb/network_soc_tb.sv",
     "examples/local-network-soc/tests/test_firmware.py",
+    "examples/local-noc-mesh/requirements.json",
+    "examples/local-noc-mesh/rtl/mesh2x2.sv",
+    "examples/local-noc-mesh/rtl/router.sv",
+    "examples/local-noc-mesh/run.py",
+    "examples/local-noc-mesh/tb/mesh2x2_tb.sv",
+    "examples/local-noc-mesh/tests/test_example.py",
     "examples/local-otp-fuse/model.py",
     "examples/local-otp-fuse/requirements.json",
     "examples/local-otp-fuse/rtl/otp_ctrl.sv",
@@ -746,6 +792,11 @@
     "examples/local-plan-traceability/run.py",
     "examples/local-plan-traceability/spec.md",
     "examples/local-plan-traceability/tests/test_runner.py",
+    "examples/local-plic/requirements.json",
+    "examples/local-plic/rtl/plic.sv",
+    "examples/local-plic/run.py",
+    "examples/local-plic/tb/plic_tb.sv",
+    "examples/local-plic/tests/test_example.py",
     "examples/local-pll-clock-quality/model.py",
     "examples/local-pll-clock-quality/requirements.json",
     "examples/local-pll-clock-quality/run.py",
@@ -957,6 +1008,18 @@
     "examples/local-rnm-sar-adc/tb/sar_adc_tb.sv",
     "examples/local-rnm-sar-adc/tb/sar_cdac_rnm.sv",
     "examples/local-rnm-sar-adc/tests/test_example.py",
+    "examples/local-rtc/requirements.json",
+    "examples/local-rtc/rtl/rtc.sv",
+    "examples/local-rtc/run.py",
+    "examples/local-rtc/tb/rtc_tb.sv",
+    "examples/local-rtc/tests/test_example.py",
+    "examples/local-rvwmo-litmus/formal/litmus_formal.sv",
+    "examples/local-rvwmo-litmus/requirements.json",
+    "examples/local-rvwmo-litmus/rtl/litmus.sv",
+    "examples/local-rvwmo-litmus/run.py",
+    "examples/local-rvwmo-litmus/tb/litmus_tb.sv",
+    "examples/local-rvwmo-litmus/tests/test_example.py",
+    "examples/local-rvwmo-litmus/tests/test_formal.py",
     "examples/local-scan-atpg/atpg.py",
     "examples/local-scan-atpg/requirements.json",
     "examples/local-scan-atpg/rtl/scan_logic.sv",
@@ -1202,6 +1265,12 @@
     "examples/local-unaligned-memory/run.py",
     "examples/local-unaligned-memory/tb/unaligned_memory_tb.sv",
     "examples/local-unaligned-memory/tests/test_split.py",
+    "examples/local-usb-linecode/requirements.json",
+    "examples/local-usb-linecode/rtl/usb_linecode.sv",
+    "examples/local-usb-linecode/rtl/usb_linecode_rx.sv",
+    "examples/local-usb-linecode/run.py",
+    "examples/local-usb-linecode/tb/usb_tb.sv",
+    "examples/local-usb-linecode/tests/test_example.py",
     "examples/local-uvm-coordination/rtl/gain_pipe.sv",
     "examples/local-uvm-coordination/run.py",
     "examples/local-uvm-coordination/tb/coord_pkg.sv",
@@ -1371,12 +1440,14 @@
       "local-cache-coherence",
       "local-cache-dma",
       "local-can",
+      "local-canfd",
       "local-cdc-bridge",
       "local-cdc-handshake",
       "local-cdc-structural",
       "local-cic-decimator",
       "local-clock-gating",
       "local-clock-reset",
+      "local-clock-switch",
       "local-code-coverage",
       "local-compositional-formal",
       "local-connectivity",
@@ -1403,11 +1474,13 @@
       "local-fec-ber",
       "local-fft",
       "local-fifo",
+      "local-flash-ctrl",
       "local-formal-data-integrity",
       "local-fp-adder",
       "local-fsm-hardening",
       "local-gate-sim",
       "local-gate-timing",
+      "local-hw-semaphore",
       "local-i2c",
       "local-i2c-open-drain",
       "local-i2s-audio",
@@ -1416,7 +1489,9 @@
       "local-image-sobel",
       "local-image-soc",
       "local-interconnect",
+      "local-iommu",
       "local-irq-cdc",
+      "local-jtag-apb",
       "local-jtag-tap",
       "local-latency-insensitive-compare",
       "local-lbist",
@@ -1429,13 +1504,16 @@
       "local-memory-repair",
       "local-motion-control",
       "local-motion-io",
+      "local-mul-pipe",
       "local-mxfp4",
       "local-network-echo",
       "local-network-soc",
+      "local-noc-mesh",
       "local-otp-fuse",
       "local-packet-crc",
       "local-packet-switch",
       "local-performance-monitor",
+      "local-plic",
       "local-pll-recovery",
       "local-por-sequence",
       "local-portable-scenario",
@@ -1459,6 +1537,8 @@
       "local-riscv-iss",
       "local-riscv-pmp",
       "local-rnm-sar-adc",
+      "local-rtc",
+      "local-rvwmo-litmus",
       "local-scan-atpg",
       "local-scrambler-prbs",
       "local-secret-flow",
@@ -1486,6 +1566,7 @@
       "local-trng-health",
       "local-uart",
       "local-unaligned-memory",
+      "local-usb-linecode",
       "local-uvm-coordination",
       "local-uvm-layering",
       "local-uvm-multiclock",
@@ -1644,6 +1725,9 @@
     "local-can": [
       "local-common"
     ],
+    "local-canfd": [
+      "local-common"
+    ],
     "local-cdc-bridge": [
       "local-apb",
       "local-async-fifo",
@@ -1665,6 +1749,9 @@
       "local-common"
     ],
     "local-clock-reset": [
+      "local-common"
+    ],
+    "local-clock-switch": [
       "local-common"
     ],
     "local-closure-trend": [
@@ -1735,6 +1822,21 @@
       "local-common",
       "local-descriptor-dma",
       "local-dma"
+    ],
+    "local-domain-expansion": [
+      "local-canfd",
+      "local-clock-switch",
+      "local-exploration-common",
+      "local-flash-ctrl",
+      "local-hw-semaphore",
+      "local-iommu",
+      "local-jtag-apb",
+      "local-mul-pipe",
+      "local-noc-mesh",
+      "local-plic",
+      "local-rtc",
+      "local-rvwmo-litmus",
+      "local-usb-linecode"
     ],
     "local-dpi-model": [
       "local-exploration-common"
@@ -1809,6 +1911,9 @@
       "local-fifo",
       "local-irq-cdc"
     ],
+    "local-flash-ctrl": [
+      "local-common"
+    ],
     "local-formal-common": [
       "local-bus-formal",
       "local-fifo-formal",
@@ -1861,6 +1966,9 @@
     "local-host-common": [
       "local-common"
     ],
+    "local-hw-semaphore": [
+      "local-common"
+    ],
     "local-i2c": [
       "local-common"
     ],
@@ -1890,7 +1998,13 @@
       "local-axi4",
       "local-common"
     ],
+    "local-iommu": [
+      "local-common"
+    ],
     "local-irq-cdc": [],
+    "local-jtag-apb": [
+      "local-common"
+    ],
     "local-jtag-tap": [
       "local-common",
       "local-riscv-debug"
@@ -2026,6 +2140,9 @@
     "local-motion-io": [
       "local-exploration-common"
     ],
+    "local-mul-pipe": [
+      "local-common"
+    ],
     "local-mxfp4": [
       "local-exploration-common"
     ],
@@ -2040,6 +2157,9 @@
       "local-network-echo",
       "local-riscv-decoder",
       "local-riscv-iss"
+    ],
+    "local-noc-mesh": [
+      "local-common"
     ],
     "local-otp-fuse": [
       "local-common",
@@ -2058,6 +2178,9 @@
       "local-exploration-common",
       "local-irq-cdc",
       "local-sva"
+    ],
+    "local-plic": [
+      "local-common"
     ],
     "local-pll-clock-quality": [
       "local-common",
@@ -2185,6 +2308,12 @@
     ],
     "local-rnm-sar-adc": [
       "local-memory-common"
+    ],
+    "local-rtc": [
+      "local-common"
+    ],
+    "local-rvwmo-litmus": [
+      "local-common"
     ],
     "local-scan-atpg": [
       "local-common"
@@ -2328,6 +2457,9 @@
     ],
     "local-unaligned-memory": [
       "local-memory-common"
+    ],
+    "local-usb-linecode": [
+      "local-common"
     ],
     "local-uvm": [
       "local-apb",

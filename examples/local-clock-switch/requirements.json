@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CLK-SWITCH",
+      "goals": [
+        "switch/a-to-b",
+        "switch/b-to-a",
+        "engine/resume-after-switch"
+      ]
+    },
+    {
+      "id": "CLK-FREEZE",
+      "goals": [
+        "glitch/quiet-window",
+        "glitch/no-edge-in-window"
+      ]
+    },
+    {
+      "id": "CLK-DIV",
+      "goals": [
+        "div/increase",
+        "div/decrease",
+        "div/ratio-8",
+        "div/effective-when-idle"
+      ]
+    },
+    {
+      "id": "CLK-ENGINE",
+      "goals": [
+        "engine/hold-while-busy"
+      ]
+    },
+    {
+      "id": "CLK-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

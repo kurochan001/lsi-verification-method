@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "SEM-LOCK",
+      "goals": [
+        "sem/grant",
+        "sem/busy",
+        "sem/release",
+        "sem/reacquire"
+      ]
+    },
+    {
+      "id": "SEM-FENCE",
+      "goals": [
+        "fence/done",
+        "fence/once",
+        "fence/overflow-hold",
+        "fence/rearm"
+      ]
+    },
+    {
+      "id": "SEM-IRQ",
+      "goals": [
+        "irq/pass",
+        "irq/suppress",
+        "irq/window-rollover",
+        "irq/suppress-rearm"
+      ]
+    },
+    {
+      "id": "SEM-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

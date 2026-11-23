@@ -3199,6 +3199,186 @@
         "iverilog",
         "vvp"
       ]
+    },
+    {
+      "id": "local-plic",
+      "script": "examples/local-plic/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-mul-pipe",
+      "script": "examples/local-mul-pipe/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-rvwmo-litmus",
+      "script": "examples/local-rvwmo-litmus/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-iommu",
+      "script": "examples/local-iommu/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-flash-ctrl",
+      "script": "examples/local-flash-ctrl/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-rtc",
+      "script": "examples/local-rtc/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-clock-switch",
+      "script": "examples/local-clock-switch/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-canfd",
+      "script": "examples/local-canfd/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-usb-linecode",
+      "script": "examples/local-usb-linecode/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-noc-mesh",
+      "script": "examples/local-noc-mesh/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-jtag-apb",
+      "script": "examples/local-jtag-apb/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-hw-semaphore",
+      "script": "examples/local-hw-semaphore/run.py",
+      "kind": "simulation",
+      "profile": true,
+      "options": [
+        "timeout"
+      ],
+      "tools": [
+        "iverilog",
+        "vvp"
+      ]
+    },
+    {
+      "id": "local-domain-expansion",
+      "script": "examples/local-domain-expansion/run.py",
+      "kind": "aggregate",
+      "profile": true,
+      "options": [
+        "child-timeout"
+      ],
+      "tools": [],
+      "children": {
+        "local-plic": "local-plic",
+        "local-mul-pipe": "local-mul-pipe",
+        "local-rvwmo-litmus": "local-rvwmo-litmus",
+        "local-iommu": "local-iommu",
+        "local-flash-ctrl": "local-flash-ctrl",
+        "local-rtc": "local-rtc",
+        "local-clock-switch": "local-clock-switch",
+        "local-canfd": "local-canfd",
+        "local-usb-linecode": "local-usb-linecode",
+        "local-noc-mesh": "local-noc-mesh",
+        "local-jtag-apb": "local-jtag-apb",
+        "local-hw-semaphore": "local-hw-semaphore"
+      }
     }
   ]
 }

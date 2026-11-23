@@ -387,6 +387,7 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [local-workflow-regression](local-workflow-regression/README.md) | 集約 | 幅変換、アクセス保護、ECCメモリ、クロック・リセット、操作列縮小、刺激調整、UVMの7例 |
 | [local-soc-regression](local-soc-regression/README.md) | 集約 | UVMランダム、SystemRDL、反例再現、優先度付き割り込み、リング式DMA、クレジット通信、キャッシュの7例 |
 | [local-extension-regression](local-extension-regression/README.md) | 集約 | 生成RAL、AXI応答順序、DMA所有権、Stream DMA、CRC、カウンター、MBISTの7例 |
+| [local-domain-expansion](local-domain-expansion/README.md) | 集約 | PLIC、乗算器、メモリ順序、IOMMU、フラッシュ、RTC、クロック切替、CAN FD、USB、NoC、JTAG–APB、セマフォの12例 |
 | [local-gap-regression](local-gap-regression/README.md) | 集約 | セキュリティ、性能モニター、CDCハンドシェイク、JTAG、アドレスマップ、ロックステップの6例 |
 | [local-ai-regression](local-ai-regression/README.md) | 集約 | シストリックアレイ、再量子化、活性化関数、ラインバッファ、Top-K、FP16／MXFP8／MXFP4の6例 |
 
@@ -410,17 +411,17 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [NVDLA](reference-nvdla/README.md) | AIアクセラレーターのトレース、入力・重み・レジスター・割り込み、出力メモリー比較 | `nvdlav1`を読解し、I/O修正をC++単体8条件で確認。RTL・演算Cモデルは未実行 |
 | [Caliptra](reference-caliptra/README.md) | 暗号・鍵管理IP、SHA-512の期待ベクトル・予測器・比較器、zeroizeと機能カバレッジ | 固定ソース・接続・商用VIPを含む依存を確認。RTL・UVM・セキュリティ評価は未実施 |
 
-13件は上流を読む参照例で、下記の213登録項目・191ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
+13件は上流を読む参照例で、下記の226登録項目・192ルートジョブへ加算しません。手動演習では、OpenTitanの計画メタデータ、PicoRV32の限定したプログラムのRTL実行、LiteDRAMの6テストのMigenシミュレーションを扱います。NVDLAはI/O修正のC++単体8条件も確認しています。上流フルDVの成功やカバレッジ収束へ読み替えません。
 
 ## 集計と実行記録
 
-実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は100例・214構成、各検証例が出力するJUnit件数の合計はsmoke 1983件／nightly 2469件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
+実行数や過去の確認結果を調べる場合は、各例の実行記録と[PROVENANCE.md](../PROVENANCE.md)を参照してください。共通シミュレーションランナーの計画は112例・238構成、各検証例が出力するJUnit件数の合計はsmoke 2151件／nightly 2685件です。フォーマル・UVMなどの別ランナー、親の集約判定、ランナー自身のセルフテストは別集計です。
 
 [関連例の集約手順](../README.md#まとめて実行する手順)は親の判定と子の個別結果を持ちます。同じ実行を重複して件数へ加えないようにします。
 
 [全例の統合ランナー](../tools/REGRESSION.md)は、記載構成の行列と集約の親子関係を登録表から読み込みます。UVM移行例はpassive・activeの両モードを別々に起動し、選択した範囲と判定を記録します。
 
-現在の統合計画は、213登録項目・191ルートジョブです。nightly対応の個別例に加え、集約7本、フォーマル27例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて28行、`aggregate`は共通lintの2行を含めて9行です。従来のSBY証明例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
+現在の統合計画は、226登録項目・192ルートジョブです。nightly対応の個別例に加え、集約8本、フォーマル27例、固定計画の共通lint・STAを含みます。[登録表](../tools/regressions.json)の種別で数えると、`formal`は子タスク1行を含めて28行、`aggregate`は共通lintの2行を含めて10行です。従来のSBY証明例の計画は23構成・182タスクです。MCYが各候補に対して実行する等価性証明は別集計です。
 
 共通シミュレーションランナーとは別に数える例と、共通ランナーの件数のうち最近加えた例の内訳を下表に示します。JUnit件数は各例が出力する件数です。
 
@@ -449,10 +450,11 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 | [LibertyとSPICEの対応付け](local-liberty-vs-spice/README.md) | 31 | 35 | 独自（証跡は探索用の共通処理） |
 | [電源の立上りとパワーオンリセット](local-por-sequence/README.md) | 57 | 65 | 独自（証跡は探索用の共通処理） |
 | [I2Cのオープンドレイン](local-i2c-open-drain/README.md) | 72 | 84 | 独自（証跡は探索用の共通処理） |
+| [割り込み・メモリ順序・通信などの12例](local-domain-expansion/README.md) | 168 | 216 | 子12例・各2構成の合計。親には別に12判定 |
 | [ΔΣ変調器とCIC](local-sigma-delta/README.md) | 38 | 42 | 共通シミュレーションランナー（上の内数）。実行の後のSNRの判定8件を含む |
 | [E2E通信保護](local-e2e-guard/README.md) | 24 | 28 | 独自 |
 | [小規模ECU](local-automotive-ecu/README.md) | 30 | 34 | 独自 |
-| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の1983／2469件の内数） |
+| [PLLのロック待ちと復帰](local-pll-recovery/README.md)・[ADCの変換](local-adc-conversion/README.md)・[PWMからのADC起動](local-pwm-adc/README.md)の3例の合計 | 44 | 56 | [共通シミュレーションランナー](local-common/README.md)（上の2151／2685件の内数） |
 | [PLL出力の測定実習](local-pll-clock-quality/README.md) | 16 | 20 | 共通シミュレーションランナー（同上） |
 | [複数電源領域](local-power-domains/README.md)・[クロックゲーティング](local-clock-gating/README.md)・[メモリの修復](local-memory-repair/README.md)・[遷移故障](local-transition-fault/README.md)の4例の合計 | 69 | 85 | 共通シミュレーションランナー（同上）。内訳は順に20／24、16／20、18／22、15／19 |
 | [CDC／RDCの構造解析](local-cdc-structural/README.md) | 29 | 31 | 独自（証跡は探索用の共通処理） |
@@ -490,7 +492,7 @@ lint・等価性検証・ゲートレベルシミュレーション・STAの分�
 
 RAMを使う発展4例には、[まとめて回帰する入口](local-memory-common/README.md)も用意しています。
 
-共通lintの対象は236 RTLファイル・237モジュール・570構成です。2026-11-21に加えた通信・信号処理の12例の41構成と、アナログ・ミックスドシグナルの2例の8構成、セキュリティ・機能安全の5例の11構成、SoC・再利用・試作の9例の32構成、F-5の2例の5構成は警告0件です。2026-11-21に加えたテストベンチの技法の9例の17構成は警告0件です。2026-11-21に加えたプロセッサ関連の20構成は、JTAG TAPを含む4構成に既存の既知の警告が1件ずつ出るほかは警告0件です。2026-11-20の[レビューで追加した教材](../PROVENANCE.md#review-additions-20261120)のRTL 28構成、RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
+共通lintの対象は251 RTLファイル・252モジュール・599構成です。2026-11-21に加えた通信・信号処理の12例の41構成と、アナログ・ミックスドシグナルの2例の8構成、セキュリティ・機能安全の5例の11構成、SoC・再利用・試作の9例の32構成、F-5の2例の5構成は警告0件です。2026-11-21に加えたテストベンチの技法の9例の17構成は警告0件です。2026-11-21に加えたプロセッサ関連の20構成は、JTAG TAPを含む4構成に既存の既知の警告が1件ずつ出るほかは警告0件です。2026-11-20の[レビューで追加した教材](../PROVENANCE.md#review-additions-20261120)のRTL 28構成、RAMの発展4例の22構成、PLL・ADC・PWMの6構成は警告0件です。RAMのポート比較の27構成、非同期画像パイプラインの21構成は警告0件です。従来の画像処理の17構成に続き、ネットワークIP・SoCの15構成も警告0件です。TMR・FDIRの14構成と、モーション制御の12構成も警告0件です。C++・SPICEの4構成と、車載向けの新4構成も警告0件です。既存の487件（未解決439件・限定した除外48件）の指摘は維持し、差分なしの成功と警告0件を区別します。
 
 各例の既定計画には正常動作・変異・診断があり、予定した反例や未到達の識別も成功と判定します。証明は各例のモデルと仮定の範囲、BMCは設定された深さまでの確認です。個別結果・親判定・lint・セルフテストを分けた実行数、設定、残る制限は[最新のレビューと確認記録](../PROVENANCE.md#verification-gaps-20261107)を参照してください。
 

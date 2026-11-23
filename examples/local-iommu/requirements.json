@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "IOMMU-XLAT",
+      "goals": [
+        "xlat/perm-deny",
+        "xlat/miss-fault",
+        "xlat/hit-path"
+      ]
+    },
+    {
+      "id": "IOMMU-TLB",
+      "goals": [
+        "tlb/fill",
+        "tlb/invalidate",
+        "tlb/refetch",
+        "tlb/replace"
+      ]
+    },
+    {
+      "id": "IOMMU-BUSY",
+      "goals": [
+        "busy/hold-request",
+        "busy/deny",
+        "busy/complete-grant"
+      ]
+    },
+    {
+      "id": "IOMMU-UPD",
+      "goals": [
+        "upd/ignore-range",
+        "upd/while-busy",
+        "resp/grant-kept"
+      ]
+    },
+    {
+      "id": "IOMMU-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

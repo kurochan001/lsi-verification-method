@@ -168,6 +168,6 @@ Python側の合否は明示的な条件分岐で検査します。Pythonの`asse
 
 これはネイティブバス上の小さな増分プログラムを使う手動演習です。全ISA、IRQ、PCPI、AXI4-Lite／Wishbone、ISSとの比較、フォーマル証明、カバレッジ収束は今回実行していません。UVMのフルDVを確認した結果とも区別します。
 
-CPU本体の[COPYING](https://github.com/YosysHQ/picorv32/blob/ef203c2b0a3fb793280f5114941416c425c5b461/COPYING)と、簡易TB先頭のpublic domain表示はそのまま保持します。上流ソース・生成したバイナリーを本リポジトリのGit管理へ取り込まず、統合nightlyの213登録項目・191ルートジョブへも加算しません。
+CPU本体の[COPYING](https://github.com/YosysHQ/picorv32/blob/ef203c2b0a3fb793280f5114941416c425c5b461/COPYING)と、簡易TB先頭のpublic domain表示はそのまま保持します。上流ソース・生成したバイナリーを本リポジトリのGit管理へ取り込まず、統合nightlyの226登録項目・192ルートジョブへも加算しません。
 
 [小規模RISC-VのISS比較](../local-riscv-iss/README.md)、[CV32系](../reference-core-v-verif/README.md)、[目視確認のアサーション化](../../docs/method/assertion-based-regression.md)へ進み、より広い要求・構成・合否条件を追加します。

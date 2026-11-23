@@ -114,6 +114,15 @@
 | SCOPE-PHYSICAL（AMS） | [I2Cのオープンドレイン](../../examples/local-i2c-open-drain/README.md)、[ΔΣ変調器とCIC](../../examples/local-sigma-delta/README.md) | 立上りと取込みの時刻の境界、SNRの上下限とビット一致。SCLの遅れ、熱雑音・ジッター・有限の利得は対象外 |
 | SCOPE-POWER / RESET | [電源の立上りとパワーオンリセット](../../examples/local-por-sequence/README.md) | 電源のランプ・瞬時低下・再投入とリセットの同期解除。比較器の基準電圧の立上り、最小パルス幅とrecovery／removalは対象外 |
 
+[12分野の集約回帰](../../examples/local-domain-expansion/README.md)では次の範囲を扱います。
+
+| 領域ID | 追加例 | 確認する内容と範囲 |
+| --- | --- | --- |
+| SCOPE-SYSTEM-SW / SECURITY | PLIC、IOMMU、セマフォ | 割り込みの請求・完了、変換キャッシュと無効化、所有権と通知 |
+| SCOPE-PROTOCOL-DATA | 乗算器、RVWMOのSBパターン、NoC | パイプライン遅延、フェンス前後の順序、東・北方向のパケット転送と停止 |
+| SCOPE-PROTOCOL-DATA / FAULT-RECOVERY | CAN FD、USB、フラッシュ、JTAG–APB | ビット列と誤り、書込み許可とビジー境界、模擬APBの待ち・エラー |
+| SCOPE-POWER / CDC-RDC | クロック切替、RTC | デジタルの切替・分周、同期後の時刻キャプチャ。実セルの遅延やメタステーブルは適用範囲外 |
+
 セキュリティ・機能安全を補う次の例も追加しました。
 
 | 領域ID | 追加例 | 確認する内容と範囲 |

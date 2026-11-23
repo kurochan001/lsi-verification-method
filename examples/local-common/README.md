@@ -172,7 +172,7 @@ python3 -m unittest discover -s examples/local-bus-formal/tests -v
 
 ## プロトコル・クロス・X／リセット・性能・コードカバレッジ
 
-[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子リグレッションとして呼ぶこともできます。フォーマル45件・本共通ランナー100例の1983／2469件とは、実行内容とJUnitの階層を分けて確認してください。
+[バス検証の追加ランナー](../local-bus-validation/README.md)は、VerilatorによるネイティブSVA・line／toggle計測と、Icarusによる4値検査をまとめます。APBブリッジとAXI4を子リグレッションとして呼ぶこともできます。フォーマル45件・本共通ランナー112例の2151／2685件とは、実行内容とJUnitの階層を分けて確認してください。
 
 ```sh
 python3 examples/local-bus-validation/run.py

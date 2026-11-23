@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "MESH-ROUTE",
+      "goals": [
+        "route/1hop-x",
+        "route/1hop-y",
+        "route/2hop",
+        "route/bad-drop"
+      ]
+    },
+    {
+      "id": "MESH-BP",
+      "goals": [
+        "bp/hold",
+        "bp/burst-2",
+        "bp/no-loss",
+        "hol/block-observed"
+      ]
+    },
+    {
+      "id": "MESH-LIVE",
+      "goals": [
+        "live/cyclic-drain",
+        "live/timeout-armed"
+      ]
+    },
+    {
+      "id": "MESH-RESET",
+      "goals": [
+        "flow/queued-drain",
+        "reset/flush",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

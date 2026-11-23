@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "RTC-TIME",
+      "goals": [
+        "time/tick",
+        "time/wrap-sec",
+        "time/set-load",
+        "time/set-freeze"
+      ]
+    },
+    {
+      "id": "RTC-IRQ",
+      "goals": [
+        "irq/match",
+        "irq/w1c-clear",
+        "irq/race-win"
+      ]
+    },
+    {
+      "id": "RTC-ADJ",
+      "goals": [
+        "adj/enabled",
+        "adj/zero-pause",
+        "adj/max-rate"
+      ]
+    },
+    {
+      "id": "RTC-CAP",
+      "goals": [
+        "cap/pulse",
+        "cap/readback"
+      ]
+    },
+    {
+      "id": "RTC-REG",
+      "goals": [
+        "reg/readback",
+        "reset/recovery"
+      ]
+    }
+  ]
+}

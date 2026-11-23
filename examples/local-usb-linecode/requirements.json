@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "USB-LINE",
+      "goals": [
+        "line/stuff-zero"
+      ]
+    },
+    {
+      "id": "USB-PACKET",
+      "goals": [
+        "packet/zero",
+        "packet/nonzero",
+        "packet/accepted"
+      ]
+    },
+    {
+      "id": "USB-ERROR",
+      "goals": [
+        "error/pid",
+        "error/crc",
+        "error/stuff",
+        "error/eop"
+      ]
+    },
+    {
+      "id": "USB-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

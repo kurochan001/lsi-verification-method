@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "CANFD-CRC",
+      "goals": [
+        "crc/classic15",
+        "crc/fd16bytes",
+        "crc/fd20bytes"
+      ]
+    },
+    {
+      "id": "CANFD-LENGTH",
+      "goals": [
+        "data/empty",
+        "data/64bytes"
+      ]
+    },
+    {
+      "id": "CANFD-RATE",
+      "goals": [
+        "rate/switch",
+        "rate/nominal-fd"
+      ]
+    },
+    {
+      "id": "CANFD-STUFF",
+      "goals": [
+        "stuff/dynamic",
+        "stuff/fixed"
+      ]
+    },
+    {
+      "id": "CANFD-RESET",
+      "goals": [
+        "reset/recovery"
+      ]
+    }
+  ]
+}

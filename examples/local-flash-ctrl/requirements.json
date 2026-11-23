@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {"id": "FLASH-CMD", "goals": ["cmd/reject", "cmd/wel-gate", "cmd/wren"]},
+    {"id": "FLASH-ARRAY", "goals": ["data/program", "data/read", "data/program-fault", "erase/sector", "erase/all"]},
+    {"id": "FLASH-XIP", "goals": ["xip/out-of-range", "xip/interlock"]},
+    {"id": "FLASH-STATUS", "goals": ["poll/six-busy", "poll/timeout", "poll/clear", "reset/abort"]}
+  ]
+}

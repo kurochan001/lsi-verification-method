@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "MEM-ORD",
+      "goals": [
+        "mm/both-one",
+        "mm/mixed-outcome"
+      ]
+    },
+    {
+      "id": "MEM-DATA",
+      "goals": [
+        "mm/st-drain",
+        "mm/read-ahead",
+        "mm/read-zero",
+        "mm/read-one",
+        "mm/reset-recovery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "requirements": [
+    {
+      "id": "PLIC-CLAIM",
+      "goals": [
+        "claim/grant",
+        "claim/deny",
+        "claim/tie",
+        "claim/none-while-pending"
+      ]
+    },
+    {
+      "id": "PLIC-COMPLETE",
+      "goals": [
+        "complete/release",
+        "complete/ignore",
+        "state/inservice-hold"
+      ]
+    },
+    {
+      "id": "PLIC-PENDING",
+      "goals": [
+        "state/pending-set",
+        "state/repending",
+        "irq/line"
+      ]
+    },
+    {
+      "id": "PLIC-REGS",
+      "goals": [
+        "priority/pack-read",
+        "reset/recovery"
+      ]
+    }
+  ]
+}
